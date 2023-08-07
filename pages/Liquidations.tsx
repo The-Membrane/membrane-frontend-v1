@@ -34,7 +34,6 @@ const LiquidationPools = () => {
     <div className="col shiftRight">
     <div className="liquidation-pools">
     <h1 className="pagetitle">Liquidation Pools</h1>
-      <div className="liquidationpoolpage">
         <div className="singleassetframe">
           <h3 className="pool-titles">SINGLE ASSET</h3>
           <div className="single-asset-info-circle" />
@@ -74,6 +73,12 @@ const LiquidationPools = () => {
           <div className="collateral-tvl-label">TVL as Collateral: 10M</div>
           <div className="highest-tvl-bar-label">2M</div>
           <div className="x-axis" />
+          <a className="btn buttons deposit-button" onClick={() => {}}>
+                    Deposit
+          </a>
+          <a className="btn buttons withdraw-button" onClick={() => {}}>
+                    Withdraw
+          </a>
           <a className="btn buttons claim-button single-asset-btn" onClick={() => {}}>
                     Claim
           </a>
@@ -91,6 +96,12 @@ const LiquidationPools = () => {
           <div className="capital-ahead-info-circle" />
           <img className="tvl-container-icon" alt="" src="/images/tvl-container.svg" />
           <div className="premium">10%</div>
+          <a className="btn buttons deposit-button-omni" onClick={() => {}}>
+                    Deposit
+          </a>
+          <a className="btn buttons withdraw-button-omni" onClick={() => {}}>
+                    Withdraw
+          </a>
           <a className="btn buttons claim-button" onClick={() => {}}>
                     Claim
           </a>
@@ -100,10 +111,9 @@ const LiquidationPools = () => {
             src="/images/Water_drops_deco.svg"
           />
         </div>
-        <img className="titleicon" alt="" src="/titleicon.svg" />
+        <img className="titleicon" alt="" src="/images/liquidation_pool.svg" />
         <div className="middleborder" />
       </div>
-    </div>
     </div>
     </div>
     </div>

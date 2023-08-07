@@ -43,6 +43,8 @@ import Dashboard from './Dashboard';
 import { useRef } from 'react';
 import NavBar from './NavBar';
 import LiquidationPools from './Liquidations';
+import Lockdrop from './Lockdrop';
+import Governance from './Governance';
 
 
 export default function Home() {
@@ -56,6 +58,9 @@ export default function Home() {
   const dashboardSection = useRef(null);
   const vaultSection = useRef(null);
   const liquidationSection = useRef(null);
+  const launchSection = useRef(null);
+  const stakingSection = useRef(null);
+
 
   return (
     <>    
@@ -88,8 +93,11 @@ export default function Home() {
       <div ref={vaultSection}>
         <LiquidationPools/>
       </div>
-      <div ref={liquidationSection}>
-        <Dashboard/>
+      <div ref={launchSection}>
+        <Lockdrop/>
+      </div>
+      <div ref={stakingSection}>
+        <Governance/>
       </div>
       
     </div>

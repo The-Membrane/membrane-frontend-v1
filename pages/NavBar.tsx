@@ -7,7 +7,7 @@ export const stakingPosition = 1994;
 export const launchPosition = 2664;
 
 //Instead of Routers, just make the app a single page that you can scroll through
- export const scrollDown = (position) => {
+ export const scrollDown = (position: number) => {
     window.scrollTo({
       top: position,
     });
