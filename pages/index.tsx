@@ -45,6 +45,7 @@ import NavBar from './NavBar';
 import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
 import Governance from './Governance';
+import Positions from './Positions';
 
 
 export default function Home() {
@@ -91,6 +92,9 @@ export default function Home() {
         <Dashboard/>        
       </div>
       <div ref={vaultSection}>
+        <Positions/>
+      </div>
+      <div ref={liquidationSection}>
         <LiquidationPools/>
       </div>
       <div ref={launchSection}>
