@@ -2521,13 +2521,12 @@ ul{
   width: 321px;
   height: 484px;
 }
-.cdt-logo-icon1 {
+.osmo-logo-icon {
   position: absolute;
   top: 74px;
   left: 30px;
   width: 45px;
   height: 45px;
-  object-fit: cover;
 }
 .asset-info-child,
 .asset-info-child1,
@@ -2591,41 +2590,39 @@ ul{
 .value {
   left: 228px;
 }
-.cdt-logo-icon2,
+.atom-logo-icon,
 .cdp-div4,
 .cdp-div5 {
   position: absolute;
   top: 79px;
   left: 150px;
 }
-.cdt-logo-icon2,
+.atom-logo-icon,
 .cdp-div5 {
   left: 236px;
 }
-.cdt-logo-icon2 {
+.atom-logo-icon {
   top: 134px;
   left: 30px;
   width: 45px;
   height: 45px;
-  object-fit: cover;
 }
-.cdt-logo-icon3,
+.axlusdc-logo-icon,
 .cdp-div6,
 .cdp-div7 {
   position: absolute;
   top: 139px;
   left: 150px;
 }
-.cdt-logo-icon3,
+.axlusdc-logo-icon,
 .cdp-div7 {
   left: 236px;
 }
-.cdt-logo-icon3 {
+.axlusdc-logo-icon {
   top: 194px;
   left: 30px;
   width: 45px;
   height: 45px;
-  object-fit: cover;
 }
 .cdt-logo-icon4,
 .cdp-div8,
@@ -2976,7 +2973,7 @@ ul{
 .mint-button-icon4:hover {
   background-color: red;
 }
-.premium {
+.premium-label {
   position: absolute;
   top: 8px;
   left: 18px;
@@ -3001,13 +2998,34 @@ ul{
 }
 .click-assets-on {
   position: absolute;
-  top: 190px;
-  left: 42px;
+  top: 165px;
+  left: 10px;
   font-size: medium;
+  text-align: center;
+  display: inline-block;
+  width: 250px;
+  height: 60px;
+}
+.close-screen {
+  position: absolute;
+  top: 80px;
+  left: 42px;
+  font-size: large;
   text-align: center;
   display: inline-block;
   width: 189px;
   height: 60px;
+}
+.starting-screen {
+  position: absolute;
+  top: 80px;
+  left: 42px;
+  font-size: large;
+  text-align: center;
+  display: inline-block;
+  width: 189px;
+  height: 60px;
+  z-index: 0;
 }
 .positions {
   position: relative;
