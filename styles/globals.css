@@ -2591,11 +2591,18 @@ ul{
   left: 228px;
 }
 .atom-logo-icon,
-.cdp-div4,
+.osmo-qty,
 .cdp-div5 {
   position: absolute;
   top: 79px;
   left: 150px;
+}
+.osmo-qty,
+.atom-qty,
+.axlUSDC-qty {
+  cursor: pointer;
+  width: 45px;
+  height: 45px;
 }
 .atom-logo-icon,
 .cdp-div5 {
@@ -2608,7 +2615,7 @@ ul{
   height: 45px;
 }
 .axlusdc-logo-icon,
-.cdp-div6,
+.atom-qty,
 .cdp-div7 {
   position: absolute;
   top: 139px;
@@ -2625,7 +2632,7 @@ ul{
   height: 45px;
 }
 .cdt-logo-icon4,
-.cdp-div8,
+.axlUSDC-qty,
 .cdp-div9 {
   position: absolute;
   top: 199px;
@@ -2930,6 +2937,14 @@ ul{
   height: 263px;
   z-index: 0;
 }
+.deposit-withdraw-screen {
+  position: absolute;
+  top: 230px;
+  left: 908.5px;
+  width: 264px;
+  height: 263px;
+  z-index: 0;
+}
 .front-screen {
   z-index: 2;
 }
@@ -3018,7 +3033,7 @@ ul{
 }
 .starting-screen {
   position: absolute;
-  top: 80px;
+  top: 100px;
   left: 42px;
   font-size: large;
   text-align: center;
@@ -3036,4 +3051,25 @@ ul{
   font-size: x-large;
   color: white;
   font-family: 'Abel';
+}
+.cdp-deposit-label {
+  position: absolute;
+  top: 0px;
+  left: 40px;
+}
+.cdp-withdraw-label {
+  position: absolute;
+  top: 0px;
+  left: 132px;
+}
+.slash {
+  position: absolute;
+  top: 0px;
+  left: 116px;
+}
+.low-opacity {
+  opacity: 44%;
+}
+.bold {  
+  font-weight: bold;
 }
