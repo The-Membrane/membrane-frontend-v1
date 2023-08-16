@@ -3073,3 +3073,44 @@ ul{
 .bold {  
   font-weight: bold;
 }
+.save-asset-intent-button,
+.user-redemption-button {
+  position: absolute;
+  background-color: gray;
+  border: 2px solid #50C9BD;
+  border-radius: 1rem;
+  top: 130px;
+  left: 70px;
+  width: 126px;
+  height: 33px;
+  cursor: pointer;
+  text-align: center;
+  font-size: small;
+}
+.spacing-top {
+  padding-top: 5%;
+}
+.intents {
+  position: absolute;
+  top: 170px;
+  left: 40px;
+  width: 200px;
+  height: 33px;
+  cursor: pointer;
+  text-align: left;
+  font-size: small;
+}
+.user-redemptions {
+  position: absolute;
+  top: 80px;
+  left: 42px;
+  font-size: large;
+  text-align: center;
+  display: inline-block;
+  width: 189px;
+  height: 60px;
+  z-index: 0;
+}
+.user-redemption-button {
+  top: 250px;
+}
