@@ -5,7 +5,7 @@ import { useChain } from '@cosmos-kit/react';
 import { PositionsClient, PositionsQueryClient } from '../codegen/Positions.client';
 import { chainName } from '../config';
 
-export function usePositionsClient(contractAddress: string): {client: PositionsClient | null} {
+export function usePositionsClient(contractAddress: string): {client: PositionsClient | null, address: String | undefined } {
   const { getSigningCosmWasmClient, address, status } = useChain(chainName);
 
   const [cdpClient, setcdpClient] = useState<PositionsClient | null>(
@@ -24,7 +24,7 @@ export function usePositionsClient(contractAddress: string): {client: PositionsC
     }
   }, [address, contractAddress, getSigningCosmWasmClient, status]);
 
-  return { client: cdpClient ?? null };
+  return { client: cdpClient ?? null, address: address };
 }
 
 export function usePositionsQueryClient(contractAddress: string): {queryClient: PositionsQueryClient | null} {

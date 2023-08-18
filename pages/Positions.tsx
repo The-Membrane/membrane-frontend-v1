@@ -3,15 +3,22 @@ import { color } from "framer-motion";
 import { useState } from "react";
 
 import { contracts } from "../codegen";
+import { usePositionsClient, usePositionsQueryClient } from "../hooks/use-positions-client";
+import { testnetAddrs } from "../config";
+import { PositionResponse } from "../codegen/Positions.types";
 
+const denoms = {
+    osmo: "uosmo",
+    atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
+    axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+};
 
-const OSMO_denom = "uosmo";
-const ATOM_denom = "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2";
-const axlUSDC_denom = "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858";
-
-const Positions = () => {
+const Positions = async () => {
     
-const client = new contracts.Positions.PositionsClient();
+    //Create Client for the Positions contract
+    const {client, address} = usePositionsClient(testnetAddrs.positions);
+    const queryClient = usePositionsQueryClient(testnetAddrs.positions);
+
 
     //Start screen
     const [startingParagraph, setStarting] = useState("Click an Asset's Quantity to initiate deposits");
@@ -56,13 +63,13 @@ const client = new contracts.Positions.PositionsClient();
     const [axlusdcStyle, setaxlusdcStyle] = useState("low-opacity");
     //Positions Visual
     const [debt, setDebt] = useState(0);
-    const [liquidationValue, setliquidationValue] = useState(0);
-    
+    const [maxLTV, setmaxLTV] = useState(0);
+    const [cost, setCost] = useState(0);    
 
 
     const handleOSMOqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setworkingAsset(OSMO_denom);
+        setworkingAsset(denoms.osmo);
         setcurrentAsset("OSMO");
         handledepositClick();
         //Send to back
@@ -74,7 +81,7 @@ const client = new contracts.Positions.PositionsClient();
     };
     const handleATOMqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setworkingAsset(ATOM_denom);
+        setworkingAsset(denoms.atom);
         setcurrentAsset("ATOM");
         handledepositClick();
         //Send to back
@@ -86,7 +93,7 @@ const client = new contracts.Positions.PositionsClient();
     };
     const handleaxlUSDCqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setworkingAsset(axlUSDC_denom);
+        setworkingAsset(denoms.axlUSDC);
         setcurrentAsset("axlUSDC");
         handledepositClick();
         //Send to back
@@ -139,7 +146,7 @@ const client = new contracts.Positions.PositionsClient();
       };
     const handleOSMOClick = () => {
         //Search for OSMO_denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === OSMO_denom)
+        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.osmo)
         
         //If unadded, add to assets && sentence
         if (asset_check.length == 0) {
@@ -152,7 +159,7 @@ const client = new contracts.Positions.PositionsClient();
                     ],
                     assets: [
                         ...prevState.assets,
-                        OSMO_denom
+                        denoms.osmo
                     ]
                 }
             })
@@ -164,7 +171,7 @@ const client = new contracts.Positions.PositionsClient();
             })
         } else {
             //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != OSMO_denom)
+            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.osmo)
             let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "OSMO")
             //Update assets
             setRestricted(prevState => {
@@ -185,7 +192,7 @@ const client = new contracts.Positions.PositionsClient();
     };
     const handleATOMClick = () => {
         //Search for ATOM_denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === ATOM_denom)
+        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.atom)
         
         //If unadded, add to assets && sentence
         if (asset_check.length == 0) {
@@ -198,7 +205,7 @@ const client = new contracts.Positions.PositionsClient();
                     ],
                     assets: [
                         ...prevState.assets,
-                        ATOM_denom
+                        denoms.atom
                     ]
                 }
             })
@@ -210,7 +217,7 @@ const client = new contracts.Positions.PositionsClient();
             })
         } else {
             //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != ATOM_denom)
+            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.atom)
             let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "ATOM")
             //Update assets
             setRestricted(prevState => {
@@ -231,7 +238,7 @@ const client = new contracts.Positions.PositionsClient();
     };
     const handleaxlUSDCClick = () => {
         //Search for axlUSDC_denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === axlUSDC_denom)
+        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.axlUSDC)
         
         //If unadded, add to assets && sentence
         if (asset_check.length == 0) {
@@ -244,7 +251,7 @@ const client = new contracts.Positions.PositionsClient();
                     ],
                     assets: [
                         ...prevState.assets,
-                        axlUSDC_denom
+                        denoms.axlUSDC
                     ]
                 }
             })
@@ -256,7 +263,7 @@ const client = new contracts.Positions.PositionsClient();
             })
         } else {
             //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != axlUSDC_denom)
+            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.axlUSDC)
             let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "axlUSDC")
             //Update assets
             setRestricted(prevState => {
@@ -516,7 +523,7 @@ const client = new contracts.Positions.PositionsClient();
         handleQTYsubtraction("OSMO", osmoQTY);
         handleQTYsubtraction("ATOM", atomQTY);
         handleQTYsubtraction("axlUSDC", axlusdcQTY);
-        setDebt(0); setliquidationValue(0);
+        setDebt(0); setmaxLTV(0);
     };
     ///update debt object
     const updateDebt = (amount: number, add: boolean) => {
@@ -527,6 +534,71 @@ const client = new contracts.Positions.PositionsClient();
             setDebt(+debt - +amount)
         }
     };
+
+   
+
+    //getuserPosition info && set State
+    if (address) {
+        //getPosition
+        const userRes = await queryClient.queryClient?.getUserPositions(
+            {
+                limit: 1,
+                user: address as string,
+            }
+        );
+
+        //getBasket
+        const basketRes = await queryClient.queryClient?.getBasket();
+        
+        //query rates
+        const rateRes = await queryClient.queryClient?.getCollateralInterest();
+
+        //Set state
+        if (userRes && basketRes && rateRes){
+            //setDebt
+            setDebt(
+                parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price)
+            )
+            //setmaxLTV
+            setmaxLTV(parseFloat(userRes[0].avg_max_LTV))
+            //setAssetQTYs
+            userRes[0].collateral_assets.forEach(asset => {
+                var actual_asset = asset.asset;
+                //Cast to AssetInfo::NativeToken
+                if ("denom" in actual_asset.info) {
+                    if (actual_asset.info.denom === denoms.osmo) {
+                        setosmoQTY(parseInt(actual_asset.amount))
+                    } else if (actual_asset.info.denom === denoms.atom) {
+                        setatomQTY(parseInt(actual_asset.amount))
+                    } else if (actual_asset.info.denom === denoms.axlUSDC) {
+                        setaxlusdcQTY(parseInt(actual_asset.amount))
+                    }
+                }
+            })
+
+            ///setCost///
+            var total_rate = 0.0;
+            //get the positions collateral indices in Basket rates
+            userRes[0].collateral_assets.forEach((asset, index, _) => {
+                //find the asset's index                
+                var rate_index = basketRes.collateral_types.findIndex((info) => {
+                    if (("denom" in info.asset.info) && ("denom" in asset.asset.info)){
+                        return info.asset.info.denom === asset.asset.info.denom
+                    }
+                })
+
+                //use the index to get its interest rate
+                var asset_rate = rateRes.rates[rate_index];
+
+                //add pro-rata rate to sum 
+                total_rate += parseFloat(asset_rate) * parseFloat(userRes[0].cAsset_ratios[index]);
+            })
+            //setCost 
+            setCost(total_rate);
+        }
+    }
+
+
   return (
     <div className="positions">
       <div>
@@ -551,7 +623,7 @@ const client = new contracts.Positions.PositionsClient();
               <img className="cdt-logo-icon-cdp" alt="" src="images/cdt.svg" />
               <div className="cost-4">Cost: 4%</div>
               <div className="debt-225">Debt: ${debt}</div>
-              <div className="liq-value-375">Liq. Value: $375</div>
+              <div className="liq-value-375">Liq. Value: ${debt / maxLTV}</div>
               <div className="tvl-500">TVL: ${osmoValue + atomValue + axlUSDCValue}</div>
             </div>
             <div className="asset-info">
