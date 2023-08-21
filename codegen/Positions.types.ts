@@ -12,15 +12,14 @@ export interface PositionUserInfo {
   position_id?: Uint128 | null;
   position_owner?: string | null;
 }
-export type AssetInfo = {
-  token: {
-    address: Addr;
-  };
-} | {
-  native_token: {
-    denom: string;
-  };
-};
+export type Token = {
+  address: Addr;
+}
+export type NativeToken = {
+  denom: string;
+}
+export type AssetInfo = Token | NativeToken;
+
 export type Addr = string;
 export type Decimal = string;
 export interface BasketPositionsResponse {

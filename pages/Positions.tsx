@@ -1,19 +1,22 @@
 import { background } from "@chakra-ui/react";
 import { color } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { contracts } from "../codegen";
 import { usePositionsClient, usePositionsQueryClient } from "../hooks/use-positions-client";
 import { testnetAddrs } from "../config";
-import { PositionResponse } from "../codegen/Positions.types";
+import { Asset, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
+import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
+import { StargateClient } from "@cosmjs/stargate";
 
 const denoms = {
+    cdt: "",
     osmo: "uosmo",
     atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
     axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
 };
 
-const Positions = async () => {
+const Positions = () => {
     
     //Create Client for the Positions contract
     const {client, address} = usePositionsClient(testnetAddrs.positions);
@@ -27,6 +30,7 @@ const Positions = async () => {
     const [negClick, setnegClick] = useState("mint-button-icon4");
     const [redeemScreen, setredeemScreen] = useState("redemption-screen");
     const [redeemInfoScreen, setredeemInfoScreen] = useState("redemption-screen");
+    const [redeemButton, setredeemButton] = useState("user-redemption-button");
     const [premium, setPremium] = useState('');
     const [loanUsage, setloanUsage] = useState('');
     const [restrictedAssets, setRestricted] = useState({
@@ -34,12 +38,14 @@ const Positions = async () => {
         readable_assets: [] as string[],
         assets: [] as string[],
     });
+    const [redemptionRes, setredemptionRes] = useState<RedeemabilityResponse>();
     //Mint repay
     const [mintrepayScreen, setmintrepayScreen] = useState("mintrepay-screen");
     const [mintrepayLabel, setmintrepayLabel] = useState("");
     const [amount, setAmount] = useState(0);
     //Close position screen
     const [closeScreen, setcloseScreen] = useState("mintrepay-screen");
+    const [maxSpread, setSpread] = useState(0.01);
     //Deposit-Withdraw screen
     const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
     const [currentfunctionLabel, setcurrentfunctionLabel] = useState("deposit");
@@ -64,7 +70,9 @@ const Positions = async () => {
     //Positions Visual
     const [debt, setDebt] = useState(0);
     const [maxLTV, setmaxLTV] = useState(0);
-    const [cost, setCost] = useState(0);    
+    const [cost, setCost] = useState(0);
+    const [positionID, setpositionID] = useState("0");
+    const [user_address, setAddress] = useState("");
 
 
     const handleOSMOqtyClick = () => {
@@ -115,9 +123,29 @@ const Positions = async () => {
         //Set functionality        
         setcurrentfunctionLabel("redemptions");
     };
-    const handleredeeminfoClick = () => {
-        setredeemScreen("redemption-screen");
-        setredeemInfoScreen("redemption-screen front-screen");
+    const handleredeeminfoClick = async () => {
+
+        try {
+            console.log("trying")
+            await queryClient?.queryClient?.getBasketRedeemability({
+            limit: 1,
+            positionOwner: user_address,
+        }).then((res) => {
+            if (res?.premium_infos.length > 0) {
+                setredemptionRes(res)
+                setredeemScreen("redemption-screen");
+                setredeemInfoScreen("redemption-screen front-screen");
+                setredeemButton("user-redemption-button")
+            } else {
+                setredeemButton("user-redemption-button red-border")
+            }
+            console.log(res)
+        })
+        } catch (error) {
+            setredeemButton("user-redemption-button red-border")
+            console.log(error)
+        }   
+
     };
     const handlesetPremium = (event) => {
         event.preventDefault();
@@ -324,6 +352,10 @@ const Positions = async () => {
         setStarting("");
         setcurrentfunctionLabel("closePosition");
     };
+    const handlesetSpread = (event) => {
+        event.preventDefault();
+        setSpread(event.target.value);
+      };
     //Deposit-Withdraw screen    
     const handledepositClick = () => {
         setdepositStyle("cdp-deposit-label bold");
@@ -427,76 +459,148 @@ const Positions = async () => {
               }
           }
     };
-    const handleLogoClick = () => {
+    const handleLogoClick = async () => {
         //create a variable for asset_intents so we can mutate it within the function
         //duplicate intents dont work
         var asset_intent = assetIntent;
         //switch on functionality
         switch (currentfunctionLabel){
             case "deposit":{
-                if (asset_intent.length === 0){
-                    asset_intent = [[currentAsset, amount]];
-                }
-                asset_intent.map((intent) => (
-                    
-                    //Execute contract//
-                    //fetch working asset from current asset
-        
-                    //Update quantity && value labels
-                    handleQTYaddition(intent[0], intent[1])
-                    
-                    //Update Position specific data
-                ));
+                    if (asset_intent.length === 0){
+                        asset_intent = [[currentAsset, amount]];
+                    }
+                    ///parse assets into coin amounts
+                    var user_coins = getcoinsfromassetIntents();
 
-                //Clear intents
-                setassetIntent([])
+                try {
+                    ////Execute Deposit////
+                    var res = await client?.deposit({
+                        positionId: positionID,
+                        positionOwner: user_address,
+                    },
+                    "auto", undefined, user_coins);
+                    console.log(res?.events.toString())
+
+                    ///Update frontend data
+                    asset_intent.map((intent) => (                                      
+            
+                        //Update quantity && value labels
+                        handleQTYaddition(intent[0], intent[1])
+                    ));
+                                        
+                    //Update Position specific data
+                    fetch_update_positionData()
+
+                    //Clear intents
+                    setassetIntent([])
+                } catch (error){
+                    ////Error message
+                    const e = error as { message: string }
+
+                    ///will probably make this create a pop up (e.message)
+                }
                break;
             }
             case "withdraw":{
                 if (asset_intent.length === 0){
                     asset_intent = [[currentAsset, amount]];
-                }
-                asset_intent.map((intent) => (
-                    
-                    //Execute contract//
-                    //fetch working asset from current asset
-        
-                    //Update quantity && value labels
-                    handleQTYsubtraction(intent[0], intent[1])
-                    
-                    //Update Position specific data
-                ));
+                }                
+                ///parse assets into coin amounts
+                var assets = getassetsfromassetIntents();
+                
+                try {
+                    ////Execute Withdraw////
+                    var res = await client?.withdraw({
+                        assets: assets,
+                        positionId: positionID,
+                    },
+                    "auto");
+                    console.log(res?.events.toString())
 
-                //Clear intents
-                setassetIntent([])
+                    asset_intent.map((intent) => (        
+                        //Update quantity && value labels
+                        handleQTYsubtraction(intent[0], intent[1])
+                        
+                    ))
+
+                    //Update Position specific data
+                    fetch_update_positionData()
+
+                    //Clear intents
+                    setassetIntent([])
+                } catch (error){
+                    ////Error message
+                    const e = error as { message: string }
+
+                    ///will probably make this create a pop up (e.message)
+                }
                 break;
             }
-            case "mint": {
-                ///Execute the contract
+            case "mint": {                
+                try {
+                    ///Execute the Mint
+                    var res = await client?.increaseDebt({
+                        positionId: positionID,
+                        amount: amount.toString(),
+                    })                     
+                    console.log(res?.events.toString())
 
-                ///on success, add to debt quantity
-                updateDebt(amount, true)
+                    ///on success, add to debt quantity
+                    updateDebt(amount, true)
+                    
+                    //Update Position specific data
+                    fetch_update_positionData()
+                } catch (error){
+                    ////Error message
+                    const e = error as { message: string }
+
+                    ///will probably make this create a pop up (e.message)
+                }
                 
                 break;
             } 
             case "repay": {
-                ///Execute the contract
+                try {
+                    ///Execute the contract
+                    var res = await client?.repay({
+                        positionId: positionID,
+                    }, "auto", undefined, coins(amount, denoms.cdt))
+                    console.log(res?.events.toString())
+                    
+                    ///on success, subtract debt quantity
+                    updateDebt(amount, false)
+                    
+                    //Set to 0 if at or below
+                    if (+debt - +amount <= 0){
+                        setDebt(0);
+                    }
 
-                ///on success, subtract debt quantity
-                updateDebt(amount, false)
-                
-                //Set to 0 if at or below
-                if (+debt - +amount <= 0){
-                    setDebt(0);
+                    //Update Position specific data
+                    fetch_update_positionData()
+                } catch (error){
+                    ////Error message
+                    const e = error as { message: string }
+
+                    ///will probably make this create a pop up (e.message)
                 }
-
                 break;
             }
             case "closePosition":{
-                ///Execute the contract
+                try { 
+                    ///Execute the contract
+                    await client?.closePosition({
+                        maxSpread: maxSpread.toString(),
+                        positionId: positionID,
+                    })
+                    //set all position data to 0 on success
+                    zeroData()
 
-                //set all position data to 0 on success
-                zeroData()
+                } catch (error){
+                    ////Error message
+                    const e = error as { message: string }
+
+                    ///will probably make this create a pop up (e.message)
+                }
 
                 break;
             }
@@ -507,16 +611,61 @@ const Positions = async () => {
             }
         }
 
-        //Query for the position & update Liq. value using LTV
-
-        //Query for Collateral interest and calculate the interst rate using the Position's cAsset ratios
-
     };
     const handleassetIntent = () => {
         setassetIntent(prevState => [
             ...prevState,
             [currentAsset, amount]
         ]);
+    };
+    const getcoinsfromassetIntents = () => {
+        var workingIntents: Coin[] = [];
+        assetIntent.map((intent) => {
+            switch (intent[0]){
+                case "OSMO": {
+                    workingIntents.push(coin(intent[1], denoms.osmo))
+                }
+                case "ATOM": {
+                    workingIntents.push(coin(intent[1], denoms.atom))
+                }
+                case "axlUSDC": {
+                    workingIntents.push(coin(intent[1], denoms.axlUSDC))
+                }
+            }
+        })
+        return workingIntents
+    };
+    const getassetsfromassetIntents = () => {
+        var workingIntents: Asset[] = [];
+        assetIntent.map((intent) => {
+            switch (intent[0]){
+                case "OSMO": {
+                    workingIntents.push({
+                        amount: intent[1].toString(),
+                        info: {
+                            denom: denoms.osmo,
+                        },
+                    })
+                }
+                case "ATOM": {
+                    workingIntents.push({
+                        amount: intent[1].toString(),
+                        info: {
+                            denom: denoms.atom,
+                        },
+                    })
+                }
+                case "axlUSDC": {
+                    workingIntents.push({
+                        amount: intent[1].toString(),
+                        info: {
+                            denom: denoms.axlUSDC,
+                        },
+                    })
+                }
+            }
+        })
+        return workingIntents
     };
     /// zero asset QTY, TVL, debt, liq. value
     const zeroData = () => {
@@ -535,68 +684,90 @@ const Positions = async () => {
         }
     };
 
-   
-
-    //getuserPosition info && set State
-    if (address) {
-        //getPosition
-        const userRes = await queryClient.queryClient?.getUserPositions(
-            {
-                limit: 1,
-                user: address as string,
-            }
-        );
-
-        //getBasket
-        const basketRes = await queryClient.queryClient?.getBasket();
-        
-        //query rates
-        const rateRes = await queryClient.queryClient?.getCollateralInterest();
-
-        //Set state
-        if (userRes && basketRes && rateRes){
-            //setDebt
-            setDebt(
-                parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price)
-            )
-            //setmaxLTV
-            setmaxLTV(parseFloat(userRes[0].avg_max_LTV))
-            //setAssetQTYs
-            userRes[0].collateral_assets.forEach(asset => {
-                var actual_asset = asset.asset;
-                //Cast to AssetInfo::NativeToken
-                if ("denom" in actual_asset.info) {
-                    if (actual_asset.info.denom === denoms.osmo) {
-                        setosmoQTY(parseInt(actual_asset.amount))
-                    } else if (actual_asset.info.denom === denoms.atom) {
-                        setatomQTY(parseInt(actual_asset.amount))
-                    } else if (actual_asset.info.denom === denoms.axlUSDC) {
-                        setaxlusdcQTY(parseInt(actual_asset.amount))
-                    }
+   const fetch_update_positionData = async () => {
+        //Query for position data
+        try {
+            //getPosition
+            const userRes = await queryClient.queryClient?.getUserPositions(
+                {
+                    limit: 1,
+                    user: address as string,
                 }
-            })
+            );
 
-            ///setCost///
-            var total_rate = 0.0;
-            //get the positions collateral indices in Basket rates
-            userRes[0].collateral_assets.forEach((asset, index, _) => {
-                //find the asset's index                
-                var rate_index = basketRes.collateral_types.findIndex((info) => {
-                    if (("denom" in info.asset.info) && ("denom" in asset.asset.info)){
-                        return info.asset.info.denom === asset.asset.info.denom
+            //getBasket
+            const basketRes = await queryClient.queryClient?.getBasket();
+            
+            //query rates
+            const rateRes = await queryClient.queryClient?.getCollateralInterest();
+
+            //Set state
+            if (userRes && basketRes && rateRes){
+                //setPositionID
+                setpositionID(userRes[0].position_id)
+                //setCDT denom
+                if ("denom" in basketRes.credit_asset.info){
+                    denoms.cdt = basketRes.credit_asset.info.denom;
+                }
+                //setDebt
+                setDebt(
+                    parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price)
+                )
+                //setmaxLTV
+                setmaxLTV(parseFloat(userRes[0].avg_max_LTV))
+                //setAssetQTYs
+                userRes[0].collateral_assets.forEach(asset => {
+                    var actual_asset = asset.asset;
+                    //Cast to AssetInfo::NativeToken
+                    if ("denom" in actual_asset.info) {
+                        if (actual_asset.info.denom === denoms.osmo) {
+                            setosmoQTY(parseInt(actual_asset.amount))
+                        } else if (actual_asset.info.denom === denoms.atom) {
+                            setatomQTY(parseInt(actual_asset.amount))
+                        } else if (actual_asset.info.denom === denoms.axlUSDC) {
+                            setaxlusdcQTY(parseInt(actual_asset.amount))
+                        }
                     }
                 })
 
-                //use the index to get its interest rate
-                var asset_rate = rateRes.rates[rate_index];
+                ///setCost///
+                var total_rate = 0.0;
+                //get the positions collateral indices in Basket rates
+                userRes[0].collateral_assets.forEach((asset, index, _) => {
+                    //find the asset's index                
+                    var rate_index = basketRes.collateral_types.findIndex((info) => {
+                        if (("denom" in info.asset.info) && ("denom" in asset.asset.info)){
+                            return info.asset.info.denom === asset.asset.info.denom
+                        }
+                    })
 
-                //add pro-rata rate to sum 
-                total_rate += parseFloat(asset_rate) * parseFloat(userRes[0].cAsset_ratios[index]);
-            })
-            //setCost 
-            setCost(total_rate);
+                    //use the index to get its interest rate
+                    var asset_rate = rateRes.rates[rate_index];
+
+                    //add pro-rata rate to sum 
+                    total_rate += parseFloat(asset_rate) * parseFloat(userRes[0].cAsset_ratios[index]);
+                })
+                //setCost 
+                setCost(total_rate);
+            }
+            
+        } catch (error) {
+            console.log(error)
         }
-    }
+   };   
+
+    //getuserPosition info && set State
+    useEffect(() => {
+        if (address) {
+            //setAddress
+            setAddress(address as string)
+
+            //fetch & Update position data
+            fetch_update_positionData()
+        } else {        
+            console.log("address: ", address)
+        }
+    }, [address])
 
 
   return (
@@ -698,17 +869,26 @@ const Positions = async () => {
         <div className="click-assets-on">
           {restrictedAssets.sentence}
         </div>
-        <div className="user-redemption-button" onClick={handleredeeminfoClick}>
+        <div className={redeemButton} onClick={handleredeeminfoClick}>
             <div className="spacing-top">See Redemption Status</div>
         </div>
       </div>
       <div className={redeemInfoScreen}>
-            <div className="user-redemptions">User redemptions</div>
+            <div className="user-redemptions">
+                if 
+                <div>Premium: {redemptionRes?.premium_infos[0].premium }</div>
+                <div>Left to Redeem: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].remaining_loan_repayment}</div>
+                <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>
+            </div>
       </div>
-      <div className={closeScreen}>   
+      <div className={closeScreen}>
         <div className="close-screen">
             Close Position uses Apollo's Osmosis router to sell collateral to fulfill ALL REMAINING debt
         </div>
+        <form>
+            <label className="spread-label">Max spread (ex: 1% as 0.01)</label>     
+            <input className="spread" name="spread" value={maxSpread} type="number" onChange={handlesetSpread}/>
+        </form>
         <img className="cdt-logo-icon7" alt="" src="images/cdt.svg"  onClick={handleLogoClick}/>
       </div>
       <div className={depositwithdrawScreen}>

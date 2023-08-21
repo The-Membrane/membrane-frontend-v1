@@ -31,7 +31,6 @@ import {
   handleChangeColorModeValue,
   HackCw20,
 } from '../components';
-import { useHackCw20Balance } from '../hooks/use-hack-cw20-balance';
 
 const library = {
   title: 'OsmoJS',
@@ -51,7 +50,6 @@ import Positions from './Positions';
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { status } = useChain(chainName);
-  const { balance } = useHackCw20Balance(cw20ContractAddress);
 
  
 

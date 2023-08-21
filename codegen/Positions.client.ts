@@ -450,13 +450,13 @@ export class PositionsClient extends PositionsQueryClient implements PositionsIn
   }: {
     positionId?: Uint128;
     positionOwner?: string;
-  }, fee: number | StdFee | "auto" = "auto", memo?: string, _funds?: Coin[]): Promise<ExecuteResult> => {
+  }, fee: number | StdFee | "auto" = "auto", memo?: string, funds?: Coin[]): Promise<ExecuteResult> => {
     return await this.client.execute(this.sender, this.contractAddress, {
       deposit: {
         position_id: positionId,
         position_owner: positionOwner
       }
-    }, fee, memo, _funds);
+    }, fee, memo, funds);
   };
   increaseDebt = async ({
     ltv,

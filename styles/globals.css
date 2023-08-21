@@ -3023,7 +3023,7 @@ ul{
 }
 .close-screen {
   position: absolute;
-  top: 80px;
+  top: 40px;
   left: 42px;
   font-size: large;
   text-align: center;
@@ -3113,4 +3113,18 @@ ul{
 }
 .user-redemption-button {
   top: 250px;
+}
+.red-border {
+  border: 2px solid red;
+}
+.spread-label {
+  position: absolute;
+  top: 230px;
+  left: 90px;
+  font-size: small;
+}
+.spread {
+  position: absolute;
+  top: 190px;
+  left: 22px;
 }
