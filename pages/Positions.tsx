@@ -1,5 +1,5 @@
 import { background } from "@chakra-ui/react";
-import { color } from "framer-motion";
+import { color, px } from "framer-motion";
 import { useEffect, useState } from "react";
 
 import { contracts } from "../codegen";
@@ -69,7 +69,9 @@ const Positions = () => {
     const [axlusdcStyle, setaxlusdcStyle] = useState("low-opacity");
     //Positions Visual
     const [debt, setDebt] = useState(0);
-    const [maxLTV, setmaxLTV] = useState(0);
+    const [maxLTV, setmaxLTV] = useState(1);
+    const [brwLTV, setbrwLTV] = useState(0);
+    const [currentLTV, setcurrentLTV] = useState(0);
     const [cost, setCost] = useState(0);
     const [positionID, setpositionID] = useState("0");
     const [user_address, setAddress] = useState("");
@@ -709,12 +711,15 @@ const Positions = () => {
                 if ("denom" in basketRes.credit_asset.info){
                     denoms.cdt = basketRes.credit_asset.info.denom;
                 }
+                var new_debt = parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price);
                 //setDebt
-                setDebt(
-                    parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price)
-                )
-                //setmaxLTV
+                setDebt(new_debt)
+                //setLTVs
                 setmaxLTV(parseFloat(userRes[0].avg_max_LTV))
+                setbrwLTV(parseFloat(userRes[0].avg_borrow_LTV))
+                setcurrentLTV(
+                    (new_debt) / (osmoValue + atomValue + axlUSDCValue)
+                )
                 //setAssetQTYs
                 userRes[0].collateral_assets.forEach(asset => {
                     var actual_asset = asset.asset;
@@ -769,7 +774,6 @@ const Positions = () => {
         }
     }, [address])
 
-
   return (
     <div className="positions">
       <div>
@@ -779,20 +783,20 @@ const Positions = () => {
               <div className="infobox-icon" />
               <div className="infobox-icon1" />
               <div className="max-ltv">
-                <div className="cdp-div2">60%</div>
+                <div className="cdp-div2">{maxLTV}%</div>
                 <div className="max-ltv-child" />
               </div>
               <div className="max-borrow-ltv">
-                <div className="cdp-div3">45%</div>
+                <div className="cdp-div3">{brwLTV}%</div>
                 <div className="max-borrow-ltv-child" />
               </div>
               <div className="debt-visual-child" />
-              <div className="debt-visual-item" />
+              <div className="debt-visual-item" style={{top: 442 - (336 * (currentLTV / maxLTV)), height: (336 * (currentLTV / maxLTV))}}/>
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
               <img className="cdt-logo-icon-cdp" alt="" src="images/cdt.svg" />
-              <div className="cost-4">Cost: 4%</div>
+              <div className="cost-4">Cost: {cost}%</div>
               <div className="debt-225">Debt: ${debt}</div>
               <div className="liq-value-375">Liq. Value: ${debt / maxLTV}</div>
               <div className="tvl-500">TVL: ${osmoValue + atomValue + axlUSDCValue}</div>
@@ -875,7 +879,6 @@ const Positions = () => {
       </div>
       <div className={redeemInfoScreen}>
             <div className="user-redemptions">
-                if 
                 <div>Premium: {redemptionRes?.premium_infos[0].premium }</div>
                 <div>Left to Redeem: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].remaining_loan_repayment}</div>
                 <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>

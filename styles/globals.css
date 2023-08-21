@@ -2449,7 +2449,7 @@ ul{
 }
 .debt-visual-item {
   position: absolute;
-  top: 207px;
+  top: 207px; /*106 is top of the bar, 442 is the bottom*/ 
   left: calc(50% - 71.5px);
   background: linear-gradient(
     180deg,
@@ -2457,7 +2457,7 @@ ul{
     rgba(79, 202, 187, 0.8)
   );
   width: 143px;
-  height: 235px;
+  height: 235px; /*336 is full bar height*/
 }
 .debt-visual {
   position: absolute;
