@@ -95,11 +95,11 @@ export default function Home() {
       <div ref={liquidationSection}>
         <LiquidationPools/>
       </div>
-      <div ref={launchSection}>
-        <Lockdrop/>
-      </div>
       <div ref={stakingSection}>
         <Governance/>
+      </div>
+      <div ref={launchSection}>
+        <Lockdrop/>
       </div>
       
     </div>

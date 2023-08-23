@@ -1,6 +1,63 @@
+import { useEffect, useState } from "react";
 import ProgressBar from "./progress_bar";
 
 const Lockdrop = () => {
+  const [progress, setProgress] = useState(0);
+  const [lockedOSMO, setlockedOSMO] = useState(0);
+  const [MBRNreward, setMBRNreward] = useState(0);
+  //Lock
+  const [amount, setAmount] = useState(0);
+
+  const handlelockClick = () => {
+    var success = true;
+    //Lock OSMO
+    try {
+      //execute lock
+    } catch (error) {
+      success = false;
+      console.log(error);
+    } finally {
+      if (success) {
+        //Update OSMO total
+        setlockedOSMO(+lockedOSMO + +amount);
+
+        ///Query for these
+        //Update lock list
+
+        //Update MBRN reward total
+      }
+    }
+  }
+
+  const getdepositList = () => {
+    //Query for deposit list
+    //var res = ;
+    const depositList = []
+
+    var i = 0;
+    try {    
+      for (i; i < depositList.length; i++) {
+        //Update lock object
+        setdepositAmount1()
+      }
+
+    } catch (error) {
+
+    }
+
+  }
+
+  useEffect(() => {
+    //Query lockdrop progress
+    // var res: Lockdrop;
+    // var current_block = base_client?.getBlock();
+    // setProgress((current_time - res.start_time) / (res.withdrawal_end - res.start_time) );
+  }, []);
+
+  const handlesetAmount = (event) => {
+    event.preventDefault();
+    setAmount(event.target.value);
+  };
 
   return (    
     <div className="lockdrop">
@@ -10,7 +67,7 @@ const Lockdrop = () => {
             <div className="lockdrop-frame"/>
             <div className="infobox" />
             <div className="durationbar">
-              <ProgressBar bgcolor="#50C9BD" progress='30'  height={30} />
+              <ProgressBar bgcolor="#50C9BD" progress={progress}  height={30} />
               <div className='y-axis'/>
               <div className="deposit">DEPOSIT</div>
               <div className="withdraw">WITHDRAW</div>
@@ -18,8 +75,8 @@ const Lockdrop = () => {
             
             <div className="mbrn-reward-circle" />
             <div className="osmo-deposit-circle" />
-            <div className="osmo-deposit-amount">50 OSMO</div>
-            <div className="mbrn-reward-total">1557 MBRN</div>
+            <div className="osmo-deposit-amount">{lockedOSMO} OSMO</div>
+            <div className="mbrn-reward-total">{MBRNreward} MBRN</div>
             <div className="rates-box-title">Your&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rates </div>
             <img className="mbrn-rate-logo" alt="" src="/images/Logo.svg" />
             <div className="rates-box"/>
@@ -32,7 +89,7 @@ const Lockdrop = () => {
                 There is 10M MBRN up for grabs in this 7 day event. If you want a larger share for your deposit you must lock for longer.
               </p>
               <p/>
-              <p>Locks boost your “shares” and the full 10M is split & STAKED (3 day lock) in accordance to said shares.</p>
+              <p>Locks boost your “shares” and the full 10M is split & STAKED (4 day lock) in accordance to said shares.</p>
             </div>
             <div className="allocationmsg">
               <span className="allocationmsg-txt">
@@ -81,9 +138,12 @@ const Lockdrop = () => {
             <div className="div9">100</div>
             <div className="days7">14 days</div>
           </div>
-          <button className="lock-button">
-            LOCK
-          </button>
+          <form>
+            <input className="lock-amount" name="amount" value={amount} type="number" onChange={handlesetAmount}/>
+            <button className="lock-button" type="button" onClick={handlelockClick}>
+              <div className="lock-button-label">LOCK:</div>
+            </button>
+        </form>
         </div>
   );
 };

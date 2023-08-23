@@ -1201,7 +1201,6 @@ ul{
   left: 562px;
   width: 120px;
   height: 42px;
-  text-align: 'center';
   letter-spacing: 0.14em;
   border-radius: 10%;
   z-index: 30;
@@ -1236,7 +1235,22 @@ ul{
   width: 55px;
   height: 55px;
 }
-
+.lock-amount {
+  position: absolute;
+  top: 459px;
+  left: 633px;
+  width: 44px;
+  color: black;
+  background-color: #D9D9D9; 
+  z-index: 31;
+}
+.lock-button-label {
+  position: absolute;
+  top: 9px;
+  left: 22px;
+  color: black;
+  z-index: 31;
+}
 /*Governance Specific*/
 .pagetitle-gov {
   top: 29px;

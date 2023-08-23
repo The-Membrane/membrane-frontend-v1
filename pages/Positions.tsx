@@ -19,9 +19,9 @@ const denoms = {
 const Positions = () => {
     
     //Create Client for the Positions contract
-    const {client, address} = usePositionsClient(testnetAddrs.positions);
+    const {cdp_client, base_client, address} = usePositionsClient(testnetAddrs.positions);
     const queryClient = usePositionsQueryClient(testnetAddrs.positions);
-
+    
 
     //Start screen
     const [startingParagraph, setStarting] = useState("Click an Asset's Quantity to initiate deposits");
@@ -31,8 +31,9 @@ const Positions = () => {
     const [redeemScreen, setredeemScreen] = useState("redemption-screen");
     const [redeemInfoScreen, setredeemInfoScreen] = useState("redemption-screen");
     const [redeemButton, setredeemButton] = useState("user-redemption-button");
-    const [premium, setPremium] = useState('');
-    const [loanUsage, setloanUsage] = useState('');
+    const [redeemability, setRedeemability] = useState<boolean>();
+    const [premium, setPremium] = useState();
+    const [loanUsage, setloanUsage] = useState();
     const [restrictedAssets, setRestricted] = useState({
         sentence: "Click Assets on the left to restrict redemption from, currently restricted: ",
         readable_assets: [] as string[],
@@ -130,9 +131,10 @@ const Positions = () => {
         try {
             console.log("trying")
             await queryClient?.queryClient?.getBasketRedeemability({
-            limit: 1,
-            positionOwner: user_address,
-        }).then((res) => {
+                limit: 1,
+                positionOwner: user_address,
+            }).then((res) => {
+
             if (res?.premium_infos.length > 0) {
                 setredemptionRes(res)
                 setredeemScreen("redemption-screen");
@@ -161,8 +163,10 @@ const Positions = () => {
         if (posClick == "mint-button-icon3") {
             setposClick("mint-button-icon3-solid");
             setnegClick("mint-button-icon4");
+            setRedeemability(true);
         } else {
-            setposClick("mint-button-icon3");           
+            setposClick("mint-button-icon3");
+            setRedeemability(undefined);
         }
       };
 
@@ -170,8 +174,10 @@ const Positions = () => {
         if (negClick == "mint-button-icon4") {
             setnegClick("mint-button-icon4-solid");
             setposClick("mint-button-icon3");
+            setRedeemability(false);
         } else {
             setnegClick("mint-button-icon4");
+            setRedeemability(undefined);
         }
       };
     const handleOSMOClick = () => {
@@ -465,41 +471,41 @@ const Positions = () => {
         //create a variable for asset_intents so we can mutate it within the function
         //duplicate intents dont work
         var asset_intent = assetIntent;
+        var success_indicator = true;
         //switch on functionality
         switch (currentfunctionLabel){
             case "deposit":{
-                    if (asset_intent.length === 0){
-                        asset_intent = [[currentAsset, amount]];
-                    }
-                    ///parse assets into coin amounts
-                    var user_coins = getcoinsfromassetIntents();
+                if (asset_intent.length === 0){
+                    asset_intent = [[currentAsset, amount]];
+                }
+                ///parse assets into coin amounts
+                var user_coins = getcoinsfromassetIntents(asset_intent);
 
                 try {
+                    console.log(user_coins.length.toString() + "---" + asset_intent)
                     ////Execute Deposit////
-                    var res = await client?.deposit({
+                    await cdp_client?.deposit({
                         positionId: positionID,
                         positionOwner: user_address,
                     },
                     "auto", undefined, user_coins);
-                    console.log(res?.events.toString())
-
-                    ///Update frontend data
-                    asset_intent.map((intent) => (                                      
-            
-                        //Update quantity && value labels
-                        handleQTYaddition(intent[0], intent[1])
-                    ));
-                                        
-                    //Update Position specific data
-                    fetch_update_positionData()
+                    // console.log(res?.events.toString())
 
                     //Clear intents
                     setassetIntent([])
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
-
+                    console.log(e.message)
+                    //set indicator to false
+                    success_indicator = false;
                     ///will probably make this create a pop up (e.message)
+                } finally {
+                    //on success, update position data
+                    if (success_indicator){
+                        //Update Position specific data
+                        fetch_update_positionData()
+                    }
                 }
                break;
             }
@@ -508,55 +514,57 @@ const Positions = () => {
                     asset_intent = [[currentAsset, amount]];
                 }                
                 ///parse assets into coin amounts
-                var assets = getassetsfromassetIntents();
+                var assets = getassetsfromassetIntents(asset_intent);
                 
                 try {
                     ////Execute Withdraw////
-                    var res = await client?.withdraw({
+                    var res = await cdp_client?.withdraw({
                         assets: assets,
                         positionId: positionID,
                     },
                     "auto");
                     console.log(res?.events.toString())
 
-                    asset_intent.map((intent) => (        
-                        //Update quantity && value labels
-                        handleQTYsubtraction(intent[0], intent[1])
-                        
-                    ))
-
-                    //Update Position specific data
-                    fetch_update_positionData()
-
                     //Clear intents
                     setassetIntent([])
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
-
+                    console.log(e.message)
+                    //set indicator to false
+                    success_indicator = false;
                     ///will probably make this create a pop up (e.message)
+                } finally {
+                    //on success, update position data
+                    if (success_indicator){
+                        //Update Position specific data
+                        fetch_update_positionData()
+                    }
                 }
                 break;
             }
             case "mint": {                
                 try {
                     ///Execute the Mint
-                    var res = await client?.increaseDebt({
+                    var res = await cdp_client?.increaseDebt({
                         positionId: positionID,
                         amount: amount.toString(),
                     })                     
                     console.log(res?.events.toString())
-
-                    ///on success, add to debt quantity
-                    updateDebt(amount, true)
                     
-                    //Update Position specific data
-                    fetch_update_positionData()
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
-
+                    console.log(e.message)
+                    //set indicator to false
+                    success_indicator = false;
                     ///will probably make this create a pop up (e.message)
+                } finally {
+                    //on success, update position data
+                    if (success_indicator){
+                        //Update Position specific data
+                        fetch_update_positionData()
+                    }
                 }
                 
                 break;
@@ -564,52 +572,87 @@ const Positions = () => {
             case "repay": {
                 try {
                     ///Execute the contract
-                    var res = await client?.repay({
+                    var res = await cdp_client?.repay({
                         positionId: positionID,
                     }, "auto", undefined, coins(amount, denoms.cdt))
                     console.log(res?.events.toString())
                     
-                    ///on success, subtract debt quantity
-                    updateDebt(amount, false)
-                    
-                    //Set to 0 if at or below
-                    if (+debt - +amount <= 0){
-                        setDebt(0);
-                    }
-
-                    //Update Position specific data
-                    fetch_update_positionData()
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
-
+                    console.log(e.message)
+                    //set indicator to false
+                    success_indicator = false;
                     ///will probably make this create a pop up (e.message)
+                } finally {
+                    //on success, update position data
+                    if (success_indicator){
+                        //Update Position specific data
+                        fetch_update_positionData()
+                    }
                 }
                 break;
             }
             case "closePosition":{
                 try { 
                     ///Execute the contract
-                    await client?.closePosition({
+                    await cdp_client?.closePosition({
                         maxSpread: maxSpread.toString(),
                         positionId: positionID,
-                    })
-                    //set all position data to 0 on success
-                    zeroData()
+                    }, "auto", undefined)
 
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
-
+                    console.log(e.message)
+                    //set indicator to false
+                    success_indicator = false;
                     ///will probably make this create a pop up (e.message)
+                } finally {
+                    //on success, update position data
+                    if (success_indicator){
+                        //set all position data to 0 on success
+                        zeroData()
+                    }
                 }
 
                 break;
             }
             case "redemptions": {
-                ///Execute the contract
+                try {                    
+                    ///Execute the contract
+                    await cdp_client?.editRedeemability(
+                        {
+                            positionIds: [positionID],
+                            maxLoanRepayment: loanUsage ?? undefined,
+                            premium: premium ?? undefined,
+                            redeemable: redeemability ?? undefined,
+                            restrictedCollateralAssets: restrictedAssets.assets ?? undefined,
+                        }, "auto", undefined)
 
-                //update redemption values
+                } catch (error){
+                    ////Error message
+                    const e = error as { message: string }
+                    console.log(e.message)
+                    //set indicator to false
+                    success_indicator = false;
+                    ///will probably make this create a pop up (e.message)
+                } finally {
+
+                    if (success_indicator){
+                        //Query to update redemption values
+                        await queryClient?.queryClient?.getBasketRedeemability({
+                            limit: 1,
+                            positionOwner: user_address,
+                        }).then((res) => {
+                            if (res?.premium_infos.length > 0) {
+                                setredemptionRes(res)
+                            }
+                            console.log(res)
+                        })
+                    }                    
+
+                }
             }
         }
 
@@ -620,26 +663,29 @@ const Positions = () => {
             [currentAsset, amount]
         ]);
     };
-    const getcoinsfromassetIntents = () => {
+    const getcoinsfromassetIntents = (intents: [string, number][]) => {
         var workingIntents: Coin[] = [];
-        assetIntent.map((intent) => {
+        intents.map((intent) => {
             switch (intent[0]){
                 case "OSMO": {
                     workingIntents.push(coin(intent[1], denoms.osmo))
+                    break;
                 }
                 case "ATOM": {
                     workingIntents.push(coin(intent[1], denoms.atom))
+                    break;
                 }
                 case "axlUSDC": {
                     workingIntents.push(coin(intent[1], denoms.axlUSDC))
+                    break;
                 }
             }
         })
         return workingIntents
     };
-    const getassetsfromassetIntents = () => {
+    const getassetsfromassetIntents = (intents: [string, number][]) => {
         var workingIntents: Asset[] = [];
-        assetIntent.map((intent) => {
+        intents.map((intent) => {
             switch (intent[0]){
                 case "OSMO": {
                     workingIntents.push({
@@ -648,6 +694,7 @@ const Positions = () => {
                             denom: denoms.osmo,
                         },
                     })
+                    break;
                 }
                 case "ATOM": {
                     workingIntents.push({
@@ -656,6 +703,7 @@ const Positions = () => {
                             denom: denoms.atom,
                         },
                     })
+                    break;
                 }
                 case "axlUSDC": {
                     workingIntents.push({
@@ -664,6 +712,7 @@ const Positions = () => {
                             denom: denoms.axlUSDC,
                         },
                     })
+                    break;
                 }
             }
         })
@@ -675,15 +724,6 @@ const Positions = () => {
         handleQTYsubtraction("ATOM", atomQTY);
         handleQTYsubtraction("axlUSDC", axlusdcQTY);
         setDebt(0); setmaxLTV(0);
-    };
-    ///update debt object
-    const updateDebt = (amount: number, add: boolean) => {
-        if (add){
-            setDebt(+debt + +amount)
-
-        } else {
-            setDebt(+debt - +amount)
-        }
     };
 
    const fetch_update_positionData = async () => {
@@ -726,11 +766,14 @@ const Positions = () => {
                     //Cast to AssetInfo::NativeToken
                     if ("denom" in actual_asset.info) {
                         if (actual_asset.info.denom === denoms.osmo) {
-                            setosmoQTY(parseInt(actual_asset.amount))
+                            setosmoQTY(parseInt(actual_asset.amount))                            
+                            setosmoValue(parseInt(actual_asset.amount) * +osmoPrice);
                         } else if (actual_asset.info.denom === denoms.atom) {
                             setatomQTY(parseInt(actual_asset.amount))
+                            setatomValue(parseInt(actual_asset.amount) * +atomPrice);
                         } else if (actual_asset.info.denom === denoms.axlUSDC) {
                             setaxlusdcQTY(parseInt(actual_asset.amount))
+                            setaxlusdcValue(parseInt(actual_asset.amount) * +axlusdcPrice);
                         }
                     }
                 })
@@ -764,11 +807,14 @@ const Positions = () => {
     //getuserPosition info && set State
     useEffect(() => {
         if (address) {
+            console.log("address: ", address)
             //setAddress
             setAddress(address as string)
 
             //fetch & Update position data
             fetch_update_positionData()
+
+            //Query Prices
         } else {        
             console.log("address: ", address)
         }

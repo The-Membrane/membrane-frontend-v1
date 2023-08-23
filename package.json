@@ -21,6 +21,7 @@
     "@cosmos-kit/keplr": "2.0.3",
     "@cosmos-kit/leap": "2.0.3",
     "@cosmos-kit/react": "2.0.3",
+    "@cosmostation/cosmos-client": "^0.0.5",
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
     "bignumber.js": "9.1.0",
