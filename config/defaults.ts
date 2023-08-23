@@ -26,6 +26,7 @@ export const feeDenom = 'uosmo';
 export const cw20ContractAddress = 'osmo1y0ywcujptlmnx4fgstlqfp7nftc8w5qndsfds9wxwtm0ltjpzp4qdj09j8'
 
 export const testnetAddrs = {
+    launch: "osmo15q2jxqmjrtmmglqfeh85j36avgxvmsv2qe7sujgatwfrte630hcssnrzhu",
     discount_vault: "osmo1p0w9h8km3un4dsgpgc0cumch73swwgfc0mrw626elkajuzurn87sfmqgz3",
     governance: "osmo1hxw4qjtnnzaxexhncdsp8hw9yxyvdrr7kx0jgl592dc6qcn4zmpqddqgrg",
     liq_queue: "osmo18d7fx6cc3vfuvlam6pf7yppwcj0u34892j90pwfnhspj8gxxd6hs94gkxz",

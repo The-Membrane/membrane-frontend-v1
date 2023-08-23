@@ -45,13 +45,12 @@ import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
 import Governance from './Governance';
 import Positions from './Positions';
+import { useClients, useQueryClients } from '../hooks/use-clients';
 
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { status } = useChain(chainName);
-
- 
 
   //Set references
   const dashboardSection = useRef(null);
@@ -59,6 +58,10 @@ export default function Home() {
   const liquidationSection = useRef(null);
   const launchSection = useRef(null);
   const stakingSection = useRef(null);
+
+  //Get Clients
+  const { cdp_client, launch_client, address } = useClients();
+  const { cdpqueryClient, launchqueryClient, oraclequeryClient } = useQueryClients();
 
 
   return (
@@ -90,7 +93,7 @@ export default function Home() {
         <Dashboard/>        
       </div>
       <div ref={vaultSection}>
-        <Positions/>
+        <Positions client={cdp_client} qClient={cdpqueryClient} addr={address}/>
       </div>
       <div ref={liquidationSection}>
         <LiquidationPools/>

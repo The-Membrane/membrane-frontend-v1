@@ -5,23 +5,25 @@ import { useEffect, useState } from "react";
 import { contracts } from "../codegen";
 import { usePositionsClient, usePositionsQueryClient } from "../hooks/use-positions-client";
 import { testnetAddrs } from "../config";
-import { Asset, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
+import { Asset, AssetInfo, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
+import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.client";
+import { OracleQueryClient } from "../codegen/oracle/Oracle.client";
 
 const denoms = {
-    cdt: "",
+    cdt: "factory/osmo1v0us2salr8t28mmcjm87k2zrv3txecc8e2gz9kgvw77xguedus4qlnkl0t/ucdt",
     osmo: "uosmo",
     atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
     axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
 };
 
-const Positions = () => {
-    
-    //Create Client for the Positions contract
-    const {cdp_client, base_client, address} = usePositionsClient(testnetAddrs.positions);
-    const queryClient = usePositionsQueryClient(testnetAddrs.positions);
-    
+const Positions = ({client, qClient, oracleqClient, addr}) => {
+
+    const cdp_client = client as PositionsClient;
+    const queryClient = qClient as PositionsQueryClient;
+    const oraclequeryClient = oracleqClient as OracleQueryClient;
+    const address = addr as string | undefined;
 
     //Start screen
     const [startingParagraph, setStarting] = useState("Click an Asset's Quantity to initiate deposits");
@@ -70,7 +72,7 @@ const Positions = () => {
     const [axlusdcStyle, setaxlusdcStyle] = useState("low-opacity");
     //Positions Visual
     const [debt, setDebt] = useState(0);
-    const [maxLTV, setmaxLTV] = useState(1);
+    const [maxLTV, setmaxLTV] = useState(100);
     const [brwLTV, setbrwLTV] = useState(0);
     const [currentLTV, setcurrentLTV] = useState(0);
     const [cost, setCost] = useState(0);
@@ -130,7 +132,7 @@ const Positions = () => {
 
         try {
             console.log("trying")
-            await queryClient?.queryClient?.getBasketRedeemability({
+            await queryClient?.getBasketRedeemability({
                 limit: 1,
                 positionOwner: user_address,
             }).then((res) => {
@@ -548,7 +550,7 @@ const Positions = () => {
                     ///Execute the Mint
                     var res = await cdp_client?.increaseDebt({
                         positionId: positionID,
-                        amount: amount.toString(),
+                        amount: (amount * 1_000_000).toString(),
                     })                     
                     console.log(res?.events.toString())
                     
@@ -574,7 +576,7 @@ const Positions = () => {
                     ///Execute the contract
                     var res = await cdp_client?.repay({
                         positionId: positionID,
-                    }, "auto", undefined, coins(amount, denoms.cdt))
+                    }, "auto", undefined, coins(amount * 1_000_000, denoms.cdt))
                     console.log(res?.events.toString())
                     
                 } catch (error){
@@ -641,7 +643,7 @@ const Positions = () => {
 
                     if (success_indicator){
                         //Query to update redemption values
-                        await queryClient?.queryClient?.getBasketRedeemability({
+                        await queryClient?.getBasketRedeemability({
                             limit: 1,
                             positionOwner: user_address,
                         }).then((res) => {
@@ -663,20 +665,21 @@ const Positions = () => {
             [currentAsset, amount]
         ]);
     };
+    //we add decimals to the asset amounts
     const getcoinsfromassetIntents = (intents: [string, number][]) => {
         var workingIntents: Coin[] = [];
         intents.map((intent) => {
             switch (intent[0]){
                 case "OSMO": {
-                    workingIntents.push(coin(intent[1], denoms.osmo))
+                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.osmo))
                     break;
                 }
                 case "ATOM": {
-                    workingIntents.push(coin(intent[1], denoms.atom))
+                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.atom))
                     break;
                 }
                 case "axlUSDC": {
-                    workingIntents.push(coin(intent[1], denoms.axlUSDC))
+                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.axlUSDC))
                     break;
                 }
             }
@@ -689,7 +692,7 @@ const Positions = () => {
             switch (intent[0]){
                 case "OSMO": {
                     workingIntents.push({
-                        amount: intent[1].toString(),
+                        amount: (intent[1]* 1_000_000).toString(),
                         info: {
                             denom: denoms.osmo,
                         },
@@ -698,7 +701,7 @@ const Positions = () => {
                 }
                 case "ATOM": {
                     workingIntents.push({
-                        amount: intent[1].toString(),
+                        amount: (intent[1]* 1_000_000).toString(),
                         info: {
                             denom: denoms.atom,
                         },
@@ -707,7 +710,7 @@ const Positions = () => {
                 }
                 case "axlUSDC": {
                     workingIntents.push({
-                        amount: intent[1].toString(),
+                        amount: (intent[1]* 1_000_000).toString(),
                         info: {
                             denom: denoms.axlUSDC,
                         },
@@ -729,34 +732,33 @@ const Positions = () => {
    const fetch_update_positionData = async () => {
         //Query for position data
         try {
+            
+            //getBasket
+            const basketRes = await queryClient.getBasket();
+
             //getPosition
-            const userRes = await queryClient.queryClient?.getUserPositions(
+            const userRes = await queryClient.getUserPositions(
                 {
                     limit: 1,
                     user: address as string,
                 }
             );
-
-            //getBasket
-            const basketRes = await queryClient.queryClient?.getBasket();
             
             //query rates
-            const rateRes = await queryClient.queryClient?.getCollateralInterest();
+            const rateRes = await queryClient.getCollateralInterest();
+          
 
             //Set state
             if (userRes && basketRes && rateRes){
                 //setPositionID
                 setpositionID(userRes[0].position_id)
-                //setCDT denom
-                if ("denom" in basketRes.credit_asset.info){
-                    denoms.cdt = basketRes.credit_asset.info.denom;
-                }
+                //calc Debt
                 var new_debt = parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price);
                 //setDebt
                 setDebt(new_debt)
                 //setLTVs
-                setmaxLTV(parseFloat(userRes[0].avg_max_LTV))
-                setbrwLTV(parseFloat(userRes[0].avg_borrow_LTV))
+                setmaxLTV(parseFloat(userRes[0].avg_max_LTV) * +100)
+                setbrwLTV(parseFloat(userRes[0].avg_borrow_LTV) * +100)
                 setcurrentLTV(
                     (new_debt) / (osmoValue + atomValue + axlUSDCValue)
                 )
@@ -804,6 +806,38 @@ const Positions = () => {
         }
    };   
 
+    const queryPrices = async () => {        
+        try {
+            await oraclequeryClient.prices({
+                assetInfos: [
+                    {
+                        native_token: {
+                            denom: denoms.osmo
+                        }
+                    },
+                    {
+                        native_token: {
+                            denom: denoms.atom
+                        }
+                    },
+                    {
+                        native_token: {
+                            denom: denoms.axlUSDC
+                        }
+                    }
+                ],
+                oracleTimeLimit: 10,
+                twapTimeframe: 60,
+            }).then((res) => {
+                setosmoPrice(parseFloat(res[0].price))
+                setatomPrice(parseFloat(res[1].price))
+                setaxlusdcPrice(parseFloat(res[2].price))
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     //getuserPosition info && set State
     useEffect(() => {
         if (address) {
@@ -815,6 +849,7 @@ const Positions = () => {
             fetch_update_positionData()
 
             //Query Prices
+            queryPrices()
         } else {        
             console.log("address: ", address)
         }
