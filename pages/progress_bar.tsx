@@ -14,13 +14,15 @@ const ProgressBar = ({bgcolor,progress,height}) => {
 		height: '100%',
 		width: `${progress}%`,
 		backgroundColor: bgcolor,
-	borderRadius:40,
+		borderRadius:40,
 	}
 	
 	const progresstext = {
-		padding: 10,
+		padding: 5,
 		color: 'black',
-		fontWeight: 900
+		fontWeight: 900,
+		width: 33,
+		display: 'flex',
 	}
 		
 	return (

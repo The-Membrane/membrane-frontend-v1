@@ -9,20 +9,12 @@ import { Asset, AssetInfo, NativeToken, PositionResponse, RedeemabilityResponse 
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.client";
-import { OracleQueryClient } from "../codegen/oracle/Oracle.client";
+import { denoms } from ".";
 
-const denoms = {
-    cdt: "factory/osmo1v0us2salr8t28mmcjm87k2zrv3txecc8e2gz9kgvw77xguedus4qlnkl0t/ucdt",
-    osmo: "uosmo",
-    atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-    axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
-};
-
-const Positions = ({client, qClient, oracleqClient, addr}) => {
+const Positions = ({client, qClient, addr, prices}) => {
 
     const cdp_client = client as PositionsClient;
     const queryClient = qClient as PositionsQueryClient;
-    const oraclequeryClient = oracleqClient as OracleQueryClient;
     const address = addr as string | undefined;
 
     //Start screen
@@ -61,9 +53,6 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
     const [osmoQTY, setosmoQTY] = useState(0);
     const [atomQTY, setatomQTY] = useState(0);
     const [axlusdcQTY, setaxlusdcQTY] = useState(0);
-    const [osmoPrice, setosmoPrice] = useState(1);
-    const [atomPrice, setatomPrice] = useState(1);
-    const [axlusdcPrice, setaxlusdcPrice] = useState(1);
     const [osmoValue, setosmoValue] = useState(0);
     const [atomValue, setatomValue] = useState(0);
     const [axlUSDCValue, setaxlusdcValue] = useState(0);
@@ -386,7 +375,7 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
                 var new_qty = +osmoQTY + +amount;
                 setosmoQTY(new_qty);
                 setAmount(0);
-                setosmoValue(new_qty * +osmoPrice);
+                setosmoValue(new_qty * +prices.osmo);
 
                 //Remove opacity if above 0
                 if (new_qty > 0){
@@ -398,7 +387,7 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
                 var new_qty = +atomQTY + +amount;
                 setatomQTY(new_qty);
                 setAmount(0);
-                setatomValue(new_qty * +atomPrice);
+                setatomValue(new_qty * +prices.atom);
                 
                 //Remove opacity if above 0
                 if (new_qty > 0){
@@ -410,7 +399,7 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
                 var new_qty = +axlusdcQTY + +amount;
                 setaxlusdcQTY(new_qty);
                 setAmount(0);
-                setaxlusdcValue(new_qty * +axlusdcPrice);
+                setaxlusdcValue(new_qty * +prices.axlUSDC);
 
                 //Remove opacity if above 0
                 if (new_qty > 0){
@@ -434,14 +423,13 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
                     setosmoQTY(0);
                     new_qty = 0;
                 }
-                setosmoValue(new_qty * +osmoPrice);
+                setosmoValue(new_qty * +prices.osmo);
                 break;
               }
             case 'ATOM':{
                 var new_qty = +atomQTY - +amount;
                 setatomQTY(new_qty);
                 setAmount(0);
-                setatomValue(new_qty * +atomPrice);
 
                 //Set opacity if 0 & set to if below
                 if (new_qty <= 0){
@@ -449,14 +437,13 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
                     setatomQTY(0);
                     new_qty = 0;
                 }
-                setatomValue(new_qty * +atomPrice);
+                setatomValue(new_qty * +prices.atom);
                 break;
               }
             case 'axlUSDC':{
                 var new_qty = +axlusdcQTY - +amount;
                 setaxlusdcQTY(new_qty);
                 setAmount(0);
-                setaxlusdcValue(new_qty * +axlusdcPrice);
 
                 //Set opacity if 0 & set to if below
                 if (new_qty <= 0){
@@ -464,7 +451,7 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
                     setaxlusdcQTY(0);
                     new_qty = 0;
                 }
-                setaxlusdcValue(new_qty * +axlusdcPrice);
+                setaxlusdcValue(new_qty * +prices.axlUSDC);
                 break;
               }
           }
@@ -768,14 +755,14 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
                     //Cast to AssetInfo::NativeToken
                     if ("denom" in actual_asset.info) {
                         if (actual_asset.info.denom === denoms.osmo) {
-                            setosmoQTY(parseInt(actual_asset.amount))                            
-                            setosmoValue(parseInt(actual_asset.amount) * +osmoPrice);
+                            setosmoQTY(parseInt(actual_asset.amount) / 1_000_000)                            
+                            setosmoValue(parseInt(actual_asset.amount) * +prices.osmo);
                         } else if (actual_asset.info.denom === denoms.atom) {
-                            setatomQTY(parseInt(actual_asset.amount))
-                            setatomValue(parseInt(actual_asset.amount) * +atomPrice);
+                            setatomQTY(parseInt(actual_asset.amount) / 1_000_000)
+                            setatomValue(parseInt(actual_asset.amount) * +prices.atom);
                         } else if (actual_asset.info.denom === denoms.axlUSDC) {
-                            setaxlusdcQTY(parseInt(actual_asset.amount))
-                            setaxlusdcValue(parseInt(actual_asset.amount) * +axlusdcPrice);
+                            setaxlusdcQTY(parseInt(actual_asset.amount) / 1_000_000)
+                            setaxlusdcValue(parseInt(actual_asset.amount) * +prices.axlUSDC);
                         }
                     }
                 })
@@ -806,37 +793,7 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
         }
    };   
 
-    const queryPrices = async () => {        
-        try {
-            await oraclequeryClient.prices({
-                assetInfos: [
-                    {
-                        native_token: {
-                            denom: denoms.osmo
-                        }
-                    },
-                    {
-                        native_token: {
-                            denom: denoms.atom
-                        }
-                    },
-                    {
-                        native_token: {
-                            denom: denoms.axlUSDC
-                        }
-                    }
-                ],
-                oracleTimeLimit: 10,
-                twapTimeframe: 60,
-            }).then((res) => {
-                setosmoPrice(parseFloat(res[0].price))
-                setatomPrice(parseFloat(res[1].price))
-                setaxlusdcPrice(parseFloat(res[2].price))
-            })
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    
 
     //getuserPosition info && set State
     useEffect(() => {
@@ -847,9 +804,6 @@ const Positions = ({client, qClient, oracleqClient, addr}) => {
 
             //fetch & Update position data
             fetch_update_positionData()
-
-            //Query Prices
-            queryPrices()
         } else {        
             console.log("address: ", address)
         }

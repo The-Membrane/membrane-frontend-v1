@@ -39,7 +39,7 @@ const library = {
 };
 
 import Dashboard from './Dashboard';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import NavBar from './NavBar';
 import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
@@ -47,6 +47,12 @@ import Governance from './Governance';
 import Positions from './Positions';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 
+export const denoms = {
+  cdt: "factory/osmo1v0us2salr8t28mmcjm87k2zrv3txecc8e2gz9kgvw77xguedus4qlnkl0t/ucdt",
+  osmo: "uosmo",
+  atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
+  axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+};
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -63,6 +69,52 @@ export default function Home() {
   const { cdp_client, launch_client, address } = useClients();
   const { cdpqueryClient, launchqueryClient, oraclequeryClient } = useQueryClients();
 
+  //Set Prices
+  const [prices, setPrices] = useState({
+    osmo: 0,
+    atom: 0,
+    axlUSDC: 0,
+  });
+
+  //Query prices
+  const queryPrices = async () => {        
+    try {
+        await oraclequeryClient?.prices({
+            assetInfos: [
+                {
+                    native_token: {
+                        denom: denoms.osmo
+                    }
+                },
+                {
+                    native_token: {
+                        denom: denoms.atom
+                    }
+                },
+                {
+                    native_token: {
+                        denom: denoms.axlUSDC
+                    }
+                }
+            ],
+            oracleTimeLimit: 10,
+            twapTimeframe: 60,
+        }).then((res) => {
+            setPrices({
+                osmo: parseFloat(res[0].price),
+                atom: parseFloat(res[1].price), 
+                axlUSDC: parseFloat(res[2].price)
+            })
+        })
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    //Get prices
+    queryPrices()
+  }, [])
 
   return (
     <>    
@@ -93,7 +145,7 @@ export default function Home() {
         <Dashboard/>        
       </div>
       <div ref={vaultSection}>
-        <Positions client={cdp_client} qClient={cdpqueryClient} addr={address}/>
+        <Positions client={cdp_client} qClient={cdpqueryClient} addr={address} prices={prices}/>
       </div>
       <div ref={liquidationSection}>
         <LiquidationPools/>
@@ -102,7 +154,7 @@ export default function Home() {
         <Governance/>
       </div>
       <div ref={launchSection}>
-        <Lockdrop/>
+        <Lockdrop client={launch_client} qClient={launchqueryClient} addr={address} prices={prices}/>
       </div>
       
     </div>

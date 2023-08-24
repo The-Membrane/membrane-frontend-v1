@@ -845,7 +845,7 @@ ul{
 }
 .mbrn-reward-total {
   top: 152px;
-  left: 577px;
+  left: 587px;
   font-size: var(--font-size-3xl);
   z-index: 12;
 }
@@ -959,12 +959,24 @@ ul{
   font-weight: bolder;
   color: #ababab;
 }
-.edit {
+.launch-lock-amount,
+.lock-duration {
   position: absolute;
   margin: 0 !important;
-  top: 50px;
-  left: 210px;
+  top: 60px;
+  left: 20px;
   z-index: 11;
+}
+.lock-duration {
+  left: 95px;
+}
+.button-label {
+  top: 0;
+  left: 7px;
+  font-size: small;
+  font-weight: bolder;
+  letter-spacing: 0.14em;
+  position: absolute;
 }
 .button,
 .button1,
@@ -978,8 +990,9 @@ ul{
   left: 210px;
   border-radius: 50%;
   background-color:whitesmoke;
-  width: 22px;
+  width: 44px;
   height: 22px;
+  color: #454444;
 }
 .button {
   top: 92px;
@@ -1014,6 +1027,27 @@ ul{
 .button6:hover,
 .button7:hover {
   background-color: #383838;
+}
+.div2,
+.days,
+.div3,
+.days1,
+.div4,
+.days3,
+.div5,
+.days4,
+.div6,
+.days5,
+.div7,
+.days2,
+.div8,
+.days6,
+.div9,
+.days7 {
+  left: 20px;
+  width: 50px;
+  border-radius: 20px;
+  text-align: center;
 }
 .days,
 .days1,
