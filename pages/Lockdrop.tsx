@@ -29,7 +29,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     deposit: undefined,
     new_lock_up_duration: undefined,
     old_lock_up_duration: undefined,
-    label: "LOCK",
+    label: "EDIT",
   });
   const [deposit2, setdeposit2] = useState<LockDisplay>({
     deposit: undefined,
@@ -684,6 +684,119 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     });
   };
 
+  const handleamountClick1 = () => {
+    if (deposit1.label === "EDIT"){
+      setdeposit1(prevState => {
+        return { ...prevState, label: "WTHDRW" }
+      })
+    }
+  }
+  const handledaysClick1 = () => {
+    if (deposit1.label === "WTHDRW"){
+      setdeposit1(prevState => {
+        return { ...prevState, label: "EDIT" }
+      })
+    }
+  }
+  const handleamountClick2 = () => {
+    if (deposit2.label === "EDIT"){
+      setdeposit2(prevState => {
+        return { ...prevState, label: "WTHDRW" }
+      })
+    }
+  }
+  const handledaysClick2 = () => {
+    if (deposit2.label === "WTHDRW"){
+      setdeposit2(prevState => {
+        return { ...prevState, label: "EDIT" }
+      })
+    }
+  }
+  const handleamountClick3 = () => {
+    if (deposit3.label === "EDIT"){
+      setdeposit3(prevState => {
+        return { ...prevState, label: "WTHDRW" }
+      })
+    }
+  }
+  const handledaysClick3 = () => {
+    if (deposit3.label === "WTHDRW"){
+      setdeposit3(prevState => {
+        return { ...prevState, label: "EDIT" }
+      })
+    }
+  }
+  const handleamountClick4 = () => {
+    if (deposit4.label === "EDIT"){
+      setdeposit4(prevState => {
+        return { ...prevState, label: "WTHDRW" }
+      })
+    }
+  }
+  const handledaysClick4 = () => {
+    if (deposit4.label === "WTHDRW"){
+      setdeposit4(prevState => {
+        return { ...prevState, label: "EDIT" }
+      })
+    }
+  }
+  const handleamountClick5 = () => {
+    if (deposit5.label === "EDIT"){
+      setdeposit5(prevState => {
+        return { ...prevState, label: "WTHDRW" }
+      })
+    }
+  }
+  const handledaysClick5 = () => {
+    if (deposit5.label === "WTHDRW"){
+      setdeposit5(prevState => {
+        return { ...prevState, label: "EDIT" }
+      })
+    }
+  }
+  const handleamountClick6 = () => {
+    if (deposit6.label === "EDIT"){
+      setdeposit6(prevState => {
+        return { ...prevState, label: "WTHDRW" }
+      })
+    }
+  }
+  const handledaysClick6 = () => {
+    if (deposit6.label === "WTHDRW"){
+      setdeposit6(prevState => {
+        return { ...prevState, label: "EDIT" }
+      })
+    }
+  }
+  const handleamountClick7 = () => {
+    if (deposit7.label === "EDIT"){
+      setdeposit7(prevState => {
+        return { ...prevState, label: "WTHDRW" }
+      })
+    }
+  }
+  const handledaysClick7 = () => {
+    if (deposit7.label === "WTHDRW"){
+      setdeposit7(prevState => {
+        return { ...prevState, label: "EDIT" }
+      })
+    }
+  }
+  const handleamountClick8 = () => {
+    if (deposit8.label === "EDIT"){
+      setdeposit8(prevState => {
+        return { ...prevState, label: "WTHDRW" }
+      })
+    }
+  }
+  const handledaysClick8 = () => {
+    if (deposit8.label === "WTHDRW"){
+      setdeposit8(prevState => {
+        return { ...prevState, label: "EDIT" }
+      })
+    }
+  }
+
   return (    
     <div className="lockdrop">
     <h1 className="pagetitle-lockdrop">Lockdrop</h1>
@@ -747,64 +860,64 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
             <div className="btn button7" />
             <form>
               {/*Deposit 1*/}
-              <input className="div2" name="deposit1amount" value={deposit1.deposit} type="number" disabled={deposit1.label === "EDIT"} onChange={handlesetdeposit1amount}/>
-              <input className="days" name="deposit1days" value={deposit1.old_lock_up_duration} type="number" onChange={handlesetdeposit1days}/>
+              <input className="div2" name="deposit1amount" value={deposit1.deposit} type="number" onChange={handlesetdeposit1amount} onClick={handleamountClick1}/>
+              <input className="days" name="deposit1days" value={deposit1.old_lock_up_duration} type="number" onChange={handlesetdeposit1days} onClick={handledaysClick1}/>
               <button className="btn button" type="button" onClick={handledeposit1Click}>
                 <div className="button-label">
                 {deposit1.label}
                 </div>
               </button>
               {/*Deposit 2*/}
-              <input className="div3" name="deposit2amount" value={deposit2.deposit} type="number" disabled={deposit2.label === "EDIT"} onChange={handlesetdeposit2amount}/>
-              <input className="days1" name="deposit2days" value={deposit2.old_lock_up_duration} type="number" onChange={handlesetdeposit2days}/>
+              <input className="div3" name="deposit2amount" value={deposit2.deposit} type="number" disabled={deposit2.label === "EDIT"} onChange={handlesetdeposit2amount} onClick={handleamountClick2}/>
+              <input className="days1" name="deposit2days" value={deposit2.old_lock_up_duration} type="number" disabled={deposit2.label === "WTHDRW"} onChange={handlesetdeposit2days} onClick={handledaysClick2}/>
               <button className="btn button1" type="button" onClick={handledeposit2Click}>
                 <div className="button-label">
                 {deposit2.label}
                 </div>
               </button>
               {/*Deposit 3*/}
-              <input className="div4" name="deposit3amount" value={deposit3.deposit} type="number" disabled={deposit3.label === "EDIT"} onChange={handlesetdeposit3amount}/>
-              <input className="days2" name="deposit3days" value={deposit3.old_lock_up_duration} type="number" onChange={handlesetdeposit3days}/>
+              <input className="div4" name="deposit3amount" value={deposit3.deposit} type="number" disabled={deposit3.label === "EDIT"} onChange={handlesetdeposit3amount} onClick={handleamountClick3}/>
+              <input className="days2" name="deposit3days" value={deposit3.old_lock_up_duration} type="number" disabled={deposit3.label === "WTHDRW"} onChange={handlesetdeposit3days} onClick={handledaysClick3}/>
               <button className="btn button2" type="button" onClick={handledeposit3Click}>
                 <div className="button-label">
                 {deposit3.label}
                 </div>
               </button>
               {/*Deposit 4*/}
-              <input className="div5" name="deposit4amount" value={deposit4.deposit} type="number" disabled={deposit4.label === "EDIT"} onChange={handlesetdeposit4amount}/>
-              <input className="days3" name="deposit4days" value={deposit4.old_lock_up_duration} type="number" onChange={handlesetdeposit4days}/>
+              <input className="div5" name="deposit4amount" value={deposit4.deposit} type="number" disabled={deposit4.label === "EDIT"} onChange={handlesetdeposit4amount} onClick={handleamountClick4}/>
+              <input className="days3" name="deposit4days" value={deposit4.old_lock_up_duration} type="number" disabled={deposit4.label === "WTHDRW"} onChange={handlesetdeposit4days} onClick={handledaysClick4}/>
               <button className="btn button3" type="button" onClick={handledeposit4Click}>
                 <div className="button-label">
                 {deposit4.label}
                 </div>
               </button>
               {/*Deposit 5*/}
-              <input className="div6" name="deposit5amount" value={deposit5.deposit} type="number" disabled={deposit5.label === "EDIT"} onChange={handlesetdeposit5amount}/>
-              <input className="days4" name="deposit5days" value={deposit5.old_lock_up_duration} type="number" onChange={handlesetdeposit5days}/>
+              <input className="div6" name="deposit5amount" value={deposit5.deposit} type="number" disabled={deposit5.label === "EDIT"} onChange={handlesetdeposit5amount} onClick={handleamountClick5}/>
+              <input className="days4" name="deposit5days" value={deposit5.old_lock_up_duration} type="number" disabled={deposit5.label === "WTHDRW"} onChange={handlesetdeposit5days} onClick={handledaysClick5}/>
               <button className="btn button4" type="button" onClick={handledeposit5Click}>
                 <div className="button-label">
                 {deposit5.label}
                 </div>
               </button>
               {/*Deposit 6*/}
-              <input className="div7" name="deposit6amount" value={deposit6.deposit} type="number" disabled={deposit6.label === "EDIT"} onChange={handlesetdeposit6amount}/>
-              <input className="days5" name="deposit6days" value={deposit6.old_lock_up_duration} type="number" onChange={handlesetdeposit6days}/>
+              <input className="div7" name="deposit6amount" value={deposit6.deposit} type="number" disabled={deposit6.label === "EDIT"} onChange={handlesetdeposit6amount} onClick={handleamountClick6}/>
+              <input className="days5" name="deposit6days" value={deposit6.old_lock_up_duration} type="number" disabled={deposit6.label === "WTHDRW"} onChange={handlesetdeposit6days} onClick={handledaysClick6}/>
               <button className="btn button5" type="button" onClick={handledeposit6Click}>
                 <div className="button-label">
                 {deposit6.label}
                 </div>
               </button>
               {/*Deposit 7*/}
-              <input className="div8" name="deposit7amount" value={deposit7.deposit} type="number" disabled={deposit7.label === "EDIT"} onChange={handlesetdeposit7amount}/>
-              <input className="days6" name="deposit7days" value={deposit7.old_lock_up_duration} type="number" onChange={handlesetdeposit7days}/>
+              <input className="div8" name="deposit7amount" value={deposit7.deposit} type="number" disabled={deposit7.label === "EDIT"} onChange={handlesetdeposit7amount} onClick={handleamountClick7}/>
+              <input className="days6" name="deposit7days" value={deposit7.old_lock_up_duration} type="number" disabled={deposit7.label === "WTHDRW"} onChange={handlesetdeposit7days} onClick={handledaysClick7}/>
               <button className="btn button6" type="button" onClick={handledeposit7Click}>
                 <div className="button-label">
                 {deposit7.label}
                 </div>
               </button>
               {/*Deposit 8*/}
-              <input className="div9" name="deposit8amount" value={deposit8.deposit} type="number" disabled={deposit8.label === "EDIT"} onChange={handlesetdeposit8amount}/>
-              <input className="days7" name="deposit8days" value={deposit8.old_lock_up_duration} type="number" onChange={handlesetdeposit8days}/>
+              <input className="div9" name="deposit8amount" value={deposit8.deposit} type="number" disabled={deposit8.label === "EDIT"} onChange={handlesetdeposit8amount} onClick={handleamountClick8}/>
+              <input className="days7" name="deposit8days" value={deposit8.old_lock_up_duration} type="number" disabled={deposit8.label === "WTHDRW"} onChange={handlesetdeposit8days} onClick={handledaysClick8}/>
               <button className="btn button7" type="button" onClick={handledeposit8Click}>
                 <div className="button-label">
                 {deposit8.label}
