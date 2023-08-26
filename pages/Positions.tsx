@@ -121,6 +121,10 @@ const Positions = ({client, qClient, addr, prices}) => {
         setStarting("");
         //Set functionality        
         setcurrentfunctionLabel("redemptions");
+        //Format popup to inform user that redemptions are unaudited
+        setPopupTrigger(true);
+        setPopupMsg("Redemptions are unaudited & fully opt-in, so please use at your own risk.");
+        setPopupStatus("Warning");
     };
     const handleredeeminfoClick = async () => {
 

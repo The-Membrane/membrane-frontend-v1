@@ -21,6 +21,10 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     label: string;
   }
 
+  //Popup
+  const [popupTrigger, setPopupTrigger] = useState(false);
+  const [popupMsg, setPopupMsg] = useState("");
+  const [popupStatus, setPopupStatus] = useState("");
   //Visuals
   const [progress, setProgress] = useState(0);
   const [lockedOSMO, setlockedOSMO] = useState(0);
@@ -76,28 +80,28 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
   //Lock
   const [amount, setAmount] = useState(0);
 
-  const handlelockClick = () => {
-    var success = true;
-    //Lock OSMO
-    try {
-      //execute lock
-      // await launch_client?.lock()
-    } catch (error) {
-      success = false;
-      console.log(error);
-    } finally {
-      if (success) {
-        //Update OSMO total
-        setlockedOSMO(+lockedOSMO + +amount)
+  // const handlelockClick = () => {
+  //   var success = true;
+  //   //Lock OSMO
+  //   try {
+  //     //execute lock
+  //     // await launch_client?.lock()
+  //   } catch (error) {
+  //     success = false;
+  //     console.log(error);
+  //   } finally {
+  //     if (success) {
+  //       //Update OSMO total
+  //       setlockedOSMO(+lockedOSMO + +amount)
 
-        //Query to update lock list
-        get_updateddepositList() 
+  //       //Query to update lock list
+  //       get_updateddepositList() 
 
-        //Query to Update MBRN reward total
-        set_MBRNreward()
-      }
-    }
-  }
+  //       //Query to Update MBRN reward total
+  //       set_MBRNreward()
+  //     }
+  //   }
+  // }
 
   //Query & update list objects
   const get_updateddepositList = async () => {
@@ -350,12 +354,15 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     if (deposit1.label ==="LOCK"){
       //Lock deposit using new_lock_up_duration
       try {
-        console.log("trying")
         await launch_client?.lock({
           lockUpDuration: deposit1.new_lock_up_duration ?? 0
         }, "auto", undefined, [coin((deposit1.deposit ?? 0) * 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lock of "+ deposit1.deposit+" OSMO for "+deposit1.new_lock_up_duration+ " days is successful")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
 
       } catch (error) {
@@ -370,6 +377,10 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           uosmoAmount: ((deposit1.deposit ?? 0) * 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lockup changed from "+ deposit1.old_lock_up_duration+" to "+deposit1.new_lock_up_duration+ " days")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
@@ -383,6 +394,10 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit1.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Withdrew "+ deposit1.deposit+" OSMO")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
@@ -399,10 +414,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit2.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lock of "+ deposit2.deposit+" OSMO for "+deposit2.new_lock_up_duration+ " days is successful")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
 
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit2.label ==="EDIT"){
       //Edit deposit
@@ -413,9 +437,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           uosmoAmount: ((deposit2.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lockup changed from "+ deposit2.old_lock_up_duration+" to "+deposit2.new_lock_up_duration+ " days")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit2.label ==="WTHDRW"){
       //Withdraw deposit
@@ -425,9 +458,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit2.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Withdrew "+ deposit2.deposit+" OSMO")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     }
   };
@@ -441,10 +483,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit3.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lock of "+ deposit3.deposit+" OSMO for "+deposit3.new_lock_up_duration+ " days is successful")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
 
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit3.label ==="EDIT"){
       //Edit deposit
@@ -455,9 +506,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           uosmoAmount: ((deposit3.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lockup changed from "+ deposit3.old_lock_up_duration+" to "+deposit3.new_lock_up_duration+ " days")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit3.label ==="WTHDRW"){
       //Withdraw deposit
@@ -467,9 +527,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit3.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Withdrew "+ deposit3.deposit+" OSMO")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     }
   };
@@ -483,10 +552,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit4.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lock of "+ deposit4.deposit+" OSMO for "+deposit4.new_lock_up_duration+ " days is successful")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
 
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit4.label ==="EDIT"){
       //Edit deposit
@@ -497,9 +575,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           uosmoAmount: ((deposit4.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lockup changed from "+ deposit4.old_lock_up_duration+" to "+deposit4.new_lock_up_duration+ " days")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit4.label ==="WTHDRW"){
       //Withdraw deposit
@@ -509,9 +596,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit4.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Withdrew "+ deposit4.deposit+" OSMO")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     }
   };
@@ -525,10 +621,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit5.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lock of "+ deposit5.deposit+" OSMO for "+deposit5.new_lock_up_duration+ " days is successful")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
 
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit5.label ==="EDIT"){
       //Edit deposit
@@ -539,9 +644,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           uosmoAmount: ((deposit5.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lockup changed from "+ deposit5.old_lock_up_duration+" to "+deposit5.new_lock_up_duration+ " days")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit5.label ==="WTHDRW"){
       //Withdraw deposit
@@ -551,9 +665,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit5.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Withdrew "+ deposit5.deposit+" OSMO")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     }
   };
@@ -567,10 +690,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit6.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lock of "+ deposit6.deposit+" OSMO for "+deposit6.new_lock_up_duration+ " days is successful")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
 
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit6.label ==="EDIT"){
       //Edit deposit
@@ -581,9 +713,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           uosmoAmount: ((deposit6.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lockup changed from "+ deposit6.old_lock_up_duration+" to "+deposit6.new_lock_up_duration+ " days")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit6.label ==="WTHDRW"){
       //Withdraw deposit
@@ -593,9 +734,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit6.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Withdrew "+ deposit6.deposit+" OSMO")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     }
   };
@@ -609,10 +759,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit7.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lock of "+ deposit7.deposit+" OSMO for "+deposit7.new_lock_up_duration+ " days is successful")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
 
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit7.label ==="EDIT"){
       //Edit deposit
@@ -623,9 +782,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           uosmoAmount: ((deposit7.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lockup changed from "+ deposit7.old_lock_up_duration+" to "+deposit7.new_lock_up_duration+ " days")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit7.label ==="WTHDRW"){
       //Withdraw deposit
@@ -635,9 +803,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit7.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Withdrew "+ deposit7.deposit+" OSMO")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     }
   };
@@ -651,10 +828,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit8.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lock of "+ deposit8.deposit+" OSMO for "+deposit8.new_lock_up_duration+ " days is successful")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
 
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit8.label ==="EDIT"){
       //Edit deposit
@@ -665,9 +851,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           uosmoAmount: ((deposit8.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Lockup changed from "+ deposit8.old_lock_up_duration+" to "+deposit8.new_lock_up_duration+ " days")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit8.label ==="WTHDRW"){
       //Withdraw deposit
@@ -677,9 +872,18 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit8.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Format popup message
+          setPopupMsg("Withdrew "+ deposit8.deposit+" OSMO")
+          setPopupStatus("Success")
+          setPopupTrigger(true)
         })
       } catch (error) {
         console.log(error);
+        const e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     }
   };
@@ -1022,6 +1226,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
               </button>
             </form>
           </div>
+          <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
           {/* <form>
             <input className="lock-amount" name="amount" value={amount} type="number" onChange={handlesetAmount}/>
             <button className="lock-button" type="button" onClick={handlelockClick}>
