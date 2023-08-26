@@ -29,7 +29,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     deposit: undefined,
     new_lock_up_duration: undefined,
     old_lock_up_duration: undefined,
-    label: "EDIT",
+    label: "LOCK",
   });
   const [deposit2, setdeposit2] = useState<LockDisplay>({
     deposit: undefined,
@@ -118,7 +118,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
                 setdeposit1(prevState => {
                     return {
                       ...prevState,
-                      deposit: parseInt(depositList[i].deposit),
+                      deposit: parseInt(depositList[i].deposit) / 1_000_000,
                       old_lock_up_duration:  depositList[i].lock_up_duration,
                       label: "EDIT"
                     }
@@ -130,7 +130,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
                 setdeposit2(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit),
+                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
                     old_lock_up_duration:  depositList[i].lock_up_duration,
                     label: "EDIT"
                   }
@@ -142,7 +142,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
                 setdeposit3(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit),
+                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
                     old_lock_up_duration:  depositList[i].lock_up_duration,
                     label: "EDIT"
                   }
@@ -154,7 +154,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
                 setdeposit4(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit),
+                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
                     old_lock_up_duration:  depositList[i].lock_up_duration,
                     label: "EDIT"
                   }
@@ -166,7 +166,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
                 setdeposit5(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit),
+                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
                     old_lock_up_duration:  depositList[i].lock_up_duration,
                     label: "EDIT"
                   }
@@ -178,7 +178,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
                 setdeposit6(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit),
+                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
                     old_lock_up_duration:  depositList[i].lock_up_duration,
                     label: "EDIT"
                   }
@@ -190,7 +190,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
                 setdeposit7(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit),
+                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
                     old_lock_up_duration:  depositList[i].lock_up_duration,
                     label: "EDIT"
                   }
@@ -202,7 +202,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
                 setdeposit8(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit),
+                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
                     old_lock_up_duration:  depositList[i].lock_up_duration,
                     label: "EDIT"
                   }
@@ -353,7 +353,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         console.log("trying")
         await launch_client?.lock({
           lockUpDuration: deposit1.new_lock_up_duration ?? 0
-        }, "auto", undefined, [coin(deposit1.deposit ?? 0, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit1.deposit ?? 0) * 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
         })
@@ -367,7 +367,20 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         await launch_client?.changeLockDuration({
           newLockUpDuration: deposit1.new_lock_up_duration ?? 0,
           oldLockUpDuration: deposit1.old_lock_up_duration ?? 0,
-          uosmoAmount: (deposit1.deposit ?? 0).toString(),
+          uosmoAmount: ((deposit1.deposit ?? 0) * 1_000_000).toString(),
+        }).then((res) => {
+          get_updateddepositList()
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (deposit1.label ==="WTHDRW"){
+      //Withdraw deposit
+      try {
+        console.log("withdrawing")
+        await launch_client?.withdraw({
+          lockUpDuration: deposit1.old_lock_up_duration ?? 0,
+          withdrawalAmount: ((deposit1.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
         })
@@ -383,7 +396,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
       try {
         await launch_client?.lock({
           lockUpDuration: deposit2.new_lock_up_duration ?? 0
-        }, "auto", undefined, [coin(deposit2.deposit ?? 0, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit2.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
         })
@@ -397,7 +410,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         await launch_client?.changeLockDuration({
           newLockUpDuration: deposit2.new_lock_up_duration ?? 0,
           oldLockUpDuration: deposit2.old_lock_up_duration ?? 0,
-          uosmoAmount: (deposit2.deposit ?? 0).toString(),
+          uosmoAmount: ((deposit2.deposit ?? 0)* 1_000_000).toString(),
+        }).then((res) => {
+          get_updateddepositList()
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (deposit2.label ==="WTHDRW"){
+      //Withdraw deposit
+      try {
+        await launch_client?.withdraw({
+          lockUpDuration: deposit2.old_lock_up_duration ?? 0,
+          withdrawalAmount: ((deposit2.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
         })
@@ -413,7 +438,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
       try {
         await launch_client?.lock({
           lockUpDuration: deposit3.new_lock_up_duration ?? 0
-        }, "auto", undefined, [coin(deposit3.deposit ?? 0, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit3.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
         })
@@ -427,7 +452,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         await launch_client?.changeLockDuration({
           newLockUpDuration: deposit3.new_lock_up_duration ?? 0,
           oldLockUpDuration: deposit3.old_lock_up_duration ?? 0,
-          uosmoAmount: (deposit3.deposit ?? 0).toString(),
+          uosmoAmount: ((deposit3.deposit ?? 0)* 1_000_000).toString(),
+        }).then((res) => {
+          get_updateddepositList()
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (deposit3.label ==="WTHDRW"){
+      //Withdraw deposit
+      try {
+        await launch_client?.withdraw({
+          lockUpDuration: deposit3.old_lock_up_duration ?? 0,
+          withdrawalAmount: ((deposit3.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
         })
@@ -443,7 +480,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
       try {
         await launch_client?.lock({
           lockUpDuration: deposit4.new_lock_up_duration ?? 0
-        }, "auto", undefined, [coin(deposit4.deposit ?? 0, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit4.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
         })
@@ -457,7 +494,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         await launch_client?.changeLockDuration({
           newLockUpDuration: deposit4.new_lock_up_duration ?? 0,
           oldLockUpDuration: deposit4.old_lock_up_duration ?? 0,
-          uosmoAmount: (deposit4.deposit ?? 0).toString(),
+          uosmoAmount: ((deposit4.deposit ?? 0)* 1_000_000).toString(),
+        }).then((res) => {
+          get_updateddepositList()
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (deposit4.label ==="WTHDRW"){
+      //Withdraw deposit
+      try {
+        await launch_client?.withdraw({
+          lockUpDuration: deposit4.old_lock_up_duration ?? 0,
+          withdrawalAmount: ((deposit4.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
         })
@@ -473,7 +522,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
       try {
         await launch_client?.lock({
           lockUpDuration: deposit5.new_lock_up_duration ?? 0
-        }, "auto", undefined, [coin(deposit5.deposit ?? 0, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit5.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
         })
@@ -487,7 +536,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         await launch_client?.changeLockDuration({
           newLockUpDuration: deposit5.new_lock_up_duration ?? 0,
           oldLockUpDuration: deposit5.old_lock_up_duration ?? 0,
-          uosmoAmount: (deposit5.deposit ?? 0).toString(),
+          uosmoAmount: ((deposit5.deposit ?? 0)* 1_000_000).toString(),
+        }).then((res) => {
+          get_updateddepositList()
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (deposit5.label ==="WTHDRW"){
+      //Withdraw deposit
+      try {
+        await launch_client?.withdraw({
+          lockUpDuration: deposit5.old_lock_up_duration ?? 0,
+          withdrawalAmount: ((deposit5.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
         })
@@ -503,7 +564,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
       try {
         await launch_client?.lock({
           lockUpDuration: deposit6.new_lock_up_duration ?? 0
-        }, "auto", undefined, [coin(deposit6.deposit ?? 0, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit6.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
         })
@@ -517,7 +578,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         await launch_client?.changeLockDuration({
           newLockUpDuration: deposit6.new_lock_up_duration ?? 0,
           oldLockUpDuration: deposit6.old_lock_up_duration ?? 0,
-          uosmoAmount: (deposit6.deposit ?? 0).toString(),
+          uosmoAmount: ((deposit6.deposit ?? 0)* 1_000_000).toString(),
+        }).then((res) => {
+          get_updateddepositList()
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (deposit6.label ==="WTHDRW"){
+      //Withdraw deposit
+      try {
+        await launch_client?.withdraw({
+          lockUpDuration: deposit6.old_lock_up_duration ?? 0,
+          withdrawalAmount: ((deposit6.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
         })
@@ -533,7 +606,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
       try {
         await launch_client?.lock({
           lockUpDuration: deposit7.new_lock_up_duration ?? 0
-        }, "auto", undefined, [coin(deposit7.deposit ?? 0, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit7.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
         })
@@ -547,7 +620,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         await launch_client?.changeLockDuration({
           newLockUpDuration: deposit7.new_lock_up_duration ?? 0,
           oldLockUpDuration: deposit7.old_lock_up_duration ?? 0,
-          uosmoAmount: (deposit7.deposit ?? 0).toString(),
+          uosmoAmount: ((deposit7.deposit ?? 0)* 1_000_000).toString(),
+        }).then((res) => {
+          get_updateddepositList()
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (deposit7.label ==="WTHDRW"){
+      //Withdraw deposit
+      try {
+        await launch_client?.withdraw({
+          lockUpDuration: deposit7.old_lock_up_duration ?? 0,
+          withdrawalAmount: ((deposit7.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
         })
@@ -563,7 +648,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
       try {
         await launch_client?.lock({
           lockUpDuration: deposit8.new_lock_up_duration ?? 0
-        }, "auto", undefined, [coin(deposit8.deposit ?? 0, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit8.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
         })
@@ -577,7 +662,19 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         await launch_client?.changeLockDuration({
           newLockUpDuration: deposit8.new_lock_up_duration ?? 0,
           oldLockUpDuration: deposit8.old_lock_up_duration ?? 0,
-          uosmoAmount: (deposit8.deposit ?? 0).toString(),
+          uosmoAmount: ((deposit8.deposit ?? 0)* 1_000_000).toString(),
+        }).then((res) => {
+          get_updateddepositList()
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (deposit8.label ==="WTHDRW"){
+      //Withdraw deposit
+      try {
+        await launch_client?.withdraw({
+          lockUpDuration: deposit8.old_lock_up_duration ?? 0,
+          withdrawalAmount: ((deposit8.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
         })

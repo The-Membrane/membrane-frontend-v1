@@ -10,6 +10,7 @@ import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.client";
 import { denoms } from ".";
+import Popup from "./Popup";
 
 const Positions = ({client, qClient, addr, prices}) => {
 
@@ -17,6 +18,10 @@ const Positions = ({client, qClient, addr, prices}) => {
     const queryClient = qClient as PositionsQueryClient;
     const address = addr as string | undefined;
 
+    //Popup
+    const [popupTrigger, setPopupTrigger] = useState(true);
+    const [popupMsg, setPopupMsg] = useState("Hitting the close button is acknowledgement & agreement to the below: ");
+    const [popupStatus, setPopupStatus] = useState("User Agreement");
     //Start screen
     const [startingParagraph, setStarting] = useState("Click an Asset's Quantity to initiate deposits");
     //Redemptions
@@ -368,47 +373,47 @@ const Positions = ({client, qClient, addr, prices}) => {
     };
 
     //Logo functionality activation
-    const handleQTYaddition = (current_asset: string, amount: number) => {
+    // const handleQTYaddition = (current_asset: string, amount: number) => {
 
-        switch(current_asset) {
-            case 'OSMO': {
-                var new_qty = +osmoQTY + +amount;
-                setosmoQTY(new_qty);
-                setAmount(0);
-                setosmoValue(new_qty * +prices.osmo);
+    //     switch(current_asset) {
+    //         case 'OSMO': {
+    //             var new_qty = +osmoQTY + +amount;
+    //             setosmoQTY(new_qty);
+    //             setAmount(0);
+    //             setosmoValue(new_qty * +prices.osmo);
 
-                //Remove opacity if above 0
-                if (new_qty > 0){
-                    setosmoStyle("");
-                }
-                break;
-              }
-            case 'ATOM':{
-                var new_qty = +atomQTY + +amount;
-                setatomQTY(new_qty);
-                setAmount(0);
-                setatomValue(new_qty * +prices.atom);
+    //             //Remove opacity if above 0
+    //             if (new_qty > 0){
+    //                 setosmoStyle("");
+    //             }
+    //             break;
+    //           }
+    //         case 'ATOM':{
+    //             var new_qty = +atomQTY + +amount;
+    //             setatomQTY(new_qty);
+    //             setAmount(0);
+    //             setatomValue(new_qty * +prices.atom);
                 
-                //Remove opacity if above 0
-                if (new_qty > 0){
-                    setatomStyle("");
-                }
-                break;
-              }
-            case 'axlUSDC':{
-                var new_qty = +axlusdcQTY + +amount;
-                setaxlusdcQTY(new_qty);
-                setAmount(0);
-                setaxlusdcValue(new_qty * +prices.axlUSDC);
+    //             //Remove opacity if above 0
+    //             if (new_qty > 0){
+    //                 setatomStyle("");
+    //             }
+    //             break;
+    //           }
+    //         case 'axlUSDC':{
+    //             var new_qty = +axlusdcQTY + +amount;
+    //             setaxlusdcQTY(new_qty);
+    //             setAmount(0);
+    //             setaxlusdcValue(new_qty * +prices.axlUSDC);
 
-                //Remove opacity if above 0
-                if (new_qty > 0){
-                    setaxlusdcStyle("");
-                }
-                break;
-              }
-          }
-    };
+    //             //Remove opacity if above 0
+    //             if (new_qty > 0){
+    //                 setaxlusdcStyle("");
+    //             }
+    //             break;
+    //           }
+    //       }
+    // };
     const handleQTYsubtraction = (current_asset: string, amount: number) => {
 
         switch(current_asset) {
@@ -460,7 +465,6 @@ const Positions = ({client, qClient, addr, prices}) => {
         //create a variable for asset_intents so we can mutate it within the function
         //duplicate intents dont work
         var asset_intent = assetIntent;
-        var success_indicator = true;
         //switch on functionality
         switch (currentfunctionLabel){
             case "deposit":{
@@ -471,14 +475,20 @@ const Positions = ({client, qClient, addr, prices}) => {
                 var user_coins = getcoinsfromassetIntents(asset_intent);
 
                 try {
-                    console.log(user_coins.length.toString() + "---" + asset_intent)
                     ////Execute Deposit////
                     await cdp_client?.deposit({
                         positionId: positionID,
                         positionOwner: user_address,
                     },
-                    "auto", undefined, user_coins);
-                    // console.log(res?.events.toString())
+                    "auto", undefined, user_coins).then((res) => {
+                        console.log(res?.events.toString())
+                        //update data
+                        fetch_update_positionData()
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg("Deposit of" +{asset_intent}+ "successful");
+                        setPopupStatus("Success");
+                    });
 
                     //Clear intents
                     setassetIntent([])
@@ -486,15 +496,10 @@ const Positions = ({client, qClient, addr, prices}) => {
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    //set indicator to false
-                    success_indicator = false;
-                    ///will probably make this create a pop up (e.message)
-                } finally {
-                    //on success, update position data
-                    if (success_indicator){
-                        //Update Position specific data
-                        fetch_update_positionData()
-                    }
+                    ///Format Pop up
+                    setPopupTrigger(true);
+                    setPopupMsg(e.message);
+                    setPopupStatus("Deposit Error");
                 }
                break;
             }
@@ -507,12 +512,19 @@ const Positions = ({client, qClient, addr, prices}) => {
                 
                 try {
                     ////Execute Withdraw////
-                    var res = await cdp_client?.withdraw({
+                    await cdp_client?.withdraw({
                         assets: assets,
                         positionId: positionID,
                     },
-                    "auto");
-                    console.log(res?.events.toString())
+                    "auto").then((res) => {       
+                        console.log(res?.events.toString())                 
+                        //Update Position specific data
+                        fetch_update_positionData()
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg("Withdrawal of" +{asset_intent}+ "successful");
+                        setPopupStatus("Success");
+                    })
 
                     //Clear intents
                     setassetIntent([])
@@ -520,40 +532,37 @@ const Positions = ({client, qClient, addr, prices}) => {
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    //set indicator to false
-                    success_indicator = false;
-                    ///will probably make this create a pop up (e.message)
-                } finally {
-                    //on success, update position data
-                    if (success_indicator){
-                        //Update Position specific data
-                        fetch_update_positionData()
-                    }
-                }
+                    ///Format Pop up
+                    setPopupTrigger(true);
+                    setPopupMsg(e.message);
+                    setPopupStatus("Withdrawal Error");
+                } 
                 break;
             }
             case "mint": {                
                 try {
                     ///Execute the Mint
-                    var res = await cdp_client?.increaseDebt({
+                    await cdp_client?.increaseDebt({
                         positionId: positionID,
                         amount: (amount * 1_000_000).toString(),
-                    })                     
-                    console.log(res?.events.toString())
+                    }).then((res) => {           
+                        console.log(res?.events.toString())             
+                        //Update Position specific data
+                        fetch_update_positionData()
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg("Mint of" +{amount}+ "CDT successful");
+                        setPopupStatus("Success");
+                    })
                     
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    //set indicator to false
-                    success_indicator = false;
-                    ///will probably make this create a pop up (e.message)
-                } finally {
-                    //on success, update position data
-                    if (success_indicator){
-                        //Update Position specific data
-                        fetch_update_positionData()
-                    }
+                    ///Format Pop up
+                    setPopupTrigger(true);
+                    setPopupMsg(e.message);
+                    setPopupStatus("Mint Error");
                 }
                 
                 break;
@@ -564,21 +573,24 @@ const Positions = ({client, qClient, addr, prices}) => {
                     var res = await cdp_client?.repay({
                         positionId: positionID,
                     }, "auto", undefined, coins(amount * 1_000_000, denoms.cdt))
-                    console.log(res?.events.toString())
+                    .then((res) => {           
+                        console.log(res?.events.toString())             
+                        //Update Position specific data
+                        fetch_update_positionData()
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg("Repayment of" +{amount}+ "CDT successful");
+                        setPopupStatus("Success");
+                    })
                     
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    //set indicator to false
-                    success_indicator = false;
-                    ///will probably make this create a pop up (e.message)
-                } finally {
-                    //on success, update position data
-                    if (success_indicator){
-                        //Update Position specific data
-                        fetch_update_positionData()
-                    }
+                    ///Format Pop up
+                    setPopupTrigger(true);
+                    setPopupMsg(e.message);
+                    setPopupStatus("Repay Error");
                 }
                 break;
             }
@@ -588,21 +600,24 @@ const Positions = ({client, qClient, addr, prices}) => {
                     await cdp_client?.closePosition({
                         maxSpread: maxSpread.toString(),
                         positionId: positionID,
-                    }, "auto", undefined)
+                    }, "auto", undefined).then((res) => {
+                        console.log(res?.events.toString())
+                        //set all position data to 0 on success
+                        zeroData()
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg("Position closed successfully");
+                        setPopupStatus("Success");
+                    })
 
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    //set indicator to false
-                    success_indicator = false;
-                    ///will probably make this create a pop up (e.message)
-                } finally {
-                    //on success, update position data
-                    if (success_indicator){
-                        //set all position data to 0 on success
-                        zeroData()
-                    }
+                    ///Format Pop up
+                    setPopupTrigger(true);
+                    setPopupMsg(e.message);
+                    setPopupStatus("ClosePosition Error");
                 }
 
                 break;
@@ -611,36 +626,28 @@ const Positions = ({client, qClient, addr, prices}) => {
                 try {                    
                     ///Execute the contract
                     await cdp_client?.editRedeemability(
-                        {
-                            positionIds: [positionID],
-                            maxLoanRepayment: loanUsage ?? undefined,
-                            premium: premium ?? undefined,
-                            redeemable: redeemability ?? undefined,
-                            restrictedCollateralAssets: restrictedAssets.assets ?? undefined,
-                        }, "auto", undefined)
+                    {
+                        positionIds: [positionID],
+                        maxLoanRepayment: loanUsage ?? undefined,
+                        premium: premium ?? undefined,
+                        redeemable: redeemability ?? undefined,
+                        restrictedCollateralAssets: restrictedAssets.assets ?? undefined,
+                    }, "auto", undefined).then(async (res) => {
+                        console.log(res?.events.toString())
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg("Redemption settings updated successfully");
+                        setPopupStatus("Success");
+                    })
 
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    //set indicator to false
-                    success_indicator = false;
-                    ///will probably make this create a pop up (e.message)
-                } finally {
-
-                    if (success_indicator){
-                        //Query to update redemption values
-                        await queryClient?.getBasketRedeemability({
-                            limit: 1,
-                            positionOwner: user_address,
-                        }).then((res) => {
-                            if (res?.premium_infos.length > 0) {
-                                setredemptionRes(res)
-                            }
-                            console.log(res)
-                        })
-                    }                    
-
+                    ///Format Pop up
+                    setPopupTrigger(true);
+                    setPopupMsg(e.message);
+                    setPopupStatus("Edit Redemption Info Error");
                 }
             }
         }
@@ -721,10 +728,10 @@ const Positions = ({client, qClient, addr, prices}) => {
         try {
             
             //getBasket
-            const basketRes = await queryClient.getBasket();
+            const basketRes = await queryClient?.getBasket();
 
             //getPosition
-            const userRes = await queryClient.getUserPositions(
+            const userRes = await queryClient?.getUserPositions(
                 {
                     limit: 1,
                     user: address as string,
@@ -732,7 +739,7 @@ const Positions = ({client, qClient, addr, prices}) => {
             );
             
             //query rates
-            const rateRes = await queryClient.getCollateralInterest();
+            const rateRes = await queryClient?.getCollateralInterest();
           
 
             //Set state
@@ -947,6 +954,7 @@ const Positions = ({client, qClient, addr, prices}) => {
             ))}
         </div>
       </div>
+      <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>
   );
 };

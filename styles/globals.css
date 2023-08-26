@@ -859,7 +859,7 @@ ul{
 .mbrn-rate-logo {
   position: absolute;
   top: 525px;
-  left: 351px;
+  left: 347px;
   width: 22px;
   height: 22px;
   z-index: 13;
@@ -3175,4 +3175,43 @@ ul{
   position: absolute;
   top: 190px;
   left: 22px;
+}
+
+/* Popup specifc */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popup-inner {
+  position: absolute;
+  padding: 32px;
+  height: 200px;
+  width: 100%;
+  max-width: 600px;
+  background-color: #383838;
+  color: white;
+  border: 3px solid #4fcabb;
+  z-index: 9999; 
+}
+.popup-button {
+  position: absolute;
+  height: 20px;
+  width: 50px;
+  top: 16px;
+  right: 16px;
+  z-index: 9999; 
+  color: white;
+  background-color: #7990FE;
+  font-size: small;
+}
+.popup-msg {  
+  font-size: small;
 }
