@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { contracts } from "../codegen";
 import { usePositionsClient, usePositionsQueryClient } from "../hooks/use-positions-client";
 import { testnetAddrs } from "../config";
-import { Asset, AssetInfo, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
+import { Asset, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.client";
@@ -20,7 +20,7 @@ const Positions = ({client, qClient, addr, prices}) => {
 
     //Popup
     const [popupTrigger, setPopupTrigger] = useState(true);
-    const [popupMsg, setPopupMsg] = useState("Hitting the close button is acknowledgement & agreement to the below: ");
+    const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
     const [popupStatus, setPopupStatus] = useState("User Agreement");
     //Start screen
     const [startingParagraph, setStarting] = useState("Click an Asset's Quantity to initiate deposits");
@@ -42,7 +42,7 @@ const Positions = ({client, qClient, addr, prices}) => {
     //Mint repay
     const [mintrepayScreen, setmintrepayScreen] = useState("mintrepay-screen");
     const [mintrepayLabel, setmintrepayLabel] = useState("");
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState<number | undefined>();
     //Close position screen
     const [closeScreen, setcloseScreen] = useState("mintrepay-screen");
     const [maxSpread, setSpread] = useState(0.01);
@@ -50,7 +50,6 @@ const Positions = ({client, qClient, addr, prices}) => {
     const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
     const [currentfunctionLabel, setcurrentfunctionLabel] = useState("deposit");
     const [currentAsset, setcurrentAsset] = useState("");
-    const [workingAsset, setworkingAsset] = useState("");
     const [depositStyle, setdepositStyle] = useState("cdp-deposit-label bold");
     const [withdrawStyle, setwithdrawStyle] = useState("cdp-withdraw-label low-opacity");
     const [assetIntent, setassetIntent] = useState<[string , number][]>([]);
@@ -76,9 +75,7 @@ const Positions = ({client, qClient, addr, prices}) => {
 
     const handleOSMOqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setworkingAsset(denoms.osmo);
         setcurrentAsset("OSMO");
-        handledepositClick();
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -88,9 +85,7 @@ const Positions = ({client, qClient, addr, prices}) => {
     };
     const handleATOMqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setworkingAsset(denoms.atom);
         setcurrentAsset("ATOM");
-        handledepositClick();
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -100,9 +95,7 @@ const Positions = ({client, qClient, addr, prices}) => {
     };
     const handleaxlUSDCqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setworkingAsset(denoms.axlUSDC);
         setcurrentAsset("axlUSDC");
-        handledepositClick();
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -369,11 +362,15 @@ const Positions = ({client, qClient, addr, prices}) => {
         setdepositStyle("cdp-deposit-label bold");
         setwithdrawStyle("cdp-withdraw-label low-opacity");
         setcurrentfunctionLabel("deposit");
+        //clear intents
+        setassetIntent([]);
     };
     const handlewithdrawClick = () => {
         setwithdrawStyle("cdp-withdraw-label bold");
         setdepositStyle("cdp-deposit-label low-opacity");
         setcurrentfunctionLabel("withdraw");
+        //clear intents
+        setassetIntent([]);
     };
 
     //Logo functionality activation
@@ -473,7 +470,7 @@ const Positions = ({client, qClient, addr, prices}) => {
         switch (currentfunctionLabel){
             case "deposit":{
                 if (asset_intent.length === 0){
-                    asset_intent = [[currentAsset, amount]];
+                    asset_intent = [[currentAsset, amount ?? 0]];
                 }
                 ///parse assets into coin amounts
                 var user_coins = getcoinsfromassetIntents(asset_intent);
@@ -509,7 +506,7 @@ const Positions = ({client, qClient, addr, prices}) => {
             }
             case "withdraw":{
                 if (asset_intent.length === 0){
-                    asset_intent = [[currentAsset, amount]];
+                    asset_intent = [[currentAsset, amount ?? 0]];
                 }                
                 ///parse assets into coin amounts
                 var assets = getassetsfromassetIntents(asset_intent);
@@ -548,14 +545,14 @@ const Positions = ({client, qClient, addr, prices}) => {
                     ///Execute the Mint
                     await cdp_client?.increaseDebt({
                         positionId: positionID,
-                        amount: (amount * 1_000_000).toString(),
+                        amount: ((amount ?? 0) * 1_000_000).toString(),
                     }).then((res) => {           
                         console.log(res?.events.toString())             
                         //Update Position specific data
                         fetch_update_positionData()
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Mint of" +{amount}+ "CDT successful");
+                        setPopupMsg("Mint of" +(amount ?? 0)+ "CDT successful");
                         setPopupStatus("Success");
                     })
                     
@@ -576,14 +573,14 @@ const Positions = ({client, qClient, addr, prices}) => {
                     ///Execute the contract
                     var res = await cdp_client?.repay({
                         positionId: positionID,
-                    }, "auto", undefined, coins(amount * 1_000_000, denoms.cdt))
+                    }, "auto", undefined, coins((amount ?? 0) * 1_000_000, denoms.cdt))
                     .then((res) => {           
                         console.log(res?.events.toString())             
                         //Update Position specific data
                         fetch_update_positionData()
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Repayment of" +{amount}+ "CDT successful");
+                        setPopupMsg("Repayment of" +(amount ?? 0)+ "CDT successful");
                         setPopupStatus("Success");
                     })
                     
@@ -658,10 +655,13 @@ const Positions = ({client, qClient, addr, prices}) => {
 
     };
     const handleassetIntent = () => {
-        setassetIntent(prevState => [
-            ...prevState,
-            [currentAsset, amount]
-        ]);
+        if (amount !== undefined && amount > 0){
+            console.log(amount)
+            setassetIntent(prevState => [
+                ...prevState,
+                [currentAsset, amount]
+            ]);
+        }
     };
     //we add decimals to the asset amounts
     const getcoinsfromassetIntents = (intents: [string, number][]) => {
@@ -692,8 +692,10 @@ const Positions = ({client, qClient, addr, prices}) => {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
                         info: {
-                            denom: denoms.osmo,
-                        },
+                            native_token: { //These show errors but this is correct
+                                denom: denoms.osmo,
+                            }
+                        }
                     })
                     break;
                 }
@@ -701,8 +703,10 @@ const Positions = ({client, qClient, addr, prices}) => {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
                         info: {
-                            denom: denoms.atom,
-                        },
+                            native_token: {
+                                denom: denoms.atom,
+                            }
+                        }
                     })
                     break;
                 }
@@ -710,8 +714,10 @@ const Positions = ({client, qClient, addr, prices}) => {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
                         info: {
-                            denom: denoms.axlUSDC,
-                        },
+                            native_token: {
+                                denom: denoms.axlUSDC,
+                            }
+                        }
                     })
                     break;
                 }

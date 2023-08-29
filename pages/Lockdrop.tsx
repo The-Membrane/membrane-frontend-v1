@@ -6,6 +6,7 @@ import { Lock, Uint128 } from "../codegen/launch/Launch.types";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { coin } from "@cosmjs/stargate";
 import { denoms } from ".";
+import Popup from "./Popup";
 
 const Lockdrop = ({client, qClient, addr, prices}) => {
 
@@ -20,6 +21,11 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     old_lock_up_duration: number | undefined;
     label: string;
   }
+  interface LaunchRankings {
+    user: number;
+    total: number;
+    color: string;
+  }
 
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
@@ -29,6 +35,11 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
   const [progress, setProgress] = useState(0);
   const [lockedOSMO, setlockedOSMO] = useState(0);
   const [MBRNreward, setMBRNreward] = useState(0);
+  const [rankings, setRankings] = useState<LaunchRankings>({
+    user: 0,
+    total: 0,
+    color: "rgba(79, 202, 187, 0.8)"
+  });
   const [deposit1, setdeposit1] = useState<LockDisplay>({
     deposit: undefined,
     new_lock_up_duration: undefined,
@@ -109,202 +120,239 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     try {
       await queryClient?.userInfo({
         user: address ?? "",
-      }).then((res) => {
+      }).then(async (res) => {
         
         var depositList = res.deposits
 
         var i = 0;
-        try {    
-          for (i; i < depositList.length; i++) {
-            switch (i){
-              case 0: {
-                //Update lock object
-                setdeposit1(prevState => {
-                    return {
-                      ...prevState,
-                      deposit: parseInt(depositList[i].deposit) / 1_000_000,
-                      old_lock_up_duration:  depositList[i].lock_up_duration,
-                      label: "EDIT"
-                    }
-                  })
-                break;
-              }
-              case 1: {
-                //Update lock object
-                setdeposit2(prevState => {
+        for (i; i < depositList.length; i++) {
+          switch (i){
+            case 0: {
+              //Update lock object
+              setdeposit1(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
+                    deposit: parseInt(depositList[i].deposit) / 1_000_000,
                     old_lock_up_duration:  depositList[i].lock_up_duration,
                     label: "EDIT"
                   }
                 })
-                break;
-              }
-              case 2: {
-                //Update lock object
-                setdeposit3(prevState => {
-                  return {
-                    ...prevState,
-                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                    old_lock_up_duration:  depositList[i].lock_up_duration,
-                    label: "EDIT"
-                  }
-                })
-                break;
-              }
-              case 3: {
-                //Update lock object
-                setdeposit4(prevState => {
-                  return {
-                    ...prevState,
-                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                    old_lock_up_duration:  depositList[i].lock_up_duration,
-                    label: "EDIT"
-                  }
-                })
-                break;
-              }
-              case 4: {
-                //Update lock object
-                setdeposit5(prevState => {
-                  return {
-                    ...prevState,
-                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                    old_lock_up_duration:  depositList[i].lock_up_duration,
-                    label: "EDIT"
-                  }
-                })
-                break;
-              }
-              case 5: {
-                //Update lock object
-                setdeposit6(prevState => {
-                  return {
-                    ...prevState,
-                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                    old_lock_up_duration:  depositList[i].lock_up_duration,
-                    label: "EDIT"
-                  }
-                })
-                break;
-              }
-              case 6: {
-                //Update lock object
-                setdeposit7(prevState => {
-                  return {
-                    ...prevState,
-                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                    old_lock_up_duration:  depositList[i].lock_up_duration,
-                    label: "EDIT"
-                  }
-                })
-                break;
-              }
-              case 7: {
-                //Update lock object
-                setdeposit8(prevState => {
-                  return {
-                    ...prevState,
-                    deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                    old_lock_up_duration:  depositList[i].lock_up_duration,
-                    label: "EDIT"
-                  }
-                })
-                break;
-              }
+              break;
             }
-          }
-
-        } catch (error) {
-          //set remaining lock objects to 0/null/undefuned
-          for (i; i < depositList.length; i++) {
-            switch (i){
-              case 0: {
-                //Update lock object
-                setdeposit1({
-                  deposit: undefined,                  
-                  new_lock_up_duration: undefined,
-                  old_lock_up_duration: undefined,
-                  label: "LOCK"
-                  })
-                break;
-              }
-              case 1: {
-                //Update lock object
-                setdeposit2({
-                  deposit: undefined,     
-                  new_lock_up_duration: undefined,
-                  old_lock_up_duration: undefined,
-                  label: "LOCK"
-                })
-                break;
-              }
-              case 2: {
-                //Update lock object
-                setdeposit3({
-                  deposit: undefined,     
-                  new_lock_up_duration: undefined,
-                  old_lock_up_duration: undefined,
-                  label: "LOCK"
-                })
-                break;
-              }
-              case 3: {
-                //Update lock object
-                setdeposit4({
-                  deposit: undefined,     
-                  new_lock_up_duration: undefined,
-                  old_lock_up_duration: undefined,
-                  label: "LOCK"
-                })
-                break;
-              }
-              case 4: {
-                //Update lock object
-                setdeposit5({
-                  deposit: undefined,     
-                  new_lock_up_duration: undefined,
-                  old_lock_up_duration: undefined,
-                  label: "LOCK"
-                })
-                break;
-              }
-              case 5: {
-                //Update lock object
-                setdeposit6({
-                  deposit: undefined,     
-                  new_lock_up_duration: undefined,
-                  old_lock_up_duration: undefined,
-                  label: "LOCK"
-                })
-                break;
-              }
-              case 6: {
-                //Update lock object
-                setdeposit7({
-                  deposit: undefined,     
-                  new_lock_up_duration: undefined,
-                  old_lock_up_duration: undefined,
-                  label: "LOCK"
-                })
-                break;
-              }
-              case 7: {
-                //Update lock object
-                setdeposit8({
-                  deposit: undefined,     
-                  new_lock_up_duration: undefined,
-                  old_lock_up_duration: undefined,
-                  label: "LOCK"
-                })
-                break;
-              }
+            case 1: {
+              //Update lock object
+              setdeposit2(prevState => {
+                return {
+                  ...prevState,
+                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
+                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  label: "EDIT"
+                }
+              })
+              break;
+            }
+            case 2: {
+              //Update lock object
+              setdeposit3(prevState => {
+                return {
+                  ...prevState,
+                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
+                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  label: "EDIT"
+                }
+              })
+              break;
+            }
+            case 3: {
+              //Update lock object
+              setdeposit4(prevState => {
+                return {
+                  ...prevState,
+                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
+                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  label: "EDIT"
+                }
+              })
+              break;
+            }
+            case 4: {
+              //Update lock object
+              setdeposit5(prevState => {
+                return {
+                  ...prevState,
+                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
+                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  label: "EDIT"
+                }
+              })
+              break;
+            }
+            case 5: {
+              //Update lock object
+              setdeposit6(prevState => {
+                return {
+                  ...prevState,
+                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
+                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  label: "EDIT"
+                }
+              })
+              break;
+            }
+            case 6: {
+              //Update lock object
+              setdeposit7(prevState => {
+                return {
+                  ...prevState,
+                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
+                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  label: "EDIT"
+                }
+              })
+              break;
+            }
+            case 7: {
+              //Update lock object
+              setdeposit8(prevState => {
+                return {
+                  ...prevState,
+                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
+                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  label: "EDIT"
+                }
+              })
+              break;
             }
           }
         }
 
+        //set remaining lock objects to 0/null/undefuned
+        for (i; i < depositList.length; i++) {
+          switch (i){
+            case 0: {
+              //Update lock object
+              setdeposit1({
+                deposit: undefined,                  
+                new_lock_up_duration: undefined,
+                old_lock_up_duration: undefined,
+                label: "LOCK"
+                })
+              break;
+            }
+            case 1: {
+              //Update lock object
+              setdeposit2({
+                deposit: undefined,     
+                new_lock_up_duration: undefined,
+                old_lock_up_duration: undefined,
+                label: "LOCK"
+              })
+              break;
+            }
+            case 2: {
+              //Update lock object
+              setdeposit3({
+                deposit: undefined,     
+                new_lock_up_duration: undefined,
+                old_lock_up_duration: undefined,
+                label: "LOCK"
+              })
+              break;
+            }
+            case 3: {
+              //Update lock object
+              setdeposit4({
+                deposit: undefined,     
+                new_lock_up_duration: undefined,
+                old_lock_up_duration: undefined,
+                label: "LOCK"
+              })
+              break;
+            }
+            case 4: {
+              //Update lock object
+              setdeposit5({
+                deposit: undefined,     
+                new_lock_up_duration: undefined,
+                old_lock_up_duration: undefined,
+                label: "LOCK"
+              })
+              break;
+            }
+            case 5: {
+              //Update lock object
+              setdeposit6({
+                deposit: undefined,     
+                new_lock_up_duration: undefined,
+                old_lock_up_duration: undefined,
+                label: "LOCK"
+              })
+              break;
+            }
+            case 6: {
+              //Update lock object
+              setdeposit7({
+                deposit: undefined,     
+                new_lock_up_duration: undefined,
+                old_lock_up_duration: undefined,
+                label: "LOCK"
+              })
+              break;
+            }
+            case 7: {
+              //Update lock object
+              setdeposit8({
+                deposit: undefined,     
+                new_lock_up_duration: undefined,
+                old_lock_up_duration: undefined,
+                label: "LOCK"
+              })
+              break;
+            }
+          }
+        }
       })
+
+      //Query for rankings
+      try {
+        await queryClient?.incentiveDistribution().then((res) => {
+          let user_ratio = 0;
+          //Find user ratio
+          for (var i = 0; i < res.length; i++) {
+            if (res[i].user == address) {
+              user_ratio = parseInt(res[i].ratio);
+              break;
+            }
+          }
+          //Find users ahead of user 
+          var users_ahead = 0;
+          for (var i = 0; i < res.length; i++) {
+            if (parseInt(res[i].ratio) > user_ratio) {
+              users_ahead += 1;
+            }
+          }
+          //Find color
+          var color = "";
+          var user_percent_class = users_ahead / res.length;
+          if (user_percent_class <= 0.10){
+              color = "gold";
+          } else if (user_percent_class <= 0.33){
+              color = "#c0c0c0";
+          } else {
+            color = "rgba(79, 202, 187, 0.8)";
+          } 
+
+          //Set rankings
+          setRankings({
+            user: users_ahead+1,
+            total: res.length,
+            color: color,
+          })
+        })
+      } catch (error) {
+        console.log(error);
+      }
+
     } catch (error) {
       console.log(error);
     }
@@ -359,6 +407,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit1.deposit ?? 0) * 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Update lock amount
+        setlockedOSMO(+lockedOSMO + +(deposit1.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit1.deposit+" OSMO for "+deposit1.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -367,6 +417,11 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
 
       } catch (error) {
         console.log(error);
+        let e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit1.label ==="EDIT"){
       //Edit deposit
@@ -384,6 +439,11 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         })
       } catch (error) {
         console.log(error);
+        let e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     } else if (deposit1.label ==="WTHDRW"){
       //Withdraw deposit
@@ -394,6 +454,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit1.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO - +(deposit1.deposit ?? 0))
           //Format popup message
           setPopupMsg("Withdrew "+ deposit1.deposit+" OSMO")
           setPopupStatus("Success")
@@ -401,6 +463,11 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         })
       } catch (error) {
         console.log(error);
+        let e = error as { message: string }
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
       }
     }
   };
@@ -414,6 +481,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit2.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Update lock amount
+        setlockedOSMO(+lockedOSMO + +(deposit2.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit2.deposit+" OSMO for "+deposit2.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -458,6 +527,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit2.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO - +(deposit2.deposit ?? 0))
           //Format popup message
           setPopupMsg("Withdrew "+ deposit2.deposit+" OSMO")
           setPopupStatus("Success")
@@ -483,6 +554,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit3.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Update lock amount
+        setlockedOSMO(+lockedOSMO + +(deposit3.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit3.deposit+" OSMO for "+deposit3.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -527,6 +600,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit3.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO - +(deposit3.deposit ?? 0))
           //Format popup message
           setPopupMsg("Withdrew "+ deposit3.deposit+" OSMO")
           setPopupStatus("Success")
@@ -552,6 +627,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit4.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Update lock amount
+        setlockedOSMO(+lockedOSMO + +(deposit4.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit4.deposit+" OSMO for "+deposit4.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -596,6 +673,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit4.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO - +(deposit4.deposit ?? 0))
           //Format popup message
           setPopupMsg("Withdrew "+ deposit4.deposit+" OSMO")
           setPopupStatus("Success")
@@ -621,6 +700,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit5.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Update lock amount
+        setlockedOSMO(+lockedOSMO + +(deposit5.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit5.deposit+" OSMO for "+deposit5.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -665,6 +746,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit5.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO - +(deposit5.deposit ?? 0))
           //Format popup message
           setPopupMsg("Withdrew "+ deposit5.deposit+" OSMO")
           setPopupStatus("Success")
@@ -690,6 +773,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit6.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Update lock amount
+        setlockedOSMO(+lockedOSMO + +(deposit6.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit6.deposit+" OSMO for "+deposit6.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -734,6 +819,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit6.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO - +(deposit6.deposit ?? 0))
           //Format popup message
           setPopupMsg("Withdrew "+ deposit6.deposit+" OSMO")
           setPopupStatus("Success")
@@ -759,6 +846,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
         }, "auto", undefined, [coin((deposit7.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
+          //Update lock amount
+        setlockedOSMO(+lockedOSMO + +(deposit7.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit7.deposit+" OSMO for "+deposit7.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -803,6 +892,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit7.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO - +(deposit7.deposit ?? 0))
           //Format popup message
           setPopupMsg("Withdrew "+ deposit7.deposit+" OSMO")
           setPopupStatus("Success")
@@ -827,7 +918,10 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           lockUpDuration: deposit8.new_lock_up_duration ?? 0
         }, "auto", undefined, [coin((deposit8.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
+          //Update deposits
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO + +(deposit8.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit8.deposit+" OSMO for "+deposit8.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -872,6 +966,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           withdrawalAmount: ((deposit8.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
+          //Update lock amount
+          setlockedOSMO(+lockedOSMO - +(deposit8.deposit ?? 0))
           //Format popup message
           setPopupMsg("Withdrew "+ deposit8.deposit+" OSMO")
           setPopupStatus("Success")
@@ -1097,6 +1193,23 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
       })
     }
   }
+  const handleclaimClick = async () => {
+    try {
+      await launch_client?.claim().then((res) => {        
+        //Format popup message
+        setPopupMsg("Claimed "+ MBRNreward+" MBRN")
+        setPopupStatus("Success")
+        setPopupTrigger(true)
+      })
+    } catch (error) {
+      console.log(error);
+      const e = error as { message: string }
+      //Format popup message
+      setPopupMsg(e.message)
+      setPopupStatus("Error")
+      setPopupTrigger(true)
+    }
+  }
 
   return (    
     <div className="lockdrop">
@@ -1115,7 +1228,13 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
             <div className="mbrn-reward-circle" />
             <div className="osmo-deposit-circle" />
             <div className="osmo-deposit-amount">{lockedOSMO} OSMO</div>
+            {rankings !== undefined ?(
+              <div className="mbrn-rank" style={{color: rankings.color}}>Ranked #{rankings.user} out of {rankings.total}</div>
+              ) : null}
             <div className="mbrn-reward-total">{MBRNreward} MBRN</div>
+            <button className="mbrn-claim-button" disabled={(progress <= 100)} style={(progress <= 100) ? {opacity:0.3} : undefined} type="button" onClick={handleclaimClick}>
+              <div className="mbrn-claim-button-label">CLAIM</div>
+            </button>
             <div className="rates-box-title">Your&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rates </div>
             <img className="mbrn-rate-logo" alt="" src="/images/Logo.svg" />
             <div className="rates-box"/>
@@ -1125,9 +1244,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
             <div className="price-in-axlusdc">: {(MBRNreward / lockedOSMO) * prices.osmo}</div>
             <div className="infomsg">
               <p className="there-is-10m-mbrn-up-for-grabs">
-                There is 10M MBRN up for grabs in this 7 day event. If you want a larger share for your deposit you must lock for longer (MAX: 90 days).
+                There is 10M MBRN up for grabs in this 7 day event. If you want a larger share for your deposit you must lock for longer (MAX: 365 days).
               </p>
-              <p/>
               <p>Locks boost your “shares” and the full 10M is split & STAKED (4 day lock) in accordance to said shares.</p>
             </div>
             <div className="allocationmsg">
@@ -1142,7 +1260,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
           </div>
           <div className="deposits-list">
             <div className="yourdepositstext">
-              YOUR DEPOSITS
+              YOUR LOCKS
             </div>
             <div className="launch-lock-amount"> AMOUNT </div>
             <div className="lock-duration"> DURATION </div>
@@ -1227,12 +1345,6 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
             </form>
           </div>
           <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
-          {/* <form>
-            <input className="lock-amount" name="amount" value={amount} type="number" onChange={handlesetAmount}/>
-            <button className="lock-button" type="button" onClick={handlelockClick}>
-              <div className="lock-button-label">LOCK:</div>
-            </button>
-          </form> */}
         </div>
   );
 };

@@ -499,7 +499,7 @@ ul{
   z-index: 7;
 }
 .claim-button {
-  z-index: 20;
+  z-index: 10;
   color: black;
   width: 120px;
   height: 41px;
@@ -509,17 +509,109 @@ ul{
 }
 .withdraw-button,
 .deposit-button,
+.deposit-amount,
+.withdraw-amount,
 .withdraw-button-omni,
 .deposit-button-omni {
   position: absolute;
   z-index: 20;
   color: black;
-  text-align: 'center';
-  width: 82px;
-  margin-top: 89%;
+  width: 111px;
+  height: 38px;
+  margin-top: 70%;
   background-color: #4FCABB;
 }
-.deposit-button,
+.deposit-button {
+  left: 45px;
+}
+.withdraw-button {
+  left: -15px;
+}
+.deposit-amount{
+  position: absolute;
+  border: 1px solid #AAA;
+  border-radius: 4px;
+  top: 101px;
+  left: 105px;
+  width: 44px;
+  height: 22px;
+  z-index: 21;
+}
+input[type="number"]:disabled {
+  opacity: 0;
+}
+.withdraw-amount{
+  position: absolute;
+  border: 1px solid #AAA;
+  border-radius: 4px;
+  top: 101px;
+  left: 393px;
+  width: 40px;
+  height: 22px;
+  z-index: 21;
+}
+.deposit-button-label {
+  position: absolute;
+  top: 5px;
+  margin-left: -5%;
+}
+div[data-descr] {
+  position: absolute;
+}
+div[data-descr]:hover::after {
+  content: attr(data-descr);
+  position: absolute;
+  left: -7px;
+  top: 25px;
+  min-width: 0px;
+  border: 1px #aaaaaa solid;
+  border-radius: 10px;
+  background-color: #50C9BD;
+  padding: 12px;
+  color: #000000;
+  font-size: 14px;
+  z-index: 21;
+}
+p[data-descr] {
+  position: relative;
+}
+p[data-descr]:hover::after {
+  content: attr(data-descr);
+  position: absolute;
+  left: 3px;
+  top: 25px;
+  min-width: 90px;
+  border: 1px #aaaaaa solid;
+  border-radius: 10px;
+  background-color: #ffffcc;
+  padding: 12px;
+  color: #000000;
+  font-size: 14px;
+  z-index: 21;
+}
+span[data-descr] {
+  position: relative;
+  cursor: help;
+}
+span[data-descr]:hover::after {
+  content: attr(data-descr);
+  position: absolute;
+  left: 0;
+  top: 24px;
+  min-width: 200px;
+  border: 1px #aaaaaa solid;
+  border-radius: 10px;
+  background-color: #ffffcc;
+  padding: 12px;
+  color: #000000;
+  font-size: 14px;
+  z-index: 21;
+}
+.withdraw-button-label {
+  position: absolute;
+  top: 5px;
+  margin-left: -5%;
+}
 .deposit-button-omni {  
   margin-left: 11%;
 }
@@ -843,11 +935,18 @@ ul{
   color: whitesmoke;
   z-index: 11;
 }
-.mbrn-reward-total {
+.mbrn-reward-total,
+.mbrn-rank {
   top: 152px;
   left: 587px;
   font-size: var(--font-size-3xl);
   z-index: 12;
+}
+.mbrn-rank {
+  position: absolute;
+  font-weight: bolder;
+  top: 120px;
+  left: 557px;
 }
 .rates-box-title { 
   position: absolute;
@@ -859,7 +958,7 @@ ul{
 .mbrn-rate-logo {
   position: absolute;
   top: 525px;
-  left: 347px;
+  left: 350px;
   width: 22px;
   height: 22px;
   z-index: 13;
@@ -939,7 +1038,6 @@ ul{
   z-index: 15;
   color: #4FCABB;
   font-weight: bolder;
-  text-decoration: underline;
 }
 .allocations {
   top: 370px;
@@ -1227,20 +1325,18 @@ ul{
 .deposit-list-x-axis6 {  
   top: 425px;
 }
-.lock-button {
+.mbrn-claim-button {
   cursor: pointer;
   background-color: #D9D9D9;
   position: absolute;
-  top: 450px;
-  left: 562px;
-  width: 120px;
-  height: 42px;
+  top: 180px;
+  left: 575px;
+  width: 80px;
+  height: 22px;
+  font-size: small;
   letter-spacing: 0.14em;
   border-radius: 10%;
   z-index: 30;
-}
-.lock-button:hover {
-  border: 3px solid #798EFF;
 }
 .lockdrop-page {
   position: relative;
@@ -1278,9 +1374,9 @@ ul{
   background-color: #D9D9D9; 
   z-index: 31;
 }
-.lock-button-label {
+.mbrn-claim-button-label {
   position: absolute;
-  top: 9px;
+  top: 1px;
   left: 22px;
   color: black;
   z-index: 31;

@@ -102,7 +102,7 @@ const Governance = () => {
         <div className="stake">Stake</div>
       </div>
       <div className="status-dropdown">
-        <img className="button-icon" alt="" src="/button.svg" />
+        <img className="button-icon" alt="" src="images/button.svg" />
         <div className="dropdown proposal-dropdown">
             <button onClick={handleOpen}>Proposal Status</button>
             {open ? (
