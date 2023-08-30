@@ -38,6 +38,7 @@ const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient,
   const [userTVL, setuserTVL] = useState(0);
   const [TVL, setTVL] = useState(0);
   const [SPclaimables, setSPclaimables] = useState("");
+  const [unstakingMsg, setunstakingMsg] = useState("");
   //Menu
   const [open, setOpen] = useState(false);
   const [menuAsset, setMenuAsset] = useState("OSMO" as string);
@@ -570,6 +571,34 @@ const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient,
     }    
     setSPclaimables(claims)
   }
+  //Get leading unstaking deposit from the SP for the user
+  const getunstakingSP = async () => {
+    try {
+      await sp_queryClient?.assetPool({
+        user: address ?? "",
+      }).then((res) => {
+        //Check if user has an unstaking deposit
+        if (res.deposits.length > 0) {
+          for (let i = 0; i < res.deposits.length; i++) {
+            if (res.deposits[i].unstake_time !== null && res.deposits[i].unstake_time !== undefined) {
+              //Get block time
+              var current_time = 0; 
+              liq_queueClient?.client.getBlock().then( (block) => {
+                current_time = Date.parse(block.header.time)
+              })
+              var unstake_time_left_seconds = res.deposits[i].unstake_time? - current_time : 0;
+              //Format tooltip
+              setunstakingMsg("You have an unstaking deposit of " + parseInt(res.deposits[i].amount)/1_000_000 + " CDT finished in " + unstake_time_left_seconds + " seconds")
+              break;
+            }
+          }
+        }
+
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     switch(menuAsset){
@@ -596,6 +625,8 @@ const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient,
     }
     //Set SP TVL
     getSPTVL()
+    //Check for unstaking positions
+    getunstakingSP()
 
   }, [menuAsset])
 
@@ -688,8 +719,10 @@ const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient,
             </button>
             <input className="omni-withdraw-amount" name="amount" value={omniwithdrawAmount}  type="number" onChange={handlesetomniwAmount}/>
             <button className="btn buttons withdraw-button-omni" onClick={handleStabilityWithdraw}  type="button">
-              <div className="withdraw-button-label"  onClick={handleStabilityWithdraw}>
-                Withdraw:
+              <div className="withdraw-button-label" onClick={handleStabilityWithdraw}>
+              {(unstakingMsg !== "") ? (
+                <span tabIndex={0} data-descr={unstakingMsg}>Withdraw:</span>
+              ) : <>Withdraw:</>}
               </div>
             </button>
           </form> 
