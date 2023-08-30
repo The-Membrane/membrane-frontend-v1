@@ -48,6 +48,7 @@ import Positions from './Positions';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 
 export const denoms = {
+  mbrn: "umbrn",
   cdt: "factory/osmo1v0us2salr8t28mmcjm87k2zrv3txecc8e2gz9kgvw77xguedus4qlnkl0t/ucdt",
   osmo: "uosmo",
   atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
@@ -66,8 +67,8 @@ export default function Home() {
   const stakingSection = useRef(null);
 
   //Get Clients
-  const { cdp_client, launch_client, liq_queue_client, address } = useClients();
-  const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, oraclequeryClient } = useQueryClients();
+  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, address } = useClients();
+  const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, oraclequeryClient } = useQueryClients();
 
   //Set Prices
   const [prices, setPrices] = useState({
@@ -148,7 +149,7 @@ export default function Home() {
         <Positions client={cdp_client} qClient={cdpqueryClient} addr={address} prices={prices}/>
       </div>
       <div ref={liquidationSection}>
-        <LiquidationPools lqQClient={liqqueuequeryClient} lqclient={liq_queue_client} addr={address}/>
+        <LiquidationPools lqQClient={liqqueuequeryClient} lqClient={liq_queue_client} spQClient={stabilitypoolqueryClient} spClient={stability_pool_client} addr={address}/>
       </div>
       <div ref={stakingSection}>
         <Governance/>

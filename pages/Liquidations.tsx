@@ -9,19 +9,35 @@ import { ClaimsResponse, QueueResponse, SlotResponse } from "../codegen/liquidat
 import { denoms } from ".";
 import { coins } from "@cosmjs/stargate";
 import Popup from "./Popup";
+import { StabilityPoolClient, StabilityPoolQueryClient } from "../codegen/stability_pool/StabilityPool.client";
+import { PositionsQueryClient } from "../codegen/Positions.client";
+import { NativeToken } from "../codegen/Positions.types";
 
+//Bar graph scale
 const CDTperPIXEL = 10000_000_000;
 
-const LiquidationPools = ({lqQClient, lqclient, addr}) => {
+const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient, addr, prices}) => {
 
   const queryClient = lqQClient as LiquidationQueueQueryClient;
-  const liq_queueClient = lqclient as LiquidationQueueClient;
+  const liq_queueClient = lqClient as LiquidationQueueClient;
+  const sp_queryClient = spQClient as StabilityPoolQueryClient;
+  const sp_client = spClient as StabilityPoolClient;
+  const cdp_queryClient = cdpQClient as PositionsQueryClient;
   const address = addr as string | undefined;
 
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState("");
   const [popupStatus, setPopupStatus] = useState("");
+  //Stability Pool execution  
+  const [omnidepositAmount, setomnidAmount] = useState();
+  const [omniwithdrawAmount, setomniwAmount] = useState();
+  //Stability Pool Visual
+  const [capitalAhead, setcapitalAhead] = useState(0);
+  const [userclosestDeposit, setuserclosestDeposit] = useState(0);
+  const [userTVL, setuserTVL] = useState(0);
+  const [TVL, setTVL] = useState(0);
+  const [SPclaimables, setSPclaimables] = useState("");
   //Menu
   const [open, setOpen] = useState(false);
   const [menuAsset, setMenuAsset] = useState("OSMO" as string);
@@ -30,10 +46,10 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
     display: string;
     bidFor: string[];
   }
-  const [depositAmount, setdAmount] = useState(0);
-  const [withdrawAmount, setwAmount] = useState(0);
+  const [depositAmount, setdAmount] = useState();
+  const [withdrawAmount, setwAmount] = useState();
   const [premium, setPremium] = useState<number>();
-  const [lqClaimables, setlqClaimables] = useState({
+  const [lqClaimables, setlqClaimables] = useState<LQClaims>({
     display: "",
     bidFor: [""],
   });
@@ -55,21 +71,24 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
     { height: 0, color: "#000000", tvl: "0M" },
     { height: 0, color: "#000000", tvl: "0M" },
   ]);
+  const [collateralTVL, setcollateralTVL] = useState(0);
   //index for highest bar in barGraph
   const [highestBar, sethighestBar] = useState<number>(0);
 
   const handleOpen = () => {
     setOpen(!open);
   };
-
   const handleMenuOne = () => {
     setOpen(false);
     setMenuAsset("ATOM");
   };
-
   const handleMenuTwo = () => {
     setOpen(false);
     setMenuAsset("axlUSDC");
+  };
+  const handleMenuThree = () => {
+    setOpen(false);
+    setMenuAsset("OSMO");
   };
   const handlesetdAmount = (event) => {
     event.preventDefault();
@@ -78,6 +97,14 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
   const handlesetwAmount = (event) => {
     event.preventDefault();
     setwAmount(event.target.value);
+  };  
+  const handlesetomnidAmount = (event) => {
+    event.preventDefault();
+    setomnidAmount(event.target.value);
+  };
+  const handlesetomniwAmount = (event) => {
+    event.preventDefault();
+    setomniwAmount(event.target.value);
   };
   
   // Query premiums slots and save new heights
@@ -118,6 +145,8 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
             }
           }
         }
+        //Save new barGraph
+        setbarGraph(barGraph);
         //Set highest 
         sethighestBar(highest);
       })
@@ -125,6 +154,41 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
       //We don't popup for query errors
       console.log(error)
     }
+
+    //Query total queue
+    try {
+      await cdp_queryClient?.getBasket({
+      }).then((res) => {
+        console.log(res)
+        //Get price
+        let price = 0;
+        switch (asset) {
+          case denoms.osmo: {
+            price = prices.osmo;
+            break;
+          } 
+          case denoms.atom: {
+            price = prices.atom;
+            break;
+          }
+          case denoms.axlUSDC: {
+            price = prices.axlUSDC;
+            break;
+          }
+        }
+        //Set collateral TVL
+        for (let i = 0; i < res.collateral_types.length; i++) {
+          if ((res.collateral_types[i].asset.info as NativeToken).denom === asset) {
+            setcollateralTVL((parseInt(res.collateral_types[i].asset.amount) / 1_000_000) * price);
+            break;
+          }
+        }
+      })
+    } catch (error) {
+      //We don't popup for query errors
+      console.log(error)
+    }
+
   }
 
   const setqueueClaimables = async () => {
@@ -196,7 +260,7 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
           },          
           liq_premium: premium ?? 0,
         }
-      }, "auto", undefined, coins((depositAmount * 1_000_000), denoms.cdt)).then((res) => {
+      }, "auto", undefined, coins(((depositAmount ?? 0) * 1_000_000), denoms.cdt)).then((res) => {
         console.log(res)
         //Format popup
         setPopupStatus("Success")
@@ -259,7 +323,7 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
                     denom: workingDenom,
                   }
                 },
-                amount: (withdrawAmount * 1_000_000).toString(),
+                amount: ((withdrawAmount ?? 0) * 1_000_000).toString(),
                 bidId: bidId,
               
             }, "auto", undefined).then((res) => {
@@ -324,6 +388,189 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
     });
   }
 
+  const handleStabilityDeposit = async () => {
+    try {
+      await sp_client?.deposit({}
+        , "auto", undefined, coins(((omnidepositAmount ?? 0) * 1_000_000), denoms.cdt)
+        ).then(async (res) => {
+          console.log(res)
+          //Format popup
+          setPopupStatus("Success")
+          setPopupMsg("Deposited " + omnidepositAmount + " CDT")
+          setPopupTrigger(true)
+
+          //Query capital ahead of user deposit
+          await sp_queryClient?.capitalAheadOfDeposit({
+            user: address ?? "",
+          }).then((res) => {
+            console.log(res)
+            //set capital ahead of user deposit in K
+            setcapitalAhead(parseInt(res.capital_ahead) / 1000_000_000)
+            //set user closest deposit in K
+            setuserclosestDeposit(parseInt(res.deposit.amount) / 1000_000_000)
+          })
+          //Query user's total deposit
+          await sp_queryClient?.assetPool({
+            user: address ?? "",
+          }).then((res) => {
+            console.log(res)
+            //Calc user tvl
+            var tvl = 0;
+            for (let i = 0; i < res.deposits.length; i++) {
+              tvl += parseInt(res.deposits[i].amount) / 1_000_000;
+            }
+            //set user tvl
+            setuserTVL(tvl)
+          })
+        })
+
+    } catch (error) {
+      console.log(error)
+      const e = error as { message: string }
+      //Format popup
+      setPopupStatus("Error")
+      setPopupMsg(e.message)
+      setPopupTrigger(true)
+    }
+  }
+  const handleStabilityWithdraw = async () => {
+    try {
+      await sp_client?.withdraw({
+        amount: ((omniwithdrawAmount ?? 0) * 1_000_000).toString(),
+      }, "auto", undefined)
+        .then(async (res) => {
+          console.log(res)
+          //Format popup
+          setPopupStatus("Success")
+          setPopupTrigger(true)
+
+          //Query capital ahead of user deposit
+          await sp_queryClient?.capitalAheadOfDeposit({
+            user: address ?? "",
+          }).then((res) => {
+            console.log(res)
+            //set capital ahead of user deposit in K
+            setcapitalAhead(parseInt(res.capital_ahead) / 1000_000_000)
+            //set user closest deposit in K
+            setuserclosestDeposit(parseInt(res.deposit.amount) / 1000_000_000)
+          })
+          //Query user's total deposit
+          await sp_queryClient?.assetPool({
+            user: address ?? "",
+          }).then((res) => {
+            console.log(res)
+            //Calc user tvl
+            var tvl = 0;
+            for (let i = 0; i < res.deposits.length; i++) {
+              tvl += parseInt(res.deposits[i].amount) / 1_000_000;
+            }
+            //Format pop-up
+            if (tvl < userTVL){
+              setPopupMsg("Withdrew " + omnidepositAmount + " CDT")
+              //set user tvl
+              setuserTVL(tvl)
+            } else {              
+              setPopupMsg("Unstaked " + omnidepositAmount + " CDT")
+            }
+
+          })
+        })
+
+    } catch (error) {
+      console.log(error)
+      const e = error as { message: string }
+      //Format popup
+      setPopupStatus("Error")
+      setPopupMsg(e.message)
+      setPopupTrigger(true)
+    }
+  }
+
+  const getSPTVL = async () => {
+    try {
+      //Query total deposits
+      await sp_queryClient?.assetPool({
+        depositLimit: 1,
+      }).then((res) => {
+        console.log(res)
+        //set TVL in Ms
+        setTVL(parseInt(res.credit_asset.amount) / 1000000_000_000)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleStabilityClaim = async () => {
+    try { 
+      await sp_client?.claimRewards("auto", undefined).then((res) => {
+        console.log(res)
+        //Format popup
+        setPopupStatus("Success")
+        setPopupMsg("Claimed " + SPclaimables)
+        setPopupTrigger(true)
+      })
+    } catch (error) { 
+      console.log(error)
+      const e = error as { message: string }
+      //Format popup
+      setPopupStatus("Error")
+      setPopupMsg(e.message)
+      setPopupTrigger(true)
+    }
+  }
+  const getSPclaimables = async () => {
+    var claims = "";
+    //Claimable Liquidations
+    try {
+      await sp_queryClient?.userClaims({
+        user: address ?? "",
+      }).then((res) => {
+        console.log(res)
+
+        //add SP claimables
+        for (let i = 0; i < res.claims.length; i++) {
+          switch (res.claims[i].denom) {
+            case denoms.osmo: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " OSMO, "
+              break;
+            }
+            case denoms.atom: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " ATOM, "
+              break;
+            }
+            case denoms.axlUSDC: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " axlUSDC, "
+              break;
+            }
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    //Incentives
+    try {
+      await sp_queryClient?.unclaimedIncentives({
+        user: address ?? "",
+      }).then((res) => {
+        console.log(res)
+
+        //add SP incentives
+        claims += parseInt(res)/1_000_000 + " MBRN, "
+        
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    if (claims === "") {
+      claims = "No Claims"
+    }    
+    setSPclaimables(claims)
+  }
+
   useEffect(() => {
     switch(menuAsset){
       case "OSMO": {
@@ -339,11 +586,16 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
         break;
       }
     }
-    //Set claimables
+    //Set LQ claimables
     if (lqClaimables.display !== "No Claims") {
       setqueueClaimables()
     }
-    
+    //Set SP claimables
+    if (SPclaimables !== "No Claims") {
+      getSPclaimables()
+    }
+    //Set SP TVL
+    getSPTVL()
 
   }, [menuAsset])
 
@@ -366,30 +618,33 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
           <div className="bar-icon7" data-descr={barGraph[7].tvl} style={{height: barGraph[7].height, backgroundColor: barGraph[7].color,}}/>
           <div className="bar-icon8" data-descr={barGraph[8].tvl} style={{height: barGraph[8].height, backgroundColor: barGraph[8].color,}}/>
           <div className="bar-icon9" data-descr={barGraph[9].tvl} style={{height: barGraph[9].height, backgroundColor: barGraph[9].color,}}/>
-          <div className="label4" onClick={()=>{setPremium(0)}}>0%</div>
-          <div className="label5" onClick={()=>{setPremium(1)}}>1%</div>
-          <div className="label6" onClick={()=>{setPremium(2)}}>2%</div>
-          <div className="label7" onClick={()=>{setPremium(3)}}>3%</div>
-          <div className="label8" onClick={()=>{setPremium(4)}}>4%</div>
-          <div className="label9" onClick={()=>{setPremium(5)}}>5%</div>
-          <div className="label10" onClick={()=>{setPremium(6)}}>6%</div>
-          <div className="label11" onClick={()=>{setPremium(7)}}>7%</div>
-          <div className="label12" onClick={()=>{setPremium(8)}}>8%</div>
-          <div className="label13" onClick={()=>{setPremium(9)}}>9%</div>
+          <div className="label4" style={(premium === 0) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(0)}}>0%</div>
+          <div className="label5" style={(premium === 1) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(1)}}>1%</div>
+          <div className="label6" style={(premium === 2) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(2)}}>2%</div>
+          <div className="label7" style={(premium === 3) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(3)}}>3%</div>
+          <div className="label8" style={(premium === 4) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(4)}}>4%</div>
+          <div className="label9" style={(premium === 5) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(5)}}>5%</div>
+          <div className="label10" style={(premium === 6) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(6)}}>6%</div>
+          <div className="label11" style={(premium === 7) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(7)}}>7%</div>
+          <div className="label12" style={(premium === 8) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(8)}}>8%</div>
+          <div className="label13" style={(premium === 9) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(9)}}>9%</div>
           <div className="dropdown asset-dropdown">
-            <button onClick={handleOpen}>OSMO</button>
+            <button onClick={handleOpen}>{menuAsset}</button>
             {open ? (
                 <ul className="menu">
-                <li className="menu-item">
+                {menuAsset !== "ATOM" ? (<li className="menu-item">
                     <button onClick={handleMenuOne}>ATOM</button>
-                </li>
-                <li className="menu-item">
+                </li>) : null}
+                {menuAsset !== "axlUSDC" ? (<li className="menu-item">
                     <button onClick={handleMenuTwo}>axlUSDC</button>
-                </li>
+                </li>) : null}
+                {menuAsset !== "OSMO" ? (<li className="menu-item">
+                    <button onClick={handleMenuThree}>OSMO</button>
+                </li>) : null}
                 </ul>
             ) : null}
           </div>
-          <div className="collateral-tvl-label">TVL as Collateral: 10M</div>
+          <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}M</div>
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[highestBar].height), left: 42 + ((highestBar) * 40)}}>{barGraph[highestBar].tvl}</div>
           <div className="x-axis" />
           <form>
@@ -418,23 +673,28 @@ const LiquidationPools = ({lqQClient, lqclient, addr}) => {
           <h3 className="pool-titles">OMNI-ASSET</h3>
           <div className="captial-ahead-box" />
           <div className="user-tvl-box" />
-          <div className="user-tvl-label">50K</div>
-          <div className="captial-ahead-label">10M</div>
+          <div className="user-tvl-label" data-descr={"Closest TVL: "+userclosestDeposit+", Total TVL: "+userTVL}>{userclosestDeposit}K</div>
+          <div className="captial-ahead-label" data-descr="Capital ahead of you">{capitalAhead}K</div>
           <div className="x-axis1" />
-          <div className="total-tvl-label">TVL: 50M</div>
-          <div className="omni-asset-info-circle" />
-          <div className="user-tvl-info-circle" />
-          <div className="capital-ahead-info-circle" />
+          <div className="total-tvl-label">TVL: {TVL}M</div>
           <img className="tvl-container-icon" alt="" src="/images/tvl-container.svg" />
           <div className="premium">10%</div>
-          <a className="btn buttons deposit-button-omni" onClick={() => {}}>
-                    Deposit
-          </a>
-          <a className="btn buttons withdraw-button-omni" onClick={() => {}}>
-                    Withdraw
-          </a>
-          <a className="btn buttons claim-button" onClick={() => {}}>
-                    Claim
+          <form>
+            <input className="omni-deposit-amount" name="amount" value={omnidepositAmount} type="number" onChange={handlesetomnidAmount}/>
+            <button className="btn buttons deposit-button-omni" onClick={handleStabilityDeposit}  type="button">
+              <div className="deposit-button-label" onClick={handleStabilityDeposit}>
+                <span tabIndex={0} style={{cursor:"pointer"}} data-descr="NOTE: Funds can be used to liquidate during the 1 day unstaking">Deposit:</span>
+              </div>
+            </button>
+            <input className="omni-withdraw-amount" name="amount" value={omniwithdrawAmount}  type="number" onChange={handlesetomniwAmount}/>
+            <button className="btn buttons withdraw-button-omni" onClick={handleStabilityWithdraw}  type="button">
+              <div className="withdraw-button-label"  onClick={handleStabilityWithdraw}>
+                Withdraw:
+              </div>
+            </button>
+          </form> 
+          <a className="btn buttons claim-button" onClick={handleStabilityClaim}>
+            <p tabIndex={0} data-descr={SPclaimables} style={{color: "black"}} onClick={handleStabilityClaim}>Claim</p>
           </a>
           <img
             className="water-drops-deco-icon"
