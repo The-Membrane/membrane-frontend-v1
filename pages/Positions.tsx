@@ -656,7 +656,6 @@ const Positions = ({client, qClient, addr, prices}) => {
     };
     const handleassetIntent = () => {
         if (amount !== undefined && amount > 0){
-            console.log(amount)
             setassetIntent(prevState => [
                 ...prevState,
                 [currentAsset, amount]

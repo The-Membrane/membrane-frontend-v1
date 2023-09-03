@@ -67,8 +67,8 @@ export default function Home() {
   const stakingSection = useRef(null);
 
   //Get Clients
-  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, address } = useClients();
-  const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, oraclequeryClient } = useQueryClients();
+  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, address } = useClients();
+  const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, governancequeryClient, stakingqueryClient, oraclequeryClient } = useQueryClients();
 
   //Set Prices
   const [prices, setPrices] = useState({
@@ -149,15 +149,14 @@ export default function Home() {
         <Positions client={cdp_client} qClient={cdpqueryClient} addr={address} prices={prices}/>
       </div>
       <div ref={liquidationSection}>
-        <LiquidationPools lqQClient={liqqueuequeryClient} lqClient={liq_queue_client} spQClient={stabilitypoolqueryClient} spClient={stability_pool_client} addr={address}/>
+        <LiquidationPools lqQClient={liqqueuequeryClient} lqClient={liq_queue_client} spQClient={stabilitypoolqueryClient} spClient={stability_pool_client} cdpQClient={cdpqueryClient} addr={address} prices={prices}/>
       </div>
       <div ref={stakingSection}>
-        <Governance/>
+        <Governance gov_client={governance_client} gov_qclient={governancequeryClient} staking_client={staking_client} staking_qclient={stakingqueryClient} addr={address}/>
       </div>
       <div ref={launchSection}>
         <Lockdrop client={launch_client} qClient={launchqueryClient} addr={address} prices={prices}/>
-      </div>
-      
+      </div>      
     </div>
     </div>
     

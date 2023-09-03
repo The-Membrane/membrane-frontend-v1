@@ -180,7 +180,7 @@ const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient,
         //Set collateral TVL
         for (let i = 0; i < res.collateral_types.length; i++) {
           if ((res.collateral_types[i].asset.info as NativeToken).denom === asset) {
-            setcollateralTVL((parseInt(res.collateral_types[i].asset.amount) / 1_000_000) * price);
+            setcollateralTVL((parseInt(res.collateral_types[i].asset.amount) / 1000000_000_000) * price);
             break;
           }
         }

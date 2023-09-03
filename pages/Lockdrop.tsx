@@ -1235,11 +1235,14 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
             <button className="mbrn-claim-button" disabled={(progress <= 100)} style={(progress <= 100) ? {opacity:0.3} : undefined} type="button" onClick={handleclaimClick}>
               <div className="mbrn-claim-button-label">CLAIM</div>
             </button>
-            <div className="rates-box-title">Your&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rates </div>
-            <img className="mbrn-rate-logo" alt="" src="/images/Logo.svg" />
+            <div className="rates-box-title">
+              Your&nbsp;&nbsp;&nbsp;&nbsp;
+                <img className="mbrn-rate-logo" alt="membrane-mbrn-logo" src="/images/Logo.svg" />
+              &nbsp;&nbsp;&nbsp;&nbsp;Rates
+            </div>
             <div className="rates-box"/>
-            <img className="osmo-rate-logo" alt="" src="/images/osmo.svg" />
-            <img className="axlusdc-rate-logo" alt="" src="/images/usdc.svg" />
+            <img className="osmo-rate-logo" alt="osmosis-osmo-logo" src="/images/osmo.svg" />
+            <img className="axlusdc-rate-logo" alt="axelar-usdc-logo" src="/images/usdc.svg" />
             <div className="price-in-osmo">: {MBRNreward / lockedOSMO}</div>
             <div className="price-in-axlusdc">: {(MBRNreward / lockedOSMO) * prices.osmo}</div>
             <div className="infomsg">
@@ -1250,8 +1253,8 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
             </div>
             <div className="allocationmsg">
               <span className="allocationmsg-txt">
-              <p>Pre-launch contributors: 10%, vested for 2y cliff/1y linear</p>
-              <p>Community: 90%</p>
+              <p>Pre-launch contributors: 9%, vested for 2y cliff/1y linear</p>
+              <p>Community: 91%</p>
               <p>Stakers have control over vested stake.</p>
               </span>
             </div>
