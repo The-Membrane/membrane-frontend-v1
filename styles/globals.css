@@ -1778,8 +1778,16 @@ span[data-descr]:hover::after {
 .unstake {
   position: absolute;
   top: -10%;
-  left: 27%;
+  left: 1px;
   font-size: 150%;
+}
+.unstake-input {
+  position: relative;
+  background-color: white;
+  border: 1px solid aqua;
+  width: 55px;
+  left: 40px;
+  bottom: 4px;
 }
 .unstake-button {
   position: absolute;
@@ -1803,9 +1811,17 @@ span[data-descr]:hover::after {
 .stake {
   position: absolute;
   top: -10%;
-  left: 35%;
+  left: 5;
   text-align: center;
   font-size: 150%;
+}
+.stake-input {
+  position: relative;
+  background-color: white;
+  border: 1px solid aqua;
+  width: 55px;
+  left: 30px;
+  bottom: 4px;
 }
 .stake-button1 {
   position: absolute;
@@ -2009,15 +2025,20 @@ span[data-descr]:hover::after {
 }
 .cdt-claims,
 .mbrn-claims {
-  position: absolute;
-  top: 218px;
-  left: 1083px;
+  position: relative;
+  width: 60%;
+  height: auto;
+  padding: 10px;
   color: white;
   font-size: x-large;
 }
 .cdt-claims {
-  top: 218px;
-  left: 1003px;
+  top: 89px;
+  margin-right: auto;
+}
+.mbrn-claims {
+  top: 33px;
+  margin-left: auto;
 }
 .claim-button-frame { 
   position: absolute;
@@ -2026,6 +2047,8 @@ span[data-descr]:hover::after {
   background-color: #585858;
   width: 185px;
   height: 135px;
+  display: inline-block;
+  text-align: center;
   border-radius: 1rem;
 }
 .logo-icon1 {

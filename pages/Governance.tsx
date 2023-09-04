@@ -5,8 +5,11 @@ import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.cl
 import { Proposal, ProposalResponse, Config, ProposalMessage } from "../codegen/governance/Governance.types";
 import Popup from "./Popup";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { coins } from "@cosmjs/stargate";
+import { denoms } from ".";
 
 const SECONDS_PER_DAY = 86400;
+const unstakingPeriod = 4; //days
 
 const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, addr}) => {
 
@@ -38,7 +41,35 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
       completed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
       executed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
   });
+  const [userVP, setuserVP] = useState(0);
+  //Staking//
+  //Emissions Schedule
+  const [emissionsSchedule, setEmissionsSchedule] = useState({
+    rate: 0,
+    monthsLeft: 0,
+  })
+  const [userStake, setUserStake] = useState({
+    staked: 0,
+    unstaking: {
+      amount: 0,
+      timeLeft: 0,
+    },
+  });
+  const [stakeAmount, setstakeAmount] = useState();
+  const [unstakeAmount, setunstakeAmount] = useState();
+  const [userClaims, setuserClaims] = useState({
+    mbrnClaims: 0,
+    cdtClaims: 0,
+  });
 
+  const handlesetstakeAmount = (event) => {
+    event.preventDefault();
+    setstakeAmount(event.target.value);
+  }
+  const handlesetunstakeAmount = (event) => {
+    event.preventDefault();
+    setunstakeAmount(event.target.value);
+  }
   const handleOpen = () => {
     //Query Proposals and save them in sorted bins
     setOpen(!open);
@@ -259,12 +290,204 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
     } catch (error) {
       console.log(error)
     }
-  }  
+  }
+
+  //Get emissions schedule
+  const getEmissionsSchedule = async () => {
+    try {
+      //Get emissions schedule
+      await stakingQueryClient.incentiveSchedule()
+      .then(async (res) => {
+        console.log(res)
+        //Get block time
+        stakingClient.client.getBlock().then((block) => {
+          let start_in_seconds = res.start_time;
+          let durations_in_seconds = res.ownership_distribution.duration * SECONDS_PER_DAY;
+          //Calc months left
+          let seconds_left = (start_in_seconds + durations_in_seconds) - (Date.parse(block.header.time) / 1000);
+          //Seconds to months
+          let monthsLeft = seconds_left / (SECONDS_PER_DAY * 30);
+          //Set emissions schedule
+          setEmissionsSchedule({
+            rate: parseInt(res.ownership_distribution.rate),
+            monthsLeft: monthsLeft,
+          })
+        })
+
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  //Get user staked & unstaking MBRN
+  const getUserStake = async () => {
+    try {
+      await stakingQueryClient.userStake({
+        staker: address ?? "",
+      }).then((res) => {
+        //Get staking total & closest unstaking deposit
+        var stakingTotal = 0;
+        var closestUnstakingDeposit = 0;
+        var closestUnstakingDepositTime = 0;
+        for (let i = 0; i < res.deposit_list.length; i++) {
+          if (res.deposit_list[i].unstake_start_time === null || res.deposit_list[i].unstake_start_time === undefined) {
+            stakingTotal += parseInt(res.deposit_list[i].amount)
+          } else {
+            if (closestUnstakingDepositTime === 0){
+              closestUnstakingDepositTime = res.deposit_list[i].unstake_start_time ?? 0
+              closestUnstakingDeposit = parseInt(res.deposit_list[i].amount)
+            } else if ((res.deposit_list[i].unstake_start_time ?? 0) < closestUnstakingDepositTime) {
+              closestUnstakingDepositTime = res.deposit_list[i].unstake_start_time ?? 0
+              closestUnstakingDeposit = parseInt(res.deposit_list[i].amount)
+            }            
+          }
+        }
+        //Calc time left to unstake
+        var currentTime = 0;
+        stakingClient.client.getBlock().then( (block) => {
+          currentTime = Date.parse(block.header.time) / 1000;
+          var secondsLeft = closestUnstakingDepositTime - currentTime;
+          var daysLeft = secondsLeft / SECONDS_PER_DAY;
+          //Set user stake
+          setUserStake({
+            staked: stakingTotal,
+            unstaking: {
+              amount: closestUnstakingDeposit,
+              timeLeft: daysLeft,
+            },
+          })
+        })
+
+        //Set user VP
+        setuserVP(Math.sqrt(parseInt(res.total_staked)))
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handlestakeClick = async () => {
+    try {
+      await stakingClient?.stake({}
+        ,"auto", undefined, coins(stakeAmount ?? 0, denoms.mbrn)
+      ).then((res) => {
+        console.log(res)
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Staked</div>)
+        setPopupStatus("Success")
+        //Update user stake
+        setUserStake(prevState => {
+          return {
+            ...prevState,
+            staked: prevState.staked + (stakeAmount ?? 0),
+          }
+        })
+      })
+    } catch (error) {
+      console.log(error)
+      const e = error as {message: string};
+      //format popup message
+      setPopupTrigger(true)
+      setPopupMsg(<div>{e.message}</div>)
+      setPopupStatus("Error")
+    }
+  }
+
+  const handleunstakeClick = async () => {
+    try {      
+      await stakingClient?.unstake({
+        mbrnAmount: (unstakeAmount ?? 0).toString(),
+      },"auto", undefined
+      ).then((res) => {
+        console.log(res)
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Staked</div>)
+        setPopupStatus("Success")
+        //Update user stake
+        setUserStake(prevState => {
+          return {
+            ...prevState,
+            unstaking: {
+              amount: prevState.unstaking.amount + (unstakeAmount ?? 0),
+              timeLeft: unstakingPeriod,
+            }
+          }
+        })
+      })
+    } catch (error) {
+      console.log(error)
+      const e = error as {message: string};
+      //format popup message
+      setPopupTrigger(true)
+      setPopupMsg(<div>{e.message}</div>)
+      setPopupStatus("Error")
+    }
+  }
+  const handleclaimClick = async () => {
+    try {
+      await stakingClient?.claimRewards({
+        restake: false,
+      },"auto", undefined
+      ).then((res) => {
+        console.log(res)
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Claimed</div>)
+        setPopupStatus("Success")
+      })
+    } catch (error) {
+      console.log(error)
+      const e = error as {message: string};
+      //format popup message
+      setPopupTrigger(true)
+      setPopupMsg(<div>{e.message}</div>)
+      setPopupStatus("Error")
+    }
+  }
+  const getuserClaims = async () => {
+    try {
+      await stakingQueryClient.userRewards({
+        user: address ?? "",
+      }).then((res) => {
+        console.log(res)
+        //Set user claims
+        for (let i = 0; i < res.claimables.length; i++) {
+          if("denom" in res.claimables[i].info) {
+            if (res.claimables[i].info.denom === denoms.cdt) {
+              setuserClaims(prevState => {
+                return {
+                  ...prevState,
+                  cdtClaims: parseInt(res.claimables[i].amount),
+                }
+              })
+            }
+          }
+        }
+        //Set MBRN claims
+        setuserClaims(prevState => {
+          return {
+            ...prevState,
+            mbrnClaims: parseInt(res.accrued_interest),
+          }
+        })
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     //Query & set proposals
     getProposals()
-
+    //Query & set emissions schedule
+    getEmissionsSchedule()
+    //Get user staked & unstaking MBRN
+    getUserStake()
+    //Get user claims
+    getuserClaims()
   }, []);
       
   return (
@@ -397,21 +620,30 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
         <div className="delegate">Delegate</div>
       </div>
       <div className="total-vp-label">Total VP: </div>
-      <div className="total-vp-amount">200</div>
+      <div className="total-vp-amount">{userVP}</div>
       <div className="delegated-to">Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fluid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comm.&nbsp;&nbsp;&nbsp;Undele.</div>
-      <div className="claim-button-frame"/>
-      <div className="btn gov-claim-button">
+      <div className="claim-button-frame">        
+        <div className="cdt-claims">{userClaims.cdtClaims}</div>
+        <div className="mbrn-claims">{userClaims.mbrnClaims}</div>
+      </div>
+      <div className="btn gov-claim-button" onClick={handleclaimClick}>
         <div className="claim">Claim</div>
       </div>
       <div className="btn commission">5% Commission</div>
       <div className="unstake-button-frame"/>
-      <div className="btn unstake-button">
-        <div className="unstake">Unstake</div>
+      <form>
+      <div className="btn unstake-button" >
+        <div className="unstake">Unstake:</div>
+        <input className="unstake-input" name="amount" value={unstakeAmount} type="number" onChange={handlesetunstakeAmount}/>
       </div>
+      </form>
       <div className="stake-button-frame"/>
-      <div className="btn stake-button1">
-        <div className="stake">Stake</div>
-      </div>
+      <form>
+        <div className="btn stake-button1">
+          <div className="stake">Stake:</div>
+          <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
+        </div>
+      </form>
       <div className="status-dropdown">
         <img className="button-icon" alt="" src="images/button.svg" />
         <div className="dropdown proposal-dropdown">
@@ -522,10 +754,8 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
       <div className="delegates-y" />
       <div className="delegators-y1" />
       <div className="delegators-y2" />
-      <div className="staked-mbrn1">100</div>
-      <div className="unstaking-mbrn">100</div>
-      <div className="mbrn-claims">100</div>
-      <div className="cdt-claims">100</div>
+      <div className="staked-mbrn1">{userStake.staked}</div>
+      <div className="unstaking-mbrn">{userStake.unstaking.amount}</div>
       <div className="mbrn-stake-logo">
         <img className="logo-icon1  logo-shiftDown" alt="" src="/images/logo.svg" />
       </div>
@@ -535,10 +765,12 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
       <div className="mbrn-claim-logo">
       <img className="logo-icon1" alt="" src="/images/logo.svg" />
       </div>
-      <div className="unstaking-progress-bar" >
-        <ProgressBar bgcolor="#50C9BD" progress='30'  height={20} />
-      </div>
-      <div className="emissions-schedule">33%/8 months</div>
+      {userStake.unstaking.amount !== 0 ? (<div className="unstaking-progress-bar" >
+        <ProgressBar bgcolor="#50C9BD" progress={(unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod}  height={20} />
+      </div>) : null}
+      {(emissionsSchedule.rate !== 0 && emissionsSchedule.monthsLeft !== 0) ? 
+      (<div className="emissions-schedule">{emissionsSchedule.rate}%/{emissionsSchedule.monthsLeft} months</div>)
+      : null}
       <img className="cdt-logo-icon" alt="" src="/images/CDT.svg" />      
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>    
