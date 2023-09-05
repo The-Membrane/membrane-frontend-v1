@@ -28,7 +28,7 @@ import {
   Product,
   Dependency,
   WalletSection,
-  handleChangeColorModeValue,
+  handleAlterColorModeValue,
   HackCw20,
 } from '../components';
 
@@ -40,7 +40,7 @@ const library = {
 
 import Dashboard from './Dashboard';
 import { useEffect, useRef, useState } from 'react';
-import NavBar from './NavBar';
+import NavBar from '../components/NavBar';
 import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
 import Governance from './Governance';
@@ -51,9 +51,17 @@ export const denoms = {
   mbrn: "umbrn",
   cdt: "factory/osmo1v0us2salr8t28mmcjm87k2zrv3txecc8e2gz9kgvw77xguedus4qlnkl0t/ucdt",
   osmo: "uosmo",
-  atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-  axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+  //mainnet atom ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
+  atom: "ibc/A8C2D23A1E6F95DA4E48BA349667E322BD7A6C996D8A4AAE8BA72E190F3D1477",
+  //mainnet axlUSDC ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858
+  axlUSDC: "ibc/6F34E1BD664C36CE49ACC28E60D62559A5F96C4F9A6CCE4FC5A67B2852E24CFE",
 };
+
+export interface Prices {
+  osmo: number,
+  atom: number,
+  axlUSDC: number
+}
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -69,9 +77,10 @@ export default function Home() {
   //Get Clients
   const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, address } = useClients();
   const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, governancequeryClient, stakingqueryClient, oraclequeryClient } = useQueryClients();
+  const addr = address as string | undefined;
 
   //Set Prices
-  const [prices, setPrices] = useState({
+  const [prices, setPrices] = useState<Prices>({
     osmo: 0,
     atom: 0,
     axlUSDC: 0,
@@ -146,16 +155,16 @@ export default function Home() {
         <Dashboard/>        
       </div>
       <div ref={vaultSection}>
-        <Positions client={cdp_client} qClient={cdpqueryClient} addr={address} prices={prices}/>
+        <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={addr} prices={prices}/>
       </div>
       <div ref={liquidationSection}>
-        <LiquidationPools lqQClient={liqqueuequeryClient} lqClient={liq_queue_client} spQClient={stabilitypoolqueryClient} spClient={stability_pool_client} cdpQClient={cdpqueryClient} addr={address} prices={prices}/>
+        <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={addr} prices={prices}/>
       </div>
       <div ref={stakingSection}>
-        <Governance gov_client={governance_client} gov_qclient={governancequeryClient} staking_client={staking_client} staking_qclient={stakingqueryClient} addr={address}/>
+        <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={addr}/>
       </div>
       <div ref={launchSection}>
-        <Lockdrop client={launch_client} qClient={launchqueryClient} addr={address} prices={prices}/>
+        <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} address={addr} prices={prices}/>
       </div>      
     </div>
     </div>

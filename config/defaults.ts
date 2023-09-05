@@ -1,7 +1,8 @@
 import { assets } from 'chain-registry';
 import { AssetList, Asset } from '@chain-registry/types';
-import { GeneratedType, Registry } from "@cosmjs/proto-signing";
+import { GeneratedType } from "@cosmjs/proto-signing";
 import { AminoTypes } from "@cosmjs/stargate";
+import { Registry } from "@cosmjs/stargate/node_modules/@cosmjs/proto-signing/build/registry";
 import {
     cosmosAminoConverters,
     cosmosProtoRegistry,

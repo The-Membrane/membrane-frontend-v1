@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
-import ProgressBar from "./progress_bar";
+import ProgressBar from "../components/progress_bar";
 import { GovernanceClient, GovernanceQueryClient } from "../codegen/governance/Governance.client";
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { Proposal, ProposalResponse, Config, ProposalMessage } from "../codegen/governance/Governance.types";
-import Popup from "./Popup";
+import Popup from "../components/Popup";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { coins } from "@cosmjs/stargate";
 import { denoms } from ".";
+import { NativeToken } from "../codegen/Positions.types";
 
 const SECONDS_PER_DAY = 86400;
 const unstakingPeriod = 4; //days
 
-const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, addr}) => {
+interface Props {
+  govClient: GovernanceClient | null;
+  govQueryClient: GovernanceQueryClient | null;
+  stakingClient: StakingClient | null;
+  stakingQueryClient: StakingQueryClient | null;
+  address: string | undefined;
+}
 
-  const govClient = gov_client as GovernanceClient;
-  const govQueryClient = gov_qclient as GovernanceQueryClient;
-  const stakingClient = staking_client as StakingClient;
-  const stakingQueryClient = staking_qclient as StakingQueryClient;
-  const address = addr as string | undefined;
-
+const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClient, address}: Props) => {
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState<ReactJSXElement>();
@@ -168,11 +170,11 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
     }
   ]);
 
-  const handlesetstakeAmount = (event) => {
+  const handlesetstakeAmount = (event: any) => {
     event.preventDefault();
     setstakeAmount(event.target.value);
   }
-  const handlesetunstakeAmount = (event) => {
+  const handlesetunstakeAmount = (event: any) => {
     event.preventDefault();
     setunstakeAmount(event.target.value);
   }
@@ -273,9 +275,11 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
           } else {
             reader.readAsText((msgs as FileList)[0]);
             reader.onload = () => {
-              //Set proposal
-              handleproposalSubmission(title, description, link, JSON.parse(reader.result))
-              console.log(JSON.parse(reader.result));
+              if (reader.result !== null){
+                //Set proposal
+                handleproposalSubmission(title, description, link, JSON.parse(reader.result as string))
+                console.log(JSON.parse(reader.result as string));
+              }
             }
           }
           
@@ -336,7 +340,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
         currentTime = Date.parse(block.header.time) / 1000;;
       })
       //Get active
-      await govQueryClient.activeProposals({})
+      await govQueryClient?.activeProposals({})
       .then(async (res) => {
         //Set active, completed & executed
         for (let i = 0; i < res.proposal_list.length; i++) {
@@ -346,7 +350,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
               var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;            
               //Get total voting power
               var totalVotingPower = 0;
-              await govQueryClient.totalVotingPower({
+              await govQueryClient?.totalVotingPower({
                 proposalId: parseInt(res.proposal_list[i].proposal_id)
               }).then((res) => {
                 totalVotingPower = parseInt(res);
@@ -354,7 +358,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
               //Calc quorum
               var quorum = (parseInt(res.proposal_list[i].against_power) + parseInt(res.proposal_list[i].for_power) + parseInt(res.proposal_list[i].aligned_power) + parseInt(res.proposal_list[i].amendment_power) + parseInt(res.proposal_list[i].removal_power)) / totalVotingPower;
               //Query config
-              var config = await govQueryClient.config()
+              var config = await govQueryClient?.config()
               //Set quorum from config
               setQuorum(parseInt(config.proposal_required_quorum))
               //Get current result
@@ -381,7 +385,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
       })
 
       //Get pending
-      await govQueryClient.pendingProposals({
+      await govQueryClient?.pendingProposals({
         limit: 8,
       })
       .then((res) => {
@@ -402,11 +406,11 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
   const getEmissionsSchedule = async () => {
     try {
       //Get emissions schedule
-      await stakingQueryClient.incentiveSchedule()
+      await stakingQueryClient?.incentiveSchedule()
       .then(async (res) => {
         console.log(res)
         //Get block time
-        stakingClient.client.getBlock().then((block) => {
+        stakingClient?.client.getBlock().then((block) => {
           let start_in_seconds = res.start_time;
           let durations_in_seconds = res.ownership_distribution.duration * SECONDS_PER_DAY;
           //Calc months left
@@ -429,7 +433,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
   //Get user staked & unstaking MBRN
   const getUserStake = async () => {
     try {
-      await stakingQueryClient.userStake({
+      await stakingQueryClient?.userStake({
         staker: address ?? "",
       }).then((res) => {
         //Get staking total & closest unstaking deposit
@@ -451,7 +455,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
         }
         //Calc time left to unstake
         var currentTime = 0;
-        stakingClient.client.getBlock().then( (block) => {
+        stakingClient?.client.getBlock().then( (block) => {
           currentTime = Date.parse(block.header.time) / 1000;
           var secondsLeft = closestUnstakingDepositTime - currentTime;
           var daysLeft = secondsLeft / SECONDS_PER_DAY;
@@ -555,14 +559,14 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
   }
   const getuserClaims = async () => {
     try {
-      await stakingQueryClient.userRewards({
+      await stakingQueryClient?.userRewards({
         user: address ?? "",
       }).then((res) => {
         console.log(res)
         //Set user claims
         for (let i = 0; i < res.claimables.length; i++) {
           if("denom" in res.claimables[i].info) {
-            if (res.claimables[i].info.denom === denoms.cdt) {
+            if ((res.claimables[i].info as unknown as NativeToken).denom === denoms.cdt) {
               setuserClaims(prevState => {
                 return {
                   ...prevState,
@@ -800,7 +804,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
               setPopupStatus("Success")
 
               //Set new commission
-              await stakingQueryClient.delegations({
+              await stakingQueryClient?.delegations({
                 user: address ?? "",
               }).then((res) => {
                 setCommission(parseInt(res[0].delegation_info.commission) * 100) //Commission is a % so multiply by 100
@@ -836,7 +840,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
   }
   const getDelegations = async () => {
     try {
-      await stakingQueryClient.delegations({
+      await stakingQueryClient?.delegations({
         user: address ?? "",
       }).then( async (res) => {
         console.log(res)
@@ -847,7 +851,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
           delegations[i].delegator = res[i].delegation_info.delegated_to[i].delegate
           delegations[i].fluid = res[i].delegation_info.delegated_to[i].fluidity
           //Query and set commission
-          await stakingQueryClient.delegations({
+          await stakingQueryClient?.delegations({
             user: res[i].delegation_info.delegated_to[i].delegate,
           }).then((res) => {
             delegations[i].commission = parseInt(res[0].delegation_info.commission) * 100 //Commission is a % so multiply by 100

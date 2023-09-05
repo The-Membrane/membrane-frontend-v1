@@ -6,9 +6,9 @@
 import { useEffect, useState } from "react";
 import { LiquidationQueueClient, LiquidationQueueQueryClient } from "../codegen/liquidation_queue/LiquidationQueue.client";
 import { ClaimsResponse, QueueResponse, SlotResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
-import { denoms } from ".";
+import { denoms, Prices } from ".";
 import { coins } from "@cosmjs/stargate";
-import Popup from "./Popup";
+import Popup from "../components/Popup";
 import { StabilityPoolClient, StabilityPoolQueryClient } from "../codegen/stability_pool/StabilityPool.client";
 import { PositionsQueryClient } from "../codegen/Positions.client";
 import { NativeToken } from "../codegen/Positions.types";
@@ -16,14 +16,17 @@ import { NativeToken } from "../codegen/Positions.types";
 //Bar graph scale
 const CDTperPIXEL = 10000_000_000;
 
-const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient, addr, prices}) => {
+interface Props {
+  queryClient: LiquidationQueueQueryClient | null;
+  liq_queueClient: LiquidationQueueClient | null;
+  sp_queryClient: StabilityPoolQueryClient | null;
+  sp_client: StabilityPoolClient | null;
+  cdp_queryClient: PositionsQueryClient | null;
+  address: string | undefined;
+  prices: Prices;  
+}
 
-  const queryClient = lqQClient as LiquidationQueueQueryClient;
-  const liq_queueClient = lqClient as LiquidationQueueClient;
-  const sp_queryClient = spQClient as StabilityPoolQueryClient;
-  const sp_client = spClient as StabilityPoolClient;
-  const cdp_queryClient = cdpQClient as PositionsQueryClient;
-  const address = addr as string | undefined;
+const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, prices}: Props) => {
 
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
@@ -91,19 +94,19 @@ const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient,
     setOpen(false);
     setMenuAsset("OSMO");
   };
-  const handlesetdAmount = (event) => {
+  const handlesetdAmount = (event: any) => {
     event.preventDefault();
     setdAmount(event.target.value);
   };
-  const handlesetwAmount = (event) => {
+  const handlesetwAmount = (event: any) => {
     event.preventDefault();
     setwAmount(event.target.value);
   };  
-  const handlesetomnidAmount = (event) => {
+  const handlesetomnidAmount = (event: any) => {
     event.preventDefault();
     setomnidAmount(event.target.value);
   };
-  const handlesetomniwAmount = (event) => {
+  const handlesetomniwAmount = (event: any) => {
     event.preventDefault();
     setomniwAmount(event.target.value);
   };
@@ -158,8 +161,7 @@ const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient,
 
     //Query total queue
     try {
-      await cdp_queryClient?.getBasket({
-      }).then((res) => {
+      await cdp_queryClient?.getBasket().then((res) => {
         console.log(res)
         //Get price
         let price = 0;

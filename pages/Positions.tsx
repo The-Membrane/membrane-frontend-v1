@@ -9,14 +9,17 @@ import { Asset, PositionResponse, RedeemabilityResponse } from "../codegen/Posit
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.client";
-import { denoms } from ".";
-import Popup from "./Popup";
+import { denoms, Prices } from ".";
+import Popup from "../components/Popup";
 
-const Positions = ({client, qClient, addr, prices}) => {
+interface Props {
+    cdp_client: PositionsClient | null;
+    queryClient: PositionsQueryClient | null;
+    address: string | undefined;
+    prices: Prices;
+}
 
-    const cdp_client = client as PositionsClient;
-    const queryClient = qClient as PositionsQueryClient;
-    const address = addr as string | undefined;
+const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
 
     //Popup
     const [popupTrigger, setPopupTrigger] = useState(true);
@@ -144,11 +147,11 @@ const Positions = ({client, qClient, addr, prices}) => {
         }   
 
     };
-    const handlesetPremium = (event) => {
+    const handlesetPremium = (event: any) => {
         event.preventDefault();
         setPremium(event.target.value);
       };
-    const handlesetloanUsage = (event) => {
+    const handlesetloanUsage = (event: any) => {
         event.preventDefault();
         setloanUsage(event.target.value);
     };
@@ -339,7 +342,7 @@ const Positions = ({client, qClient, addr, prices}) => {
         //Set functionality        
         setcurrentfunctionLabel("repay");
     };
-    const handlesetAmount = (event) => {
+    const handlesetAmount = (event: any) => {
         event.preventDefault();
         setAmount(event.target.value);
       };
@@ -353,7 +356,7 @@ const Positions = ({client, qClient, addr, prices}) => {
         setStarting("");
         setcurrentfunctionLabel("closePosition");
     };
-    const handlesetSpread = (event) => {
+    const handlesetSpread = (event: any) => {
         event.preventDefault();
         setSpread(event.target.value);
       };
@@ -691,9 +694,7 @@ const Positions = ({client, qClient, addr, prices}) => {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
                         info: {
-                            native_token: { //These show errors but this is correct
-                                denom: denoms.osmo,
-                            }
+                            denom: denoms.osmo,
                         }
                     })
                     break;
@@ -702,9 +703,7 @@ const Positions = ({client, qClient, addr, prices}) => {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
                         info: {
-                            native_token: {
-                                denom: denoms.atom,
-                            }
+                            denom: denoms.atom,
                         }
                     })
                     break;
@@ -713,9 +712,7 @@ const Positions = ({client, qClient, addr, prices}) => {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
                         info: {
-                            native_token: {
-                                denom: denoms.axlUSDC,
-                            }
+                            denom: denoms.axlUSDC,
                         }
                     })
                     break;
@@ -937,7 +934,7 @@ const Positions = ({client, qClient, addr, prices}) => {
       </div>
       <div className={closeScreen}>
         <div className="close-screen">
-            Close Position uses Apollo's Osmosis router to sell collateral to fulfill ALL REMAINING debt
+            Close Position uses Apollos Osmosis router to sell collateral to fulfill ALL REMAINING debt
         </div>
         <form>
             <label className="spread-label">Max spread (ex: 1% as 0.01)</label>     

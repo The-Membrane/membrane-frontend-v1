@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Box,
   Button,
@@ -49,7 +50,7 @@ export function stringTruncateFromCenter(str: string, maxLength: number) {
   return str.substring(0, left) + midChar + str.substring(right);
 }
 
-export function handleChangeColorModeValue(
+export function handleAlterColorModeValue(
   colorMode: string,
   light: string,
   dark: string
@@ -98,7 +99,7 @@ export const ConnectedShowAddress = ({
       justifyContent="center"
       borderRadius={isRound ? 'full' : 'lg'}
       border="1px solid"
-      borderColor={handleChangeColorModeValue(
+      borderColor={handleAlterColorModeValue(
         colorMode,
         'gray.200',
         'whiteAlpha.300'
@@ -108,7 +109,7 @@ export const ConnectedShowAddress = ({
       minH="fit-content"
       pl={2}
       pr={2}
-      color={handleChangeColorModeValue(
+      color={handleAlterColorModeValue(
         colorMode,
         'gray.700',
         'whiteAlpha.600'
@@ -171,7 +172,7 @@ export const ConnectedShowAddress = ({
           color={
             hasCopied
               ? 'green.400'
-              : handleChangeColorModeValue(
+              : handleAlterColorModeValue(
                   colorMode,
                   'gray.500',
                   'whiteAlpha.400'

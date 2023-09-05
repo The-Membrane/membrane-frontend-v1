@@ -1,5 +1,5 @@
 import { WalletSection } from "../components";
-import NavBar, { launchPosition, liquidationPosition, scrollDown, stakingPosition, vaultPosition } from './NavBar';
+import NavBar, { launchPosition, liquidationPosition, scrollDown, stakingPosition, vaultPosition } from '../components/NavBar';
 
 const Dashboard = () => {
     return (

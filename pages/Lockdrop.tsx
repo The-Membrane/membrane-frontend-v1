@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
-import ProgressBar from "./progress_bar";
+import ProgressBar from "../components/progress_bar";
 import { LaunchClient, LaunchQueryClient } from "../codegen/launch/Launch.client";
 import { OracleQueryClient } from "../codegen/oracle/Oracle.client";
 import { Lock, Uint128 } from "../codegen/launch/Launch.types";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { coin } from "@cosmjs/stargate";
-import { denoms } from ".";
-import Popup from "./Popup";
+import { denoms, Prices } from ".";
+import Popup from "../components/Popup";
 
-const Lockdrop = ({client, qClient, addr, prices}) => {
+interface Props {
+  launch_client: LaunchClient | null;
+  queryClient: LaunchQueryClient | null;
+  address: string | undefined;
+  prices: Prices;
+}
 
-  //Get Clients
-  const launch_client = client as LaunchClient;  
-  const queryClient = qClient as LaunchQueryClient;
-  const address = addr as string | undefined;
-
+const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
+  
   interface LockDisplay {
     deposit: number | undefined;
     new_lock_up_duration: number | undefined;
@@ -88,31 +90,6 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
-  //Lock
-  const [amount, setAmount] = useState(0);
-
-  // const handlelockClick = () => {
-  //   var success = true;
-  //   //Lock OSMO
-  //   try {
-  //     //execute lock
-  //     // await launch_client?.lock()
-  //   } catch (error) {
-  //     success = false;
-  //     console.log(error);
-  //   } finally {
-  //     if (success) {
-  //       //Update OSMO total
-  //       setlockedOSMO(+lockedOSMO + +amount)
-
-  //       //Query to update lock list
-  //       get_updateddepositList() 
-
-  //       //Query to Update MBRN reward total
-  //       set_MBRNreward()
-  //     }
-  //   }
-  // }
 
   //Query & update list objects
   const get_updateddepositList = async () => {
@@ -984,97 +961,97 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
     }
   };
   
-  const handlesetdeposit1amount = (event) => {
+  const handlesetdeposit1amount = (event: any) => {
     event.preventDefault();
     setdeposit1(prevState => {
       return { ...prevState, deposit: event.target.value }
     });
   };
-  const handlesetdeposit1days = (event) => {
+  const handlesetdeposit1days = (event: any) => {
     event.preventDefault();
     setdeposit1(prevState => {
       return { ...prevState, new_lock_up_duration: event.target.value }
     });
   };
-  const handlesetdeposit2amount = (event) => {
+  const handlesetdeposit2amount = (event: any) => {
     event.preventDefault();
     setdeposit2(prevState => {
       return { ...prevState, deposit: event.target.value }
     });
   };
-  const handlesetdeposit2days = (event) => {
+  const handlesetdeposit2days = (event: any) => {
     event.preventDefault();
     setdeposit2(prevState => {
       return { ...prevState, new_lock_up_duration: event.target.value }
     });
   };
-  const handlesetdeposit3amount = (event) => {
+  const handlesetdeposit3amount = (event: any) => {
     event.preventDefault();
     setdeposit3(prevState => {
       return { ...prevState, deposit: event.target.value }
     });
   };
-  const handlesetdeposit3days = (event) => {
+  const handlesetdeposit3days = (event: any) => {
     event.preventDefault();
     setdeposit3(prevState => {
       return { ...prevState, new_lock_up_duration: event.target.value }
     });
   };
-  const handlesetdeposit4amount = (event) => {
+  const handlesetdeposit4amount = (event: any) => {
     event.preventDefault();
     setdeposit4(prevState => {
       return { ...prevState, deposit: event.target.value }
     });
   };
-  const handlesetdeposit4days = (event) => {
+  const handlesetdeposit4days = (event: any) => {
     event.preventDefault();
     setdeposit4(prevState => {
       return { ...prevState, new_lock_up_duration: event.target.value }
     });
   };
-  const handlesetdeposit5amount = (event) => {
+  const handlesetdeposit5amount = (event: any) => {
     event.preventDefault();
     setdeposit5(prevState => {
       return { ...prevState, deposit: event.target.value }
     });
   };
-  const handlesetdeposit5days = (event) => {
+  const handlesetdeposit5days = (event: any) => {
     event.preventDefault();
     setdeposit5(prevState => {
       return { ...prevState, new_lock_up_duration: event.target.value }
     });
   };
-  const handlesetdeposit6amount = (event) => {
+  const handlesetdeposit6amount = (event: any) => {
     event.preventDefault();
     setdeposit6(prevState => {
       return { ...prevState, deposit: event.target.value }
     });
   };
-  const handlesetdeposit6days = (event) => {
+  const handlesetdeposit6days = (event: any) => {
     event.preventDefault();
     setdeposit6(prevState => {
       return { ...prevState, new_lock_up_duration: event.target.value }
     });
   };
-  const handlesetdeposit7amount = (event) => {
+  const handlesetdeposit7amount = (event: any) => {
     event.preventDefault();
     setdeposit7(prevState => {
       return { ...prevState, deposit: event.target.value }
     });
   };
-  const handlesetdeposit7days = (event) => {
+  const handlesetdeposit7days = (event: any) => {
     event.preventDefault();
     setdeposit7(prevState => {
       return { ...prevState, new_lock_up_duration: event.target.value }
     });
   };
-  const handlesetdeposit8amount = (event) => {
+  const handlesetdeposit8amount = (event: any) => {
     event.preventDefault();
     setdeposit8(prevState => {
       return { ...prevState, deposit: event.target.value }
     });
   };
-  const handlesetdeposit8days = (event) => {
+  const handlesetdeposit8days = (event: any) => {
     event.preventDefault();
     setdeposit8(prevState => {
       return { ...prevState, new_lock_up_duration: event.target.value }
@@ -1244,7 +1221,7 @@ const Lockdrop = ({client, qClient, addr, prices}) => {
             <img className="osmo-rate-logo" alt="osmosis-osmo-logo" src="/images/osmo.svg" />
             <img className="axlusdc-rate-logo" alt="axelar-usdc-logo" src="/images/usdc.svg" />
             <div className="price-in-osmo">: {MBRNreward / lockedOSMO}</div>
-            <div className="price-in-axlusdc">: {(MBRNreward / lockedOSMO) * prices.osmo}</div>
+            <div className="price-in-axlusdc">: {(MBRNreward / lockedOSMO) * prices?.osmo}</div>
             <div className="infomsg">
               <p className="there-is-10m-mbrn-up-for-grabs">
                 There is 10M MBRN up for grabs in this 7 day event. If you want a larger share for your deposit you must lock for longer (MAX: 365 days).
