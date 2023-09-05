@@ -3,6 +3,7 @@
 // & place its bottom at the static bottom + bar height + spacing
 // (using inline styles from the variables)
 
+import React from "react";
 import { useEffect, useState } from "react";
 import { LiquidationQueueClient, LiquidationQueueQueryClient } from "../codegen/liquidation_queue/LiquidationQueue.client";
 import { ClaimsResponse, QueueResponse, SlotResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";

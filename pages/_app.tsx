@@ -12,6 +12,7 @@ import { GasPrice } from '@cosmjs/stargate';
 import { SignerOptions } from '@cosmos-kit/core';
 import '@interchain-ui/react/styles';
 import { defaultTheme } from '../config';
+import React from 'react';
 
 function CreateCosmosApp({ Component, pageProps }: AppProps) {
   const signerOptions: SignerOptions = {

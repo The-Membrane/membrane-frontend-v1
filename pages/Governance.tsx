@@ -8,6 +8,7 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { coins } from "@cosmjs/stargate";
 import { denoms } from ".";
 import { NativeToken } from "../codegen/Positions.types";
+import React from "react";
 
 const SECONDS_PER_DAY = 86400;
 const unstakingPeriod = 4; //days

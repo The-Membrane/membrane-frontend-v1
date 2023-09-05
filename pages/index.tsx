@@ -1,3 +1,4 @@
+import React from "react";
 import Head from 'next/head';
 import {
   Box,
@@ -24,13 +25,6 @@ import {
   dependencies,
   products,
 } from '../config';
-import {
-  Product,
-  Dependency,
-  WalletSection,
-  handleAlterColorModeValue,
-  HackCw20,
-} from '../components';
 
 const library = {
   title: 'OsmoJS',

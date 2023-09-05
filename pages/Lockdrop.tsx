@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import ProgressBar from "../components/progress_bar";
 import { LaunchClient, LaunchQueryClient } from "../codegen/launch/Launch.client";
@@ -16,7 +17,7 @@ interface Props {
 }
 
 const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
-  
+
   interface LockDisplay {
     deposit: number | undefined;
     new_lock_up_duration: number | undefined;

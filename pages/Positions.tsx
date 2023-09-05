@@ -1,14 +1,15 @@
 import { background } from "@chakra-ui/react";
 import { color, px } from "framer-motion";
 import { useEffect, useState } from "react";
+import React from "react";
 
 import { contracts } from "../codegen";
 import { usePositionsClient, usePositionsQueryClient } from "../hooks/use-positions-client";
 import { testnetAddrs } from "../config";
-import { Asset, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.client";
+import { Asset, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 

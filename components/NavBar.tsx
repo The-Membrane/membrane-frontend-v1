@@ -1,3 +1,4 @@
+import React from 'react';
 import { MutableRefObject, useRef } from 'react';
 
 export const dashboardPosition = 20;
