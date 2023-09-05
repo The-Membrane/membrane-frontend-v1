@@ -9,6 +9,7 @@ import { coins } from "@cosmjs/stargate";
 import { denoms } from ".";
 import { NativeToken } from "../codegen/Positions.types";
 import React from "react";
+import Image from "next/image";
 
 const SECONDS_PER_DAY = 86400;
 const unstakingPeriod = 4; //days
@@ -1050,7 +1051,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         </div>
       </form>
       <div className="status-dropdown">
-        <img className="button-icon" alt="" src="images/button.svg" />
+        <Image className="button-icon" alt="" src="images/button.svg" />
         <div className="dropdown proposal-dropdown">
             <button onClick={handleOpen}>Proposal Status</button>
             {open ? (
@@ -1162,13 +1163,13 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="staked-mbrn1">{userStake.staked}</div>
       <div className="unstaking-mbrn">{userStake.unstaking.amount}</div>
       <div className="mbrn-stake-logo">
-        <img className="logo-icon1  logo-shiftDown" alt="" src="/images/logo.svg" />
+        <Image className="logo-icon1  logo-shiftDown" alt="" src="/images/logo.svg" />
       </div>
       <div className="mbrn-unstake-logo">
-      <img className="logo-icon1  logo-shiftDown" alt="" src="/images/logo.svg" />
+      <Image className="logo-icon1  logo-shiftDown" alt="" src="/images/logo.svg" />
       </div>
       <div className="mbrn-claim-logo">
-      <img className="logo-icon1" alt="" src="/images/logo.svg" />
+      <Image className="logo-icon1" alt="" src="/images/logo.svg" />
       </div>
       {userStake.unstaking.amount !== 0 ? (<div className="unstaking-progress-bar" >
         <ProgressBar bgcolor="#50C9BD" progress={(unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod}  height={20} />
@@ -1176,7 +1177,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       {(emissionsSchedule.rate !== 0 && emissionsSchedule.monthsLeft !== 0) ? 
       (<div className="emissions-schedule">{emissionsSchedule.rate}%/{emissionsSchedule.monthsLeft} months</div>)
       : null}
-      <img className="cdt-logo-icon" alt="" src="/images/CDT.svg" />      
+      <Image className="cdt-logo-icon" alt="" src="/images/CDT.svg" />      
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>    
   );

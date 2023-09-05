@@ -12,6 +12,7 @@ import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.clie
 import { Asset, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
+import Image from "next/image";
 
 interface Props {
     cdp_client: PositionsClient | null;
@@ -844,7 +845,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
-              <img className="cdt-logo-icon-cdp" alt="" src="images/cdt.svg" />
+              <Image className="cdt-logo-icon-cdp" alt="" src="images/cdt.svg" />
               <div className="cost-4">Cost: {cost}%</div>
               <div className="debt-225">Debt: ${debt}</div>
               <div className="liq-value-375">Liq. Value: ${debt / maxLTV}</div>
@@ -863,17 +864,17 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <div className="qty">Qty.</div>
               <div className="value">Value</div>
               <div className={osmoStyle}>
-                <img className="osmo-logo-icon " alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
+                <Image className="osmo-logo-icon " alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
                 <div className="osmo-qty" onClick={handleOSMOqtyClick}>{osmoQTY}</div>
                 <div className="cdp-div5">${osmoValue}</div>
               </div>              
               <div className={atomStyle}>
-                <img className="atom-logo-icon" alt="" src="images/atom.svg" onClick={handleATOMClick} />
+                <Image className="atom-logo-icon" alt="" src="images/atom.svg" onClick={handleATOMClick} />
                 <div className="atom-qty" onClick={handleATOMqtyClick}>{atomQTY}</div>
                 <div className="cdp-div7">${atomValue}</div>
               </div>
               <div className={axlusdcStyle}>
-                <img className="axlusdc-logo-icon" alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
+                <Image className="axlusdc-logo-icon" alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
                 <div className="axlUSDC-qty" onClick={handleaxlUSDCqtyClick}>{axlusdcQTY}</div>
                 <div className="cdp-div9">${axlUSDCValue}</div>
               </div>
@@ -898,14 +899,14 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
           <div className="repay" onClick={handlerepayScreen}>REPAY</div>
         </div>
 
-        <img className="pie-chart-icon1" alt="" src="images/pie_chart.svg" />          
+        <Image className="pie-chart-icon1" alt="" src="images/pie_chart.svg" />          
         <div className="vaults1">VAULTS</div>
       </div>
       <div className={mintrepayScreen}>   
         <form>
             <label className="amount-label">{mintrepayLabel} amount:</label>     
             <input className="amount" name="amount" value={amount} type="number" onChange={handlesetAmount}/>
-            <img className="cdt-logo-icon7" alt="" src="images/cdt.svg"  onClick={handleLogoClick}/>
+            <Image className="cdt-logo-icon7" alt="" src="images/cdt.svg"  onClick={handleLogoClick}/>
         </form>
       </div>
       <div className={redeemScreen}>
@@ -916,7 +917,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             <div className="premium-label">Premium</div>
             <input className="mint-button-icon5" name="loan-usage" value={loanUsage} type="number" onChange={handlesetloanUsage}/>
             <div className="loan-usage">% Loan Usage</div>
-            <img className="cdt-logo-icon7" alt="" src="images/cdt.svg" onClick={handleLogoClick}/>
+            <Image className="cdt-logo-icon7" alt="" src="images/cdt.svg" onClick={handleLogoClick}/>
         </form>
         <div className="edit-redeemability">Redeemability Status</div>
         <div className="click-assets-on">
@@ -941,7 +942,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             <label className="spread-label">Max spread (ex: 1% as 0.01)</label>     
             <input className="spread" name="spread" value={maxSpread} type="number" onChange={handlesetSpread}/>
         </form>
-        <img className="cdt-logo-icon7" alt="" src="images/cdt.svg"  onClick={handleLogoClick}/>
+        <Image className="cdt-logo-icon7" alt="" src="images/cdt.svg"  onClick={handleLogoClick}/>
       </div>
       <div className={depositwithdrawScreen}>
         <div className={depositStyle} onClick={handledepositClick}>Deposit</div>
@@ -950,7 +951,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         <form>
             <label className="amount-label">{currentAsset} amount:</label>     
             <input className="amount" name="amount" value={amount} type="number" onChange={handlesetAmount}/>
-            <img className="cdt-logo-icon7" alt="" src="images/cdt.svg" onClick={handleLogoClick}/>
+            <Image className="cdt-logo-icon7" alt="" src="images/cdt.svg" onClick={handleLogoClick}/>
         </form>
         <div className="save-asset-intent-button" onClick={handleassetIntent}>
             <div className="spacing-top">Save {currentfunctionLabel} intent</div>

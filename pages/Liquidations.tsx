@@ -13,6 +13,7 @@ import Popup from "../components/Popup";
 import { StabilityPoolClient, StabilityPoolQueryClient } from "../codegen/stability_pool/StabilityPool.client";
 import { PositionsQueryClient } from "../codegen/Positions.client";
 import { NativeToken } from "../codegen/Positions.types";
+import Image from "next/image";
 
 //Bar graph scale
 const CDTperPIXEL = 10000_000_000;
@@ -711,7 +712,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <div className="captial-ahead-label" data-descr="Capital ahead of you">{capitalAhead}K</div>
           <div className="x-axis1" />
           <div className="total-tvl-label">TVL: {TVL}M</div>
-          <img className="tvl-container-icon" alt="" src="/images/tvl-container.svg" />
+          <Image className="tvl-container-icon" alt="" src="/images/tvl-container.svg" />
           <div className="premium">10%</div>
           <form>
             <input className="omni-deposit-amount" name="amount" value={omnidepositAmount} type="number" onChange={handlesetomnidAmount}/>
@@ -732,13 +733,13 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <a className="btn buttons claim-button" onClick={handleStabilityClaim}>
             <p tabIndex={0} data-descr={SPclaimables} style={{color: "black"}} onClick={handleStabilityClaim}>Claim</p>
           </a>
-          <img
+          <Image
             className="water-drops-deco-icon"
             alt=""
             src="/images/Water_drops_deco.svg"
           />
         </div>
-        <img className="titleicon" alt="" src="/images/liquidation_pool.svg" />
+        <Image className="titleicon" alt="" src="/images/liquidation_pool.svg" />
         <div className="middleborder" />
       </div>
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>

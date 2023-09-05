@@ -8,6 +8,7 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { coin } from "@cosmjs/stargate";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
+import Image from "next/image";
 
 interface Props {
   launch_client: LaunchClient | null;
@@ -1192,7 +1193,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
   return (    
     <div className="lockdrop">
     <h1 className="pagetitle-lockdrop">Lockdrop</h1>
-    <img className="titleicon-lockdrop" alt="" src="/images/lockdrop.svg" />
+    <Image className="titleicon-lockdrop" alt="" src="/images/lockdrop.svg" />
         <div className="lockdrop-page">
             <div className="lockdrop-frame"/>
             <div className="infobox" />
@@ -1215,12 +1216,12 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             </button>
             <div className="rates-box-title">
               Your&nbsp;&nbsp;&nbsp;&nbsp;
-                <img className="mbrn-rate-logo" alt="membrane-mbrn-logo" src="/images/Logo.svg" />
+                <Image className="mbrn-rate-logo" alt="membrane-mbrn-logo" src="/images/Logo.svg" />
               &nbsp;&nbsp;&nbsp;&nbsp;Rates
             </div>
             <div className="rates-box"/>
-            <img className="osmo-rate-logo" alt="osmosis-osmo-logo" src="/images/osmo.svg" />
-            <img className="axlusdc-rate-logo" alt="axelar-usdc-logo" src="/images/usdc.svg" />
+            <Image className="osmo-rate-logo" alt="osmosis-osmo-logo" src="/images/osmo.svg" />
+            <Image className="axlusdc-rate-logo" alt="axelar-usdc-logo" src="/images/usdc.svg" />
             <div className="price-in-osmo">: {MBRNreward / lockedOSMO}</div>
             <div className="price-in-axlusdc">: {(MBRNreward / lockedOSMO) * prices?.osmo}</div>
             <div className="infomsg">
