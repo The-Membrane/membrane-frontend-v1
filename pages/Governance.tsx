@@ -1163,13 +1163,13 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="staked-mbrn1">{userStake.staked}</div>
       <div className="unstaking-mbrn">{userStake.unstaking.amount}</div>
       <div className="mbrn-stake-logo">
-        <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/logo.svg" />
+        <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
       </div>
       <div className="mbrn-unstake-logo">
-      <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/logo.svg" />
+      <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
       </div>
       <div className="mbrn-claim-logo">
-      <Image className="logo-icon1" width={43} height={48} alt="" src="/images/logo.svg" />
+      <Image className="logo-icon1" width={43} height={48} alt="" src="/images/Logo.svg" />
       </div>
       {userStake.unstaking.amount !== 0 ? (<div className="unstaking-progress-bar" >
         <ProgressBar bgcolor="#50C9BD" progress={(unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod}  height={20} />

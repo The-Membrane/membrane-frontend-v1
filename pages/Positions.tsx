@@ -845,7 +845,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
-              <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/cdt.svg" />
+              <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
               <div className="cost-4">Cost: {cost}%</div>
               <div className="debt-225">Debt: ${debt}</div>
               <div className="liq-value-375">Liq. Value: ${debt / maxLTV}</div>
@@ -905,19 +905,19 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
       <div className={mintrepayScreen}>   
         <form>
             <label className="amount-label">{mintrepayLabel} amount:</label>     
-            <input className="amount" name="amount" value={amount} type="number" onChange={handlesetAmount}/>
-            <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/cdt.svg"  onClick={handleLogoClick}/>
+            <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={amount} type="number" onChange={handlesetAmount}/>
+            <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg"  onClick={handleLogoClick}/>
         </form>
       </div>
       <div className={redeemScreen}>
         <form>            
-            <input className="mint-button-icon2" name="premium" value={premium} type="number" onChange={handlesetPremium}/>
+            <input className="mint-button-icon2" style={{backgroundColor:"#454444"}} name="premium" value={premium} type="number" onChange={handlesetPremium}/>
             <div className={posClick} onClick={handleposClick}/>
             <div className={negClick} onClick={handlenegClick}/>
             <div className="premium-label">Premium</div>
-            <input className="mint-button-icon5" name="loan-usage" value={loanUsage} type="number" onChange={handlesetloanUsage}/>
+            <input className="mint-button-icon5" style={{backgroundColor:"#454444"}} name="loan-usage" value={loanUsage} type="number" onChange={handlesetloanUsage}/>
             <div className="loan-usage">% Loan Usage</div>
-            <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/cdt.svg" onClick={handleLogoClick}/>
+            <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg" onClick={handleLogoClick}/>
         </form>
         <div className="edit-redeemability">Redeemability Status</div>
         <div className="click-assets-on">
@@ -940,9 +940,9 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         </div>
         <form>
             <label className="spread-label">Max spread (ex: 1% as 0.01)</label>     
-            <input className="spread" name="spread" value={maxSpread} type="number" onChange={handlesetSpread}/>
+            <input className="spread" style={{backgroundColor:"#454444"}} name="spread" value={maxSpread} type="number" onChange={handlesetSpread}/>
         </form>
-        <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/cdt.svg"  onClick={handleLogoClick}/>
+        <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg"  onClick={handleLogoClick}/>
       </div>
       <div className={depositwithdrawScreen}>
         <div className={depositStyle} onClick={handledepositClick}>Deposit</div>
@@ -950,8 +950,8 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         <div className={withdrawStyle} onClick={handlewithdrawClick}>Withdraw</div>
         <form>
             <label className="amount-label">{currentAsset} amount:</label>     
-            <input className="amount" name="amount" value={amount} type="number" onChange={handlesetAmount}/>
-            <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/cdt.svg" onClick={handleLogoClick}/>
+            <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={amount} type="number" onChange={handlesetAmount}/>
+            <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg" onClick={handleLogoClick}/>
         </form>
         <div className="save-asset-intent-button" onClick={handleassetIntent}>
             <div className="spacing-top">Save {currentfunctionLabel} intent</div>
