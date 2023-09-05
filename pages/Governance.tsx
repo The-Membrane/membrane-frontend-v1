@@ -61,6 +61,112 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
     mbrnClaims: 0,
     cdtClaims: 0,
   });
+  //Delegations
+  const [commission, setCommission] = useState(0);
+  const [maxCommission, setmaxCommission] = useState(0);
+  interface Delegation {
+    delegator: string;
+    fluid: boolean | undefined;
+    amount: number | undefined;
+    commission: number | undefined;
+  }
+  interface Delegator {
+    delegator: string;
+    fluid: boolean | undefined;
+    amount: number | undefined;
+  }
+  const [delegations, setDelegations] = useState<Delegation[]>([
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }
+  ]);
+  const [delegators, setDelegators] = useState<Delegator[]>([
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }
+  ]);
 
   const handlesetstakeAmount = (event) => {
     event.preventDefault();
@@ -360,7 +466,7 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
         })
 
         //Set user VP
-        setuserVP(Math.sqrt(parseInt(res.total_staked)))
+        setuserVP(parseInt(res.total_staked))
       })
     } catch (error) {
       console.log(error)
@@ -478,6 +584,298 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
       console.log(error)
     }
   }
+  const handledelegateForm = (var_governator?: string) => {
+    //Initialize variables
+    var delegate: boolean | undefined = undefined;
+    var fluid: boolean | undefined = undefined;
+    var governator: string;
+    if (var_governator === undefined) {
+      governator = "";
+    } else {
+      governator = var_governator;
+    }
+    var amount: string;
+    var vp: boolean | undefined = undefined;
+    //format popup message
+    setPopupTrigger(true)
+    setPopupStatus("Update Delegations")
+    setPopupMsg(<p>        
+      <form onSubmit={(event) => {
+          event.preventDefault();
+          handledelegateSubmission(delegate, fluid, governator, amount, vp)
+        }}>  
+        {/*Governator*/}
+        <div>
+          <label style={{color: "aqua"}}>Governator:</label>     
+          <input name="governator" defaultValue={governator} type="string" onChange={(event)=>{
+            event.preventDefault();
+            governator = event.target.value;
+          }}/>
+        </div>
+        {/*Amount*/}
+        <div>
+          <label style={{color: "aqua"}}>Delegation amount:</label>     
+          <input name="amount" type="number" onChange={(event)=>{
+            event.preventDefault();
+            amount = (event.target.value).toString();
+          }}/>
+        </div>
+        {/*Delegate*/}
+        <label style={{color: "aqua"}}>Delegate?</label>     
+        <input name="delegate" type="checkbox" onChange={(event)=>{
+            if (event.target.checked === true) {
+              delegate = true;
+            } else {
+              delegate = undefined;
+            }
+            console.log({delegate})
+          }}/>        
+        <label style={{color: "aqua"}}>Undelegate?</label>     
+        <input name="delegate" type="checkbox" onChange={(event)=>{
+            if (event.target.checked === true) {
+              delegate = false;
+            } else {
+              delegate = undefined;
+            }
+            console.log({delegate})
+          }}/>
+          {/*Fluidity*/}
+          <label style={{color: "aqua"}}>Do you grant your governator the ability to delegate your delegation?(Y/n)</label>     
+          <input name="fluid" value={"true"} type="radio" onChange={(event)=>{
+              if (event.target.value === "true") {
+                fluid = true;
+              } else {
+                fluid = undefined;
+              }
+            }}/>
+          <input name="fluid" value={"false"} type="radio" onChange={(event)=>{
+            if (event.target.value === "true") {
+              fluid = false;
+            } else {
+              fluid = undefined;
+            }
+          }}/> 
+          {/*VP delegation*/}
+          <div>
+            <label style={{color: "aqua"}}>Delegate the voting power as well?(Y/n)</label>     
+            <input name="vp" type="radio" value={"true"} onChange={(event)=>{
+              if (event.target.value === "true") {
+                vp = true;
+              } else {
+                vp = undefined;
+              }
+            }}/>
+            <input name="vp" type="radio" value={"false"} onChange={(event)=>{
+              if (event.target.value === "true") {
+                vp = false;
+              } else {
+                vp = undefined;
+              }
+            }}/>
+        </div>
+          <button className="btn" style={{position: "absolute", top: 150, right: 100, backgroundColor:"gray"}} type="submit">
+            <div >
+              Submit
+            </div>
+          </button>
+          <button className="btn" style={{position: "absolute", opacity:0.7, top: 20, right: 100, backgroundColor:"gray"}} type="button" onClick={()=>{
+            setPopupMsg(<p>        
+              <form onSubmit={(event) => {
+                  event.preventDefault();
+                  handlefluiddelegationSubmission(governator, amount)
+                }}>  
+                {/*Governator*/}
+                <div>
+                  <label style={{color: "aqua"}}>Governator:</label>     
+                  <input name="governator" defaultValue={governator} type="string" onChange={(event)=>{
+                    event.preventDefault();
+                    governator = event.target.value;
+                  }}/>
+                </div>
+                {/*Amount*/}
+                <div>
+                  <label style={{color: "aqua"}}>Delegation amount:</label>     
+                  <input name="amount" type="number" onChange={(event)=>{
+                    event.preventDefault();
+                    amount = (event.target.value).toString();
+                  }}/>
+                </div>
+                  <button className="btn" style={{position: "absolute", top: 150, right: 100, backgroundColor:"gray"}} type="submit">
+                    <div >
+                      Submit
+                    </div>
+                  </button>
+                  <button className="btn" style={{position: "absolute", opacity:0.7, top: 20, right: 100, backgroundColor:"gray"}} type="button" onClick={() => handledelegateForm()}>
+                    <div >
+                      Switch to your delegations
+                    </div>
+                  </button>
+              </form>
+            </p>
+            )
+          }}>
+            <div >
+              Switch to your Fluid delegations
+            </div>
+          </button>
+      </form>
+    </p>
+    )
+  }
+  const handledelegateSubmission = async (
+    delegate: boolean | undefined, 
+    fluid: boolean | undefined, 
+    governator: string,
+    amount: string | undefined,
+    vp: boolean | undefined, 
+    ) => {
+    try {
+      await stakingClient?.updateDelegations({
+        delegate: delegate,
+        fluid: fluid,
+        governatorAddr: governator,
+        mbrnAmount: amount,
+        votingPowerDelegation: vp,
+      }).then(async (res) => {
+        console.log(res)
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Delegation to {governator} updated</div>)
+        setPopupStatus("Success")
+        
+        //Get delegation info
+        getDelegations()
+      })
+    } catch (error) {
+      console.log(error)
+      let e = error as {message: string};
+      //format popup message
+      setPopupTrigger(true)
+      setPopupMsg(<div>{e.message}</div>)
+      setPopupStatus("Error")        
+    }
+  }
+  const handlefluiddelegationSubmission = async (
+    governator: string,
+    amount: string | undefined,
+    ) => {
+    try {
+      await stakingClient?.delegateFluidDelegations({
+        governatorAddr: governator,
+        mbrnAmount: amount,
+      }).then((res) => {
+        console.log(res)
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Delegation to {governator} updated</div>)
+        setPopupStatus("Success")
+      })
+    } catch (error) {
+      console.log(error)
+      let e = error as {message: string};
+      //format popup message
+      setPopupTrigger(true)
+      setPopupMsg(<div>{e.message}</div>)
+      setPopupStatus("Error")        
+    }
+  }
+  const handlecommissionChange = async () => {
+    //Initialize variables
+    var commission: string = "0";
+
+    setPopupTrigger(true)
+    setPopupStatus("Change Commission")
+    setPopupMsg(<p>        
+      <form onSubmit={(event) => {
+          event.preventDefault();
+          try {
+            stakingClient?.updateDelegations({
+              commission: commission,
+            },"auto", undefined
+            ).then(async (res) => {
+              console.log(res)
+              //format popup message
+              setPopupTrigger(true)
+              setPopupMsg(<div>Commission changed</div>)
+              setPopupStatus("Success")
+
+              //Set new commission
+              await stakingQueryClient.delegations({
+                user: address ?? "",
+              }).then((res) => {
+                setCommission(parseInt(res[0].delegation_info.commission) * 100) //Commission is a % so multiply by 100
+              })
+            })
+          } catch (error) {
+            console.log(error)
+            let e = error as {message: string};
+            //format popup message
+            setPopupTrigger(true)
+            setPopupMsg(<div>{e.message}</div>)
+            setPopupStatus("Error")        
+          }
+        }}>  
+        {/*Commission*/}
+        <div>
+          <label style={{color: "aqua"}}>Commission as %: Max {maxCommission}, (5 as 5%)</label>     
+          <div>
+            <input name="commission" type="number" onChange={(event)=>{
+              event.preventDefault();
+              commission = event.target.value;
+            }}/>
+          </div>
+        </div>
+          <button className="btn" style={{position: "absolute", top: 150, right: 100, backgroundColor:"gray"}} type="submit">
+            <div >
+              Submit
+            </div>
+          </button>
+      </form>
+    </p>
+    )
+  }
+  const getDelegations = async () => {
+    try {
+      await stakingQueryClient.delegations({
+        user: address ?? "",
+      }).then( async (res) => {
+        console.log(res)
+
+        //Set delegations
+        for (let i = 0; i < res[i].delegation_info.delegated_to.length; i++) {
+          delegations[i].amount = parseInt(res[i].delegation_info.delegated_to[i].amount)
+          delegations[i].delegator = res[i].delegation_info.delegated_to[i].delegate
+          delegations[i].fluid = res[i].delegation_info.delegated_to[i].fluidity
+          //Query and set commission
+          await stakingQueryClient.delegations({
+            user: res[i].delegation_info.delegated_to[i].delegate,
+          }).then((res) => {
+            delegations[i].commission = parseInt(res[0].delegation_info.commission) * 100 //Commission is a % so multiply by 100
+          })
+        }
+        
+        //Set Delegators
+        var delegationVP = 0;
+        for (let i = 0; i < res[i].delegation_info.delegated.length; i++) {
+          delegators[i].amount = parseInt(res[i].delegation_info.delegated[i].amount)
+          delegators[i].delegator = res[i].delegation_info.delegated[i].delegate
+          delegators[i].fluid = res[i].delegation_info.delegated[i].fluidity
+          
+          //Add to user total VP
+          if (res[i].delegation_info.delegated[i].voting_power_delegation === true) {
+            delegationVP = parseInt(res[i].delegation_info.delegated_to[i].amount)
+          }          
+          //Add to user total VP
+          setuserVP(prevState => {
+            return prevState + delegationVP
+          })
+        }
+      })
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     //Query & set proposals
@@ -488,6 +886,8 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
     getUserStake()
     //Get user claims
     getuserClaims()
+    //Get delegation info
+    getDelegations()
   }, []);
       
   return (
@@ -616,12 +1016,12 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
           <div className="submit-proposal" onClick={handlesubmitproposalForm}>Submit Proposal</div>
         </div>
       </div>
-      <div className="btn delegate-button">
+      <div className="btn delegate-button" onClick={() => handledelegateForm()}>
         <div className="delegate">Delegate</div>
       </div>
       <div className="total-vp-label">Total VP: </div>
-      <div className="total-vp-amount">{userVP}</div>
-      <div className="delegated-to">Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fluid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comm.&nbsp;&nbsp;&nbsp;Undele.</div>
+      <div className="total-vp-amount">{Math.sqrt(userVP)}</div>
+      <div className="delegated-to">Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fluid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comm.&nbsp;&nbsp;&nbsp;&nbsp;Undele.</div>
       <div className="claim-button-frame">        
         <div className="cdt-claims">{userClaims.cdtClaims}</div>
         <div className="mbrn-claims">{userClaims.mbrnClaims}</div>
@@ -629,17 +1029,17 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
       <div className="btn gov-claim-button" onClick={handleclaimClick}>
         <div className="claim">Claim</div>
       </div>
-      <div className="btn commission">5% Commission</div>
+      <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>
       <div className="unstake-button-frame"/>
       <form>
-      <div className="btn unstake-button" >
+      <div className="btn unstake-button" onClick={handleunstakeClick}>
         <div className="unstake">Unstake:</div>
         <input className="unstake-input" name="amount" value={unstakeAmount} type="number" onChange={handlesetunstakeAmount}/>
       </div>
       </form>
       <div className="stake-button-frame"/>
       <form>
-        <div className="btn stake-button1">
+        <div className="btn stake-button1" onClick={handlestakeClick}>
           <div className="stake">Stake:</div>
           <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
         </div>
@@ -668,38 +1068,38 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
       </div>
       <div className="proposal-axis-labels">Days Left&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current Result</div>
       <div className="delegate-box" />
-        <div className="delegate-1">osmo1988s5h45q...</div>
-        <div className="delegate-2">Delegate 1</div>
-        <div className="delegate-3">Delegate 1</div>
-        <div className="delegate-4">Delegate 1</div>
-        <div className="delegate-5">Delegate 1</div>
-        <div className="delegate-6">Delegate 1</div>
-        <div className="delegate-7">Delegate 1</div>
-        <div className="delegate-8">Delegate 1</div>
-        <div className="fluid-1">Yes</div>
-        <div className="fluid-2">Yes</div>
-        <div className="fluid-3">Yes</div>
-        <div className="fluid-4">Yes</div>
-        <div className="fluid-5">Yes</div>
-        <div className="fluid-6">Yes</div>
-        <div className="fluid-7">Yes</div>
-        <div className="fluid-8">Yes</div>
-        <div className="vp-1">100</div>
-        <div className="vp-2">100</div>
-        <div className="vp-3">100</div>
-        <div className="vp-4">100</div>
-        <div className="vp-5">100</div>
-        <div className="vp-6">100</div>
-        <div className="vp-7">100</div>
-        <div className="vp-8">100</div>
-        <div className="commission-1">10%</div>
-        <div className="commission-2">10%</div>
-        <div className="commission-3">10%</div>
-        <div className="commission-4">10%</div>
-        <div className="commission-5">10%</div>
-        <div className="commission-6">10%</div>
-        <div className="commission-7">10%</div>
-        <div className="commission-8">10%</div>
+        <div className="delegate-1">{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator.slice(13)}...</>}</div>
+        <div className="delegate-2">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator.slice(13)}...</>}</div>
+        <div className="delegate-3">{delegations[2].delegator === "" ? ("") : <>{delegations[2].delegator.slice(13)}...</>}</div>
+        <div className="delegate-4">{delegations[3].delegator === "" ? ("") : <>{delegations[3].delegator.slice(13)}...</>}</div>
+        <div className="delegate-5">{delegations[4].delegator === "" ? ("") : <>{delegations[4].delegator.slice(13)}...</>}</div>
+        <div className="delegate-6">{delegations[5].delegator === "" ? ("") : <>{delegations[5].delegator.slice(13)}...</>}</div>
+        <div className="delegate-7">{delegations[6].delegator === "" ? ("") : <>{delegations[6].delegator.slice(13)}...</>}</div>
+        <div className="delegate-8">{delegations[7].delegator === "" ? ("") : <>{delegations[7].delegator.slice(13)}...</>}</div>
+        <div className="fluid-1">{delegations[0].fluid === true ? ("Yes") : delegations[0].fluid === false ? "No" : ""}</div>
+        <div className="fluid-2">{delegations[1].fluid === true ? ("Yes") : delegations[1].fluid === false ? "No" : ""}</div>
+        <div className="fluid-3">{delegations[2].fluid === true ? ("Yes") : delegations[2].fluid === false ? "No" : ""}</div>
+        <div className="fluid-4">{delegations[3].fluid === true ? ("Yes") : delegations[3].fluid === false ? "No" : ""}</div>
+        <div className="fluid-5">{delegations[4].fluid === true ? ("Yes") : delegations[4].fluid === false ? "No" : ""}</div>
+        <div className="fluid-6">{delegations[5].fluid === true ? ("Yes") : delegations[5].fluid === false ? "No" : ""}</div>
+        <div className="fluid-7">{delegations[6].fluid === true ? ("Yes") : delegations[6].fluid === false ? "No" : ""}</div>
+        <div className="fluid-8">{delegations[7].fluid === true ? ("Yes") : delegations[7].fluid === false ? "No" : ""}</div>
+        <div className="vp-1">{delegations[0].amount !== undefined ? <>{delegations[0].amount}</> : ""}</div>
+        <div className="vp-2">{delegations[1].amount !== undefined ? <>{delegations[1].amount}</> : ""}</div>
+        <div className="vp-3">{delegations[2].amount !== undefined ? <>{delegations[2].amount}</> : ""}</div>
+        <div className="vp-4">{delegations[3].amount !== undefined ? <>{delegations[3].amount}</> : ""}</div>
+        <div className="vp-5">{delegations[4].amount !== undefined ? <>{delegations[4].amount}</> : ""}</div>
+        <div className="vp-6">{delegations[5].amount !== undefined ? <>{delegations[5].amount}</> : ""}</div>
+        <div className="vp-7">{delegations[6].amount !== undefined ? <>{delegations[6].amount}</> : ""}</div>
+        <div className="vp-8">{delegations[7].amount !== undefined ? <>{delegations[7].amount}</> : ""}</div>
+        <div className="commission-1">{delegations[0].commission !== undefined ? <>{delegations[0].commission}%</> : ""}</div>
+        <div className="commission-2">{delegations[1].commission !== undefined ? <>{delegations[1].commission}%</> : ""}</div>
+        <div className="commission-3">{delegations[2].commission !== undefined ? <>{delegations[2].commission}%</> : ""}</div>
+        <div className="commission-4">{delegations[3].commission !== undefined ? <>{delegations[3].commission}%</> : ""}</div>
+        <div className="commission-5">{delegations[4].commission !== undefined ? <>{delegations[4].commission}%</> : ""}</div>
+        <div className="commission-6">{delegations[5].commission !== undefined ? <>{delegations[5].commission}%</> : ""}</div>
+        <div className="commission-7">{delegations[6].commission !== undefined ? <>{delegations[6].commission}%</> : ""}</div>
+        <div className="commission-8">{delegations[7].commission !== undefined ? <>{delegations[7].commission}%</> : ""}</div>
       <div className="delegate-x" />
       <div className="delegate-x1" />
       <div className="delegate-x2" />
@@ -710,40 +1110,40 @@ const Governance = ({gov_client, gov_qclient, staking_client, staking_qclient, a
       <div className="delegates-y1" />
       <div className="delegates-y2" />
       <div className="delegates-y3" />
-      <div className="btn delegate-button-1" />
-      <div className="btn delegate-button-2" />
-      <div className="btn delegate-button-3" />
-      <div className="btn delegate-button-4" />
-      <div className="btn delegate-button-5" />
-      <div className="btn delegate-button-6" />
-      <div className="btn delegate-button-7" />
-      <div className="btn delegate-button-8" />
+      <div className="btn delegate-button-1" onClick={() => handledelegateForm(delegations[0].delegator)}/>
+      <div className="btn delegate-button-2" onClick={() => handledelegateForm(delegations[1].delegator)}/>
+      <div className="btn delegate-button-3" onClick={() => handledelegateForm(delegations[2].delegator)}/>
+      <div className="btn delegate-button-4" onClick={() => handledelegateForm(delegations[3].delegator)}/>
+      <div className="btn delegate-button-5" onClick={() => handledelegateForm(delegations[4].delegator)}/>
+      <div className="btn delegate-button-6" onClick={() => handledelegateForm(delegations[5].delegator)}/>
+      <div className="btn delegate-button-7" onClick={() => handledelegateForm(delegations[6].delegator)}/>
+      <div className="btn delegate-button-8" onClick={() => handledelegateForm(delegations[7].delegator)}/>
       <div className="your-delegators">Your Delegators</div>
       <div className="delegators-box" />
-        <div className="delegator-1">Delegator 1</div>
-        <div className="delegator-2">Delegator 1</div>
-        <div className="delegator-3">Delegator 1</div>
-        <div className="delegator-4">Delegator 1</div>
-        <div className="delegator-5">Delegator 1</div>
-        <div className="delegator-6">Delegator 1</div>
-        <div className="delegator-7">Delegator 1</div>
-        <div className="delegator-8">Delegator 1</div>        
-        <div className="delegator-fluid-1">Yes</div>
-        <div className="delegator-fluid-2">Yes</div>
-        <div className="delegator-fluid-3">Yes</div>
-        <div className="delegator-fluid-4">Yes</div>
-        <div className="delegator-fluid-5">Yes</div>
-        <div className="delegator-fluid-6">Yes</div>
-        <div className="delegator-fluid-7">Yes</div>
-        <div className="delegator-fluid-8">Yes</div>
-        <div className="delegator-vp-1">100</div>
-        <div className="delegator-vp-2">100</div>
-        <div className="delegator-vp-3">100</div>
-        <div className="delegator-vp-4">100</div>
-        <div className="delegator-vp-5">100</div>
-        <div className="delegator-vp-6">100</div>
-        <div className="delegator-vp-7">100</div>
-        <div className="delegator-vp-8">100</div>
+        <div className="delegator-1">{delegators[0].delegator === "" ? ("") : <>{delegators[0].delegator.slice(13)}...</>}</div>
+        <div className="delegator-2">{delegators[1].delegator === "" ? ("") : <>{delegators[1].delegator.slice(13)}...</>}</div>
+        <div className="delegator-3">{delegators[2].delegator === "" ? ("") : <>{delegators[2].delegator.slice(13)}...</>}</div>
+        <div className="delegator-4">{delegators[3].delegator === "" ? ("") : <>{delegators[3].delegator.slice(13)}...</>}</div>
+        <div className="delegator-5">{delegators[4].delegator === "" ? ("") : <>{delegators[4].delegator.slice(13)}...</>}</div>
+        <div className="delegator-6">{delegators[5].delegator === "" ? ("") : <>{delegators[5].delegator.slice(13)}...</>}</div>
+        <div className="delegator-7">{delegators[6].delegator === "" ? ("") : <>{delegators[6].delegator.slice(13)}...</>}</div>
+        <div className="delegator-8">{delegators[7].delegator === "" ? ("") : <>{delegators[7].delegator.slice(13)}...</>}</div>
+        <div className="delegator-fluid-1">{delegators[0].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+        <div className="delegator-fluid-2">{delegators[1].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+        <div className="delegator-fluid-3">{delegators[2].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+        <div className="delegator-fluid-4">{delegators[3].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+        <div className="delegator-fluid-5">{delegators[4].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+        <div className="delegator-fluid-6">{delegators[5].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+        <div className="delegator-fluid-7">{delegators[6].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+        <div className="delegator-fluid-8">{delegators[7].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+        <div className="delegator-vp-1">{delegators[0].amount !== undefined ? <>{delegators[0].amount}</> : ""}</div>
+        <div className="delegator-vp-2">{delegators[1].amount !== undefined ? <>{delegators[1].amount}</> : ""}</div>
+        <div className="delegator-vp-3">{delegators[2].amount !== undefined ? <>{delegators[2].amount}</> : ""}</div>
+        <div className="delegator-vp-4">{delegators[3].amount !== undefined ? <>{delegators[3].amount}</> : ""}</div>
+        <div className="delegator-vp-5">{delegators[4].amount !== undefined ? <>{delegators[4].amount}</> : ""}</div>
+        <div className="delegator-vp-6">{delegators[5].amount !== undefined ? <>{delegators[5].amount}</> : ""}</div>
+        <div className="delegator-vp-7">{delegators[6].amount !== undefined ? <>{delegators[6].amount}</> : ""}</div>
+        <div className="delegator-vp-8">{delegators[7].amount !== undefined ? <>{delegators[7].amount}</> : ""}</div>
       <div className="delegator-x" />
       <div className="delegator-x1" />
       <div className="delegator-x2" />

@@ -1,10 +1,10 @@
 import { MutableRefObject, useRef } from 'react';
 
-export const dashboardPosition = 0;
-export const vaultPosition = 666;
-export const liquidationPosition = 1332;
-export const stakingPosition = 1994;
-export const launchPosition = 2664;
+export const dashboardPosition = 20;
+export const vaultPosition = 700;
+export const liquidationPosition = 1580;
+export const stakingPosition = 2350;
+export const launchPosition = 3270;
 
 //Instead of Routers, just make the app a single page that you can scroll through
  export const scrollDown = (position: number) => {

@@ -61,7 +61,7 @@ const LiquidationPools = ({lqQClient, lqClient, spQClient, spClient, cdpQClient,
     tvl: string;
   }
   const [barGraph, setbarGraph] = useState<Bar[]>([
-    { height: 100, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
     { height: 0, color: "#000000", tvl: "0M" },
     { height: 0, color: "#000000", tvl: "0M" },
     { height: 0, color: "#000000", tvl: "0M" },

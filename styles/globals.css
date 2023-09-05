@@ -2272,6 +2272,16 @@ span[data-descr]:hover::after {
   left: 550px;
   color: white;
 }
+.delegate-button-1:hover,
+.delegate-button-2:hover,
+.delegate-button-3:hover,
+.delegate-button-4:hover,
+.delegate-button-5:hover,
+.delegate-button-6:hover,
+.delegate-button-7:hover,
+.delegate-button-8:hover {
+  opacity: 0.5;
+}
 .delegate-2 {
   top: 530px;
   z-index: 17;
