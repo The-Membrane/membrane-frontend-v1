@@ -712,7 +712,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <div className="captial-ahead-label" data-descr="Capital ahead of you">{capitalAhead}K</div>
           <div className="x-axis1" />
           <div className="total-tvl-label">TVL: {TVL}M</div>
-          <Image className="tvl-container-icon" alt="" src="/images/tvl-container.svg" />
+          <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl-container.svg" />
           <div className="premium">10%</div>
           <form>
             <input className="omni-deposit-amount" name="amount" value={omnidepositAmount} type="number" onChange={handlesetomnidAmount}/>
@@ -734,12 +734,13 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             <p tabIndex={0} data-descr={SPclaimables} style={{color: "black"}} onClick={handleStabilityClaim}>Claim</p>
           </a>
           <Image
+            width={82} height={145} 
             className="water-drops-deco-icon"
             alt=""
             src="/images/Water_drops_deco.svg"
           />
         </div>
-        <Image className="titleicon" alt="" src="/images/liquidation_pool.svg" />
+        <Image className="titleicon" width={45} height={45} alt="" src="/images/liquidation_pool.svg" />
         <div className="middleborder" />
       </div>
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>

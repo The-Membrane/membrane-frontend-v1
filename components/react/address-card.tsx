@@ -149,6 +149,7 @@ export const ConnectedShowAddress = ({
           maxH={SIZES[size as keyof typeof SIZES].walletImageSize}
           mr={2}
           opacity={0.85}
+          backgroundColor="#383838"
         >
           <Image alt={displayAddress} src={walletIcon} />
         </Box>

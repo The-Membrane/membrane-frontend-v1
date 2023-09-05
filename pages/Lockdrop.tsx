@@ -1193,7 +1193,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
   return (    
     <div className="lockdrop">
     <h1 className="pagetitle-lockdrop">Lockdrop</h1>
-    <Image className="titleicon-lockdrop" alt="" src="/images/lockdrop.svg" />
+    <Image className="titleicon-lockdrop" width={55} height={55} alt="" src="/images/lockdrop.svg" />
         <div className="lockdrop-page">
             <div className="lockdrop-frame"/>
             <div className="infobox" />
@@ -1216,12 +1216,12 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             </button>
             <div className="rates-box-title">
               Your&nbsp;&nbsp;&nbsp;&nbsp;
-                <Image className="mbrn-rate-logo" alt="membrane-mbrn-logo" src="/images/Logo.svg" />
+                <Image className="mbrn-rate-logo" width={22} height={22} alt="membrane-mbrn-logo" src="/images/Logo.svg" />
               &nbsp;&nbsp;&nbsp;&nbsp;Rates
             </div>
             <div className="rates-box"/>
-            <Image className="osmo-rate-logo" alt="osmosis-osmo-logo" src="/images/osmo.svg" />
-            <Image className="axlusdc-rate-logo" alt="axelar-usdc-logo" src="/images/usdc.svg" />
+            <Image className="osmo-rate-logo" width={27} height={27} alt="osmosis-osmo-logo" src="/images/osmo.svg" />
+            <Image className="axlusdc-rate-logo" width={27} height={27} alt="axelar-usdc-logo" src="/images/usdc.svg" />
             <div className="price-in-osmo">: {MBRNreward / lockedOSMO}</div>
             <div className="price-in-axlusdc">: {(MBRNreward / lockedOSMO) * prices?.osmo}</div>
             <div className="infomsg">
