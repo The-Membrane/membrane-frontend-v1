@@ -368,7 +368,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
           var current_time = Date.parse(block.header.time) / 1000;
           
           //Calc & set progress
-          setProgress(((current_time - res.start_time) / (res.withdrawal_end - res.start_time)).toPrecision(1) );
+          setProgress(parseFloat(((current_time - res.start_time) / (res.withdrawal_end - res.start_time)).toPrecision(1)) );
         })} );  
     } catch (error) {
       console.log(error);
