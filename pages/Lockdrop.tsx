@@ -1261,6 +1261,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             <a className="allocations" target="_blank" rel="noopener noreferrer" href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/mbrn-tokenomics">ALLOCATIONS</a>
           </div>
           <div className="deposits-list">
+            {lockedOSMO == 0 ? <div className="lock-tutorial">Below fields are input boxes for amount and duration</div> : null}
             <div className="yourdepositstext">
               YOUR LOCKS
             </div>

@@ -1295,6 +1295,19 @@ span[data-descr]:hover::after {
 .days7 {
   left: 100px;
 }
+.lock-tutorial {  
+  position: absolute;
+  left: 44px;
+  top: -70px;
+  min-width: 33px;
+  border: 1px #aaaaaa solid;
+  border-radius: 10px;
+  background-color: #50C9BD;
+  padding: 12px;
+  color: #000000;
+  font-size: 14px;
+  z-index: 21;
+}
 .deposits-list,
 .lock-button-child {
   position: absolute;
