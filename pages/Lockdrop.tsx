@@ -21,7 +21,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
 
   interface LockDisplay {
     deposit: number | undefined;
-    new_lock_up_duration: number | undefined;
+    new_lock_up_duration: number;
     old_lock_up_duration: number | undefined;
     label: string;
   }
@@ -46,49 +46,49 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
   });
   const [deposit1, setdeposit1] = useState<LockDisplay>({
     deposit: undefined,
-    new_lock_up_duration: undefined,
+    new_lock_up_duration: 0,
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
   const [deposit2, setdeposit2] = useState<LockDisplay>({
     deposit: undefined,
-    new_lock_up_duration: undefined,
+    new_lock_up_duration: 0,
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
   const [deposit3, setdeposit3] = useState<LockDisplay>({
     deposit: undefined,
-    new_lock_up_duration: undefined,
+    new_lock_up_duration: 0,
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
   const [deposit4, setdeposit4] = useState<LockDisplay>({
     deposit: undefined,
-    new_lock_up_duration: undefined,
+    new_lock_up_duration: 0,
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
   const [deposit5, setdeposit5] = useState<LockDisplay>({
     deposit: undefined,
-    new_lock_up_duration: undefined,
+    new_lock_up_duration: 0,
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
   const [deposit6, setdeposit6] = useState<LockDisplay>({
     deposit: undefined,
-    new_lock_up_duration: undefined,
+    new_lock_up_duration: 0,
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
   const [deposit7, setdeposit7] = useState<LockDisplay>({
     deposit: undefined,
-    new_lock_up_duration: undefined,
+    new_lock_up_duration: 0,
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
   const [deposit8, setdeposit8] = useState<LockDisplay>({
     deposit: undefined,
-    new_lock_up_duration: undefined,
+    new_lock_up_duration: 0,
     old_lock_up_duration: undefined,
     label: "LOCK",
   });
@@ -101,30 +101,34 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
         user: address ?? "",
       }).then(async (res) => {
         
-        var depositList = res.deposits
-
+        console.log(res.deposits)
+        var total = 0;
         var i = 0;
-        for (i; i < depositList.length; i++) {
+        for (i; i < res.deposits.length; i++) {
           switch (i){
             case 0: {
+              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              var duration = res.deposits[i]?.lock_up_duration;
               //Update lock object
               setdeposit1(prevState => {
                   return {
                     ...prevState,
-                    deposit: parseInt(depositList[i].deposit) / 1_000_000,
-                    old_lock_up_duration:  depositList[i].lock_up_duration,
+                    deposit: deposit,
+                    old_lock_up_duration: duration,
                     label: "EDIT"
                   }
                 })
               break;
             }
             case 1: {
+              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              var duration = res.deposits[i]?.lock_up_duration;
               //Update lock object
               setdeposit2(prevState => {
                 return {
                   ...prevState,
-                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  deposit: deposit,
+                  old_lock_up_duration: duration,
                   label: "EDIT"
                 }
               })
@@ -132,11 +136,13 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             }
             case 2: {
               //Update lock object
+              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              var duration = res.deposits[i]?.lock_up_duration;
               setdeposit3(prevState => {
                 return {
                   ...prevState,
-                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  deposit: deposit,
+                  old_lock_up_duration: duration,
                   label: "EDIT"
                 }
               })
@@ -144,11 +150,13 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             }
             case 3: {
               //Update lock object
+              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              var duration = res.deposits[i]?.lock_up_duration;
               setdeposit4(prevState => {
                 return {
                   ...prevState,
-                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  deposit: deposit,
+                  old_lock_up_duration: duration,
                   label: "EDIT"
                 }
               })
@@ -156,11 +164,13 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             }
             case 4: {
               //Update lock object
+              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              var duration = res.deposits[i]?.lock_up_duration;
               setdeposit5(prevState => {
                 return {
                   ...prevState,
-                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  deposit: deposit,
+                  old_lock_up_duration: duration,
                   label: "EDIT"
                 }
               })
@@ -168,11 +178,13 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             }
             case 5: {
               //Update lock object
+              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              var duration = res.deposits[i]?.lock_up_duration;
               setdeposit6(prevState => {
                 return {
                   ...prevState,
-                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  deposit: deposit,
+                  old_lock_up_duration: duration,
                   label: "EDIT"
                 }
               })
@@ -180,11 +192,13 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             }
             case 6: {
               //Update lock object
+              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              var duration = res.deposits[i]?.lock_up_duration;
               setdeposit7(prevState => {
                 return {
                   ...prevState,
-                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  deposit: deposit,
+                  old_lock_up_duration: duration,
                   label: "EDIT"
                 }
               })
@@ -192,27 +206,32 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             }
             case 7: {
               //Update lock object
+              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              var duration = res.deposits[i]?.lock_up_duration;
               setdeposit8(prevState => {
                 return {
                   ...prevState,
-                  deposit: parseInt(depositList[i].deposit)/ 1_000_000,
-                  old_lock_up_duration:  depositList[i].lock_up_duration,
+                  deposit: deposit,
+                  old_lock_up_duration: duration,
                   label: "EDIT"
                 }
               })
               break;
             }
           }
+          total += parseInt(res.deposits[i].deposit) / 1_000_000;
         }
+        //Update locked OSMO
+        setlockedOSMO(total)
 
         //set remaining lock objects to 0/null/undefuned
-        for (i; i < depositList.length; i++) {
+        for (i; i < 8; i++) {
           switch (i){
             case 0: {
               //Update lock object
               setdeposit1({
                 deposit: undefined,                  
-                new_lock_up_duration: undefined,
+                new_lock_up_duration: 0,
                 old_lock_up_duration: undefined,
                 label: "LOCK"
                 })
@@ -222,7 +241,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
               //Update lock object
               setdeposit2({
                 deposit: undefined,     
-                new_lock_up_duration: undefined,
+                new_lock_up_duration: 0,
                 old_lock_up_duration: undefined,
                 label: "LOCK"
               })
@@ -232,7 +251,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
               //Update lock object
               setdeposit3({
                 deposit: undefined,     
-                new_lock_up_duration: undefined,
+                new_lock_up_duration: 0,
                 old_lock_up_duration: undefined,
                 label: "LOCK"
               })
@@ -242,7 +261,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
               //Update lock object
               setdeposit4({
                 deposit: undefined,     
-                new_lock_up_duration: undefined,
+                new_lock_up_duration: 0,
                 old_lock_up_duration: undefined,
                 label: "LOCK"
               })
@@ -252,7 +271,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
               //Update lock object
               setdeposit5({
                 deposit: undefined,     
-                new_lock_up_duration: undefined,
+                new_lock_up_duration: 0,
                 old_lock_up_duration: undefined,
                 label: "LOCK"
               })
@@ -262,7 +281,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
               //Update lock object
               setdeposit6({
                 deposit: undefined,     
-                new_lock_up_duration: undefined,
+                new_lock_up_duration: 0,
                 old_lock_up_duration: undefined,
                 label: "LOCK"
               })
@@ -272,7 +291,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
               //Update lock object
               setdeposit7({
                 deposit: undefined,     
-                new_lock_up_duration: undefined,
+                new_lock_up_duration: 0,
                 old_lock_up_duration: undefined,
                 label: "LOCK"
               })
@@ -282,7 +301,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
               //Update lock object
               setdeposit8({
                 deposit: undefined,     
-                new_lock_up_duration: undefined,
+                new_lock_up_duration: 0,
                 old_lock_up_duration: undefined,
                 label: "LOCK"
               })
@@ -320,7 +339,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
           } else {
             color = "rgba(79, 202, 187, 0.8)";
           } 
-
+          console.log("distribution res length: "+res.length)
           //Set rankings
           setRankings({
             user: users_ahead+1,
@@ -331,6 +350,9 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       } catch (error) {
         console.log(error);
       }
+           
+      //Query to set MBRN reward total
+      set_MBRNreward()
 
     } catch (error) {
       console.log(error);
@@ -346,7 +368,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
           var current_time = Date.parse(block.header.time) / 1000;
           
           //Calc & set progress
-          setProgress((current_time - res.start_time) / (res.withdrawal_end - res.start_time) );
+          setProgress(((current_time - res.start_time) / (res.withdrawal_end - res.start_time)).toPrecision(1) );
         })} );  
     } catch (error) {
       console.log(error);
@@ -371,9 +393,6 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
 
       //Query for deposit list
       get_updateddepositList()
-      
-      //Query to set MBRN reward total
-      set_MBRNreward()
     // }
   }, [address]);
 
@@ -382,12 +401,12 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Lock deposit using new_lock_up_duration
       try {
         await launch_client?.lock({
-          lockUpDuration: deposit1.new_lock_up_duration ?? 0
+          lockUpDuration: deposit1.new_lock_up_duration * 1,
         }, "auto", undefined, [coin((deposit1.deposit ?? 0) * 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
           //Update lock amount
-        setlockedOSMO(+lockedOSMO + +(deposit1.deposit ?? 0))
+          setlockedOSMO(+lockedOSMO + +(deposit1.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit1.deposit+" OSMO for "+deposit1.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -406,8 +425,8 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Edit deposit
       try {
         await launch_client?.changeLockDuration({
-          newLockUpDuration: deposit1.new_lock_up_duration ?? 0,
-          oldLockUpDuration: deposit1.old_lock_up_duration ?? 0,
+          newLockUpDuration: deposit1.new_lock_up_duration * 1,
+          oldLockUpDuration: (deposit1.old_lock_up_duration ?? 0) * 1,
           uosmoAmount: ((deposit1.deposit ?? 0) * 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -429,7 +448,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       try {
         console.log("withdrawing")
         await launch_client?.withdraw({
-          lockUpDuration: deposit1.old_lock_up_duration ?? 0,
+          lockUpDuration: (deposit1.old_lock_up_duration ?? 0) * 1,
           withdrawalAmount: ((deposit1.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -456,12 +475,12 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Lock deposit using new_lock_up_duration
       try {
         await launch_client?.lock({
-          lockUpDuration: deposit2.new_lock_up_duration ?? 0
+          lockUpDuration: deposit2.new_lock_up_duration * 1
         }, "auto", undefined, [coin((deposit2.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
           //Update lock amount
-        setlockedOSMO(+lockedOSMO + +(deposit2.deposit ?? 0))
+          setlockedOSMO(+lockedOSMO + +(deposit2.deposit ?? 0))
           //Format popup message
           setPopupMsg("Lock of "+ deposit2.deposit+" OSMO for "+deposit2.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
@@ -480,8 +499,8 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Edit deposit
       try {
         await launch_client?.changeLockDuration({
-          newLockUpDuration: deposit2.new_lock_up_duration ?? 0,
-          oldLockUpDuration: deposit2.old_lock_up_duration ?? 0,
+          newLockUpDuration: deposit2.new_lock_up_duration * 1,
+          oldLockUpDuration: (deposit2.old_lock_up_duration ?? 0) * 1,
           uosmoAmount: ((deposit2.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -502,7 +521,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Withdraw deposit
       try {
         await launch_client?.withdraw({
-          lockUpDuration: deposit2.old_lock_up_duration ?? 0,
+          lockUpDuration: (deposit2.old_lock_up_duration ?? 0) * 1,
           withdrawalAmount: ((deposit2.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -529,7 +548,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Lock deposit using new_lock_up_duration
       try {
         await launch_client?.lock({
-          lockUpDuration: deposit3.new_lock_up_duration ?? 0
+          lockUpDuration: deposit3.new_lock_up_duration * 1
         }, "auto", undefined, [coin((deposit3.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
@@ -553,8 +572,8 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Edit deposit
       try {
         await launch_client?.changeLockDuration({
-          newLockUpDuration: deposit3.new_lock_up_duration ?? 0,
-          oldLockUpDuration: deposit3.old_lock_up_duration ?? 0,
+          newLockUpDuration: deposit3.new_lock_up_duration * 1,
+          oldLockUpDuration: (deposit3.old_lock_up_duration ?? 0) * 1,
           uosmoAmount: ((deposit3.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -575,7 +594,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Withdraw deposit
       try {
         await launch_client?.withdraw({
-          lockUpDuration: deposit3.old_lock_up_duration ?? 0,
+          lockUpDuration: (deposit3.old_lock_up_duration ?? 0) * 1,
           withdrawalAmount: ((deposit3.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -602,7 +621,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Lock deposit using new_lock_up_duration
       try {
         await launch_client?.lock({
-          lockUpDuration: deposit4.new_lock_up_duration ?? 0
+          lockUpDuration: deposit4.new_lock_up_duration * 1
         }, "auto", undefined, [coin((deposit4.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
@@ -626,8 +645,8 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Edit deposit
       try {
         await launch_client?.changeLockDuration({
-          newLockUpDuration: deposit4.new_lock_up_duration ?? 0,
-          oldLockUpDuration: deposit4.old_lock_up_duration ?? 0,
+          newLockUpDuration: deposit4.new_lock_up_duration * 1,
+          oldLockUpDuration: (deposit4.old_lock_up_duration ?? 0) * 1,
           uosmoAmount: ((deposit4.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -648,7 +667,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Withdraw deposit
       try {
         await launch_client?.withdraw({
-          lockUpDuration: deposit4.old_lock_up_duration ?? 0,
+          lockUpDuration: (deposit4.old_lock_up_duration ?? 0) * 1,
           withdrawalAmount: ((deposit4.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -675,7 +694,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Lock deposit using new_lock_up_duration
       try {
         await launch_client?.lock({
-          lockUpDuration: deposit5.new_lock_up_duration ?? 0
+          lockUpDuration: deposit5.new_lock_up_duration * 1
         }, "auto", undefined, [coin((deposit5.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
@@ -699,8 +718,8 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Edit deposit
       try {
         await launch_client?.changeLockDuration({
-          newLockUpDuration: deposit5.new_lock_up_duration ?? 0,
-          oldLockUpDuration: deposit5.old_lock_up_duration ?? 0,
+          newLockUpDuration: deposit5.new_lock_up_duration * 1,
+          oldLockUpDuration: (deposit5.old_lock_up_duration ?? 0) * 1,
           uosmoAmount: ((deposit5.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -721,7 +740,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Withdraw deposit
       try {
         await launch_client?.withdraw({
-          lockUpDuration: deposit5.old_lock_up_duration ?? 0,
+          lockUpDuration: (deposit5.old_lock_up_duration ?? 0) * 1,
           withdrawalAmount: ((deposit5.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -748,7 +767,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Lock deposit using new_lock_up_duration
       try {
         await launch_client?.lock({
-          lockUpDuration: deposit6.new_lock_up_duration ?? 0
+          lockUpDuration: deposit6.new_lock_up_duration * 1
         }, "auto", undefined, [coin((deposit6.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
@@ -772,8 +791,8 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Edit deposit
       try {
         await launch_client?.changeLockDuration({
-          newLockUpDuration: deposit6.new_lock_up_duration ?? 0,
-          oldLockUpDuration: deposit6.old_lock_up_duration ?? 0,
+          newLockUpDuration: deposit6.new_lock_up_duration * 1,
+          oldLockUpDuration: (deposit6.old_lock_up_duration ?? 0) * 1,
           uosmoAmount: ((deposit6.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -794,7 +813,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Withdraw deposit
       try {
         await launch_client?.withdraw({
-          lockUpDuration: deposit6.old_lock_up_duration ?? 0,
+          lockUpDuration: (deposit6.old_lock_up_duration ?? 0) * 1,
           withdrawalAmount: ((deposit6.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -821,7 +840,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Lock deposit using new_lock_up_duration
       try {
         await launch_client?.lock({
-          lockUpDuration: deposit7.new_lock_up_duration ?? 0
+          lockUpDuration: deposit7.new_lock_up_duration * 1
         }, "auto", undefined, [coin((deposit7.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           get_updateddepositList()
@@ -845,8 +864,8 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Edit deposit
       try {
         await launch_client?.changeLockDuration({
-          newLockUpDuration: deposit7.new_lock_up_duration ?? 0,
-          oldLockUpDuration: deposit7.old_lock_up_duration ?? 0,
+          newLockUpDuration: deposit7.new_lock_up_duration * 1,
+          oldLockUpDuration: (deposit7.old_lock_up_duration ?? 0) * 1,
           uosmoAmount: ((deposit7.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -867,7 +886,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Withdraw deposit
       try {
         await launch_client?.withdraw({
-          lockUpDuration: deposit7.old_lock_up_duration ?? 0,
+          lockUpDuration: (deposit7.old_lock_up_duration ?? 0) * 1,
           withdrawalAmount: ((deposit7.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -894,7 +913,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Lock deposit using new_lock_up_duration
       try {
         await launch_client?.lock({
-          lockUpDuration: deposit8.new_lock_up_duration ?? 0
+          lockUpDuration: deposit8.new_lock_up_duration * 1
         }, "auto", undefined, [coin((deposit8.deposit ?? 0)* 1_000_000, denoms.osmo)])
         .then((res) => {
           //Update deposits
@@ -919,8 +938,8 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Edit deposit
       try {
         await launch_client?.changeLockDuration({
-          newLockUpDuration: deposit8.new_lock_up_duration ?? 0,
-          oldLockUpDuration: deposit8.old_lock_up_duration ?? 0,
+          newLockUpDuration: deposit8.new_lock_up_duration * 1,
+          oldLockUpDuration: (deposit8.old_lock_up_duration ?? 0) * 1,
           uosmoAmount: ((deposit8.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -941,7 +960,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Withdraw deposit
       try {
         await launch_client?.withdraw({
-          lockUpDuration: deposit8.old_lock_up_duration ?? 0,
+          lockUpDuration: (deposit8.old_lock_up_duration ?? 0) * 1,
           withdrawalAmount: ((deposit8.deposit ?? 0)* 1_000_000).toString(),
         }).then((res) => {
           get_updateddepositList()
@@ -1204,13 +1223,14 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
               <div className="withdraw">WITHDRAW</div>
             </div>
             
-            <div className="mbrn-reward-circle" />
+            <div className="mbrn-reward-circle">              
+              <div className="mbrn-reward-total">{MBRNreward} MBRN</div>
+            </div>
             <div className="osmo-deposit-circle" />
             <div className="osmo-deposit-amount">{lockedOSMO} OSMO</div>
             {rankings !== undefined ?(
               <div className="mbrn-rank" style={{color: rankings.color}}>Ranked #{rankings.user} out of {rankings.total}</div>
               ) : null}
-            <div className="mbrn-reward-total">{MBRNreward} MBRN</div>
             <button className="mbrn-claim-button" disabled={(progress <= 100)} style={(progress <= 100) ? {opacity:0.3} : undefined} type="button" onClick={handleclaimClick}>
               <div className="mbrn-claim-button-label">CLAIM</div>
             </button>
@@ -1261,64 +1281,64 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
             <div className="btn button7" />
             <form>
               {/*Deposit 1*/}
-              <input className="div2" name="deposit1amount" value={deposit1.deposit} type="number" onChange={handlesetdeposit1amount} onClick={handleamountClick1}/>
-              <input className="days" name="deposit1days" value={deposit1.old_lock_up_duration} type="number" onChange={handlesetdeposit1days} onClick={handledaysClick1}/>
+              <input className="div2" name="deposit1amount" defaultValue={deposit1.deposit} type="number" onChange={handlesetdeposit1amount} onClick={handleamountClick1}/>
+              <input className="days" name="deposit1days" defaultValue={deposit1.old_lock_up_duration} type="number" onChange={handlesetdeposit1days} onClick={handledaysClick1}/>
               <button className="btn button" type="button" onClick={handledeposit1Click}>
                 <div className="button-label">
                 {deposit1.label}
                 </div>
               </button>
               {/*Deposit 2*/}
-              <input className="div3" name="deposit2amount" value={deposit2.deposit} type="number" disabled={deposit2.label === "EDIT"} onChange={handlesetdeposit2amount} onClick={handleamountClick2}/>
-              <input className="days1" name="deposit2days" value={deposit2.old_lock_up_duration} type="number" disabled={deposit2.label === "WTHDRW"} onChange={handlesetdeposit2days} onClick={handledaysClick2}/>
+              <input className="div3" name="deposit2amount" defaultValue={deposit2.deposit} type="number" onChange={handlesetdeposit2amount} onClick={handleamountClick2}/>
+              <input className="days1" name="deposit2days" defaultValue={deposit2.old_lock_up_duration} type="number" onChange={handlesetdeposit2days} onClick={handledaysClick2}/>
               <button className="btn button1" type="button" onClick={handledeposit2Click}>
                 <div className="button-label">
                 {deposit2.label}
                 </div>
               </button>
               {/*Deposit 3*/}
-              <input className="div4" name="deposit3amount" value={deposit3.deposit} type="number" disabled={deposit3.label === "EDIT"} onChange={handlesetdeposit3amount} onClick={handleamountClick3}/>
-              <input className="days2" name="deposit3days" value={deposit3.old_lock_up_duration} type="number" disabled={deposit3.label === "WTHDRW"} onChange={handlesetdeposit3days} onClick={handledaysClick3}/>
+              <input className="div4" name="deposit3amount" defaultValue={deposit3.deposit} type="number"onChange={handlesetdeposit3amount} onClick={handleamountClick3}/>
+              <input className="days2" name="deposit3days" defaultValue={deposit3.old_lock_up_duration} type="number" onChange={handlesetdeposit3days} onClick={handledaysClick3}/>
               <button className="btn button2" type="button" onClick={handledeposit3Click}>
                 <div className="button-label">
                 {deposit3.label}
                 </div>
               </button>
               {/*Deposit 4*/}
-              <input className="div5" name="deposit4amount" value={deposit4.deposit} type="number" disabled={deposit4.label === "EDIT"} onChange={handlesetdeposit4amount} onClick={handleamountClick4}/>
-              <input className="days3" name="deposit4days" value={deposit4.old_lock_up_duration} type="number" disabled={deposit4.label === "WTHDRW"} onChange={handlesetdeposit4days} onClick={handledaysClick4}/>
+              <input className="div5" name="deposit4amount" defaultValue={deposit4.deposit} type="number" onChange={handlesetdeposit4amount} onClick={handleamountClick4}/>
+              <input className="days3" name="deposit4days" defaultValue={deposit4.old_lock_up_duration} type="number" onChange={handlesetdeposit4days} onClick={handledaysClick4}/>
               <button className="btn button3" type="button" onClick={handledeposit4Click}>
                 <div className="button-label">
                 {deposit4.label}
                 </div>
               </button>
               {/*Deposit 5*/}
-              <input className="div6" name="deposit5amount" value={deposit5.deposit} type="number" disabled={deposit5.label === "EDIT"} onChange={handlesetdeposit5amount} onClick={handleamountClick5}/>
-              <input className="days4" name="deposit5days" value={deposit5.old_lock_up_duration} type="number" disabled={deposit5.label === "WTHDRW"} onChange={handlesetdeposit5days} onClick={handledaysClick5}/>
+              <input className="div6" name="deposit5amount" defaultValue={deposit5.deposit} type="number" onChange={handlesetdeposit5amount} onClick={handleamountClick5}/>
+              <input className="days4" name="deposit5days" defaultValue={deposit5.old_lock_up_duration} type="number" onChange={handlesetdeposit5days} onClick={handledaysClick5}/>
               <button className="btn button4" type="button" onClick={handledeposit5Click}>
                 <div className="button-label">
                 {deposit5.label}
                 </div>
               </button>
               {/*Deposit 6*/}
-              <input className="div7" name="deposit6amount" value={deposit6.deposit} type="number" disabled={deposit6.label === "EDIT"} onChange={handlesetdeposit6amount} onClick={handleamountClick6}/>
-              <input className="days5" name="deposit6days" value={deposit6.old_lock_up_duration} type="number" disabled={deposit6.label === "WTHDRW"} onChange={handlesetdeposit6days} onClick={handledaysClick6}/>
+              <input className="div7" name="deposit6amount" defaultValue={deposit6.deposit} type="number" onChange={handlesetdeposit6amount} onClick={handleamountClick6}/>
+              <input className="days5" name="deposit6days" defaultValue={deposit6.old_lock_up_duration} type="number" onChange={handlesetdeposit6days} onClick={handledaysClick6}/>
               <button className="btn button5" type="button" onClick={handledeposit6Click}>
                 <div className="button-label">
                 {deposit6.label}
                 </div>
               </button>
               {/*Deposit 7*/}
-              <input className="div8" name="deposit7amount" value={deposit7.deposit} type="number" disabled={deposit7.label === "EDIT"} onChange={handlesetdeposit7amount} onClick={handleamountClick7}/>
-              <input className="days6" name="deposit7days" value={deposit7.old_lock_up_duration} type="number" disabled={deposit7.label === "WTHDRW"} onChange={handlesetdeposit7days} onClick={handledaysClick7}/>
+              <input className="div8" name="deposit7amount" defaultValue={deposit7.deposit} type="number" onChange={handlesetdeposit7amount} onClick={handleamountClick7}/>
+              <input className="days6" name="deposit7days" defaultValue={deposit7.old_lock_up_duration} type="number" onChange={handlesetdeposit7days} onClick={handledaysClick7}/>
               <button className="btn button6" type="button" onClick={handledeposit7Click}>
                 <div className="button-label">
                 {deposit7.label}
                 </div>
               </button>
               {/*Deposit 8*/}
-              <input className="div9" name="deposit8amount" value={deposit8.deposit} type="number" disabled={deposit8.label === "EDIT"} onChange={handlesetdeposit8amount} onClick={handleamountClick8}/>
-              <input className="days7" name="deposit8days" value={deposit8.old_lock_up_duration} type="number" disabled={deposit8.label === "WTHDRW"} onChange={handlesetdeposit8days} onClick={handledaysClick8}/>
+              <input className="div9" name="deposit8amount" defaultValue={deposit8.deposit} type="number" onChange={handlesetdeposit8amount} onClick={handleamountClick8}/>
+              <input className="days7" name="deposit8days" defaultValue={deposit8.old_lock_up_duration} type="number" onChange={handlesetdeposit8days} onClick={handledaysClick8}/>
               <button className="btn button7" type="button" onClick={handledeposit8Click}>
                 <div className="button-label">
                 {deposit8.label}
