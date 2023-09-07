@@ -366,6 +366,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
     //Query lockdrop progress
     try {
       await queryClient?.lockdrop().then(async (res) => {
+        console.log("current_time: "+res?.start_time)
         launch_client?.client?.getBlock().then( (block: any) => {
           var current_time = Date.parse(block?.header.time) / 1000;
           console.log("current_time: "+current_time)
