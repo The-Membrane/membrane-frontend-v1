@@ -635,7 +635,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }, [menuAsset])
 
   return (
-    <div className="fullHeight">
+    <div className="fullHeight" style={{overflow:"hidden"}}>
     <div className="row ">
     <div className="col shiftRight">
     <div className="liquidation-pools">
