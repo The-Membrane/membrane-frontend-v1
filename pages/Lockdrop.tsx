@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ProgressBar from "../components/progress_bar";
 import { LaunchClient, LaunchQueryClient } from "../codegen/launch/Launch.client";
 import { OracleQueryClient } from "../codegen/oracle/Oracle.client";
-import { Lock, Uint128 } from "../codegen/launch/Launch.types";
+import { Lock, Uint128, UserRatio } from "../codegen/launch/Launch.types";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { coin } from "@cosmjs/stargate";
 import { denoms, Prices } from ".";
@@ -314,21 +314,23 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
       //Query for rankings
       try {
         await queryClient?.incentiveDistribution().then((res) => {
-          let user_ratio = 0;
+          
+          var user_ratio = 0;
           //Find user ratio
-          for (var i = 0; i < res.length; i++) {
-            if (res[i].user == address) {
-              user_ratio = parseInt(res[i].ratio);
-              break;
+          res.forEach((element?) => {
+            if (element.user == address) {
+              user_ratio = parseFloat(element.ratio);     
+              console.log("me: "+element.user)
             }
-          }
+          })
+
           //Find users ahead of user 
           var users_ahead = 0;
-          for (var i = 0; i < res.length; i++) {
-            if (parseInt(res[i].ratio) > user_ratio) {
+          res.forEach((element?) => {
+            if (parseFloat(element.ratio) > user_ratio) {              
               users_ahead += 1;
             }
-          }
+          })
           //Find color
           var color = "";
           var user_percent_class = users_ahead / res.length;
@@ -339,7 +341,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
           } else {
             color = "rgba(79, 202, 187, 0.8)";
           } 
-          console.log("distribution res length: "+res.length)
+          console.log("users_ahead: "+users_ahead)
           //Set rankings
           setRankings({
             user: users_ahead+1,
@@ -379,7 +381,7 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
     //Query for MBRN reward total
     try { 
       await queryClient?.userIncentives({user: address ?? ""}).then((res: Uint128) => {
-        setMBRNreward(parseInt(res))
+        setMBRNreward(parseInt(res)/1_000_000)
       })
     } catch (error) {
       console.log(error);
