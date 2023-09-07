@@ -365,12 +365,12 @@ const Lockdrop = ({launch_client, queryClient, address, prices}: Props) => {
   const get_lockdropProgress = async () => {
     //Query lockdrop progress
     try {
-      await queryClient?.lockdrop().then((res) => {
+      await queryClient?.lockdrop().then(async (res) => {
         launch_client?.client.getBlock().then( (block) => {
           var current_time = Date.parse(block.header.time) / 1000;
           
           //Calc & set progress
-          setProgress(parseFloat(((current_time - res.start_time) / (res.withdrawal_end - res.start_time)).toPrecision(1)) );
+          setProgress(parseFloat(((current_time - res.start_time) / (res.withdrawal_end - res.start_time)).toPrecision(4)) * 100);
         })} );  
     } catch (error) {
       console.log(error);
