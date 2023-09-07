@@ -69,7 +69,7 @@ export default function Home() {
   const stakingSection = useRef(null);
 
   //Get Clients
-  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, address } = useClients();
+  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, base_client, address } = useClients();
   const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, governancequeryClient, stakingqueryClient, oraclequeryClient } = useQueryClients();
   const addr = address as string | undefined;
 
@@ -158,7 +158,7 @@ export default function Home() {
         <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={addr}/>
       </div>
       <div ref={launchSection}>
-        <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} address={addr} prices={prices}/>
+        <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={addr} prices={prices}/>
       </div>      
     </div>
     </div>
