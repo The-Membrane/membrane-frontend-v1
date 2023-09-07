@@ -143,7 +143,7 @@ export default function Home() {
       rel="stylesheet"
     />
     <div className="fullHeight">
-    <div className="row ">
+    <div className="row">
         <NavBar/>
       <div ref={dashboardSection}>
         <Dashboard/>        

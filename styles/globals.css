@@ -38,6 +38,8 @@ input {
   background-color: #212121;
   font-family: 'Abel', sans-serif;
   overflow:auto;
+  display: flex;
+  flex-direction: row-reverse;
 }
 shadow{
   background-color: #131313;
