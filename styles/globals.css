@@ -39,7 +39,7 @@ input {
   font-family: 'Abel', sans-serif;
   overflow:auto;
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: column;
 }
 shadow{
   background-color: #131313;
@@ -104,7 +104,6 @@ ul{
   height: 100%;
   position: fixed;
   bottom: 0%;
-  margin-right: 10%;
 }
 .hoverColor:hover {
   background-color: #798EFF;
