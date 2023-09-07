@@ -46,7 +46,7 @@ export function useClients(): {
         { gasPrice: GasPrice.fromString("0.025uosmo") }
       ).catch((e) => {
         console.log(e);
-        // getSigningCosmWasmClient()
+        getSigningCosmWasmClient()
       });
 
       client.then((cosmwasmClient) => {
