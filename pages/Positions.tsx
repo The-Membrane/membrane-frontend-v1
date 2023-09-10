@@ -822,7 +822,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         } else {        
             console.log("address: ", address)
         }
-    }, [address])
+    }, [address, cdp_client, queryClient])
 
   return (
     <div className="positions">

@@ -894,7 +894,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
     getuserClaims()
     //Get delegation info
     getDelegations()
-  }, []);
+  }, [address, govClient, govQueryClient, stakingClient, stakingQueryClient]);
       
   return (
     <div className="governance">

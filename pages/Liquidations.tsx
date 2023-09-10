@@ -632,7 +632,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Check for unstaking positions
     getunstakingSP()
 
-  }, [menuAsset])
+  }, [menuAsset, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient])
 
   return (
     <div className="fullHeight" style={{overflow:"hidden"}}>
