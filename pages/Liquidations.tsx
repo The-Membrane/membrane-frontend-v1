@@ -712,7 +712,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <div className="captial-ahead-label" data-descr="Capital ahead of you">{capitalAhead}K</div>
           <div className="x-axis1" />
           <div className="total-tvl-label">TVL: {TVL}M</div>
-          <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl-container.svg" />
+          <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl_container.svg" />
           <div className="premium">10%</div>
           <form>
             <input className="omni-deposit-amount" name="amount" value={omnidepositAmount} type="number" onChange={handlesetomnidAmount}/>
