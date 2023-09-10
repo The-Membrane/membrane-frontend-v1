@@ -35,19 +35,27 @@ export function useClients(): {
   const [stakingClient, setstakingClient] = useState<StakingClient | null>(  null  );
   const [cosmwasmClient, setCosmwasmClient] = useState<SigningCosmWasmClient | null>(  null  );
 
+  var signed_errored = false;
+
   useEffect(() => { 
     if (status === 'Connected') {
+
+      signed_errored = false;
       
       //Use this to access the RPC node directly instead of using public RPCs with getSigningCosmWasmClient()
       const signer = getOfflineSigner();
-      const client = SigningCosmWasmClient.connectWithSigner(
+      var client = SigningCosmWasmClient.connectWithSigner(
       'https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c', 
         signer,
         { gasPrice: GasPrice.fromString("0.025uosmo") }
       ).catch((e) => {
         console.log(e);
-        getSigningCosmWasmClient()
+        signed_errored = true;
       });
+
+      if (signed_errored) {
+        client = getSigningCosmWasmClient();
+      }
 
       client.then((cosmwasmClient) => {
         if (!cosmwasmClient || !address) {
@@ -70,7 +78,7 @@ export function useClients(): {
         console.log(e);
       });
     }
-  }, [address, status]);
+  }, [address, status, testnetAddrs]);
 
   return { 
     cdp_client: cdpClient ?? null,
@@ -93,13 +101,18 @@ export function useQueryClients(): {
   governancequeryClient: GovernanceQueryClient | null;
   stakingqueryClient: StakingQueryClient | null;
 } {
+    var query_errored = false;
     const { getCosmWasmClient } = useChain(chainName);
     ///I can change the RPC node here
-    const client = CosmWasmClient.connect("https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c")
+    var client = CosmWasmClient.connect("https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c")
     .catch((e) => {
       console.log(e);
-      // getCosmWasmClient()
+      query_errored = true;
     });
+
+    if (query_errored) {
+      client = getCosmWasmClient();
+    }
   
     const [positionsQueryClient, setPositionsQueryClient] = useState<PositionsQueryClient | null>( null );
     const [oracleQueryClient, setoracleQueryClient] = useState<OracleQueryClient | null>( null );
@@ -110,26 +123,27 @@ export function useQueryClients(): {
     const [stakingqueryClient, setstakingqueryClient] = useState<StakingQueryClient | null>( null );
 
     useEffect(() => { 
-          client.then((cosmwasmClient) => {
-            if (!cosmwasmClient) {
-            console.error('cosmwasmClient undefined or address undefined.');
-            return;
-            }
-            
-            //Set clients
-            setoracleQueryClient(new OracleQueryClient(cosmwasmClient, testnetAddrs.oracle));
-            setLaunchQueryClient(new LaunchQueryClient(cosmwasmClient, testnetAddrs.launch));
-            setPositionsQueryClient(new PositionsQueryClient(cosmwasmClient, testnetAddrs.positions));
-            setliqqueueQueryClient(new LiquidationQueueQueryClient(cosmwasmClient, testnetAddrs.liq_queue));
-            setstabilitypoolqueryClient(new StabilityPoolQueryClient(cosmwasmClient, testnetAddrs.stability_pool));
-            setgovernancequeryClient(new GovernanceQueryClient(cosmwasmClient, testnetAddrs.governance));
-            setstakingqueryClient(new StakingQueryClient(cosmwasmClient, testnetAddrs.staking));
+      client.then((cosmwasmClient) => {
+        if (!cosmwasmClient) {
+        console.error('cosmwasmClient undefined or address undefined.');
+        return;
+        }
+        query_errored = false;
+        
+        //Set clients
+        setoracleQueryClient(new OracleQueryClient(cosmwasmClient, testnetAddrs.oracle));
+        setLaunchQueryClient(new LaunchQueryClient(cosmwasmClient, testnetAddrs.launch));
+        setPositionsQueryClient(new PositionsQueryClient(cosmwasmClient, testnetAddrs.positions));
+        setliqqueueQueryClient(new LiquidationQueueQueryClient(cosmwasmClient, testnetAddrs.liq_queue));
+        setstabilitypoolqueryClient(new StabilityPoolQueryClient(cosmwasmClient, testnetAddrs.stability_pool));
+        setgovernancequeryClient(new GovernanceQueryClient(cosmwasmClient, testnetAddrs.governance));
+        setstakingqueryClient(new StakingQueryClient(cosmwasmClient, testnetAddrs.staking));
 
         }).catch((e) => {
         console.log(e);
       });;
       
-    }, [getCosmWasmClient]);
+    }, [getCosmWasmClient, testnetAddrs]);
   
     return { 
       oraclequeryClient: oracleQueryClient ?? null,

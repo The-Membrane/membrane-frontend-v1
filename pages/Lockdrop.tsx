@@ -397,7 +397,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
       //Query for deposit list
       get_updateddepositList()
     // }
-  }, [address]);
+  }, [address, launch_client, queryClient, baseClient]);
 
   const handledeposit1Click = async () => {
     if (deposit1.label ==="LOCK"){
@@ -1245,13 +1245,13 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             <div className="rates-box"/>
             <Image className="osmo-rate-logo" width={27} height={27} alt="osmosis-osmo-logo" src="/images/osmo.svg" />
             <Image className="axlusdc-rate-logo" width={27} height={27} alt="axelar-usdc-logo" src="/images/usdc.svg" />
-            <div className="price-in-osmo">: {MBRNreward / lockedOSMO}</div>
-            <div className="price-in-axlusdc">: {(MBRNreward / lockedOSMO) * prices?.osmo}</div>
+            <div className="price-in-osmo">: {parseFloat((MBRNreward / lockedOSMO).toPrecision(3))}</div>
+            <div className="price-in-axlusdc" onClick={() => {console.log(prices)}}>: {parseFloat(((MBRNreward / lockedOSMO) * prices?.osmo).toPrecision(3))}</div>
             <div className="infomsg">
               <p className="there-is-10m-mbrn-up-for-grabs">
                 There is 10M MBRN up for grabs in this 7 day event. If you want a larger share for your deposit you must lock for longer (MAX: 365 days).
               </p>
-              <p>Locks boost your “shares” and the full 10M is split & STAKED (4 day lock) in accordance to said shares.</p>
+              <p>Locks boost your “shares” and the full 10M is split & STAKED (4 day unstaking) in accordance to said shares.</p>
             </div>
             <div className="allocationmsg">
               <span className="allocationmsg-txt">
@@ -1266,7 +1266,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           <div className="deposits-list">
             {lockedOSMO == 0 ? <div className="lock-tutorial">Below fields are input boxes for amount and duration</div> : null}
             <div className="yourdepositstext">
-              YOUR LOCKS
+              OSMO Deposits &nbsp;/&nbsp; MBRN Reward Locks
             </div>
             <div className="launch-lock-amount"> AMOUNT </div>
             <div className="lock-duration"> DURATION </div>

@@ -33,7 +33,7 @@ export const testnetAddrs = {
     liq_queue: "osmo1xa6mcwvhyqv9krtscwxvl7d0w6ef0nz9tv28fug5tjx7wgukarqsv95jtv",
     liquidity_check: "osmo1nq37he853ma46dr7xrnzwz5y62jnte02l7sgq8gxqngmseqxz0qsxeu6fp",
     mbrn_auction: "osmo16zj94q3m6szy9rz24zznq9ygmt60je3czcdt9svaw7lqn4wmawks634g7a",
-    oracle: "osmo19xeehmeyfmd5yaz8ap4qwq3vakfn6trpa56ywux7kpfr743ceqzsxctk6s",
+    oracle: "osmo1wuat5jpawsrpvfsk820x9ysd2z80jwcn36tlt92h3wnawggra7dsuvmm0y",
     osmosis_proxy: "osmo1nw336rzf03vrlgu90vj6v53j6t2nquvk0vda0qv78c8ldukk6f8snkphpc",
     positions: "osmo1f369k6q7gm5rcwjhjfrwe7xyfxnuf5t4e9ld0zp5a3waeffdt5wq4jam43",
     stability_pool: "osmo1490c8kx4fsqcwpe2zru68pzehhdfzl35lnvlc04v2e30ajcfeh8qstlgpv",

@@ -102,7 +102,7 @@ export default function Home() {
                 }
             ],
             oracleTimeLimit: 10,
-            twapTimeframe: 60,
+            twapTimeframe: 0,
         }).then((res) => {
             setPrices({
                 osmo: parseFloat(res[0].price),
@@ -116,9 +116,16 @@ export default function Home() {
   }
 
   useEffect(() => {
-    //Get prices
-    queryPrices()
-  }, [])
+
+    if (prices.osmo === 0) {
+      //Get prices
+      queryPrices()
+    }
+
+    console.log(prices)
+
+    console.log(oraclequeryClient)
+  }, [oraclequeryClient, prices])
 
   return (
     <>    
