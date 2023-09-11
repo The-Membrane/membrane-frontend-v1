@@ -411,7 +411,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           //Update lock amount
           setlockedOSMO(+lockedOSMO + +(deposit1.deposit ?? 0))
           //Format popup message
-          setPopupMsg("Lock of "+ deposit1.deposit+" OSMO for "+deposit1.new_lock_up_duration+ " days is successful")
+          setPopupMsg("Deposit of "+ deposit1.deposit+" OSMO, whose MBRN rewards will be locked for "+deposit1.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
           setPopupTrigger(true)
         })
@@ -485,7 +485,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           //Update lock amount
           setlockedOSMO(+lockedOSMO + +(deposit2.deposit ?? 0))
           //Format popup message
-          setPopupMsg("Lock of "+ deposit2.deposit+" OSMO for "+deposit2.new_lock_up_duration+ " days is successful")
+          setPopupMsg("Deposit of "+ deposit2.deposit+" OSMO, whose MBRN rewards will be locked for "+deposit2.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
           setPopupTrigger(true)
         })
@@ -558,7 +558,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           //Update lock amount
         setlockedOSMO(+lockedOSMO + +(deposit3.deposit ?? 0))
           //Format popup message
-          setPopupMsg("Lock of "+ deposit3.deposit+" OSMO for "+deposit3.new_lock_up_duration+ " days is successful")
+          setPopupMsg("Deposit of "+ deposit3.deposit+" OSMO, whose MBRN rewards will be locked for "+deposit3.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
           setPopupTrigger(true)
         })
@@ -631,7 +631,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           //Update lock amount
         setlockedOSMO(+lockedOSMO + +(deposit4.deposit ?? 0))
           //Format popup message
-          setPopupMsg("Lock of "+ deposit4.deposit+" OSMO for "+deposit4.new_lock_up_duration+ " days is successful")
+          setPopupMsg("Deposit of "+ deposit4.deposit+" OSMO, whose MBRN rewards will be locked for "+deposit4.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
           setPopupTrigger(true)
         })
@@ -704,7 +704,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           //Update lock amount
         setlockedOSMO(+lockedOSMO + +(deposit5.deposit ?? 0))
           //Format popup message
-          setPopupMsg("Lock of "+ deposit5.deposit+" OSMO for "+deposit5.new_lock_up_duration+ " days is successful")
+          setPopupMsg("Deposit of "+ deposit5.deposit+" OSMO, whose MBRN rewards will be locked for "+deposit5.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
           setPopupTrigger(true)
         })
@@ -777,7 +777,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           //Update lock amount
         setlockedOSMO(+lockedOSMO + +(deposit6.deposit ?? 0))
           //Format popup message
-          setPopupMsg("Lock of "+ deposit6.deposit+" OSMO for "+deposit6.new_lock_up_duration+ " days is successful")
+          setPopupMsg("Deposit of "+ deposit6.deposit+" OSMO, whose MBRN rewards will be locked for "+deposit6.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
           setPopupTrigger(true)
         })
@@ -850,7 +850,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           //Update lock amount
         setlockedOSMO(+lockedOSMO + +(deposit7.deposit ?? 0))
           //Format popup message
-          setPopupMsg("Lock of "+ deposit7.deposit+" OSMO for "+deposit7.new_lock_up_duration+ " days is successful")
+          setPopupMsg("Deposit of "+ deposit7.deposit+" OSMO, whose MBRN rewards will be locked for "+deposit7.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
           setPopupTrigger(true)
         })
@@ -924,7 +924,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
           //Update lock amount
           setlockedOSMO(+lockedOSMO + +(deposit8.deposit ?? 0))
           //Format popup message
-          setPopupMsg("Lock of "+ deposit8.deposit+" OSMO for "+deposit8.new_lock_up_duration+ " days is successful")
+          setPopupMsg("Deposit of "+ deposit8.deposit+" OSMO, whose MBRN rewards will be locked for "+deposit8.new_lock_up_duration+ " days is successful")
           setPopupStatus("Success")
           setPopupTrigger(true)
         })

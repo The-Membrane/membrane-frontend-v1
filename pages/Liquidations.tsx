@@ -495,7 +495,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     try {
       //Query total deposits
       await sp_queryClient?.assetPool({
-        depositLimit: 1,
+        depositLimit: 0,
       }).then((res) => {
         console.log(res)
         //set TVL in Ms

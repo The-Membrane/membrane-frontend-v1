@@ -125,7 +125,7 @@ export default function Home() {
     console.log(prices)
 
     console.log(oraclequeryClient)
-  }, [oraclequeryClient, prices])
+  }, [oraclequeryClient, prices, address])
 
   return (
     <>    
