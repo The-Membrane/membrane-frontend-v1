@@ -49,12 +49,18 @@ export const denoms = {
   atom: "ibc/A8C2D23A1E6F95DA4E48BA349667E322BD7A6C996D8A4AAE8BA72E190F3D1477",
   //mainnet axlUSDC ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858
   axlUSDC: "ibc/6F34E1BD664C36CE49ACC28E60D62559A5F96C4F9A6CCE4FC5A67B2852E24CFE",
+  //mainnet "gamm/pool/1"
+  atomosmo_pool: "gamm/pool/12",
+  //mainnet "gamm/pool/678"
+  osmousdc_pool: "gamm/pool/5",
 };
 
 export interface Prices {
   osmo: number,
   atom: number,
-  axlUSDC: number
+  axlUSDC: number,
+  atomosmo_pool: number,
+  osmousdc_pool: number,
 }
 
 export default function Home() {
@@ -78,6 +84,8 @@ export default function Home() {
     osmo: 0,
     atom: 0,
     axlUSDC: 0,
+    atomosmo_pool: 0,
+    osmousdc_pool: 0,
   });
 
   //Query prices
@@ -99,6 +107,16 @@ export default function Home() {
                     native_token: {
                         denom: denoms.axlUSDC
                     }
+                },
+                {
+                    native_token: {
+                        denom: denoms.atomosmo_pool
+                    }
+                },
+                {
+                    native_token: {
+                        denom: denoms.osmousdc_pool
+                    }
                 }
             ],
             oracleTimeLimit: 10,
@@ -107,7 +125,10 @@ export default function Home() {
             setPrices({
                 osmo: parseFloat(res[0].price),
                 atom: parseFloat(res[1].price), 
-                axlUSDC: parseFloat(res[2].price)
+                axlUSDC: parseFloat(res[2].price),
+                atomosmo_pool: parseFloat(res[3].price),
+                osmousdc_pool: parseFloat(res[4].price),
+
             })
         })
     } catch (error) {

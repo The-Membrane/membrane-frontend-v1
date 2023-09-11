@@ -2857,6 +2857,48 @@ span[data-descr]:hover::after {
   top: 199px;
   left: 150px;
 }
+.atomosmopool-atom-icon {
+  position: absolute;
+  top: 254px;
+  left: 15px;
+  width: 45px;
+  height: 45px;
+  z-index: 2;
+}
+.atomosmopool-qty {
+  position: absolute;
+  top: 259px;
+  left: 150px;
+}
+.atomosmopool-osmo-icon {
+  position: absolute;
+  top: 254px;
+  left: 45px;
+  width: 45px;
+  height: 45px;
+  z-index: 1;
+}
+.osmousdcpool-osmo-icon {
+  position: absolute;
+  top: 314px;
+  left: 15px;
+  width: 45px;
+  height: 45px;
+  z-index: 2;
+}
+.osmousdcpool-qty {
+  position: absolute;
+  top: 319px;
+  left: 150px;
+}
+.osmousdcpool-usdc-icon {
+  position: absolute;
+  top: 314px;
+  left: 45px;
+  width: 45px;
+  height: 45px;
+  z-index: 1;
+}
 .cdt-logo-icon4,
 .cdp-div9 {
   left: 236px;
@@ -3144,8 +3186,9 @@ span[data-descr]:hover::after {
 }
 .amount-label {
   position: absolute;
-  top: 50px;
+  top: 60px;
   left: 22px;
+  font-size: large;
 }
 .mintrepay-screen,
 .redemption-screen {

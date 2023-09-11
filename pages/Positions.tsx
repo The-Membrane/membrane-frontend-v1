@@ -59,15 +59,24 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [withdrawStyle, setwithdrawStyle] = useState("cdp-withdraw-label low-opacity");
     const [assetIntent, setassetIntent] = useState<[string , number][]>([]);
     //Asset specific
+        //qty
     const [osmoQTY, setosmoQTY] = useState(0);
     const [atomQTY, setatomQTY] = useState(0);
     const [axlusdcQTY, setaxlusdcQTY] = useState(0);
+    const [atomosmo_poolQTY, setatomosmo_poolQTY] = useState(0);
+    const [osmousdc_poolQTY, setosmousdc_poolQTY] = useState(0);
+        //value
     const [osmoValue, setosmoValue] = useState(0);
     const [atomValue, setatomValue] = useState(0);
     const [axlUSDCValue, setaxlusdcValue] = useState(0);
+    const [atomosmo_poolValue, setatomosmo_poolValue] = useState(0);
+    const [osmousdc_poolValue, setosmousdc_poolValue] = useState(0);
+        //style
     const [osmoStyle, setosmoStyle] = useState("low-opacity");
     const [atomStyle, setatomStyle] = useState("low-opacity");
     const [axlusdcStyle, setaxlusdcStyle] = useState("low-opacity");
+    const [atomosmo_poolStyle, setatomosmo_poolStyle] = useState("low-opacity");
+    const [osmousdc_poolStyle, setosmousdc_poolStyle] = useState("low-opacity");
     //Positions Visual
     const [debt, setDebt] = useState(0);
     const [maxLTV, setmaxLTV] = useState(100);
@@ -101,6 +110,26 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const handleaxlUSDCqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("axlUSDC");
+        //Send to back
+        setredeemScreen("redemption-screen");
+        setmintrepayScreen("mintrepay-screen");
+        setcloseScreen("redemption-screen");
+        setredeemInfoScreen("redemption-screen");
+        setStarting("");
+    };    
+    const handleatomosmo_poolqtyClick = () => {
+        setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
+        setcurrentAsset("ATOM-OSMO LP");
+        //Send to back
+        setredeemScreen("redemption-screen");
+        setmintrepayScreen("mintrepay-screen");
+        setcloseScreen("redemption-screen");
+        setredeemInfoScreen("redemption-screen");
+        setStarting("");
+    };
+    const handleosmousdc_poolqtyClick = () => {
+        setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
+        setcurrentAsset("OSMO-axlUSDC LP");
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -316,6 +345,98 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             })
         }
     };
+    const handleatomosmo_poolClick = () => {
+        //Search for atomosmo_pool denom in the asset list
+        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.atomosmo_pool)
+        
+        //If unadded, add to assets && sentence
+        if (asset_check.length == 0) {
+            setRestricted(prevState => {
+                return { 
+                    ...prevState,
+                    readable_assets: [
+                        ...prevState.readable_assets,
+                        "ATOM-OSMO LP"
+                    ],
+                    assets: [
+                        ...prevState.assets,
+                        denoms.atomosmo_pool
+                    ]
+                }
+            })
+            setRestricted(prevState => {
+                return { 
+                    ...prevState,
+                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
+                }
+            })
+        } else {
+            //Remove from assets list
+            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.atomosmo_pool)
+            let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "ATOM-OSMO LP")
+            //Update assets
+            setRestricted(prevState => {
+                return { 
+                    ...prevState,
+                    readable_assets: readable_asset_check,
+                    assets: asset_check
+                }
+            })
+            //Update sentence
+            setRestricted(prevState => {
+                return { 
+                    ...prevState,
+                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
+                }
+            })
+        }
+    };
+    const handleosmousdc_poolClick = () => {
+        //Search for osmousdc_pool denom in the asset list
+        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.osmousdc_pool)
+        
+        //If unadded, add to assets && sentence
+        if (asset_check.length == 0) {
+            setRestricted(prevState => {
+                return { 
+                    ...prevState,
+                    readable_assets: [
+                        ...prevState.readable_assets,
+                        "OSMO-axlUSDC LP"
+                    ],
+                    assets: [
+                        ...prevState.assets,
+                        denoms.osmousdc_pool
+                    ]
+                }
+            })
+            setRestricted(prevState => {
+                return { 
+                    ...prevState,
+                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
+                }
+            })
+        } else {
+            //Remove from assets list
+            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.osmousdc_pool)
+            let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "OSMO-axlUSDC LP")
+            //Update assets
+            setRestricted(prevState => {
+                return { 
+                    ...prevState,
+                    readable_assets: readable_asset_check,
+                    assets: asset_check
+                }
+            })
+            //Update sentence
+            setRestricted(prevState => {
+                return { 
+                    ...prevState,
+                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
+                }
+            })
+        }
+    };
     //Mint
     const handlemintScreen = () => {
         //Update screens
@@ -377,49 +498,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         //clear intents
         setassetIntent([]);
     };
-
-    //Logo functionality activation
-    // const handleQTYaddition = (current_asset: string, amount: number) => {
-
-    //     switch(current_asset) {
-    //         case 'OSMO': {
-    //             var new_qty = +osmoQTY + +amount;
-    //             setosmoQTY(new_qty);
-    //             setAmount(0);
-    //             setosmoValue(new_qty * +prices.osmo);
-
-    //             //Remove opacity if above 0
-    //             if (new_qty > 0){
-    //                 setosmoStyle("");
-    //             }
-    //             break;
-    //           }
-    //         case 'ATOM':{
-    //             var new_qty = +atomQTY + +amount;
-    //             setatomQTY(new_qty);
-    //             setAmount(0);
-    //             setatomValue(new_qty * +prices.atom);
-                
-    //             //Remove opacity if above 0
-    //             if (new_qty > 0){
-    //                 setatomStyle("");
-    //             }
-    //             break;
-    //           }
-    //         case 'axlUSDC':{
-    //             var new_qty = +axlusdcQTY + +amount;
-    //             setaxlusdcQTY(new_qty);
-    //             setAmount(0);
-    //             setaxlusdcValue(new_qty * +prices.axlUSDC);
-
-    //             //Remove opacity if above 0
-    //             if (new_qty > 0){
-    //                 setaxlusdcStyle("");
-    //             }
-    //             break;
-    //           }
-    //       }
-    // };
     const handleQTYsubtraction = (current_asset: string, amount: number) => {
 
         switch(current_asset) {
@@ -465,6 +543,34 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 setaxlusdcValue(new_qty * +prices.axlUSDC);
                 break;
               }
+            case 'atomosmo_pool':{
+                var new_qty = +atomosmo_poolQTY - +amount;
+                setatomosmo_poolQTY(new_qty);
+                setAmount(0);
+
+                //Set opacity if 0 & set to if below
+                if (new_qty <= 0){
+                    setatomosmo_poolStyle("low-opacity");
+                    setatomosmo_poolQTY(0);
+                    new_qty = 0;
+                }
+                setatomosmo_poolValue(new_qty * +prices.atomosmo_pool);
+                break;
+            }
+            case 'osmousdc_pool':{
+                var new_qty = +osmousdc_poolQTY - +amount;
+                setosmousdc_poolQTY(new_qty);
+                setAmount(0);
+
+                //Set opacity if 0 & set to if below
+                if (new_qty <= 0){
+                    setosmousdc_poolStyle("low-opacity");
+                    setosmousdc_poolQTY(0);
+                    new_qty = 0;
+                }
+                setosmousdc_poolValue(new_qty * +prices.osmousdc_pool);
+                break;
+            }
           }
     };
     const handleLogoClick = async () => {
@@ -684,6 +790,14 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                     workingIntents.push(coin(intent[1] * 1_000_000, denoms.axlUSDC))
                     break;
                 }
+                case "ATOM-OSMO LP": { //18 decimal instead of 6
+                    workingIntents.push(coin(intent[1] * 1_000_000_000_000_000_000, denoms.atomosmo_pool))
+                    break;
+                }
+                case "OSMO-axlUSDC LP": { //18 decimal instead of 6
+                    workingIntents.push(coin(intent[1] * 1_000_000_000_000_000_000, denoms.osmousdc_pool))
+                    break;
+                }
             }
         })
         return workingIntents
@@ -719,6 +833,24 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                     })
                     break;
                 }
+                case "ATOM-OSMO LP": { //18 decimal instead of 6
+                    workingIntents.push({
+                        amount: (intent[1]* 1_000_000_000_000_000_000).toString(),
+                        info: {
+                            denom: denoms.atomosmo_pool,
+                        }
+                    })
+                    break;
+                }
+                case "OSMO-axlUSDC LP": { //18 decimal instead of 6
+                    workingIntents.push({
+                        amount: (intent[1]* 1_000_000_000_000_000_000).toString(),
+                        info: {
+                            denom: denoms.osmousdc_pool,
+                        }
+                    })
+                    break;
+                }
             }
         })
         return workingIntents
@@ -728,6 +860,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         handleQTYsubtraction("OSMO", osmoQTY);
         handleQTYsubtraction("ATOM", atomQTY);
         handleQTYsubtraction("axlUSDC", axlusdcQTY);
+
         setDebt(0); setmaxLTV(0);
     };
 
@@ -772,13 +905,25 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         if (actual_asset.info.denom === denoms.osmo) {
                             setosmoQTY(parseInt(actual_asset.amount) / 1_000_000)                            
                             setosmoValue(parseInt(actual_asset.amount) * +prices.osmo);
+                            setosmoStyle("");
                         } else if (actual_asset.info.denom === denoms.atom) {
                             setatomQTY(parseInt(actual_asset.amount) / 1_000_000)
                             setatomValue(parseInt(actual_asset.amount) * +prices.atom);
+                            setatomStyle("");
                         } else if (actual_asset.info.denom === denoms.axlUSDC) {
                             setaxlusdcQTY(parseInt(actual_asset.amount) / 1_000_000)
                             setaxlusdcValue(parseInt(actual_asset.amount) * +prices.axlUSDC);
+                            setaxlusdcStyle("");
+                        } else if (actual_asset.info.denom === denoms.atomosmo_pool) {
+                            setatomosmo_poolQTY(parseInt(actual_asset.amount) / 1_000_000_000_000_000_000)
+                            setatomosmo_poolValue(parseInt(actual_asset.amount) * +prices.atomosmo_pool);
+                            setatomosmo_poolStyle("");
+                        } else if (actual_asset.info.denom === denoms.osmousdc_pool) {
+                            setosmousdc_poolQTY(parseInt(actual_asset.amount) / 1_000_000_000_000_000_000)
+                            setosmousdc_poolValue(parseInt(actual_asset.amount) * +prices.osmousdc_pool);
+                            setosmousdc_poolStyle("");
                         }
+
                     }
                 })
 
@@ -877,6 +1022,22 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 <Image className="axlusdc-logo-icon" width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
                 <div className="axlUSDC-qty" onClick={handleaxlUSDCqtyClick}>{axlusdcQTY}</div>
                 <div className="cdp-div9">${axlUSDCValue}</div>
+              </div>
+              <div className={atomosmo_poolStyle}>
+                <div onClick={(handleatomosmo_poolClick)}>
+                    <Image className="atomosmopool-atom-icon" width={45} height={45} alt="" src="images/atom.svg" />
+                    <Image className="atomosmopool-osmo-icon" width={45} height={45} alt="" src="images/osmo.svg" />
+                </div>
+                <div className="atomosmopool-qty" onClick={handleatomosmo_poolqtyClick}>{atomosmo_poolQTY}</div>
+                <div className="cdp-div11">${atomosmo_poolValue}</div>
+              </div>
+              <div className={osmousdc_poolStyle}>
+                <div onClick={(handleosmousdc_poolClick)}>
+                    <Image className="osmousdcpool-osmo-icon" width={45} height={45} alt="" src="images/osmo.svg" />
+                    <Image className="osmousdcpool-usdc-icon" width={45} height={45} alt="" src="images/usdc.svg" />
+                </div>
+                <div className="osmousdcpool-qty" onClick={handleosmousdc_poolqtyClick}>{osmousdc_poolQTY}</div>
+                <div className="cdp-div13">${osmousdc_poolValue}</div>
               </div>
             </div>
           </div>
