@@ -1234,7 +1234,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             {rankings !== undefined ?(
               <div className="mbrn-rank" style={{color: rankings.color}}>Ranked #{rankings.user} out of {rankings.total}</div>
               ) : null}
-            <button className="mbrn-claim-button" disabled={(progress <= 100)} style={(progress <= 100) ? {opacity:0.3} : undefined} type="button" onClick={handleclaimClick}>
+            <button className="mbrn-claim-button" disabled={(progress < 100)} style={(progress <= 100) ? {opacity:0.3} : undefined} type="button" onClick={handleclaimClick}>
               <div className="mbrn-claim-button-label">CLAIM</div>
             </button>
             <div className="rates-box-title">
