@@ -1251,7 +1251,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
               <p className="there-is-10m-mbrn-up-for-grabs">
                 There is 10M MBRN up for grabs in this 7 day event. If you want a larger share for your deposit you must lock for longer (MAX: 365 days).
               </p>
-              <p>Locks boost your “shares” and the full 10M is split & STAKED (4 day unstaking) in accordance to said shares.</p>
+              <p>Locks boost your “shares” and the full 10M is split & STAKED (4 day unstaking) in accordance to the ratio of said shares.</p>
             </div>
             <div className="allocationmsg">
               <span className="allocationmsg-txt">
