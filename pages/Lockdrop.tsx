@@ -1227,7 +1227,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             </div>
             
             <div className="mbrn-reward-circle">              
-              <div className="mbrn-reward-total">{MBRNreward} MBRN</div>
+              <div className="mbrn-reward-total" onClick={() => {set_MBRNreward()}}>{MBRNreward} MBRN</div>
             </div>
             <div className="osmo-deposit-circle" />
             <div className="osmo-deposit-amount">{lockedOSMO} OSMO</div>

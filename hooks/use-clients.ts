@@ -43,9 +43,11 @@ export function useClients(): {
       signed_errored = false;
       
       //Use this to access the RPC node directly instead of using public RPCs with getSigningCosmWasmClient()
+      //https://rpc.osmotest5.osmosis.zone/
+      //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
       const signer = getOfflineSigner();
       var client = SigningCosmWasmClient.connectWithSigner(
-      'https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c', 
+        'https://rpc.osmotest5.osmosis.zone/', 
         signer,
         { gasPrice: GasPrice.fromString("0.025uosmo") }
       ).catch((e) => {
@@ -104,7 +106,9 @@ export function useQueryClients(): {
     var query_errored = false;
     const { getCosmWasmClient } = useChain(chainName);
     ///I can change the RPC node here
-    var client = CosmWasmClient.connect("https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c")
+    //https://rpc.osmotest5.osmosis.zone/
+    //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
+    var client = CosmWasmClient.connect("https://rpc.osmotest5.osmosis.zone/")
     .catch((e) => {
       console.log(e);
       query_errored = true;
