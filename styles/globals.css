@@ -1052,7 +1052,7 @@ span[data-descr]:hover::after {
   left: 35px;
 }
 .allocationmsg {
-  top: 395px;
+  top: 445px;
   display: flex;
   align-items: center;
   width: 270px;
@@ -1067,7 +1067,7 @@ span[data-descr]:hover::after {
   font-weight: bolder;
 }
 .allocations {
-  top: 370px;
+  top: 420px;
   text-align: right;
   z-index: 16;
 }
