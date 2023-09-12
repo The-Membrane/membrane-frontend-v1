@@ -27,19 +27,20 @@ export const feeDenom = 'uosmo';
 export const cw20ContractAddress = 'osmo1y0ywcujptlmnx4fgstlqfp7nftc8w5qndsfds9wxwtm0ltjpzp4qdj09j8'
 
 export const testnetAddrs = {
-    launch: "osmo1ew856e7squd4r05fge5ujpz5njej8gzrfjqjsf0cyrvqf9cj6ausjtmzc3",
-    discount_vault: "osmo19u339dlg9p29dr26y7wrfq9x0zxcrcxvelangr834md3rh9m20yqffm469",
-    governance: "osmo1mueryu7hfmg3jwwnswykug0ly4xryfg9d06cpvmqqhz7zvzypx6qhl4ex2",
-    liq_queue: "osmo1cu9uucjt9n532906glsh8c3g6wsumthze5phsv2jj07zjsq72j2sl8ewtq",
-    liquidity_check: "osmo1t75thvhsm8832lwyzleghu6cd7ufahsketsmj6xst3jrc0vwpv7s4h9wqv",
-    mbrn_auction: "osmo1uwe9cmp7ky3p4gzxq6s0wgharq4khqrdk6amx6dxx8fud76xd9nsgnc7gz",
-    oracle: "osmo1d0zg2fmewavcqcfum9sxmzc9jxmt9fyw7esvwvm7lqj9724nqqrq3jmqsx",
-    osmosis_proxy: "osmo1mavfhp7sszhetuuwcd66rpz8v63ds056mgr76ng4928tk9kcvu6s9te226",
-    positions: "osmo1auth0rdfvak93n6wmva0jnhy0gnzq2dpl7ye5dqzzyqzn8lavl9q6jxuqa",
-    stability_pool: "osmo17d52ajv8scxunwf4k60n22ve3vcu40w4x9fv6eaqymkldk50ejmqvpm7kk",
-    staking: "osmo1z2gyg9n2lw6urrugtklgvfela76g59m4xg4fzydmrs0nmxck0csszth58k",
-    system_discounts: "osmo15ghndfcqxf20hep4z62qpvkr37cgnyuwdkfcat5n6fqrkuserpzsmjcyzp",
-    vesting: "osmo1m9guy7fpnyr7fyeu43qj4jy8hwncfxgmf2mqm7kadrnzdxqg74zqdtryk8"
+    launch: "osmo1ew856e7squd4r05fge5ujpz5njej8gzrfjqjsf0cyrvqf9cj6ausjtmzc3", //osmo1n2p5809dmllt8nn4fydsz9qg2qwzutrd562y5xh8zvnfakngmhmsunslda the addr of the rest of the addresses
+    discount_vault: "osmo13r7p6addxj0sxwkjvl6039uuhs09m5yxe800qwhrzxupkz4jye6swdtk5z",
+    governance: "osmo1qlcfzv5r755akv3ncyc52a4h6n97r9shzeyx0rd85232ferzrs6s3wq2ps",
+    liq_queue: "osmo100z2gn9td0u5aanszrj3chgluu7lscq2vfezq95u94v9satmdf0qw5s9uc",
+    liquidity_check: "osmo15n75emczgzdj2mdn9qfp7k67e2nvxlvla79yrhwv7u4an4sg6wtqwu59gv",
+    mbrn_auction: "osmo1ly2n6apchlrpwqk806m2dqq6w7juqrgja2zguze80r39veleruqqe9nn9u",
+    oracle: "osmo1sdcapjth295auapkmhz727dedp9q07xqcgmyns8jey8jmntctpeq6j8cmd",
+    osmosis_proxy: "osmo1j7fas6rpg2syj33ttac8jje60cltph0l37gvk5er3j3y6z4c9yfsl30q8v",
+    positions: "osmo1sfw0tzrqxms8f2kq66epul6s3cgrc8677g9hfkt5pvlgcnsa3rkqua70q7",
+    stability_pool: "osmo14uqgu52cah0f6cy9urmyql88x9vt445hrdtz7yfagnwsqf3vaqwsxkw2uz",
+    staking: "osmo1vpx0yap7yce959tdppnlv5k3c6cpca23n9kxnyp32mmdvekgv9gsfczctf",
+    system_discounts: "osmo1jjaf7w8xd5p8czxurekyk29xwehmh5tmpa9zc3x7sfw5a0rph8ysl2afyp",
+    vesting: "osmo130jx0jzez6q88qmy3qrwznz6sqnv2ca8uzu8ec64k5kj9krhdlhseec4n5"
+      
       
   };
 

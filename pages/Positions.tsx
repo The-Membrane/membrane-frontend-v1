@@ -498,6 +498,72 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         //clear intents
         setassetIntent([]);
     };
+    //Logo functionality activation
+    const handleQTYaddition = (current_asset: string, amount: number) => {
+
+        switch(current_asset) {
+            case 'OSMO': {
+                var new_qty = +osmoQTY + +amount;
+                setosmoQTY(new_qty);
+                setAmount(0);
+                setosmoValue(new_qty * +prices.osmo);
+
+                //Remove opacity if above 0
+                if (new_qty > 0){
+                    setosmoStyle("");
+                }
+                break;
+              }
+            case 'ATOM':{
+                var new_qty = +atomQTY + +amount;
+                setatomQTY(new_qty);
+                setAmount(0);
+                setatomValue(new_qty * +prices.atom);
+                
+                //Remove opacity if above 0
+                if (new_qty > 0){
+                    setatomStyle("");
+                }
+                break;
+              }
+            case 'axlUSDC':{
+                var new_qty = +axlusdcQTY + +amount;
+                setaxlusdcQTY(new_qty);
+                setAmount(0);
+                setaxlusdcValue(new_qty * +prices.axlUSDC);
+
+                //Remove opacity if above 0
+                if (new_qty > 0){
+                    setaxlusdcStyle("");
+                }
+                break;
+              }
+            case 'atomosmo_pool':{
+                var new_qty = +atomosmo_poolQTY + +amount;
+                setatomosmo_poolQTY(new_qty);
+                setAmount(0);
+                setatomosmo_poolValue(new_qty * +prices.atomosmo_pool);
+
+                //Remove opacity if above 0
+                if (new_qty > 0){
+                    setatomosmo_poolStyle("");
+                }
+                break;
+            }
+            case 'osmousdc_pool':{
+                var new_qty = +osmousdc_poolQTY + +amount;
+                setosmousdc_poolQTY(new_qty);
+                setAmount(0);
+                setosmousdc_poolValue(new_qty * +prices.osmousdc_pool);
+
+                //Remove opacity if above 0
+                if (new_qty > 0){
+                    setosmousdc_poolStyle("");
+                }
+                break;
+            }
+          }
+    };
     const handleQTYsubtraction = (current_asset: string, amount: number) => {
 
         switch(current_asset) {
@@ -593,13 +659,21 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         positionOwner: user_address,
                     },
                     "auto", undefined, user_coins).then((res) => {
-                        console.log(res?.events.toString())
-                        //update data
+                        console.log(res?.events.toString())               
+                        //Update Position specific data
                         fetch_update_positionData()
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Deposit of" +{asset_intent}+ "successful");
+                        //map asset intents to readable string
+                        var readable_asset_intent = asset_intent.map((asset) => {
+                            return asset[1] + " " + asset[0]
+                        })
+                        setPopupMsg("Deposit of " +readable_asset_intent+ " successful");
                         setPopupStatus("Success");
+                        //Update Deposit daata
+                        asset_intent.forEach((asset) => {
+                            handleQTYaddition(asset[0], asset[1])
+                        })
                     });
 
                     //Clear intents
