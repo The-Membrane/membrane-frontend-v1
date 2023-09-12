@@ -65,7 +65,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     color: string;
     tvl: string;
   }
-  const [barGraph, setbarGraph] = useState<Bar[]>([
+  const [barGraph, setbarGraph] = useState<Bar[][]>([[
     { height: 0, color: "#000000", tvl: "0M" },
     { height: 0, color: "#000000", tvl: "0M" },
     { height: 0, color: "#000000", tvl: "0M" },
@@ -76,10 +76,58 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     { height: 0, color: "#000000", tvl: "0M" },
     { height: 0, color: "#000000", tvl: "0M" },
     { height: 0, color: "#000000", tvl: "0M" },
-  ]);
+  ],[
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+  ],
+  [
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+  ],
+  [
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+  ],[
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0M" },
+  ]]);
   const [collateralTVL, setcollateralTVL] = useState(0);
   //index for highest bar in barGraph
-  const [highestBar, sethighestBar] = useState<number>(0);
+  const [highestBar, sethighestBar] = useState<number[]>([0,0,0,0,0]);
+  //index for the barGraph to display
+  const [barIndex, setbarIndex] = useState(0);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -87,14 +135,27 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleMenuOne = () => {
     setOpen(false);
     setMenuAsset("ATOM");
+    setbarIndex(1);
   };
   const handleMenuTwo = () => {
     setOpen(false);
     setMenuAsset("axlUSDC");
+    setbarIndex(2);
   };
   const handleMenuThree = () => {
     setOpen(false);
     setMenuAsset("OSMO");
+    setbarIndex(0);
+  };
+  const handleMenuFour = () => {
+    setOpen(false);
+    setMenuAsset("ATOM-OSMO");
+    setbarIndex(3);
+  };
+  const handleMenuFive = () => {
+    setOpen(false);
+    setMenuAsset("OSMO-axlUSDC");
+    setbarIndex(4);
   };
   const handlesetdAmount = (event: any) => {
     event.preventDefault();
@@ -126,27 +187,27 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         limit: 10,
       }).then((res) => {
         let resp = res as SlotResponse[];
-        let highest = 0;
+        let highest = highestBar[barIndex];
 
         for (let i = 0; i < resp.length; i++) {
           //Divide to get X per pixel.Add 6 decimals to account for the extra decimals of a native token
-          barGraph[i].height = parseInt(resp[i].total_bid_amount) / CDTperPIXEL;
+          barGraph[barIndex][i].height = parseInt(resp[i].total_bid_amount) / CDTperPIXEL;
           //Set tvl
-          barGraph[i].tvl = (parseInt(resp[i].total_bid_amount) / 1_000_000_000000).toString() + "M";
+          barGraph[barIndex][i].tvl = (parseInt(resp[i].total_bid_amount) / 1_000_000_000000).toString() + "M";
 
           //Check if this is the highest bar
-          if (barGraph[i].height > barGraph[highest].height) {
+          if (barGraph[barIndex][i].height > barGraph[barIndex][highest].height) {
             highest = i;
           }
           //Reset color of bar
-          barGraph[i].color = "#000000";
+          barGraph[barIndex][i].color = "#000000";
         }
         //Set the color of any slots the user is in to blue
         if (address !== undefined) {
           for (let i = 0; i < resp.length; i++) {
             for (let x = 0; x < resp[i].bids.length; x++) {
               if (resp[i].bids[x].user === address){
-                barGraph[i].color = "rgba(79, 202, 187, 0.85)";
+                barGraph[barIndex][i].color = "rgba(79, 202, 187, 0.85)";
               }
             }
           }
@@ -154,7 +215,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         //Save new barGraph
         setbarGraph(barGraph);
         //Set highest 
-        sethighestBar(highest);
+        highestBar[barIndex] = highest;
+        sethighestBar(highestBar);
       })
     } catch (error) {
       //We don't popup for query errors
@@ -253,6 +315,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         workingDenom = denoms.axlUSDC;
         break;
       }
+      case "ATOM-OSMO": {
+        workingDenom = denoms.atomosmo_pool;
+        break;
+      }
+      case "OSMO-axlUSDC": {
+        workingDenom = denoms.osmousdc_pool;
+        break;
+      }
     }
     ///Try execution
     try {
@@ -296,6 +366,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "axlUSDC": {
         workingDenom = denoms.axlUSDC;
+        break;
+      }
+      case "ATOM-OSMO": {
+        workingDenom = denoms.atomosmo_pool;
+        break;
+      }
+      case "OSMO-axlUSDC": {
+        workingDenom = denoms.osmousdc_pool;
         break;
       }
     }
@@ -607,15 +685,33 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   useEffect(() => {
     switch(menuAsset){
       case "OSMO": {
-        queryQueuesaveHeights(denoms.osmo)
+        if (barGraph[0][0].tvl === "0M") {
+          queryQueuesaveHeights(denoms.osmo)
+        }
         break;
       }
       case "ATOM": {
-        queryQueuesaveHeights(denoms.atom)
+        if (barGraph[1][0].tvl === "0M") {
+          queryQueuesaveHeights(denoms.atom)
+        }
         break;
       }
       case "axlUSDC": {
-        queryQueuesaveHeights(denoms.axlUSDC)
+        if (barGraph[2][0].tvl === "0M") {
+          queryQueuesaveHeights(denoms.axlUSDC)
+        }
+        break;
+      }
+      case "ATOM-OSMO": {
+        if (barGraph[3][0].tvl === "0M") {
+          queryQueuesaveHeights(denoms.atomosmo_pool)
+        }
+        break;
+      }
+      case "OSMO-axlUSDC": {
+        if (barGraph[4][0].tvl === "0M") {
+          queryQueuesaveHeights(denoms.osmousdc_pool)
+        }
         break;
       }
     }
@@ -643,16 +739,16 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         <div className="singleassetframe">
           <h3 className="pool-titles">SINGLE ASSET</h3>
           <div className="single-asset-info-circle" />
-          <div className="bar-icon" data-descr={barGraph[0].tvl} style={{height: barGraph[0].height, backgroundColor: barGraph[0].color,}}/>
-          <div className="bar-icon1" data-descr={barGraph[1].tvl} style={{height: barGraph[1].height, backgroundColor: barGraph[1].color,}}/>
-          <div className="bar-icon2" data-descr={barGraph[2].tvl} style={{height: barGraph[2].height, backgroundColor: barGraph[2].color,}}/>
-          <div className="bar-icon3" data-descr={barGraph[3].tvl} style={{height: barGraph[3].height, backgroundColor: barGraph[3].color,}}/>
-          <div className="bar-icon4" data-descr={barGraph[4].tvl} style={{height: barGraph[4].height, backgroundColor: barGraph[4].color,}}/>
-          <div className="bar-icon5" data-descr={barGraph[5].tvl} style={{height: barGraph[5].height, backgroundColor: barGraph[5].color,}}/>
-          <div className="bar-icon6" data-descr={barGraph[6].tvl} style={{height: barGraph[6].height, backgroundColor: barGraph[6].color,}}/>
-          <div className="bar-icon7" data-descr={barGraph[7].tvl} style={{height: barGraph[7].height, backgroundColor: barGraph[7].color,}}/>
-          <div className="bar-icon8" data-descr={barGraph[8].tvl} style={{height: barGraph[8].height, backgroundColor: barGraph[8].color,}}/>
-          <div className="bar-icon9" data-descr={barGraph[9].tvl} style={{height: barGraph[9].height, backgroundColor: barGraph[9].color,}}/>
+          <div className="bar-icon" data-descr={barGraph[barIndex][0].tvl} style={{height: barGraph[barIndex][0].height, backgroundColor: barGraph[barIndex][0].color,}}/>
+          <div className="bar-icon1" data-descr={barGraph[barIndex][1].tvl} style={{height: barGraph[barIndex][1].height, backgroundColor: barGraph[barIndex][1].color,}}/>
+          <div className="bar-icon2" data-descr={barGraph[barIndex][2].tvl} style={{height: barGraph[barIndex][2].height, backgroundColor: barGraph[barIndex][2].color,}}/>
+          <div className="bar-icon3" data-descr={barGraph[barIndex][3].tvl} style={{height: barGraph[barIndex][3].height, backgroundColor: barGraph[barIndex][3].color,}}/>
+          <div className="bar-icon4" data-descr={barGraph[barIndex][4].tvl} style={{height: barGraph[barIndex][4].height, backgroundColor: barGraph[barIndex][4].color,}}/>
+          <div className="bar-icon5" data-descr={barGraph[barIndex][5].tvl} style={{height: barGraph[barIndex][5].height, backgroundColor: barGraph[barIndex][5].color,}}/>
+          <div className="bar-icon6" data-descr={barGraph[barIndex][6].tvl} style={{height: barGraph[barIndex][6].height, backgroundColor: barGraph[barIndex][6].color,}}/>
+          <div className="bar-icon7" data-descr={barGraph[barIndex][7].tvl} style={{height: barGraph[barIndex][7].height, backgroundColor: barGraph[barIndex][7].color,}}/>
+          <div className="bar-icon8" data-descr={barGraph[barIndex][8].tvl} style={{height: barGraph[barIndex][8].height, backgroundColor: barGraph[barIndex][8].color,}}/>
+          <div className="bar-icon9" data-descr={barGraph[barIndex][9].tvl} style={{height: barGraph[barIndex][9].height, backgroundColor: barGraph[barIndex][9].color,}}/>
           <div className="label4" style={(premium === 0) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(0)}}>0%</div>
           <div className="label5" style={(premium === 1) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(1)}}>1%</div>
           <div className="label6" style={(premium === 2) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(2)}}>2%</div>
@@ -676,11 +772,17 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 {menuAsset !== "OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuThree}>OSMO</button>
                 </li>) : null}
+                {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
+                    <button onClick={handleMenuFour}>ATOM-OSMO</button>
+                </li>) : null}
+                {menuAsset !== "OSMO-axlUSDC" ? (<li className="menu-item">
+                    <button onClick={handleMenuFive}>OSMO-axlUSDC</button>
+                </li>) : null}
                 </ul>
             ) : null}
           </div>
           <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}M</div>
-          <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[highestBar].height), left: 42 + ((highestBar) * 40)}}>{barGraph[highestBar].tvl}</div>
+          <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 40)}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
           <div className="x-axis" />
           <form>
             <input className="deposit-amount" name="amount" value={depositAmount} disabled={premium === undefined} type="number" onChange={handlesetdAmount}/>
