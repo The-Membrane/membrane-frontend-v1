@@ -8,7 +8,7 @@ import { Coin } from "@cosmjs/amino";
 import { MsgExecuteContractEncodeObject } from "@cosmjs/cosmwasm-stargate";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
 import { toUtf8 } from "@cosmjs/encoding";
-import { Uint128, BadDebtResponse, PositionUserInfo, AssetInfo, Addr, Decimal, BasketPositionsResponse, Position, CAsset, Asset, PoolInfo, LPAssetInfo, Basket, SupplyCap, MultiAssetSupplyCap, CollateralInterestResponse, Config, DebtCap, ExecuteMsg, PoolType, CallbackMsg, UpdateConfig, UserInfo, EditBasket, TWAPPoolInfo, InsolvencyResponse, InsolventPosition, InstantiateMsg, InterestResponse, PositionResponse, QueryMsg, RedeemabilityResponse, PremiumInfo, RedemptionInfo, PositionRedemption } from "./Positions.types";
+import { Uint128, BadDebtResponse, PositionUserInfo, NativeToken, Addr, Decimal, BasketPositionsResponse, Position, CAsset, Asset, PoolInfo, LPAssetInfo, Basket, SupplyCap, MultiAssetSupplyCap, CollateralInterestResponse, Config, DebtCap, ExecuteMsg, PoolType, CallbackMsg, UpdateConfig, UserInfo, EditBasket, TWAPPoolInfo, InsolvencyResponse, InsolventPosition, InstantiateMsg, InterestResponse, PositionResponse, QueryMsg, RedeemabilityResponse, PremiumInfo, RedemptionInfo, PositionRedemption } from "./Positions.types";
 export interface PositionsMsg {
   contractAddress: string;
   sender: string;
@@ -183,7 +183,7 @@ export interface PositionsMsg {
     maxLTV,
     maxBorrowLTV
   }: {
-    asset: AssetInfo;
+    asset: NativeToken;
     maxLTV?: Decimal;
     maxBorrowLTV?: Decimal;
   }, _funds?: Coin[]) => MsgExecuteContractEncodeObject;
@@ -629,7 +629,7 @@ export class PositionsMsgComposer implements PositionsMsg {
     maxLTV,
     maxBorrowLTV
   }: {
-    asset: AssetInfo;
+    asset: NativeToken;
     maxLTV?: Decimal;
     maxBorrowLTV?: Decimal;
   }, _funds?: Coin[]): MsgExecuteContractEncodeObject => {
