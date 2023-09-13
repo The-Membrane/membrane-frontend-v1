@@ -2814,7 +2814,6 @@ span[data-descr]:hover::after {
 .cdp-div5 {
   position: absolute;
   top: 79px;
-  left: 150px;
 }
 .osmo-qty,
 .atom-qty,
@@ -2825,9 +2824,7 @@ span[data-descr]:hover::after {
   width: 18%;
   height: 45px;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  left: 46%;
+  left: 142px;
 }
 .atom-logo-icon,
 .cdp-div5 {
@@ -2844,7 +2841,6 @@ span[data-descr]:hover::after {
 .cdp-div7 {
   position: absolute;
   top: 139px;
-  left: 150px;
 }
 .axlusdc-logo-icon,
 .cdp-div7 {
@@ -2861,7 +2857,6 @@ span[data-descr]:hover::after {
 .cdp-div9 {
   position: absolute;
   top: 199px;
-  left: 150px;
 }
 .atomosmopool-atom-icon {
   position: absolute;
@@ -2874,7 +2869,6 @@ span[data-descr]:hover::after {
 .atomosmopool-qty {
   position: absolute;
   top: 259px;
-  left: 150px;
 }
 .atomosmopool-osmo-icon {
   position: absolute;
@@ -2895,7 +2889,6 @@ span[data-descr]:hover::after {
 .osmousdcpool-qty {
   position: absolute;
   top: 319px;
-  left: 150px;
 }
 .osmousdcpool-usdc-icon {
   position: absolute;
@@ -2921,7 +2914,6 @@ span[data-descr]:hover::after {
 .cdp-div11 {
   position: absolute;
   top: 259px;
-  left: 150px;
 }
 .cdt-logo-icon5,
 .cdp-div11 {
@@ -2939,7 +2931,6 @@ span[data-descr]:hover::after {
 .cdp-div13 {
   position: absolute;
   top: 319px;
-  left: 150px;
 }
 .cdt-logo-icon6,
 .cdp-div13 {
@@ -2957,7 +2948,6 @@ span[data-descr]:hover::after {
 .cdp-div15 {
   position: absolute;
   top: 379px;
-  left: 150px;
 }
 .asset-info,
 .cdp-div15 {
