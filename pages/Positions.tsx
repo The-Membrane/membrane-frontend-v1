@@ -985,7 +985,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 //setPositionID
                 setpositionID(userRes[0].position_id)
                 //calc Debt
-                var new_debt = (parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price) / 1_000_000);
+                var new_debt = parseFloat((parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price) / 1_000_000).toFixed(2));
                 //setDebt
                 setDebt(new_debt)
                 //setLTVs
@@ -1037,7 +1037,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                     var asset_rate = rateRes.rates[rate_index];
 
                     //add pro-rata rate to sum 
-                    total_rate += parseFloat(asset_rate) * parseFloat(userRes[0].cAsset_ratios[index]);
+                    total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes[0].cAsset_ratios[index])).toFixed(4));
                 })
                 //setCost 
                 setCost(total_rate);
@@ -1103,36 +1103,32 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <div className="asset">Asset</div>
               <div className="qty">Qty.</div>
               <div className="value">Value</div>
-              <div className={osmoStyle}>
-                <Image className="osmo-logo-icon" width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
-                <div className="osmo-qty" onClick={handleOSMOqtyClick}>{osmoQTY}</div>
-                <div className="cdp-div5">${osmoValue}</div>
+              <div>
+                <Image className={osmoStyle+" osmo-logo-icon"} width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
+                <div className={osmoStyle +" osmo-qty"} onClick={handleOSMOqtyClick}>{osmoQTY}</div>
+                <div className={osmoStyle +" cdp-div5"}>${osmoValue}</div>
               </div>              
-              <div className={atomStyle}>
-                <Image className="atom-logo-icon" width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
-                <div className="atom-qty" onClick={handleATOMqtyClick}>{atomQTY}</div>
-                <div className="cdp-div7">${atomValue}</div>
+              <div>
+                <Image className={atomStyle + " atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
+                <div className={atomStyle + " atom-qty"} onClick={handleATOMqtyClick}>{atomQTY}</div>
+                <div className={atomStyle + " cdp-div7"}>${atomValue}</div>
               </div>
-              <div className={axlusdcStyle}>
-                <Image className="axlusdc-logo-icon" width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
-                <div className="axlUSDC-qty" onClick={handleaxlUSDCqtyClick}>{axlusdcQTY}</div>
-                <div className="cdp-div9">${axlUSDCValue}</div>
+              <div>
+                <Image className={axlusdcStyle + " axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
+                <div className={axlusdcStyle + " axlUSDC-qty"} onClick={handleaxlUSDCqtyClick}>{axlusdcQTY}</div>
+                <div className={axlusdcStyle + " cdp-div9"}>${axlUSDCValue}</div>
               </div>
-              <div className={atomosmo_poolStyle}>
-                <div onClick={(handleatomosmo_poolClick)}>
-                    <Image className="atomosmopool-atom-icon" width={45} height={45} alt="" src="images/atom.svg" />
-                    <Image className="atomosmopool-osmo-icon" width={45} height={45} alt="" src="images/osmo.svg" />
-                </div>
-                <div className="atomosmopool-qty" onClick={handleatomosmo_poolqtyClick}>{atomosmo_poolQTY}</div>
-                <div className="cdp-div11">${atomosmo_poolValue}</div>
+              <div>
+                <Image className={atomosmo_poolStyle+" atomosmopool-atom-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
+                <Image className={atomosmo_poolStyle+" atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
+                <div className={atomosmo_poolStyle +" atomosmopool-qty"} onClick={handleatomosmo_poolqtyClick}>{atomosmo_poolQTY}</div>
+                <div className={atomosmo_poolStyle + " cdp-div11"}>${atomosmo_poolValue}</div>
               </div>
-              <div className={osmousdc_poolStyle}>
-                <div onClick={(handleosmousdc_poolClick)}>
-                    <Image className="osmousdcpool-osmo-icon" width={45} height={45} alt="" src="images/osmo.svg" />
-                    <Image className="osmousdcpool-usdc-icon" width={45} height={45} alt="" src="images/usdc.svg" />
-                </div>
-                <div className="osmousdcpool-qty" onClick={handleosmousdc_poolqtyClick}>{osmousdc_poolQTY}</div>
-                <div className="cdp-div13">${osmousdc_poolValue}</div>
+              <div>
+                <Image className={osmousdc_poolStyle+" osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
+                <Image className={osmousdc_poolStyle+" osmousdcpool-usdc-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
+                <div className={osmousdc_poolStyle+" osmousdcpool-qty"} onClick={handleosmousdc_poolqtyClick}>{osmousdc_poolQTY}</div>
+                <div className={osmousdc_poolStyle+" cdp-div13"}>${osmousdc_poolValue}</div>
               </div>
             </div>
           </div>

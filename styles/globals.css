@@ -2746,6 +2746,7 @@ span[data-descr]:hover::after {
   left: 30px;
   width: 45px;
   height: 45px;
+  z-index: 51;
 }
 .asset-info-child,
 .asset-info-child1,
@@ -2814,6 +2815,14 @@ span[data-descr]:hover::after {
 .cdp-div5 {
   position: absolute;
   top: 79px;
+  left: 150px;
+}
+.cdp-div5,
+.cdp-div7,
+.cdp-div9,
+.cdp-div11,
+.cdp-div13 {  
+  z-index: 51;
 }
 .osmo-qty,
 .atom-qty,
@@ -2821,10 +2830,12 @@ span[data-descr]:hover::after {
 .atomosmopool-qty,
 .osmousdcpool-qty {
   cursor: pointer;
-  width: 18%;
+  min-width: 18%;
   height: 45px;
   position: relative;
-  left: 142px;
+  left: auto;  
+  text-align: center;
+  z-index: 50;
 }
 .atom-logo-icon,
 .cdp-div5 {
@@ -2835,9 +2846,12 @@ span[data-descr]:hover::after {
   left: 30px;
   width: 45px;
   height: 45px;
+  z-index: 51;
+}
+.atom-qty {
+  top: 95px;
 }
 .axlusdc-logo-icon,
-.atom-qty,
 .cdp-div7 {
   position: absolute;
   top: 139px;
@@ -2851,12 +2865,16 @@ span[data-descr]:hover::after {
   left: 30px;
   width: 45px;
   height: 45px;
+  z-index: 51;
+}
+.axlUSDC-qty {
+  top: 111px;
 }
 .cdt-logo-icon4,
-.axlUSDC-qty,
 .cdp-div9 {
   position: absolute;
   top: 199px;
+  left: 150px;
 }
 .atomosmopool-atom-icon {
   position: absolute;
@@ -2864,11 +2882,10 @@ span[data-descr]:hover::after {
   left: 15px;
   width: 45px;
   height: 45px;
-  z-index: 2;
+  z-index: 52;
 }
 .atomosmopool-qty {
-  position: absolute;
-  top: 259px;
+  top: 127px;
 }
 .atomosmopool-osmo-icon {
   position: absolute;
@@ -2876,7 +2893,7 @@ span[data-descr]:hover::after {
   left: 45px;
   width: 45px;
   height: 45px;
-  z-index: 1;
+  z-index: 51;
 }
 .osmousdcpool-osmo-icon {
   position: absolute;
@@ -2884,11 +2901,10 @@ span[data-descr]:hover::after {
   left: 15px;
   width: 45px;
   height: 45px;
-  z-index: 2;
+  z-index: 52;
 }
 .osmousdcpool-qty {
-  position: absolute;
-  top: 319px;
+  top: 142px;
 }
 .osmousdcpool-usdc-icon {
   position: absolute;
@@ -2896,7 +2912,7 @@ span[data-descr]:hover::after {
   left: 45px;
   width: 45px;
   height: 45px;
-  z-index: 1;
+  z-index: 51;
 }
 .cdt-logo-icon4,
 .cdp-div9 {
@@ -2914,6 +2930,7 @@ span[data-descr]:hover::after {
 .cdp-div11 {
   position: absolute;
   top: 259px;
+  left: 150px;
 }
 .cdt-logo-icon5,
 .cdp-div11 {
@@ -2931,6 +2948,7 @@ span[data-descr]:hover::after {
 .cdp-div13 {
   position: absolute;
   top: 319px;
+  left: 150px;
 }
 .cdt-logo-icon6,
 .cdp-div13 {
@@ -2948,6 +2966,7 @@ span[data-descr]:hover::after {
 .cdp-div15 {
   position: absolute;
   top: 379px;
+  left: 150px;
 }
 .asset-info,
 .cdp-div15 {
