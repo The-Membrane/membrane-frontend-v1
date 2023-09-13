@@ -706,9 +706,13 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         console.log(res?.events.toString())                 
                         //Update Position specific data
                         fetch_update_positionData()
+                        //map asset intents to readable string
+                        var readable_asset_intent = asset_intent.map((asset) => {
+                            return asset[1] + " " + asset[0]
+                        })
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Withdrawal of" +{asset_intent}+ "successful");
+                        setPopupMsg("Withdrawal of " +{readable_asset_intent}+ " successful");
                         setPopupStatus("Success");
                     })
 

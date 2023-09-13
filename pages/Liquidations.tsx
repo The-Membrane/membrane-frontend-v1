@@ -16,7 +16,7 @@ import { NativeToken } from "../codegen/Positions.types";
 import Image from "next/image";
 
 //Bar graph scale
-const CDTperPIXEL = 10000_000_000;
+const CDTperPIXEL = 100_000_000; //100
 
 interface Props {
   queryClient: LiquidationQueueQueryClient | null;
@@ -66,62 +66,62 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     tvl: string;
   }
   const [barGraph, setbarGraph] = useState<Bar[][]>([[
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
   ],[
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
   ],
   [
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
   ],
   [
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
   ],[
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
-    { height: 0, color: "#000000", tvl: "0M" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0K" },
   ]]);
   const [collateralTVL, setcollateralTVL] = useState(0);
   //index for highest bar in barGraph
@@ -191,9 +191,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
 
         for (let i = 0; i < resp.length; i++) {
           //Divide to get X per pixel.Add 6 decimals to account for the extra decimals of a native token
-          barGraph[barIndex][i].height = parseInt(resp[i].total_bid_amount) / CDTperPIXEL;
+          barGraph[barIndex][i].height = parseFloat(resp[i].total_bid_amount) / CDTperPIXEL;
           //Set tvl
-          barGraph[barIndex][i].tvl = (parseInt(resp[i].total_bid_amount) / 1_000_000_000000).toString() + "M";
+          barGraph[barIndex][i].tvl = (parseFloat(resp[i].total_bid_amount) / 1_000_000000).toString() + "K";
 
           //Check if this is the highest bar
           if (barGraph[barIndex][i].height > barGraph[barIndex][highest].height) {
@@ -246,7 +246,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         //Set collateral TVL
         for (let i = 0; i < res.collateral_types.length; i++) {
           if ((res.collateral_types[i].asset.info as NativeToken).denom === asset) {
-            setcollateralTVL((parseInt(res.collateral_types[i].asset.amount) / 1000000_000_000) * price);
+            setcollateralTVL((parseInt(res.collateral_types[i].asset.amount) / 1000_000_000) * price);
             break;
           }
         }
@@ -685,31 +685,31 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   useEffect(() => {
     switch(menuAsset){
       case "OSMO": {
-        if (barGraph[0][0].tvl === "0M") {
+        if (barGraph[0][0].tvl === "0K") {
           queryQueuesaveHeights(denoms.osmo)
         }
         break;
       }
       case "ATOM": {
-        if (barGraph[1][0].tvl === "0M") {
+        if (barGraph[1][0].tvl === "0K") {
           queryQueuesaveHeights(denoms.atom)
         }
         break;
       }
       case "axlUSDC": {
-        if (barGraph[2][0].tvl === "0M") {
+        if (barGraph[2][0].tvl === "0K") {
           queryQueuesaveHeights(denoms.axlUSDC)
         }
         break;
       }
       case "ATOM-OSMO": {
-        if (barGraph[3][0].tvl === "0M") {
+        if (barGraph[3][0].tvl === "0K") {
           queryQueuesaveHeights(denoms.atomosmo_pool)
         }
         break;
       }
       case "OSMO-axlUSDC": {
-        if (barGraph[4][0].tvl === "0M") {
+        if (barGraph[4][0].tvl === "0K") {
           queryQueuesaveHeights(denoms.osmousdc_pool)
         }
         break;
@@ -781,7 +781,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 </ul>
             ) : null}
           </div>
-          <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}M</div>
+          <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}K</div>
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 40)}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
           <div className="x-axis" />
           <form>
