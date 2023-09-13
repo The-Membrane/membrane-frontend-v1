@@ -6,7 +6,7 @@
 
 import { CosmWasmClient, SigningCosmWasmClient, ExecuteResult } from "@cosmjs/cosmwasm-stargate";
 import { Coin, StdFee } from "@cosmjs/amino";
-import { Uint128, BadDebtResponse, PositionUserInfo, AssetInfo, Addr, Decimal, BasketPositionsResponse, Position, CAsset, Asset, PoolInfo, LPAssetInfo, Basket, SupplyCap, MultiAssetSupplyCap, CollateralInterestResponse, Config, DebtCap, ExecuteMsg, PoolType, CallbackMsg, UpdateConfig, UserInfo, EditBasket, TWAPPoolInfo, InsolvencyResponse, InsolventPosition, InstantiateMsg, InterestResponse, PositionResponse, QueryMsg, RedeemabilityResponse, PremiumInfo, RedemptionInfo, PositionRedemption } from "./Positions.types";
+import { Uint128, BadDebtResponse, PositionUserInfo, NativeToken, Addr, Decimal, BasketPositionsResponse, Position, CAsset, Asset, PoolInfo, LPAssetInfo, Basket, SupplyCap, MultiAssetSupplyCap, CollateralInterestResponse, Config, DebtCap, ExecuteMsg, PoolType, CallbackMsg, UpdateConfig, UserInfo, EditBasket, TWAPPoolInfo, InsolvencyResponse, InsolventPosition, InstantiateMsg, InterestResponse, PositionResponse, QueryMsg, RedeemabilityResponse, PremiumInfo, RedemptionInfo, PositionRedemption } from "./Positions.types";
 export interface PositionsReadOnlyInterface {
   contractAddress: string;
   config: () => Promise<Config>;
@@ -351,7 +351,7 @@ export interface PositionsInterface extends PositionsReadOnlyInterface {
     maxLTV,
     maxBorrowLTV
   }: {
-    asset: AssetInfo;
+    asset: NativeToken;
     maxLTV?: Decimal;
     maxBorrowLTV?: Decimal;
   }, fee?: number | StdFee | "auto", memo?: string, _funds?: Coin[]) => Promise<ExecuteResult>;
@@ -688,7 +688,7 @@ export class PositionsClient extends PositionsQueryClient implements PositionsIn
     maxLTV,
     maxBorrowLTV
   }: {
-    asset: AssetInfo;
+    asset: NativeToken;
     maxLTV?: Decimal;
     maxBorrowLTV?: Decimal;
   }, fee: number | StdFee | "auto" = "auto", memo?: string, _funds?: Coin[]): Promise<ExecuteResult> => {

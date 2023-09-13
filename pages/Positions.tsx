@@ -9,7 +9,7 @@ import { testnetAddrs } from "../config";
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.client";
-import { Asset, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
+import { Asset, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
@@ -22,7 +22,7 @@ interface Props {
 }
 
 const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
-
+    // address = "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w";
     //Popup
     const [popupTrigger, setPopupTrigger] = useState(true);
     const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
@@ -658,7 +658,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         positionId: positionID,
                         positionOwner: user_address,
                     },
-                    "auto", undefined, user_coins).then((res) => {
+                    "auto", undefined, user_coins).then(async (res) => {
                         console.log(res?.events.toString())
                         //format pop up
                         setPopupTrigger(true);
@@ -672,6 +672,17 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         asset_intent.forEach((asset) => {
                             handleQTYaddition(asset[0], asset[1])
                         })
+                        //getPosition
+                        const userRes = await queryClient?.getUserPositions(
+                            {
+                                limit: 1,
+                                user: address as string,
+                            }
+                        );
+                        if (userRes){
+                            //setPositionID
+                            setpositionID(userRes[0].position_id)
+                        }
                     });
 
                     //Clear intents
@@ -959,51 +970,58 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             
             //query rates
             const rateRes = await queryClient?.getCollateralInterest();
+
           
 
             //Set state
             if (userRes && basketRes && rateRes){
+                //query position insolvency
+                const insolvencyRes = await queryClient?.getPositionInsolvency(
+                    {
+                        positionId: userRes[0].position_id,
+                        positionOwner: address as string,
+                    }
+                );
                 //setPositionID
                 setpositionID(userRes[0].position_id)
                 //calc Debt
-                var new_debt = parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price);
+                var new_debt = (parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price) / 1_000_000);
                 //setDebt
                 setDebt(new_debt)
                 //setLTVs
                 setmaxLTV(parseFloat(userRes[0].avg_max_LTV) * +100)
                 setbrwLTV(parseFloat(userRes[0].avg_borrow_LTV) * +100)
-                setcurrentLTV(
-                    (new_debt) / (osmoValue + atomValue + axlUSDCValue)
-                )
+                if (insolvencyRes) {                    
+                    setcurrentLTV( parseFloat(insolvencyRes.insolvent_positions[0].current_LTV) * +100)
+                }
                 //setAssetQTYs
                 userRes[0].collateral_assets.forEach(asset => {
-                    var actual_asset = asset.asset;
-                    //Cast to AssetInfo::NativeToken
-                    if ("denom" in actual_asset.info) {
-                        if (actual_asset.info.denom === denoms.osmo) {
-                            setosmoQTY(parseInt(actual_asset.amount) / 1_000_000)                            
-                            setosmoValue(parseInt(actual_asset.amount) * +prices.osmo);
-                            setosmoStyle("");
-                        } else if (actual_asset.info.denom === denoms.atom) {
-                            setatomQTY(parseInt(actual_asset.amount) / 1_000_000)
-                            setatomValue(parseInt(actual_asset.amount) * +prices.atom);
-                            setatomStyle("");
-                        } else if (actual_asset.info.denom === denoms.axlUSDC) {
-                            setaxlusdcQTY(parseInt(actual_asset.amount) / 1_000_000)
-                            setaxlusdcValue(parseInt(actual_asset.amount) * +prices.axlUSDC);
-                            setaxlusdcStyle("");
-                        } else if (actual_asset.info.denom === denoms.atomosmo_pool) {
-                            setatomosmo_poolQTY(parseInt(actual_asset.amount) / 1_000_000_000_000_000_000)
-                            setatomosmo_poolValue(parseInt(actual_asset.amount) * +prices.atomosmo_pool);
-                            setatomosmo_poolStyle("");
-                        } else if (actual_asset.info.denom === denoms.osmousdc_pool) {
-                            setosmousdc_poolQTY(parseInt(actual_asset.amount) / 1_000_000_000_000_000_000)
-                            setosmousdc_poolValue(parseInt(actual_asset.amount) * +prices.osmousdc_pool);
-                            setosmousdc_poolStyle("");
-                        }
-
-                    }
-                })
+                    // @ts-ignore
+                    var actual_asset = asset.asset.info.native_token.denom;
+                    
+                    console.log("actual_asset: ", actual_asset)
+                    if (actual_asset === denoms.osmo) {
+                        setosmoQTY(parseInt(asset.asset.amount) / 1_000_000)                            
+                        setosmoValue(parseFloat((parseInt(asset.asset.amount) / 1_000_000 * +prices.osmo).toFixed(2)));
+                        setosmoStyle("");
+                    } else if (actual_asset === denoms.atom) {
+                        setatomQTY(parseInt(asset.asset.amount) / 1_000_000)
+                        setatomValue(parseFloat((parseInt(asset.asset.amount) / 1_000_000 * +prices.atom).toFixed(2)));
+                        setatomStyle("");
+                    } else if (actual_asset === denoms.axlUSDC) {
+                        setaxlusdcQTY(parseInt(asset.asset.amount) / 1_000_000)
+                        setaxlusdcValue(parseFloat((parseInt(asset.asset.amount) / 1_000_000 * +prices.axlUSDC).toFixed(2)));
+                        setaxlusdcStyle("");
+                    } else if (actual_asset === denoms.atomosmo_pool) {
+                        setatomosmo_poolQTY(parseInt(asset.asset.amount) / 1_000_000_000_000_000_000)
+                        setatomosmo_poolValue(parseFloat((parseInt(asset.asset.amount) / 1_000_000_000_000_000_000 * +prices.atomosmo_pool).toFixed(2)));
+                        setatomosmo_poolStyle("");
+                    } else if (actual_asset === denoms.osmousdc_pool) {
+                        setosmousdc_poolQTY(parseInt(asset.asset.amount) / 1_000_000_000_000_000_000)
+                        setosmousdc_poolValue(parseFloat((parseInt(asset.asset.amount) / 1_000_000_000_000_000_000 * +prices.osmousdc_pool).toFixed(2)));
+                        setosmousdc_poolStyle("");
+                    }                    
+            })
 
                 ///setCost///
                 var total_rate = 0.0;
@@ -1011,9 +1029,8 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 userRes[0].collateral_assets.forEach((asset, index, _) => {
                     //find the asset's index                
                     var rate_index = basketRes.collateral_types.findIndex((info) => {
-                        if (("denom" in info.asset.info) && ("denom" in asset.asset.info)){
-                            return info.asset.info.denom === asset.asset.info.denom
-                        }
+                        // @ts-ignore
+                        return info.asset.info.native_token.denom === asset.asset.info.native_token.denom
                     })
 
                     //use the index to get its interest rate
@@ -1071,7 +1088,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
               <div className="cost-4">Cost: {cost}%</div>
               <div className="debt-225">Debt: ${debt}</div>
-              <div className="liq-value-375">Liq. Value: ${debt / maxLTV}</div>
+              <div className="liq-value-375">Liq. Value: ${(debt / (maxLTV / 100)).toFixed(2)}</div>
               <div className="tvl-500">TVL: ${osmoValue + atomValue + axlUSDCValue}</div>
             </div>
             <div className="asset-info">

@@ -18,7 +18,7 @@ export type Token = {
 export type NativeToken = {
   denom: string;
 }
-export type AssetInfo = Token | NativeToken;
+//export type AssetInfo = Token | NativeToken;
 
 export type Addr = string;
 export type Decimal = string;
@@ -40,7 +40,7 @@ export interface CAsset {
 }
 export interface Asset {
   amount: Uint128;
-  info: AssetInfo;
+  info: NativeToken;
 }
 export interface PoolInfo {
   asset_infos: LPAssetInfo[];
@@ -48,7 +48,7 @@ export interface PoolInfo {
 }
 export interface LPAssetInfo {
   decimals: number;
-  info: AssetInfo;
+  info: NativeToken;
   ratio: Decimal;
 }
 export interface Basket {
@@ -71,7 +71,7 @@ export interface Basket {
   rev_to_stakers: boolean;
 }
 export interface SupplyCap {
-  asset_info: AssetInfo;
+  asset_info: NativeToken;
   current_supply: Uint128;
   debt_total: Uint128;
   lp: boolean;
@@ -79,7 +79,7 @@ export interface SupplyCap {
   supply_cap_ratio: Decimal;
 }
 export interface MultiAssetSupplyCap {
-  assets: AssetInfo[];
+  assets: NativeToken[];
   supply_cap_ratio: Decimal;
 }
 export interface CollateralInterestResponse {
@@ -106,7 +106,7 @@ export interface Config {
 }
 export interface DebtCap {
   cap: Uint128;
-  collateral: AssetInfo;
+  collateral: NativeToken;
   debt_total: Uint128;
 }
 export type ExecuteMsg = {
@@ -185,7 +185,7 @@ export type ExecuteMsg = {
   edit_basket: EditBasket;
 } | {
   editc_asset: {
-    asset: AssetInfo;
+    asset: NativeToken;
     max_LTV?: Decimal | null;
     max_borrow_LTV?: Decimal | null;
   };

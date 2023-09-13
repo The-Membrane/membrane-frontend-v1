@@ -2818,14 +2818,20 @@ span[data-descr]:hover::after {
 }
 .osmo-qty,
 .atom-qty,
-.axlUSDC-qty {
+.axlUSDC-qty,
+.atomosmopool-qty,
+.osmousdcpool-qty {
   cursor: pointer;
-  width: 45px;
+  width: 18%;
   height: 45px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  left: auto;
 }
 .atom-logo-icon,
 .cdp-div5 {
-  left: 236px;
+  left: 228px;
 }
 .atom-logo-icon {
   top: 134px;
@@ -2842,7 +2848,7 @@ span[data-descr]:hover::after {
 }
 .axlusdc-logo-icon,
 .cdp-div7 {
-  left: 236px;
+  left: 228px;
 }
 .axlusdc-logo-icon {
   top: 194px;
@@ -2901,7 +2907,7 @@ span[data-descr]:hover::after {
 }
 .cdt-logo-icon4,
 .cdp-div9 {
-  left: 236px;
+  left: 228px;
 }
 .cdt-logo-icon4 {
   top: 254px;
@@ -2919,7 +2925,7 @@ span[data-descr]:hover::after {
 }
 .cdt-logo-icon5,
 .cdp-div11 {
-  left: 236px;
+  left: 228px;
 }
 .cdt-logo-icon5 {
   top: 314px;
@@ -2937,7 +2943,7 @@ span[data-descr]:hover::after {
 }
 .cdt-logo-icon6,
 .cdp-div13 {
-  left: 236px;
+  left: 228px;
 }
 .cdt-logo-icon6 {
   top: 374px;
@@ -2955,7 +2961,7 @@ span[data-descr]:hover::after {
 }
 .asset-info,
 .cdp-div15 {
-  left: 236px;
+  left: 228px;
 }
 .asset-info {
   margin: 0 !important;
