@@ -245,8 +245,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         }
         //Set collateral TVL
         for (let i = 0; i < res.collateral_types.length; i++) {
-          if ((res.collateral_types[i].asset.info as NativeToken).denom === asset) {
-            setcollateralTVL((parseInt(res.collateral_types[i].asset.amount) / 1000_000_000) * price);
+          //@ts-ignore
+          if (res.collateral_types[i].asset.info.native_token.denom === asset) {
+            console.log(res.collateral_types[i].asset.amount, price)
+            setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount) / 1000_000_000) * price).toFixed(2)));
             break;
           }
         }

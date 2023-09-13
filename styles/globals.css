@@ -403,7 +403,7 @@ ul{
   top: 70px;
   left: 163px;
   display: inline-block;
-  width: 197px;
+  min-width: 197px;
   height: 21px;
   flex-shrink: 0;
   z-index: 23;
