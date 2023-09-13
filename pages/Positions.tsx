@@ -659,9 +659,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         positionOwner: user_address,
                     },
                     "auto", undefined, user_coins).then((res) => {
-                        console.log(res?.events.toString())               
-                        //Update Position specific data
-                        fetch_update_positionData()
+                        console.log(res?.events.toString())
                         //format pop up
                         setPopupTrigger(true);
                         //map asset intents to readable string
@@ -670,7 +668,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         })
                         setPopupMsg("Deposit of " +readable_asset_intent+ " successful");
                         setPopupStatus("Success");
-                        //Update Deposit daata
+                        //Update Deposit data
                         asset_intent.forEach((asset) => {
                             handleQTYaddition(asset[0], asset[1])
                         })
@@ -704,8 +702,10 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                     },
                     "auto").then((res) => {       
                         console.log(res?.events.toString())                 
-                        //Update Position specific data
-                        fetch_update_positionData()
+                        //Update Position data
+                        asset_intent.forEach((asset) => {
+                            handleQTYsubtraction(asset[0], asset[1])
+                        })
                         //map asset intents to readable string
                         var readable_asset_intent = asset_intent.map((asset) => {
                             return asset[1] + " " + asset[0]
@@ -737,11 +737,11 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         amount: ((amount ?? 0) * 1_000_000).toString(),
                     }).then((res) => {           
                         console.log(res?.events.toString())             
-                        //Update Position specific data
-                        fetch_update_positionData()
+                        //Update mint amount
+                        setDebt(+debt + +(amount ?? 0));
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Mint of" +(amount ?? 0)+ "CDT successful");
+                        setPopupMsg("Mint of " +(amount ?? 0)+ " CDT successful");
                         setPopupStatus("Success");
                     })
                     
@@ -764,12 +764,12 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         positionId: positionID,
                     }, "auto", undefined, coins((amount ?? 0) * 1_000_000, denoms.cdt))
                     .then((res) => {           
-                        console.log(res?.events.toString())             
-                        //Update Position specific data
-                        fetch_update_positionData()
+                        console.log(res?.events.toString())
+                        //Update mint amount
+                        setDebt(+debt - +(amount ?? 0));
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Repayment of" +(amount ?? 0)+ "CDT successful");
+                        setPopupMsg("Repayment of " +(amount ?? 0)+ " CDT successful");
                         setPopupStatus("Success");
                     })
                     
