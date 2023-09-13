@@ -2827,7 +2827,7 @@ span[data-descr]:hover::after {
   position: relative;
   margin-left: auto;
   margin-right: auto;
-  left: auto;
+  left: 46%;
 }
 .atom-logo-icon,
 .cdp-div5 {

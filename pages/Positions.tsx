@@ -655,7 +655,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 try {
                     ////Execute Deposit////
                     await cdp_client?.deposit({
-                        positionId: positionID,
+                        positionId: (positionID === "0" ? undefined : positionID),
                         positionOwner: user_address,
                     },
                     "auto", undefined, user_coins).then(async (res) => {
