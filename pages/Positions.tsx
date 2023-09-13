@@ -22,7 +22,7 @@ interface Props {
 }
 
 const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
-    address = "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w";
+    // address = "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w";
     //Popup
     const [popupTrigger, setPopupTrigger] = useState(true);
     const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
