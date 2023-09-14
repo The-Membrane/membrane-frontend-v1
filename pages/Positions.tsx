@@ -90,6 +90,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const handleOSMOqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("OSMO");
+        setcurrentfunctionLabel("deposit");
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -100,6 +101,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const handleATOMqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("ATOM");
+        setcurrentfunctionLabel("deposit");
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -110,6 +112,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const handleaxlUSDCqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("axlUSDC");
+        setcurrentfunctionLabel("deposit");
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -120,6 +123,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const handleatomosmo_poolqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("ATOM-OSMO LP");
+        setcurrentfunctionLabel("deposit");
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -130,6 +134,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const handleosmousdc_poolqtyClick = () => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("OSMO-axlUSDC LP");
+        setcurrentfunctionLabel("deposit");
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -796,7 +801,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 break;
             }
             case "closePosition":{
-                try { 
+                try {
                     ///Execute the contract
                     await cdp_client?.closePosition({
                         maxSpread: maxSpread.toString(),
