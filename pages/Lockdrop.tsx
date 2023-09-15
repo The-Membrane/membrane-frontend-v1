@@ -1198,7 +1198,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
     try {
       await launch_client?.claim().then((res) => {        
         //Format popup message
-        setPopupMsg("Claimed "+ MBRNreward+" MBRN")
+        setPopupMsg("Claim of a portion of your total "+MBRNreward+" MBRN share was successful")
         setPopupStatus("Success")
         setPopupTrigger(true)
       })

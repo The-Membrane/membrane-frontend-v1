@@ -2675,7 +2675,7 @@ span[data-descr]:hover::after {
     rgba(121, 142, 255, 0.68),
     rgba(79, 202, 187, 0.8)
   );
-  width: 143px;
+  width: 144.3px;
   height: 235px; /*336 is full bar height*/
 }
 .debt-visual {
@@ -3203,6 +3203,13 @@ span[data-descr]:hover::after {
   position: absolute;
   top: 60px;
   left: 22px;
+  font-size: large;
+}
+.max-amount-label {
+  cursor: pointer;
+  position: absolute;
+  top: 235px;
+  left: 37px;
   font-size: large;
 }
 .mintrepay-screen,

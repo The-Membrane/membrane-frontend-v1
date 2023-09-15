@@ -13,6 +13,7 @@ import { Asset, NativeToken, PositionResponse, RedeemabilityResponse } from "../
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
+import { format } from "util";
 
 interface Props {
     cdp_client: PositionsClient | null;
@@ -58,6 +59,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [depositStyle, setdepositStyle] = useState("cdp-deposit-label bold");
     const [withdrawStyle, setwithdrawStyle] = useState("cdp-withdraw-label low-opacity");
     const [assetIntent, setassetIntent] = useState<[string , number][]>([]);
+    const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
     //Asset specific
         //qty
     const [osmoQTY, setosmoQTY] = useState(0);
@@ -87,10 +89,19 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [user_address, setAddress] = useState("");
 
 
-    const handleOSMOqtyClick = () => {
+    const handleOSMOqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("OSMO");
-        setcurrentfunctionLabel("deposit");
+        if (currentFunction !== "withdraw") {
+            setcurrentfunctionLabel("deposit");
+            //Get account's balance
+            queryClient?.client.getBalance(address as string, denoms.osmo).then((res) => {
+                setmaxLPamount(BigInt(res.amount) / 1_000_000n);
+            })
+        } else if (currentFunction == "withdraw") {
+            //Set max to collateral amount
+            setmaxLPamount(BigInt(osmoQTY))
+        }
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -98,10 +109,19 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };
-    const handleATOMqtyClick = () => {
+    const handleATOMqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("ATOM");
-        setcurrentfunctionLabel("deposit");
+        if (currentFunction !== "withdraw") {
+            setcurrentfunctionLabel("deposit");
+            //Get account's balance
+            queryClient?.client.getBalance(address as string, denoms.atom).then((res) => {
+                setmaxLPamount(BigInt(res.amount) / 1_000_000n);
+            })
+        } else if (currentFunction == "withdraw") {
+            //Set max to collateral amount
+            setmaxLPamount(BigInt(atomQTY))
+        }
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -109,10 +129,19 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };
-    const handleaxlUSDCqtyClick = () => {
+    const handleaxlUSDCqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("axlUSDC");
-        setcurrentfunctionLabel("deposit");
+        if (currentFunction !== "withdraw") {
+            setcurrentfunctionLabel("deposit");
+            //Get account's balance
+            queryClient?.client.getBalance(address as string, denoms.axlUSDC).then((res) => {
+                setmaxLPamount(BigInt(res.amount) / 1_000_000n);
+            })
+        } else if (currentFunction == "withdraw") {
+            //Set max to collateral amount
+            setmaxLPamount(BigInt(axlusdcQTY))
+        }
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -120,10 +149,19 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };    
-    const handleatomosmo_poolqtyClick = () => {
+    const handleatomosmo_poolqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("ATOM-OSMO LP");
-        setcurrentfunctionLabel("deposit");
+        if (currentFunction !== "withdraw") {
+            setcurrentfunctionLabel("deposit");
+            //Get account's balance
+            queryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
+                setmaxLPamount(BigInt(res.amount));
+            })
+        } else if (currentFunction == "withdraw") {
+            //Set max to collateral amount
+            setmaxLPamount(BigInt(atomosmo_poolQTY))
+        }
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -131,10 +169,19 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };
-    const handleosmousdc_poolqtyClick = () => {
+    const handleosmousdc_poolqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("OSMO-axlUSDC LP");
-        setcurrentfunctionLabel("deposit");
+        if (currentFunction !== "withdraw") {
+            setcurrentfunctionLabel("deposit");
+            //Get account's balance
+            queryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
+                setmaxLPamount(BigInt(res.amount));
+            })
+        } else if (currentFunction == "withdraw") {
+            //Set max to collateral amount
+            setmaxLPamount(BigInt(osmousdc_poolQTY))
+        }
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
@@ -489,19 +536,64 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setSpread(event.target.value);
       };
     //Deposit-Withdraw screen    
-    const handledepositClick = () => {
+    const handledepositClick = async () => {
         setdepositStyle("cdp-deposit-label bold");
         setwithdrawStyle("cdp-withdraw-label low-opacity");
+        //Set functionality
         setcurrentfunctionLabel("deposit");
         //clear intents
         setassetIntent([]);
+        switch (currentAsset) {
+            case "OSMO": {
+                handleOSMOqtyClick("deposit")
+                break;
+            }
+            case "ATOM": {
+                handleATOMqtyClick("deposit")
+                break;
+            }
+            case "axlUSDC": {
+                handleaxlUSDCqtyClick("deposit")
+                break;
+            }
+            case "ATOM-OSMO LP": {
+                handleatomosmo_poolqtyClick("deposit")
+                break;
+            }
+            case "OSMO-axlUSDC LP": {
+                handleosmousdc_poolqtyClick("deposit")
+                break;
+            }
+        }
     };
-    const handlewithdrawClick = () => {
+    const handlewithdrawClick = async () => {
         setwithdrawStyle("cdp-withdraw-label bold");
         setdepositStyle("cdp-deposit-label low-opacity");
         setcurrentfunctionLabel("withdraw");
         //clear intents
         setassetIntent([]);
+        switch (currentAsset) {
+            case "OSMO": {
+                handleOSMOqtyClick("withdraw")
+                break;
+            }
+            case "ATOM": {
+                handleATOMqtyClick("withdraw")
+                break;
+            }
+            case "axlUSDC": {
+                handleaxlUSDCqtyClick("withdraw")
+                break;
+            }
+            case "ATOM-OSMO LP": {
+                handleatomosmo_poolqtyClick("withdraw")
+                break;
+            }
+            case "OSMO-axlUSDC LP": {
+                handleosmousdc_poolqtyClick("withdraw");
+                break;
+            }
+        }
     };
     //Logo functionality activation
     const handleQTYaddition = (current_asset: string, amount: number) => {
@@ -717,19 +809,19 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         positionId: positionID,
                     },
                     "auto").then((res) => {       
-                        console.log(res?.events.toString())                 
-                        //Update Position data
-                        asset_intent.forEach((asset) => {
-                            handleQTYsubtraction(asset[0], asset[1])
-                        })
+                        console.log(res?.events.toString())   
                         //map asset intents to readable string
-                        var readable_asset_intent = asset_intent.map((asset) => {
+                        let readable_asset_intent = asset_intent.map((asset) => {
                             return asset[1] + " " + asset[0]
                         })
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Withdrawal of " +{readable_asset_intent}+ " successful");
-                        setPopupStatus("Success");
+                        setPopupMsg("Withdrawal of " +readable_asset_intent+ " successful");
+                        setPopupStatus("Success");              
+                        //Update Position data
+                        asset_intent.forEach((asset) => {
+                            handleQTYsubtraction(asset[0], asset[1])
+                        })
                     })
 
                     //Clear intents
@@ -884,12 +976,12 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                     workingIntents.push(coin(intent[1] * 1_000_000, denoms.axlUSDC))
                     break;
                 }
-                case "ATOM-OSMO LP": { //18 decimal instead of 6
-                    workingIntents.push(coin(intent[1] * 1_000_000_000_000_000_000, denoms.atomosmo_pool))
+                case "ATOM-OSMO LP": { //No normalization bc we are excepting 18 decimal
+                    workingIntents.push(coin(intent[1].toString(), denoms.atomosmo_pool))
                     break;
                 }
-                case "OSMO-axlUSDC LP": { //18 decimal instead of 6
-                    workingIntents.push(coin(intent[1] * 1_000_000_000_000_000_000, denoms.osmousdc_pool))
+                case "OSMO-axlUSDC LP": { //No normalization bc we are excepting 18 decimal
+                    workingIntents.push(coin(intent[1].toString(), denoms.osmousdc_pool))
                     break;
                 }
             }
@@ -903,45 +995,55 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 case "OSMO": {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
-                        info: {
+                        //@ts-ignore
+                        info: {native_token :{
+                            //@ts-ignore
                             denom: denoms.osmo,
-                        }
+                        }}
                     })
                     break;
                 }
                 case "ATOM": {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
-                        info: {
+                        //@ts-ignore
+                        info: {native_token :{
+                            //@ts-ignore
                             denom: denoms.atom,
-                        }
+                        }}
                     })
                     break;
                 }
                 case "axlUSDC": {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
-                        info: {
+                        //@ts-ignore
+                        info: {native_token :{
+                            //@ts-ignore
                             denom: denoms.axlUSDC,
-                        }
+                        }}
                     })
                     break;
                 }
                 case "ATOM-OSMO LP": { //18 decimal instead of 6
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000_000_000_000_000).toString(),
-                        info: {
+                        amount: (intent[1]).toString(),
+                        //@ts-ignore
+                        info: {native_token :{
+                            //@ts-ignore
                             denom: denoms.atomosmo_pool,
-                        }
+                        }}
                     })
                     break;
                 }
                 case "OSMO-axlUSDC LP": { //18 decimal instead of 6
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000_000_000_000_000).toString(),
-                        info: {
+                        amount: (intent[1]).toString(),
+                        //@ts-ignore
+                        info: {native_token :{
+                            //@ts-ignore
                             denom: denoms.osmousdc_pool,
-                        }
+                        }}
                     })
                     break;
                 }
@@ -990,7 +1092,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 //setPositionID
                 setpositionID(userRes[0].position_id)
                 //calc Debt
-                var new_debt = parseFloat((parseInt(userRes[0].credit_amount) * parseFloat(basketRes.credit_price) / 1_000_000).toFixed(2));
+                var new_debt = parseFloat(((parseInt(userRes[0].credit_amount)/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
                 //setDebt
                 setDebt(new_debt)
                 //setLTVs
@@ -1018,12 +1120,12 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         setaxlusdcValue(parseFloat((parseInt(asset.asset.amount) / 1_000_000 * +prices.axlUSDC).toFixed(2)));
                         setaxlusdcStyle("");
                     } else if (actual_asset === denoms.atomosmo_pool) {
-                        setatomosmo_poolQTY(parseInt(asset.asset.amount) / 1_000_000_000_000_000_000)
-                        setatomosmo_poolValue(parseFloat((parseInt(asset.asset.amount) / 1_000_000_000_000_000_000 * +prices.atomosmo_pool).toFixed(2)));
+                        setatomosmo_poolQTY(parseInt(asset.asset.amount))
+                        setatomosmo_poolValue(parseFloat((parseInt(asset.asset.amount) * +prices.atomosmo_pool).toFixed(2)));
                         setatomosmo_poolStyle("");
                     } else if (actual_asset === denoms.osmousdc_pool) {
-                        setosmousdc_poolQTY(parseInt(asset.asset.amount) / 1_000_000_000_000_000_000)
-                        setosmousdc_poolValue(parseFloat((parseInt(asset.asset.amount) / 1_000_000_000_000_000_000 * +prices.osmousdc_pool).toFixed(2)));
+                        setosmousdc_poolQTY(parseInt(asset.asset.amount))
+                        setosmousdc_poolValue(parseFloat((parseInt(asset.asset.amount) * +prices.osmousdc_pool).toFixed(2)));
                         setosmousdc_poolStyle("");
                     }                    
             })
@@ -1053,7 +1155,20 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         }
    };   
 
-    
+    const getReadableLPQTY = (qty: number) => {
+        {
+            let qty_string = (qty).toExponential();
+            let exponent = parseInt(qty_string.slice(qty_string.length-2));
+            let firstTwoplaces = parseFloat(qty_string.slice(0, 3));
+            if (exponent > 18){
+                return firstTwoplaces * Math.pow(10, (exponent - 18))
+            } else if (exponent < 18){
+                return firstTwoplaces / Math.pow(10, (18 - exponent))
+            } else {
+                return firstTwoplaces
+            }
+        }
+    }
 
     //getuserPosition info && set State
     useEffect(() => {
@@ -1094,7 +1209,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <div className="cost-4">Cost: {cost}%</div>
               <div className="debt-225">Debt: ${debt}</div>
               <div className="liq-value-375">Liq. Value: ${(debt / (maxLTV / 100)).toFixed(2)}</div>
-              <div className="tvl-500">TVL: ${osmoValue + atomValue + axlUSDCValue}</div>
+              <div className="tvl-500">TVL: ${osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue}</div>
             </div>
             <div className="asset-info">
               <div className="infobox-icon3"/>
@@ -1110,30 +1225,30 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <div className="value">Value</div>
               <div>
                 <Image className={osmoStyle+" osmo-logo-icon"} width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
-                <div className={osmoStyle +" osmo-qty"} onClick={handleOSMOqtyClick}>{osmoQTY}</div>
-                <div className={osmoStyle +" cdp-div5"}>${osmoValue}</div>
+                <div className={osmoStyle +" osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY}</div>
+                <div className={osmoStyle +" cdp-div5"}>${osmoValue.toFixed(2)}</div>
               </div>              
               <div>
                 <Image className={atomStyle + " atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
-                <div className={atomStyle + " atom-qty"} onClick={handleATOMqtyClick}>{atomQTY}</div>
-                <div className={atomStyle + " cdp-div7"}>${atomValue}</div>
+                <div className={atomStyle + " atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY}</div>
+                <div className={atomStyle + " cdp-div7"}>${atomValue.toFixed(2)}</div>
               </div>
               <div>
                 <Image className={axlusdcStyle + " axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
-                <div className={axlusdcStyle + " axlUSDC-qty"} onClick={handleaxlUSDCqtyClick}>{axlusdcQTY}</div>
-                <div className={axlusdcStyle + " cdp-div9"}>${axlUSDCValue}</div>
+                <div className={axlusdcStyle + " axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY}</div>
+                <div className={axlusdcStyle + " cdp-div9"}>${axlUSDCValue.toFixed(2)}</div>
               </div>
               <div>
                 <Image className={atomosmo_poolStyle+" atomosmopool-atom-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
                 <Image className={atomosmo_poolStyle+" atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
-                <div className={atomosmo_poolStyle +" atomosmopool-qty"} onClick={handleatomosmo_poolqtyClick}>{atomosmo_poolQTY}</div>
-                <div className={atomosmo_poolStyle + " cdp-div11"}>${atomosmo_poolValue}</div>
+                <div className={atomosmo_poolStyle +" atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div>
+                <div className={atomosmo_poolStyle + " cdp-div11"}>${atomosmo_poolValue.toFixed(2)}</div>
               </div>
               <div>
                 <Image className={osmousdc_poolStyle+" osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
                 <Image className={osmousdc_poolStyle+" osmousdcpool-usdc-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
-                <div className={osmousdc_poolStyle+" osmousdcpool-qty"} onClick={handleosmousdc_poolqtyClick}>{osmousdc_poolQTY}</div>
-                <div className={osmousdc_poolStyle+" cdp-div13"}>${osmousdc_poolValue}</div>
+                <div className={osmousdc_poolStyle+" osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div>
+                <div className={osmousdc_poolStyle+" cdp-div13"}>${osmousdc_poolValue.toFixed(2)}</div>
               </div>
             </div>
           </div>
@@ -1172,7 +1287,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             <div className={posClick} onClick={handleposClick}/>
             <div className={negClick} onClick={handlenegClick}/>
             <div className="premium-label">Premium</div>
-            <input className="mint-button-icon5" style={{backgroundColor:"#454444"}} name="loan-usage" value={loanUsage} type="number" onChange={handlesetloanUsage}/>
+            <input className="mint-button-icon5" style={{backgroundColor:"#454444"}} name="loan-usage" defaultValue={0.01} value={loanUsage} type="number" onChange={handlesetloanUsage}/>
             <div className="loan-usage">% Loan Usage</div>
             <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg" onClick={handleLogoClick}/>
         </form>
@@ -1187,7 +1302,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
       <div className={redeemInfoScreen}>
             <div className="user-redemptions">
                 <div>Premium: {redemptionRes?.premium_infos[0].premium }</div>
-                <div>Left to Redeem: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].remaining_loan_repayment}</div>
+                { redemptionRes !== undefined ? <div>Left to Redeem: {parseInt(redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].remaining_loan_repayment)/ 1_000_000}</div> : null}
                 <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>
             </div>
       </div>
@@ -1206,6 +1321,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         <div className="slash">/</div>
         <div className={withdrawStyle} onClick={handlewithdrawClick}>Withdraw</div>
         <form>
+            { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={()=>{setAmount(Number(maxLPamount))}}>max: {maxLPamount.toString()}</div></>) : null}            
             <label className="amount-label">{currentAsset} amount:</label>     
             <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={amount} type="number" onChange={handlesetAmount}/>
             <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg" onClick={handleLogoClick}/>

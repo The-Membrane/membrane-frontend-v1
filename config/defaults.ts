@@ -27,20 +27,20 @@ export const feeDenom = 'uosmo';
 export const cw20ContractAddress = 'osmo1y0ywcujptlmnx4fgstlqfp7nftc8w5qndsfds9wxwtm0ltjpzp4qdj09j8'
 
 export const testnetAddrs = {
-    launch: "osmo1ew856e7squd4r05fge5ujpz5njej8gzrfjqjsf0cyrvqf9cj6ausjtmzc3", //osmo1u7av2szvllejfctr6rudr3xn7yjml7lps3rvgh7vryfhpuxtzefqh5vlhr the addr of the rest of the addresses
-    discount_vault: "osmo1wy95fjh40459yfvp5xnprakpq2fwvuewpnpadyrt2rkj7tfnflss7qw8kw",
-    governance: "osmo1t6qq3snh26q62324t7ppjrhen8k4ad7lt3alj0fywcgwl9gl2weqpaxzpf",
-    liq_queue: "osmo1rhhnshclqd0putytztqjzwhgp5fvyra84ynmk7gvg80x82qu8rvqs9y7gv",
-    liquidity_check: "osmo1ej0qmswac2n23aylnke4rhu728na7ptuafqwhd4sdwskh6aln9aqgd7fnj",
-    mbrn_auction: "osmo13zlzg6vfwq535p9777s9f94gwx0luurfrnr7ng0u6zsatu0nmxnq75pvtl",
-    oracle: "osmo1krfwupaezx5ltks6edcu00d6avugsvxyhedx0fk7kuyt4g6gya9sfg7u2c",
-    osmosis_proxy: "osmo1twhn62257w5eupxds0celpy7vggfsyrt0dx84y2aercazmqymxyq2h3fnu",
-    positions: "osmo1ug00cl7pg2wn4g68cg6axvjwcdywyec0znxcjuug8ldgqyflndysm36eg8",
-    stability_pool: "osmo10w047vtqun66er2pjy2hcnu4smnqr6tqen73y7qq6mzyk88m0e7s3mektt",
-    staking: "osmo1atpqe8ed4cy8w9ql7p4qcdde8v4f6pxkekn0k2k29g5pq6gmyu3sxd9wcf",
-    system_discounts: "osmo1nd5hcs2qsvcjxd3gff0htz6h72qwcqsl0pgnkt67tsltalzez8kqg7wslc",
-    vesting: "osmo1cn7w27eje7fg0wgmay5vpsu0n9wlj7dqjqhtzyh75lhezkhl33js3v4jsz"      
-  };
+    launch: "osmo1ew856e7squd4r05fge5ujpz5njej8gzrfjqjsf0cyrvqf9cj6ausjtmzc3", //osmo13u22ujzwegjmjnj0jcy8t70tlj9r5jrn2fj5eqwcdt4j073arz7sv6srfz the addr of the rest of the addresses
+        discount_vault: "osmo16hhpsm67f352g069y762x945sma4t4yu0lqltx259ny7qz27pfeq5j2qhh",
+        governance: "osmo15z78zy7gfa3thm0u4j2u2ung92xneuet80fj9zzgfx4r38p3jmzqa959ya",
+        liq_queue: "osmo1yxerk9spx9lfmdm2rk609579ar0e3zrxlvureumlqglg5ejfm5tqx75uky",
+        liquidity_check: "osmo185a8ggdwhd4um4ddwmjna5a9k39tyfqptv2wav4j0lg9dmxa0c0s5a0m9l",
+        mbrn_auction: "osmo1hdfu6elcexza42d0cxlcv7az7037nrhht2qzel20ch0hrtt0prqs0hygnh",
+        oracle: "osmo1pshz0e5h4agsn2lqy2fjxmdhqglv5mg6jawyu78yg55sh4qxrr2q97my3w",
+        osmosis_proxy: "osmo173cvuzxqkt85vh4u4panr5yvgfyrzr8n0unvy2tkwqjdrd44p3vqksalzz",
+        positions: "osmo1gptegj8x06d80vhs8pzjd32ullrypf3qchruz3h794008fsfr2nqpux9up",
+        stability_pool: "osmo19xnkk0syc6hpf9ru75nsyaep9nyzguqauagxf7775h5gdj3xfhsss67v2m",
+        staking: "osmo15v0me0g4r0vjfndr35qxlxpmkexu4hjrnn0stjt9wqd2xjc4hhssukukxc",
+        system_discounts: "osmo1ugyv2x5fltfhtcrlzmnm2yzpse2mf5jd7gmkaawrp445n8h7g0nq7lw9hf",
+        vesting: "osmo1md5g2kxr7ez7pdjs772jml47tdrf49f5z4ahcr9s24d3qjahjccqr93gp2"
+      };
 
 export const chainassets: AssetList = assets.find(
     (chain) => chain.chain_name === chainName

@@ -4,6 +4,8 @@
 * and run the @cosmwasm/ts-codegen generate command to regenerate this file.
 */
 
+import { PriceResponse } from "./oracle/Oracle.types";
+
 export type Uint128 = string;
 export interface BadDebtResponse {
   has_bad_debt: [PositionUserInfo, Uint128][];
@@ -59,7 +61,7 @@ export interface Basket {
   cpc_margin_of_error: Decimal;
   credit_asset: Asset;
   credit_last_accrued: number;
-  credit_price: Decimal;
+  credit_price: PriceResponse;
   current_position_id: Uint128;
   frozen: boolean;
   liq_queue?: Addr | null;
