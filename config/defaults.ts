@@ -30,7 +30,7 @@ export const testnetAddrs = {
     launch: "osmo1ew856e7squd4r05fge5ujpz5njej8gzrfjqjsf0cyrvqf9cj6ausjtmzc3", //osmo13u22ujzwegjmjnj0jcy8t70tlj9r5jrn2fj5eqwcdt4j073arz7sv6srfz the addr of the rest of the addresses
         discount_vault: "osmo16hhpsm67f352g069y762x945sma4t4yu0lqltx259ny7qz27pfeq5j2qhh",
         governance: "osmo15z78zy7gfa3thm0u4j2u2ung92xneuet80fj9zzgfx4r38p3jmzqa959ya",
-        liq_queue: "osmo1yxerk9spx9lfmdm2rk609579ar0e3zrxlvureumlqglg5ejfm5tqx75uky",
+        liq_queue: "osmo17guza0tqjn52use2e2yu4v6s3ha975qqjkygutd3kd4qz9vtfeas0trwez", //"osmo1yxerk9spx9lfmdm2rk609579ar0e3zrxlvureumlqglg5ejfm5tqx75uky", matches the other contracts
         liquidity_check: "osmo185a8ggdwhd4um4ddwmjna5a9k39tyfqptv2wav4j0lg9dmxa0c0s5a0m9l",
         mbrn_auction: "osmo1hdfu6elcexza42d0cxlcv7az7037nrhht2qzel20ch0hrtt0prqs0hygnh",
         oracle: "osmo1pshz0e5h4agsn2lqy2fjxmdhqglv5mg6jawyu78yg55sh4qxrr2q97my3w",

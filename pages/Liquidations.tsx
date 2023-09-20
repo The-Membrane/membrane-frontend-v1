@@ -184,30 +184,36 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             denom: asset,
           }
         },
-        limit: 10,
       }).then((res) => {
         let resp = res as SlotResponse[];
         let highest = highestBar[barIndex];
 
+        //Set new heights
         for (let i = 0; i < resp.length; i++) {
-          //Divide to get X per pixel.Add 6 decimals to account for the extra decimals of a native token
-          barGraph[barIndex][i].height = parseFloat(resp[i].total_bid_amount) / CDTperPIXEL;
-          //Set tvl
-          barGraph[barIndex][i].tvl = (parseFloat(resp[i].total_bid_amount) / 1_000_000000).toString() + "K";
+          let premium_index =  parseInt((parseFloat(resp[i].liq_premium) * 100).toFixed(0));
+          if (premium_index < 9){
+            //Divide to get X per pixel.Add 6 decimals to account for the extra decimals of a native token
+            barGraph[barIndex][premium_index].height = parseFloat(resp[i].total_bid_amount) / CDTperPIXEL;
+            //Set tvl
+            barGraph[barIndex][premium_index].tvl = (parseFloat(resp[i].total_bid_amount) / 1_000_000000).toFixed(2)+ "K";
 
-          //Check if this is the highest bar
-          if (barGraph[barIndex][i].height > barGraph[barIndex][highest].height) {
-            highest = i;
+            //Check if this is the highest bar
+            if (barGraph[barIndex][premium_index].height > barGraph[barIndex][highest].height) {
+              highest = premium_index;
+            }
+            //Reset color of bar
+            barGraph[barIndex][premium_index].color = "#000000";
           }
-          //Reset color of bar
-          barGraph[barIndex][i].color = "#000000";
         }
         //Set the color of any slots the user is in to blue
         if (address !== undefined) {
           for (let i = 0; i < resp.length; i++) {
-            for (let x = 0; x < resp[i].bids.length; x++) {
-              if (resp[i].bids[x].user === address){
-                barGraph[barIndex][i].color = "rgba(79, 202, 187, 0.85)";
+            let premium_index =  parseInt((parseFloat(resp[i].liq_premium) * 100).toFixed(0));
+            if (premium_index < 9){
+              for (let x = 0; x < resp[i].bids.length; x++) {
+                if (resp[i].bids[x].user === address){
+                  barGraph[barIndex][premium_index].color = "rgba(79, 202, 187, 0.85)";
+                }
               }
             }
           }
@@ -223,12 +229,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       console.log(error)
     }
 
-    //Query total queue
+    //Query TVL as collateral in Basket
     try {
       await cdp_queryClient?.getBasket().then((res) => {
         console.log(res)
         //Get price
-        let price = 0;
+        var price = 0;
         switch (asset) {
           case denoms.osmo: {
             price = prices.osmo;
@@ -242,14 +248,28 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             price = prices.axlUSDC;
             break;
           }
+          case denoms.atomosmo_pool: {
+            price = prices.atomosmo_pool;
+            break;
+          }
+          case denoms.osmousdc_pool: {
+            price = prices.osmousdc_pool;
+            break;
+          }
         }
         //Set collateral TVL
         for (let i = 0; i < res.collateral_types.length; i++) {
           //@ts-ignore
           if (res.collateral_types[i].asset.info.native_token.denom === asset) {
             console.log(res.collateral_types[i].asset.amount, price)
-            setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount) / 1000_000_000) * price).toFixed(2)));
-            break;
+            console.log(parseFloat(((parseInt(res.collateral_types[i].asset.amount)) * price).toFixed(2)))
+            if (asset === denoms.atomosmo_pool || asset === denoms.osmousdc_pool) {
+              setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount)/1000) * price).toFixed(2)));
+              break;
+            } else {
+              setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount) / 1000_000_000) * price).toFixed(2)));
+              break;
+            }
           }
         }
       })
@@ -577,7 +597,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       await sp_queryClient?.assetPool({
         depositLimit: 0,
       }).then((res) => {
-        console.log(res)
         //set TVL in Ms
         setTVL(parseInt(res.credit_asset.amount) / 1000000_000_000)
       })
@@ -685,33 +704,35 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   useEffect(() => {
+    console.log(prices)
     switch(menuAsset){
       case "OSMO": {
-        if (barGraph[0][0].tvl === "0K") {
+        if (barGraph[0][0].tvl === "0K" && prices.osmo !== 0) {
+          console.log("efe")
           queryQueuesaveHeights(denoms.osmo)
         }
         break;
       }
       case "ATOM": {
-        if (barGraph[1][0].tvl === "0K") {
+        if (barGraph[1][0].tvl === "0K" && prices.atom !== 0) {
           queryQueuesaveHeights(denoms.atom)
         }
         break;
       }
       case "axlUSDC": {
-        if (barGraph[2][0].tvl === "0K") {
+        if (barGraph[2][0].tvl === "0K" && prices.axlUSDC !== 0) {
           queryQueuesaveHeights(denoms.axlUSDC)
         }
         break;
       }
       case "ATOM-OSMO": {
-        if (barGraph[3][0].tvl === "0K") {
+        if (barGraph[3][0].tvl === "0K" && prices.atomosmo_pool !== 0) {
           queryQueuesaveHeights(denoms.atomosmo_pool)
         }
         break;
       }
       case "OSMO-axlUSDC": {
-        if (barGraph[4][0].tvl === "0K") {
+        if (barGraph[4][0].tvl === "0K" && prices.osmousdc_pool !== 0) {
           queryQueuesaveHeights(denoms.osmousdc_pool)
         }
         break;
@@ -730,7 +751,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Check for unstaking positions
     getunstakingSP()
 
-  }, [menuAsset, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient])
+  }, [menuAsset, prices, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient])
 
   return (
     <div className="fullHeight" style={{overflow:"hidden"}}>
