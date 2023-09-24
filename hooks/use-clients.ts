@@ -108,7 +108,7 @@ export function useQueryClients(): {
     ///I can change the RPC node here
     //https://rpc.osmotest5.osmosis.zone/
     //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
-    var client = CosmWasmClient.connect("https://rpc.osmotest5.osmosis.zone/")
+    var client = CosmWasmClient.connect("https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c")
     .catch((e) => {
       console.log(e);
       query_errored = true;

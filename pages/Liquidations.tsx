@@ -29,7 +29,6 @@ interface Props {
 }
 
 const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, prices}: Props) => {
-
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState("");
@@ -191,7 +190,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         //Set new heights
         for (let i = 0; i < resp.length; i++) {
           let premium_index =  parseInt((parseFloat(resp[i].liq_premium) * 100).toFixed(0));
-          if (premium_index < 9){
+          if (premium_index < 10){
             //Divide to get X per pixel.Add 6 decimals to account for the extra decimals of a native token
             barGraph[barIndex][premium_index].height = parseFloat(resp[i].total_bid_amount) / CDTperPIXEL;
             //Set tvl
@@ -209,7 +208,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         if (address !== undefined) {
           for (let i = 0; i < resp.length; i++) {
             let premium_index =  parseInt((parseFloat(resp[i].liq_premium) * 100).toFixed(0));
-            if (premium_index < 9){
+            if (premium_index < 10){
               for (let x = 0; x < resp[i].bids.length; x++) {
                 if (resp[i].bids[x].user === address){
                   barGraph[barIndex][premium_index].color = "rgba(79, 202, 187, 0.85)";
@@ -292,12 +291,36 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         //Add claims from each response
         for (let i = 0; i < resp.length; i++) {
           let asset_claims = parseInt(resp[i].pending_liquidated_collateral) / 1_000_000; //Remove native token decimals
-          if (asset_claims > 0) {
+          if (asset_claims > 1) {           
             //Add asset to display
-            new_display += asset_claims + " " + resp[i].bid_for + ", ";
+            switch (resp[i].bid_for) {
+              case denoms.osmo: {     
+                new_display += asset_claims + " OSMO, ";
+                break;
+              }
+              case denoms.atom: {
+                new_display += asset_claims + " ATOM, ";
+                break;
+              }
+              case denoms.axlUSDC: {
+                new_display += asset_claims + " axlUSDC, ";
+                break;
+              }
+              case denoms.atomosmo_pool: {
+                new_display += asset_claims + " ATOM-OSMO LP, ";
+                break;
+              }
+              case denoms.osmousdc_pool: {
+                new_display += asset_claims + " OSMO-axlUSDC LP, ";
+                break;
+              }
+            }
+
             //Add asset to bidFor
             new_bidFor.push(resp[i].bid_for);
           }
+
+          console.log(new_display)
         }
         //Set lqClaimables
         setlqClaimables(prevState => {
@@ -307,7 +330,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           }
         });
         //If no claims, set display to "No Claims"
-        if (resp.length === 0) {
+        if (resp.length === 0 || new_display === "") {
           setlqClaimables(prevState => {
             return { ...prevState, display: "No Claims"}
           });
@@ -361,7 +384,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         console.log(res)
         //Format popup
         setPopupStatus("Success")
-        setPopupMsg("Bid of "+ depositAmount +" CDT at a " +premium+ " premium successful")
+        setPopupMsg("Bid of "+ depositAmount +" CDT at a " +premium+ "% premium successful")
         setPopupTrigger(true)
       })
     } catch (error) {
@@ -435,8 +458,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 console.log(res)
                 //Format popup
                 setPopupStatus("Success")
-                setPopupMsg("Retracted" +withdrawAmount+ " CDT of bid "+ bidId)
+                setPopupMsg("Retracted " +withdrawAmount+ " CDT from bid "+ bidId)
                 setPopupTrigger(true)
+                
               })
           } catch (error) {
             console.log(error)
@@ -510,9 +534,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           }).then((res) => {
             console.log(res)
             //set capital ahead of user deposit in K
-            setcapitalAhead(parseInt(res.capital_ahead) / 1000_000_000)
+            setcapitalAhead(parseInt(res.capital_ahead ?? 0) / 1000_000_000)
             //set user closest deposit in K
-            setuserclosestDeposit(parseInt(res.deposit.amount) / 1000_000_000)
+            if (res.deposit !== undefined) {
+              setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
+            } else {  
+              //use TVL if no deposit        
+              setuserclosestDeposit(TVL)
+            }
           })
           //Query user's total deposit
           await sp_queryClient?.assetPool({
@@ -555,9 +584,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           }).then((res) => {
             console.log(res)
             //set capital ahead of user deposit in K
-            setcapitalAhead(parseInt(res.capital_ahead) / 1000_000_000)
+            setcapitalAhead(parseInt(res.capital_ahead ?? 0) / 1000_000_000)
             //set user closest deposit in K
-            setuserclosestDeposit(parseInt(res.deposit.amount) / 1000_000_000)
+            if (res.deposit !== undefined) {
+              setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
+            } else {  
+              //use TVL if no deposit        
+              setuserclosestDeposit(TVL)
+            }
           })
           //Query user's total deposit
           await sp_queryClient?.assetPool({
@@ -598,7 +632,42 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         depositLimit: 0,
       }).then((res) => {
         //set TVL in Ms
-        setTVL(parseInt(res.credit_asset.amount) / 1000000_000_000)
+        setTVL(parseFloat((parseInt(res.credit_asset.amount) / 1000_000_000).toFixed(2)))
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    //User specific
+    try {      
+      var tvl = 0;      
+      //Query user's total deposit
+      await sp_queryClient?.assetPool({
+        user: address ?? "",
+      }).then((res) => {
+        console.log(res)
+        //Calc user tvl
+        for (let i = 0; i < res.deposits.length; i++) {
+          tvl += parseInt(res.deposits[i].amount) / 1_000_000;
+        }
+        //set user tvl
+        setuserTVL(tvl)
+      })
+
+      //Query capital ahead of user deposit
+      await sp_queryClient?.capitalAheadOfDeposit({
+        user: address ?? "",
+      }).then((res) => {
+        //set capital ahead of user deposit in K
+        //@ts-ignore
+        setcapitalAhead(parseInt(res[0]?.capital_ahead ?? 0) / 1000_000_000)
+        //set user closest deposit in K
+        if (res.deposit !== undefined) {
+          setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
+        } else {  
+          //use TVL if no deposit        
+          setuserclosestDeposit(tvl)
+        }
       })
     } catch (error) {
       console.log(error)
@@ -634,6 +703,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
 
         //add SP claimables
         for (let i = 0; i < res.claims.length; i++) {
+          console.log(res.claims)
           switch (res.claims[i].denom) {
             case denoms.osmo: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " OSMO, "
@@ -645,6 +715,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             }
             case denoms.axlUSDC: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " axlUSDC, "
+              break;
+            }
+            case denoms.atomosmo_pool: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " ATOM-OSMO LP, "
+              break;
+            }
+            case denoms.osmousdc_pool: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " OSMO-axlUSDC LP, "
               break;
             }
           }
@@ -659,10 +737,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       await sp_queryClient?.unclaimedIncentives({
         user: address ?? "",
       }).then((res) => {
-        console.log(res)
-
         //add SP incentives
-        claims += parseInt(res)/1_000_000 + " MBRN, "
+        if (parseInt(res)/1_000_000 < 1) {
+          claims += parseInt(res)/1_000_000 + " MBRN, "
+        }
         
       })
     } catch (error) {
@@ -739,13 +817,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
     }
     //Set LQ claimables
-    if (lqClaimables.display !== "No Claims") {
+    if (lqClaimables.display === ""){
       setqueueClaimables()
     }
+
     //Set SP claimables
-    if (SPclaimables !== "No Claims") {
-      getSPclaimables()
-    }
+    getSPclaimables()
     //Set SP TVL
     getSPTVL()
     //Check for unstaking positions
@@ -772,16 +849,16 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <div className="bar-icon7" data-descr={barGraph[barIndex][7].tvl} style={{height: barGraph[barIndex][7].height, backgroundColor: barGraph[barIndex][7].color,}}/>
           <div className="bar-icon8" data-descr={barGraph[barIndex][8].tvl} style={{height: barGraph[barIndex][8].height, backgroundColor: barGraph[barIndex][8].color,}}/>
           <div className="bar-icon9" data-descr={barGraph[barIndex][9].tvl} style={{height: barGraph[barIndex][9].height, backgroundColor: barGraph[barIndex][9].color,}}/>
-          <div className="label4" style={(premium === 0) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(0)}}>0%</div>
-          <div className="label5" style={(premium === 1) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(1)}}>1%</div>
-          <div className="label6" style={(premium === 2) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(2)}}>2%</div>
-          <div className="label7" style={(premium === 3) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(3)}}>3%</div>
-          <div className="label8" style={(premium === 4) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(4)}}>4%</div>
-          <div className="label9" style={(premium === 5) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(5)}}>5%</div>
-          <div className="label10" style={(premium === 6) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(6)}}>6%</div>
-          <div className="label11" style={(premium === 7) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(7)}}>7%</div>
-          <div className="label12" style={(premium === 8) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(8)}}>8%</div>
-          <div className="label13" style={(premium === 9) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(9)}}>9%</div>
+          <div className="label4" data-tvl={barGraph[barIndex][0].tvl} style={(premium === 0) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(0)}}>0%</div>
+          <div className="label5" data-tvl={barGraph[barIndex][1].tvl} style={(premium === 1) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(1)}}>1%</div>
+          <div className="label6" data-tvl={barGraph[barIndex][2].tvl} style={(premium === 2) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(2)}}>2%</div>
+          <div className="label7" data-tvl={barGraph[barIndex][3].tvl} style={(premium === 3) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(3)}}>3%</div>
+          <div className="label8" data-tvl={barGraph[barIndex][4].tvl} style={(premium === 4) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(4)}}>4%</div>
+          <div className="label9" data-tvl={barGraph[barIndex][5].tvl} style={(premium === 5) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(5)}}>5%</div>
+          <div className="label10" data-tvl={barGraph[barIndex][6].tvl} style={(premium === 6) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(6)}}>6%</div>
+          <div className="label11" data-tvl={barGraph[barIndex][7].tvl} style={(premium === 7) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(7)}}>7%</div>
+          <div className="label12" data-tvl={barGraph[barIndex][8].tvl} style={(premium === 8) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(8)}}>8%</div>
+          <div className="label13" data-tvl={barGraph[barIndex][9].tvl} style={(premium === 9) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(9)}}>9%</div>
           <div className="dropdown asset-dropdown">
             <button onClick={handleOpen}>{menuAsset}</button>
             {open ? (
@@ -805,7 +882,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             ) : null}
           </div>
           <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}K</div>
-          <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 40)}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
+          <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 33)}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
           <div className="x-axis" />
           <form>
             <input className="deposit-amount" name="amount" value={depositAmount} disabled={premium === undefined} type="number" onChange={handlesetdAmount}/>
@@ -833,10 +910,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <h3 className="pool-titles">OMNI-ASSET</h3>
           <div className="captial-ahead-box" />
           <div className="user-tvl-box" />
-          <div className="user-tvl-label" data-descr={"Closest TVL: "+userclosestDeposit+", Total TVL: "+userTVL}>{userclosestDeposit}K</div>
+          <div className="user-tvl-label" data-descr={"Closest TVL: "+userclosestDeposit+", Total TVL: "+userTVL}>{userclosestDeposit /1000}K</div>
           <div className="captial-ahead-label" data-descr="Capital ahead of you">{capitalAhead}K</div>
           <div className="x-axis1" />
-          <div className="total-tvl-label">TVL: {TVL}M</div>
+          <div className="total-tvl-label">TVL: {TVL}K</div>
           <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl_container.svg" />
           <div className="premium">10%</div>
           <form>

@@ -233,6 +233,7 @@ ul{
 }
 .label4,
 .label5 {
+  cursor: pointer;
   top: 380px;
   display: inline-block;
   width: 28px;
@@ -254,6 +255,7 @@ ul{
 .label7 {
   position: absolute;
   margin: 0 !important;
+  cursor: pointer;
 }
 .label6 {
   top: 380px;
@@ -271,6 +273,7 @@ ul{
 .label7,
 .label8,
 .label9 {
+  cursor: pointer;
   top: 380px;
   display: inline-block;
   width: 28px;
@@ -290,6 +293,7 @@ ul{
 .label10,
 .label11,
 .label9 {
+  cursor: pointer;
   position: absolute;
   margin: 0 !important;
 }
@@ -309,6 +313,7 @@ ul{
 .label11,
 .label12,
 .label13 {
+  cursor: pointer;
   top: 380px;
   display: inline-block;
   width: 28px;
@@ -461,9 +466,9 @@ ul{
 }
 .captial-ahead-label,
 .user-tvl-label {
-  left: 226px;
+  left: 218px;
   display: inline-block;
-  width: 46px;
+  width: 50px;
   height: 11px;
   flex-shrink: 0;
   z-index: 13;
@@ -582,6 +587,23 @@ div[data-descr]:hover::after {
   left: -7px;
   top: 25px;
   min-width: 33px;
+  border: 1px #aaaaaa solid;
+  border-radius: 10px;
+  background-color: #50C9BD;
+  padding: 12px;
+  color: #000000;
+  font-size: 14px;
+  z-index: 21;
+}
+div[data-tvl] {
+  position: absolute;
+}
+div[data-tvl]:hover::after {
+  content: attr(data-tvl);
+  position: absolute;
+  left: -20px;
+  top: 15px;
+  min-width: 30px;
   border: 1px #aaaaaa solid;
   border-radius: 10px;
   background-color: #50C9BD;

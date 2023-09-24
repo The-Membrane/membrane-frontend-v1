@@ -43,7 +43,7 @@ import { useClients, useQueryClients } from '../hooks/use-clients';
 
 export const denoms = {
   mbrn: "factory/osmo1mavfhp7sszhetuuwcd66rpz8v63ds056mgr76ng4928tk9kcvu6s9te226/umbrn",
-  cdt: "factory/osmo1mavfhp7sszhetuuwcd66rpz8v63ds056mgr76ng4928tk9kcvu6s9te226/ucdt",
+  cdt: "factory/osmo16z5y7aafk9nq2r5hsa7u0hfexyskntamlyna3wjl8wgzqn03cv6sgp4kh3/ucdt",
   osmo: "uosmo",
   //mainnet atom ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
   atom: "ibc/A8C2D23A1E6F95DA4E48BA349667E322BD7A6C996D8A4AAE8BA72E190F3D1477",
