@@ -128,6 +128,12 @@ ul{
   margin-top: 5%;
   color: white;
 }
+.pool-subtitle {
+  position: relative;
+  margin-left: 12.5%;
+  margin-top: -3%;
+  color: darkgray;
+}
 .single-asset-info-circle {
   position: absolute;
   margin: 0 !important;
@@ -566,11 +572,11 @@ input[type="number"]:disabled {
   z-index: 21;
 }
 .omni-deposit-amount { 
-  top: 104px;
+  top: 114px;
   left: 105px;
 }
 .omni-withdraw-amount {  
-  top: 104px;
+  top: 114px;
   left: 374px;
 }
 .deposit-button-label {
@@ -1829,12 +1835,16 @@ span[data-descr]:hover::after {
   font-size: 150%;
 }
 .unstake-input {
-  position: relative;
+  position: absolute;
   background-color: white;
   border: 1px solid aqua;
   width: 55px;
-  left: 40px;
   bottom: 4px;
+  left: 702px;
+  bottom: 4px;
+  z-index: 30;
+  top: 133px;
+  height: 28px;
 }
 .unstake-button {
   position: absolute;
@@ -1863,12 +1873,15 @@ span[data-descr]:hover::after {
   font-size: 150%;
 }
 .stake-input {
-  position: relative;
+  position: absolute;
   background-color: white;
   border: 1px solid aqua;
   width: 55px;
-  left: 30px;
+  left: 345px;
   bottom: 4px;
+  z-index: 30;
+  top: 133px;
+  height: 28px;
 }
 .stake-button1 {
   position: absolute;
@@ -2063,7 +2076,7 @@ span[data-descr]:hover::after {
 .unstaking-mbrn {
   position: absolute;
   top: 180px;
-  left: 285px;
+  left: 266px;
   color: white;
   font-size: x-large;
 }

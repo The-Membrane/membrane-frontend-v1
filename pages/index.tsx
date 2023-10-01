@@ -21,7 +21,6 @@ import { WalletStatus } from '@cosmos-kit/core';
 
 import {
   chainName,
-  cw20ContractAddress,
   dependencies,
   products,
 } from '../config';
@@ -43,16 +42,16 @@ import { useClients, useQueryClients } from '../hooks/use-clients';
 
 export const denoms = {
   mbrn: "factory/osmo1mavfhp7sszhetuuwcd66rpz8v63ds056mgr76ng4928tk9kcvu6s9te226/umbrn",
-  cdt: "factory/osmo16z5y7aafk9nq2r5hsa7u0hfexyskntamlyna3wjl8wgzqn03cv6sgp4kh3/ucdt",
+  cdt: "factory/osmo1w7p2awjxs2rdv3jw054e5p0fnx6rgwh8yd2zqgsfgyua8ely4e3shrzjax/ucdt",
   osmo: "uosmo",
   //mainnet atom ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
-  atom: "ibc/A8C2D23A1E6F95DA4E48BA349667E322BD7A6C996D8A4AAE8BA72E190F3D1477",
+  atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
   //mainnet axlUSDC ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858
-  axlUSDC: "ibc/6F34E1BD664C36CE49ACC28E60D62559A5F96C4F9A6CCE4FC5A67B2852E24CFE",
+  axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
   //mainnet "gamm/pool/1"
-  atomosmo_pool: "gamm/pool/12",
+  atomosmo_pool: "gamm/pool/1",
   //mainnet "gamm/pool/678"
-  osmousdc_pool: "gamm/pool/5",
+  osmousdc_pool: "gamm/pool/678",
 };
 
 export interface Prices {

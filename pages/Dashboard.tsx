@@ -9,7 +9,7 @@ const Dashboard = () => {
         <div className="col shiftRight">
         <h1 className="pageTitle">Dashboard</h1>
         <div className="row mgTop">
-            <div className="col-sm-6">
+            <div className="col-sm-6 low-opacity">
                 <div className="card shadow ">
                 <div className="card-body card-design">
                     <h5 className="card-title ">Collateralized Vaults</h5>
@@ -26,7 +26,7 @@ const Dashboard = () => {
                 </div>
                 </div>
             </div>
-            <div className="col-sm-6">
+            <div className="col-sm-6 low-opacity">
                 <div className="card shadow">
                 <div className="card-body card-design">
                     <h5 className="card-title ">Liquidation Pools</h5>
@@ -46,7 +46,7 @@ const Dashboard = () => {
             </div>
             </div>
             <div className="row">
-            <div className="col-sm-6">
+            <div className="col-sm-6 low-opacity">
                 <div className="card shadow ">
                 <div className="card-body card-design">
                     <h5 className="card-title"> Staking</h5>

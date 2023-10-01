@@ -442,6 +442,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         var stakingTotal = 0;
         var closestUnstakingDeposit = 0;
         var closestUnstakingDepositTime = 0;
+        console.log(res.deposit_list)
         for (let i = 0; i < res.deposit_list.length; i++) {
           if (res.deposit_list[i].unstake_start_time === null || res.deposit_list[i].unstake_start_time === undefined) {
             stakingTotal += parseInt(res.deposit_list[i].amount)
@@ -459,7 +460,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         var currentTime = 0;
         stakingClient?.client.getBlock().then( (block) => {
           currentTime = Date.parse(block.header.time) / 1000;
-          var secondsLeft = closestUnstakingDepositTime - currentTime;
+          var secondsLeft = Math.max(closestUnstakingDepositTime - currentTime, 0);
           var daysLeft = secondsLeft / SECONDS_PER_DAY;
           //Set user stake
           setUserStake({
@@ -482,7 +483,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   const handlestakeClick = async () => {
     try {
       await stakingClient?.stake({}
-        ,"auto", undefined, coins(stakeAmount ?? 0, denoms.mbrn)
+        ,"auto", undefined, coins((stakeAmount ?? 0) * 1_000_000, denoms.mbrn)
       ).then((res) => {
         console.log(res)
         //format popup message
@@ -510,20 +511,20 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   const handleunstakeClick = async () => {
     try {      
       await stakingClient?.unstake({
-        mbrnAmount: (unstakeAmount ?? 0).toString(),
+        mbrnAmount: ((unstakeAmount ?? 0) * 1_000_000).toString(),
       },"auto", undefined
       ).then((res) => {
         console.log(res)
         //format popup message
         setPopupTrigger(true)
-        setPopupMsg(<div>Staked</div>)
+        setPopupMsg(<div>Unstaked</div>)
         setPopupStatus("Success")
         //Update user stake
         setUserStake(prevState => {
           return {
             ...prevState,
             unstaking: {
-              amount: prevState.unstaking.amount + (unstakeAmount ?? 0),
+              amount: +prevState.unstaking.amount + +(unstakeAmount ?? 0),
               timeLeft: unstakingPeriod,
             }
           }
@@ -572,7 +573,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
               setuserClaims(prevState => {
                 return {
                   ...prevState,
-                  cdtClaims: parseInt(res.claimables[i].amount),
+                  cdtClaims: parseInt(res.claimables[i].amount) / 1_000_000,
                 }
               })
             }
@@ -582,7 +583,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         setuserClaims(prevState => {
           return {
             ...prevState,
-            mbrnClaims: parseInt(res.accrued_interest),
+            mbrnClaims: parseInt(res.accrued_interest) / 1_000_000,
           }
         })
       })
@@ -740,7 +741,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         delegate: delegate,
         fluid: fluid,
         governatorAddr: governator,
-        mbrnAmount: amount,
+        mbrnAmount: (parseInt(amount ??"0") * 1_000_000).toString(),
         votingPowerDelegation: vp,
       }).then(async (res) => {
         console.log(res)
@@ -1026,7 +1027,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         <div className="delegate">Delegate</div>
       </div>
       <div className="total-vp-label">Total VP: </div>
-      <div className="total-vp-amount">{Math.sqrt(userVP)}</div>
+      <div className="total-vp-amount">{Math.sqrt(parseInt((userVP/1_000_000).toFixed(0))).toFixed(2)}</div>
       <div className="delegated-to">Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fluid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comm.&nbsp;&nbsp;&nbsp;&nbsp;Undele.</div>
       <div className="claim-button-frame">        
         <div className="cdt-claims">{userClaims.cdtClaims}</div>
@@ -1038,17 +1039,17 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>
       <div className="unstake-button-frame"/>
       <form>
-      <div className="btn unstake-button" onClick={handleunstakeClick}>
-        <div className="unstake">Unstake:</div>
         <input className="unstake-input" name="amount" value={unstakeAmount} type="number" onChange={handlesetunstakeAmount}/>
-      </div>
+        <button className="btn unstake-button" type="button" onClick={handleunstakeClick}>
+          <div className="unstake">Unstake:</div>
+        </button>
       </form>
       <div className="stake-button-frame"/>
       <form>
-        <div className="btn stake-button1" onClick={handlestakeClick}>
+        <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
+        <button className="btn stake-button1" type="button" onClick={handlestakeClick}>
           <div className="stake">Stake:</div>
-          <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
-        </div>
+        </button>
       </form>
       <div className="status-dropdown">
         <Image className="button-icon" width={11.26} height={13.5} alt="" src="images/button.svg" />
@@ -1160,8 +1161,8 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="delegates-y" />
       <div className="delegators-y1" />
       <div className="delegators-y2" />
-      <div className="staked-mbrn1">{userStake.staked}</div>
-      <div className="unstaking-mbrn">{userStake.unstaking.amount}</div>
+      <div className="staked-mbrn1">{parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
+      <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
       <div className="mbrn-stake-logo">
         <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
       </div>
@@ -1172,7 +1173,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <Image className="logo-icon1" width={43} height={48} alt="" src="/images/Logo.svg" />
       </div>
       {userStake.unstaking.amount !== 0 ? (<div className="unstaking-progress-bar" >
-        <ProgressBar bgcolor="#50C9BD" progress={(unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod}  height={20} />
+        <ProgressBar bgcolor="#50C9BD" progress={parseFloat((((unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod) * 100).toFixed(2))}  height={20} />
       </div>) : null}
       {(emissionsSchedule.rate !== 0 && emissionsSchedule.monthsLeft !== 0) ? 
       (<div className="emissions-schedule">{emissionsSchedule.rate}%/{emissionsSchedule.monthsLeft} months</div>)

@@ -23,7 +23,6 @@ interface Props {
 }
 
 const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
-    // address = "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w";
     //Popup
     const [popupTrigger, setPopupTrigger] = useState(true);
     const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
@@ -764,11 +763,9 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                             return asset[1] + " " + asset[0]
                         })
                         setPopupMsg("Deposit of " +readable_asset_intent+ " successful");
-                        setPopupStatus("Success");
-                        //Update Deposit data
-                        asset_intent.forEach((asset) => {
-                            handleQTYaddition(asset[0], asset[1])
-                        })
+                        setPopupStatus("Success");   
+                        //Update Position data
+                        fetch_update_positionData();
                         //getPosition
                         const userRes = await queryClient?.getUserPositions(
                             {
@@ -819,9 +816,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         setPopupMsg("Withdrawal of " +readable_asset_intent+ " successful");
                         setPopupStatus("Success");              
                         //Update Position data
-                        asset_intent.forEach((asset) => {
-                            handleQTYsubtraction(asset[0], asset[1])
-                        })
+                        fetch_update_positionData();
                     })
 
                     //Clear intents
@@ -1161,11 +1156,11 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             let exponent = parseInt(qty_string.slice(qty_string.length-2));
             let firstTwoplaces = parseFloat(qty_string.slice(0, 3));
             if (exponent > 18){
-                return firstTwoplaces * Math.pow(10, (exponent - 18))
+                return (firstTwoplaces * Math.pow(10, (exponent - 18))).toFixed(2)
             } else if (exponent < 18){
-                return firstTwoplaces / Math.pow(10, (18 - exponent))
+                return (firstTwoplaces / Math.pow(10, (18 - exponent))).toFixed(2)
             } else {
-                return firstTwoplaces
+                return (firstTwoplaces).toFixed(2)
             }
         }
     }
@@ -1193,15 +1188,15 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <div className="infobox-icon" />
               <div className="infobox-icon1" />
               <div className="max-ltv">
-                <div className="cdp-div2">{maxLTV}%</div>
+                <div className="cdp-div2">{maxLTV.toFixed(0)}%</div>
                 <div className="max-ltv-child" />
               </div>
               <div className="max-borrow-ltv">
-                <div className="cdp-div3">{brwLTV}%</div>
+                <div className="cdp-div3">{brwLTV.toFixed(2)}%</div>
                 <div className="max-borrow-ltv-child" />
               </div>
               <div className="debt-visual-child" />
-              <div className="debt-visual-item" style={{top: 442 - (336 * (currentLTV / maxLTV)), height: (336 * (currentLTV / maxLTV))}}/>
+              <div className="debt-visual-item" style={{top: 442 - (336 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / maxLTV)), height: (336 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / maxLTV))}}/>
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
@@ -1209,7 +1204,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <div className="cost-4">Cost: {cost}%</div>
               <div className="debt-225">Debt: ${debt}</div>
               <div className="liq-value-375">Liq. Value: ${(debt / (maxLTV / 100)).toFixed(2)}</div>
-              <div className="tvl-500">TVL: ${osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue}</div>
+              <div className="tvl-500">TVL: ${(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue).toFixed(2)}</div>
             </div>
             <div className="asset-info">
               <div className="infobox-icon3"/>

@@ -285,12 +285,13 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         user: address ?? "",
       }).then((res) => {
         let resp = res as ClaimsResponse[];
-        let new_display = lqClaimables.display;
+        let new_display = "";
         let new_bidFor: string[] = [];
 
         //Add claims from each response
         for (let i = 0; i < resp.length; i++) {
           let asset_claims = parseInt(resp[i].pending_liquidated_collateral) / 1_000_000; //Remove native token decimals
+          
           if (asset_claims > 1) {           
             //Add asset to display
             switch (resp[i].bid_for) {
@@ -319,8 +320,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             //Add asset to bidFor
             new_bidFor.push(resp[i].bid_for);
           }
-
-          console.log(new_display)
         }
         //Set lqClaimables
         setlqClaimables(prevState => {
@@ -486,7 +485,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleclaimClick = async () => {
     try {
       //Claim for each bidFor asset
-      for (let i = 0; i < lqClaimables.bidFor.length; i++) {        
+      for (let i = 0; i < lqClaimables.bidFor.length; i++) {     
+        console.log(lqClaimables.bidFor[i])   
         await liq_queueClient?.claimLiquidations({
           bidFor: {
             native_token: {
@@ -817,7 +817,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
     }
     //Set LQ claimables
-    if (lqClaimables.display === ""){
+    if (lqClaimables.display === "" || lqClaimables.display === "No Claims"){
       setqueueClaimables()
     }
 
@@ -908,6 +908,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         </div>
         <div className="omniassetframe">
           <h3 className="pool-titles">OMNI-ASSET</h3>
+          <div className="pool-subtitle">1 day unstaking</div>
           <div className="captial-ahead-box" />
           <div className="user-tvl-box" />
           <div className="user-tvl-label" data-descr={"Closest TVL: "+userclosestDeposit+", Total TVL: "+userTVL}>{userclosestDeposit /1000}K</div>
