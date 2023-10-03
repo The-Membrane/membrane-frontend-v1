@@ -107,12 +107,13 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
         
         console.log(res.deposits)
         var total = 0;
-        var i = 0;
-        for (i; i < res.deposits.length; i++) {
+        var count = 0;
+        for (var i = 0; i < res.deposits.length; i++) {
+          total += parseInt(res.deposits[i].deposit) / 1_000_000;
           switch (i){
             case 0: {
-              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
-              var duration = res.deposits[i]?.lock_up_duration;
+              let deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              let duration = res.deposits[i]?.lock_up_duration;
               //Update lock object
               setdeposit1(prevState => {
                   return {
@@ -125,8 +126,8 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
               break;
             }
             case 1: {
-              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
-              var duration = res.deposits[i]?.lock_up_duration;
+              let deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              let duration = res.deposits[i]?.lock_up_duration;
               //Update lock object
               setdeposit2(prevState => {
                 return {
@@ -140,8 +141,8 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             }
             case 2: {
               //Update lock object
-              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
-              var duration = res.deposits[i]?.lock_up_duration;
+              let deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              let duration = res.deposits[i]?.lock_up_duration;
               setdeposit3(prevState => {
                 return {
                   ...prevState,
@@ -154,8 +155,8 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             }
             case 3: {
               //Update lock object
-              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
-              var duration = res.deposits[i]?.lock_up_duration;
+              let deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              let duration = res.deposits[i]?.lock_up_duration;
               setdeposit4(prevState => {
                 return {
                   ...prevState,
@@ -168,8 +169,8 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             }
             case 4: {
               //Update lock object
-              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
-              var duration = res.deposits[i]?.lock_up_duration;
+              let deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              let duration = res.deposits[i]?.lock_up_duration;
               setdeposit5(prevState => {
                 return {
                   ...prevState,
@@ -182,8 +183,8 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             }
             case 5: {
               //Update lock object
-              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
-              var duration = res.deposits[i]?.lock_up_duration;
+              let deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              let duration = res.deposits[i]?.lock_up_duration;
               setdeposit6(prevState => {
                 return {
                   ...prevState,
@@ -196,8 +197,8 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             }
             case 6: {
               //Update lock object
-              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
-              var duration = res.deposits[i]?.lock_up_duration;
+              let deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              let duration = res.deposits[i]?.lock_up_duration;
               setdeposit7(prevState => {
                 return {
                   ...prevState,
@@ -210,8 +211,8 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             }
             case 7: {
               //Update lock object
-              var deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
-              var duration = res.deposits[i]?.lock_up_duration;
+              let deposit = parseInt(res.deposits[i]?.deposit) / 1_000_000;
+              let duration = res.deposits[i]?.lock_up_duration;
               setdeposit8(prevState => {
                 return {
                   ...prevState,
@@ -223,13 +224,13 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
               break;
             }
           }
-          total += parseInt(res.deposits[i].deposit) / 1_000_000;
+          count += 1;
         }
         //Update locked OSMO
         setlockedOSMO(total)
 
         //set remaining lock objects to 0/null/undefuned
-        for (i; i < 8; i++) {
+        for (var i = count; i < 8; i++) {
           switch (i){
             case 0: {
               //Update lock object
