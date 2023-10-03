@@ -1264,7 +1264,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             <Image className="osmo-rate-logo" width={27} height={27} alt="osmosis-osmo-logo" src="/images/osmo.svg" />
             <Image className="axlusdc-rate-logo" width={27} height={27} alt="axelar-usdc-logo" src="/images/usdc.svg" />
             <div className="price-in-osmo">: {parseFloat((MBRNreward / lockedOSMO).toPrecision(3))}</div>
-            <div className="price-in-axlusdc">: {parseFloat(((MBRNreward / lockedOSMO) * prices?.osmo).toPrecision(3))}</div>
+            <div className="price-in-axlusdc">: {parseFloat(((MBRNreward / lockedOSMO) / prices?.osmo).toPrecision(3))}</div>
             <div className="infomsg">
               <p className="there-is-10m-mbrn-up-for-grabs">
                 There is 10M MBRN up for grabs in this 7 day event. Deposit * Lock Time = Shares  (Lock MAX: 365 days).
