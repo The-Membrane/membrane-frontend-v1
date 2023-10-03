@@ -2,7 +2,7 @@ import { assets } from 'chain-registry';
 import { AssetList, Asset } from '@chain-registry/types';
 import { GeneratedType } from "@cosmjs/proto-signing";
 import { AminoTypes } from "@cosmjs/stargate";
-import { Registry } from "@cosmjs/stargate/node_modules/@cosmjs/proto-signing/build/registry";
+import { Registry } from "@cosmjs/proto-signing/build/registry";
 import {
     cosmosAminoConverters,
     cosmosProtoRegistry,
@@ -26,21 +26,23 @@ export const feeDenom = 'uosmo';
 // export const cw20ContractAddress = 'wasm1p7vmrhl3s0fyl0m9hk2hlm7uuxq84hztur63n8ryh85chh30vt6q89shcv'
 // export const cw20ContractAddress = 'osmo1y0ywcujptlmnx4fgstlqfp7nftc8w5qndsfds9wxwtm0ltjpzp4qdj09j8'
 
+//Mainnet addrs but for code sake we r leaving the name
 export const testnetAddrs = {
-    launch: "osmo1ew856e7squd4r05fge5ujpz5njej8gzrfjqjsf0cyrvqf9cj6ausjtmzc3", //osmo13u22ujzwegjmjnj0jcy8t70tlj9r5jrn2fj5eqwcdt4j073arz7sv6srfz the addr of the rest of the addresses
-        discount_vault: "osmo16hhpsm67f352g069y762x945sma4t4yu0lqltx259ny7qz27pfeq5j2qhh",
-        governance: "osmo15z78zy7gfa3thm0u4j2u2ung92xneuet80fj9zzgfx4r38p3jmzqa959ya",
-        liq_queue: "osmo1cgwpy90l9tyyu5e0vhmpc58q503u7sf0re5053q9tp8d7f9zqavqemkkpl", //"osmo1yxerk9spx9lfmdm2rk609579ar0e3zrxlvureumlqglg5ejfm5tqx75uky", matches the other contracts
-        liquidity_check: "osmo185a8ggdwhd4um4ddwmjna5a9k39tyfqptv2wav4j0lg9dmxa0c0s5a0m9l",
-        mbrn_auction: "osmo1hdfu6elcexza42d0cxlcv7az7037nrhht2qzel20ch0hrtt0prqs0hygnh",
-        oracle: "osmo1pshz0e5h4agsn2lqy2fjxmdhqglv5mg6jawyu78yg55sh4qxrr2q97my3w",
-        osmosis_proxy: "osmo173cvuzxqkt85vh4u4panr5yvgfyrzr8n0unvy2tkwqjdrd44p3vqksalzz",
-        positions: "osmo1pkdcgwqnj0cc6g265qkx03swtwjk44gznn4u9dgjysc4rnn69axq8dgayx",
-        stability_pool: "osmo1xqg2wzag3fqxvy3gz4lh3r7jtrlrp92wm94fulp7euae2c4xgk7qzt77hc",
-        staking: "osmo1z2gyg9n2lw6urrugtklgvfela76g59m4xg4fzydmrs0nmxck0csszth58k",
-        system_discounts: "osmo1ugyv2x5fltfhtcrlzmnm2yzpse2mf5jd7gmkaawrp445n8h7g0nq7lw9hf",
-        vesting: "osmo1md5g2kxr7ez7pdjs772jml47tdrf49f5z4ahcr9s24d3qjahjccqr93gp2"
-    };
+    launch: "osmo1g6hgj3eu9ju4vuaprjxdzj97ecnuczytve3junulgnwlamnndl5q6k73w6",
+    
+    discount_vault: "osmo1v8wckds5lvsdd0xrragvleu8srxprjpwdl7mga5uygnwmz5e7qzsl5zexw",
+    governance: "osmo19h8huy2hz4q7detxzv2r2erlsvlq8hzlsquu6n5x83775va4qgkskf20kq",
+    liq_queue: "osmo1ycmtfa7h0efexjxuaw7yh3h3qayy5lspt9q4n4e3stn06cdcgm8s50zmjl",
+    liquidity_check: "osmo1xxx0yuqhmwekt44q00jrf3rwvfa70rpeu622q0x56yaf423vq93q3qpzux",
+    mbrn_auction: "osmo1qwdlg9le9kdrvgyp35jxz53m8zhdssyvxvyevmdxcn852h6dq9gqknf2aa",
+    oracle: "osmo160t4k7x8axfd335s0rj5jdffzag684tjrzchlwmqk23xte32alvq6nfz6k",
+    osmosis_proxy: "osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd",
+    positions: "osmo1gy5gpqqlth0jpm9ydxlmff6g5mpnfvrfxd3mfc8dhyt03waumtzqt8exxr",
+    stability_pool: "osmo1326cxlzftxklgf92vdep2nvmqffrme0knh8dvugcn9w308ya9wpqv03vk8",
+    staking: "osmo1fty83rfxqs86jm5fmlql5e340e8pe0v9j8ez0lcc6zwt2amegwvsfp3gxj",
+    system_discounts: "osmo1p0hvtat69dash8f0w340n2kjdkdfq0ggyp77mr426wpnfwp3tjyqq6a8vr",
+    vesting: "osmo1flwr85scpcsdqa8uyh0acgxeqlg2ln8tlklzwzdn4u68n3p5wegsgspjf6"
+};
 
 export const chainassets: AssetList = assets.find(
     (chain) => chain.chain_name === chainName

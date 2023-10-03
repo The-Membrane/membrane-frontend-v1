@@ -87,7 +87,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [positionID, setpositionID] = useState("0");
     const [user_address, setAddress] = useState("");
 
-
     const handleOSMOqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("OSMO");

@@ -10,6 +10,7 @@ import { denoms } from ".";
 import { NativeToken } from "../codegen/Positions.types";
 import React from "react";
 import Image from "next/image";
+import { GenericAuthorization } from "osmojs/dist/codegen/cosmos/authz/v1beta1/authz";
 
 const SECONDS_PER_DAY = 86400;
 const unstakingPeriod = 4; //days
@@ -275,10 +276,10 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
             //Set proposal
             handleproposalSubmission(title, description, link, [])
           } else {
-            reader.readAsText((msgs as FileList)[0]);
-            reader.onload = () => {
-              if (reader.result !== null){
-                //Set proposal
+            reader.readAsArrayBuffer((msgs as FileList)[0]);
+            reader.onload = async () => {
+              if (reader.result !== null){     
+                // //Set proposal
                 handleproposalSubmission(title, description, link, JSON.parse(reader.result as string))
                 console.log(JSON.parse(reader.result as string));
               }
@@ -305,7 +306,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           </div>
           <div>
             <label style={{color: "aqua"}}>Msgs:</label>     
-            <input style={{position: "absolute",height: 55}} name="msg" defaultValue={""} type="file" accept="application/json" onChange={(event)=>{
+            <input style={{position: "absolute",height: 55}} name="msg" defaultValue={""} type="file" accept="wasm" onChange={(event)=>{
               event.preventDefault();
               msgs = event.target.files;
             }}/>

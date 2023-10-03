@@ -44,6 +44,7 @@ export function useClients(): {
       
       //Use this to access the RPC node directly instead of using public RPCs with getSigningCosmWasmClient()
       //https://rpc.osmotest5.osmosis.zone/
+      //https://rpc.osmosis.zone
       //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
       const signer = getOfflineSigner();
       var client = SigningCosmWasmClient.connectWithSigner(
@@ -56,7 +57,7 @@ export function useClients(): {
       });
 
       if (signed_errored) {
-        client = getSigningCosmWasmClient();
+       client = getSigningCosmWasmClient();
       }
 
       client.then((cosmwasmClient) => {
