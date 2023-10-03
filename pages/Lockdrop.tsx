@@ -9,6 +9,7 @@ import { coin } from "@cosmjs/stargate";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
+import { testnetAddrs } from "../config";
 
 interface Props {
   launch_client: LaunchClient | null;
@@ -38,6 +39,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
   const [popupStatus, setPopupStatus] = useState("");
   //Visuals
   const [progress, setProgress] = useState(0);
+  const [totalOSMO, settotalOSMO] = useState(0);
   const [lockedOSMO, setlockedOSMO] = useState(0);
   const [MBRNreward, setMBRNreward] = useState(0);
   const [rankings, setRankings] = useState<LaunchRankings>({
@@ -98,6 +100,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
   const get_updateddepositList = async () => {
     //Query for deposit list
     try {
+      
       await queryClient?.userInfo({
         user: address ?? "",
       }).then(async (res) => {
@@ -389,6 +392,17 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
     }
   }  
 
+  const set_totalOSMO = async () => {
+    try {
+      await queryClient?.client.getBalance((testnetAddrs.launch) as string, denoms.osmo).then((res) => {
+        console.log(res.amount)
+        settotalOSMO(parseFloat((parseInt(res.amount) / 1_000_000).toFixed(2)));
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     // if (launch_client && address && queryClient) {
       //Query lockdrop progress
@@ -396,6 +410,9 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
 
       //Query for deposit list
       get_updateddepositList()
+
+      //Query OSMO contract balance
+      set_totalOSMO()
     // }
   }, [address, launch_client, queryClient, baseClient]);
 
@@ -1230,7 +1247,8 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
               <div className="mbrn-reward-total" onClick={() => {set_MBRNreward()}}>{MBRNreward} MBRN</div>
             </div>
             <div className="osmo-deposit-circle" />
-            <div className="osmo-deposit-amount">{lockedOSMO} OSMO</div>
+            <div className="total-osmo-deposit-amount">Total OSMO: {totalOSMO}</div>
+            <div className="osmo-deposit-amount" style={(lockedOSMO < 1) ? {opacity:0.3} : undefined}>{lockedOSMO} OSMO</div>
             {rankings !== undefined ?(
               <div className="mbrn-rank" style={{color: rankings.color}}>Ranked #{rankings.user} out of {rankings.total}</div>
               ) : null}

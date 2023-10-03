@@ -982,6 +982,16 @@ span[data-descr]:hover::after {
   color: whitesmoke;
   z-index: 11;
 }
+.total-osmo-deposit-amount {
+  position: relative;
+  top: -374px;
+  left: -98px;
+  font-size: var(--font-size-lg);
+  text-align: center;
+  letter-spacing: 0.14em;
+  color: whitesmoke;
+  z-index: 11;
+}
 .mbrn-reward-total,
 .mbrn-rank {
   top: 152px;
