@@ -41,8 +41,8 @@ import Positions from './Positions';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 
 export const denoms = {
-  mbrn: "factory/osmo1mavfhp7sszhetuuwcd66rpz8v63ds056mgr76ng4928tk9kcvu6s9te226/umbrn",
-  cdt: "factory/osmo1w7p2awjxs2rdv3jw054e5p0fnx6rgwh8yd2zqgsfgyua8ely4e3shrzjax/ucdt",
+  mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
+  cdt: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/ucdt",
   osmo: "uosmo",
   //mainnet atom ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
   atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
