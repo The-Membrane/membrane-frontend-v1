@@ -3,13 +3,11 @@ import { color, px } from "framer-motion";
 import { useEffect, useState } from "react";
 import React from "react";
 
-import { contracts } from "../codegen";
-import { usePositionsClient, usePositionsQueryClient } from "../hooks/use-positions-client";
 import { testnetAddrs } from "../config";
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
-import { PositionsClient, PositionsQueryClient } from "../codegen/Positions.client";
-import { Asset, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/Positions.types";
+import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
+import { Asset, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
@@ -49,8 +47,8 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [mintrepayLabel, setmintrepayLabel] = useState("");
     const [amount, setAmount] = useState<number | undefined>();
     //Close position screen
-    const [closeScreen, setcloseScreen] = useState("mintrepay-screen");
-    const [maxSpread, setSpread] = useState(0.01);
+    // const [closeScreen, setcloseScreen] = useState("mintrepay-screen");
+    // const [maxSpread, setSpread] = useState(0.01);
     //Deposit-Withdraw screen
     const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
     const [currentfunctionLabel, setcurrentfunctionLabel] = useState("deposit");
@@ -82,7 +80,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [debt, setDebt] = useState(0);
     const [maxLTV, setmaxLTV] = useState(100);
     const [brwLTV, setbrwLTV] = useState(0);
-    const [currentLTV, setcurrentLTV] = useState(0);
     const [cost, setCost] = useState(0);
     const [positionID, setpositionID] = useState("0");
     const [user_address, setAddress] = useState("");
@@ -103,7 +100,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
-        setcloseScreen("redemption-screen");
+        // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };
@@ -123,7 +120,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
-        setcloseScreen("redemption-screen");
+        // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };
@@ -143,7 +140,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
-        setcloseScreen("redemption-screen");
+        // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };    
@@ -163,7 +160,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
-        setcloseScreen("redemption-screen");
+        // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };
@@ -183,7 +180,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         //Send to back
         setredeemScreen("redemption-screen");
         setmintrepayScreen("mintrepay-screen");
-        setcloseScreen("redemption-screen");
+        // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         setStarting("");
     };
@@ -192,7 +189,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const handleredeemScreen = () => {
         setredeemScreen("redemption-screen front-screen");
         setmintrepayScreen("mintrepay-screen");
-        setcloseScreen("redemption-screen");
+        // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         setdepositwithdrawScreen("deposit-withdraw-screen");
         setStarting("");
@@ -492,7 +489,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         //Update screens
         setmintrepayScreen("mintrepay-screen front-screen");
         setredeemScreen("redemption-screen");
-        setcloseScreen("redemption-screen");
+        // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         setStarting("");
         setdepositwithdrawScreen("deposit-withdraw-screen");
@@ -507,7 +504,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setmintrepayScreen("mintrepay-screen front-screen");
         setredeemScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
-        setcloseScreen("redemption-screen");
+        // setcloseScreen("redemption-screen");
         setStarting("");
         setdepositwithdrawScreen("deposit-withdraw-screen");
         //Update label
@@ -521,7 +518,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
       };
     //Close
     const handlecloseScreen = () => {
-        setcloseScreen("redemption-screen front-screen");
+        // setcloseScreen("redemption-screen front-screen");
         setmintrepayScreen("mintrepay-screen");
         setredeemScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
@@ -529,10 +526,10 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setStarting("");
         setcurrentfunctionLabel("closePosition");
     };
-    const handlesetSpread = (event: any) => {
-        event.preventDefault();
-        setSpread(event.target.value);
-      };
+    // const handlesetSpread = (event: any) => {
+    //     event.preventDefault();
+    //     setSpread(event.target.value);
+    //   };
     //Deposit-Withdraw screen    
     const handledepositClick = async () => {
         setdepositStyle("cdp-deposit-label bold");
@@ -766,15 +763,14 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         //Update Position data
                         fetch_update_positionData();
                         //getPosition
-                        const userRes = await queryClient?.getUserPositions(
+                        const userRes = await queryClient?.getBasketPositions(
                             {
-                                limit: 1,
                                 user: address as string,
                             }
                         );
                         if (userRes){
                             //setPositionID
-                            setpositionID(userRes[0].position_id)
+                            setpositionID(userRes.positions[0].position_id)
                         }
                     });
 
@@ -886,34 +882,34 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 }
                 break;
             }
-            case "closePosition":{
-                try {
-                    ///Execute the contract
-                    await cdp_client?.closePosition({
-                        maxSpread: maxSpread.toString(),
-                        positionId: positionID,
-                    }, "auto", undefined).then((res) => {
-                        console.log(res?.events.toString())
-                        //set all position data to 0 on success
-                        zeroData()
-                        //format pop up
-                        setPopupTrigger(true);
-                        setPopupMsg("Position closed successfully");
-                        setPopupStatus("Success");
-                    })
+            // case "closePosition":{
+            //     try {
+            //         ///Execute the contract
+            //         await cdp_client?.closePosition({
+            //             maxSpread: maxSpread.toString(),
+            //             positionId: positionID,
+            //         }, "auto", undefined).then((res) => {
+            //             console.log(res?.events.toString())
+            //             //set all position data to 0 on success
+            //             zeroData()
+            //             //format pop up
+            //             setPopupTrigger(true);
+            //             setPopupMsg("Position closed successfully");
+            //             setPopupStatus("Success");
+            //         })
 
-                } catch (error){
-                    ////Error message
-                    const e = error as { message: string }
-                    console.log(e.message)
-                    ///Format Pop up
-                    setPopupTrigger(true);
-                    setPopupMsg(e.message);
-                    setPopupStatus("ClosePosition Error");
-                }
+            //     } catch (error){
+            //         ////Error message
+            //         const e = error as { message: string }
+            //         console.log(e.message)
+            //         ///Format Pop up
+            //         setPopupTrigger(true);
+            //         setPopupMsg(e.message);
+            //         setPopupStatus("ClosePosition Error");
+            //     }
 
-                break;
-            }
+            //     break;
+            // }
             case "redemptions": {
                 try {                    
                     ///Execute the contract
@@ -1062,9 +1058,8 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             const basketRes = await queryClient?.getBasket();
 
             //getPosition
-            const userRes = await queryClient?.getUserPositions(
+            const userRes = await queryClient?.getBasketPositions(
                 {
-                    limit: 1,
                     user: address as string,
                 }
             );
@@ -1076,27 +1071,19 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
 
             //Set state
             if (userRes && basketRes && rateRes){
-                //query position insolvency
-                const insolvencyRes = await queryClient?.getPositionInsolvency(
-                    {
-                        positionId: userRes[0].position_id,
-                        positionOwner: address as string,
-                    }
-                );
                 //setPositionID
-                setpositionID(userRes[0].position_id)
+                setpositionID(userRes.positions[0].position_id)
                 //calc Debt
-                var new_debt = parseFloat(((parseInt(userRes[0].credit_amount)/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
+                var new_debt = parseFloat(((parseInt(userRes.positions[0].credit_amount)/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
                 //setDebt
                 setDebt(new_debt)
                 //setLTVs
-                setmaxLTV(parseFloat(userRes[0].avg_max_LTV) * +100)
-                setbrwLTV(parseFloat(userRes[0].avg_borrow_LTV) * +100)
-                if (insolvencyRes) {                    
-                    setcurrentLTV( parseFloat(insolvencyRes.insolvent_positions[0].current_LTV) * +100)
-                }
+                setmaxLTV(parseFloat(userRes.positions[0].avg_max_LTV) * +100)
+                setbrwLTV(parseFloat(userRes.positions[0].avg_borrow_LTV) * +100)
+                
+                
                 //setAssetQTYs
-                userRes[0].collateral_assets.forEach(asset => {
+                userRes.positions[0].collateral_assets.forEach(asset => {
                     // @ts-ignore
                     var actual_asset = asset.asset.info.native_token.denom;
                     
@@ -1127,7 +1114,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 ///setCost///
                 var total_rate = 0.0;
                 //get the positions collateral indices in Basket rates
-                userRes[0].collateral_assets.forEach((asset, index, _) => {
+                userRes.positions[0].collateral_assets.forEach((asset, index, _) => {
                     //find the asset's index                
                     var rate_index = basketRes.collateral_types.findIndex((info) => {
                         // @ts-ignore
@@ -1138,7 +1125,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                     var asset_rate = rateRes.rates[rate_index];
 
                     //add pro-rata rate to sum 
-                    total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes[0].cAsset_ratios[index])).toFixed(4));
+                    total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes.positions[0].cAsset_ratios[index])).toFixed(4));
                 })
                 //setCost 
                 setCost(total_rate);
@@ -1257,10 +1244,10 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             </div>
           </div>
           <div className="rdemption-button" onClick={handleredeemScreen}/>
-          <div className="close-button" onClick={handlecloseScreen}/>
+          {/* <div className="close-button" onClick={handlecloseScreen}/> */}
           <div className="controller">Controller</div>
           <div className="mint" onClick={handlemintScreen}>MINT</div>
-          <div className="close-position" onClick={handlecloseScreen}>CLOSE</div>
+          {/* <div className="close-position" onClick={handlecloseScreen}>CLOSE</div> */}
           <div className="set-redemptions" onClick={handleredeemScreen}>REDEMPTION</div>
           <div className="repay" onClick={handlerepayScreen}>REPAY</div>
         </div>
@@ -1300,7 +1287,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>
             </div>
       </div>
-      <div className={closeScreen}>
+      {/* <div className={closeScreen}>
         <div className="close-screen">
             Close Position uses Apollos Osmosis router to sell collateral to fulfill ALL REMAINING debt
         </div>
@@ -1309,7 +1296,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             <input className="spread" style={{backgroundColor:"#454444"}} name="spread" value={maxSpread} type="number" onChange={handlesetSpread}/>
         </form>
         <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg"  onClick={handleLogoClick}/>
-      </div>
+      </div> */}
       <div className={depositwithdrawScreen}>
         <div className={depositStyle} onClick={handledepositClick}>Deposit</div>
         <div className="slash">/</div>

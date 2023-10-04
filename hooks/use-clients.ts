@@ -9,7 +9,7 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate/build/cosmwasmclient';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { GasPrice } from '@cosmjs/stargate';
 import { OracleClient, OracleQueryClient } from '../codegen/oracle/Oracle.client';
-import { PositionsClient, PositionsQueryClient } from '../codegen/Positions.client';
+import { PositionsClient, PositionsQueryClient } from '../codegen/positions/Positions.client';
 import { LiquidationQueueClient, LiquidationQueueQueryClient } from '../codegen/liquidation_queue/LiquidationQueue.client';
 import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stability_pool/StabilityPool.client';
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';

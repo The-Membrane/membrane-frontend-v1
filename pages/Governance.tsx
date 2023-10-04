@@ -7,7 +7,7 @@ import Popup from "../components/Popup";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { coins } from "@cosmjs/stargate";
 import { denoms } from ".";
-import { NativeToken } from "../codegen/Positions.types";
+import { NativeToken } from "../codegen/positions/Positions.types";
 import React from "react";
 import Image from "next/image";
 import { GenericAuthorization } from "osmojs/dist/codegen/cosmos/authz/v1beta1/authz";

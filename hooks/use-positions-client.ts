@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useChain } from '@cosmos-kit/react';
 
 // import cosmwasm client generated with cosmwasm-ts-codegen
-import { PositionsClient, PositionsQueryClient } from '../codegen/Positions.client';
+import { PositionsClient, PositionsQueryClient } from '../codegen/positions/Positions.client';
 import { chainName } from '../config';
 
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate/build/cosmwasmclient';

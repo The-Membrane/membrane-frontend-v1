@@ -3100,7 +3100,7 @@ span[data-descr]:hover::after {
 .close-button,
 .rdemption-button {
   top: 570px;
-  left: 1046.5px;
+  left: 977.5px;
   width: 126px;
   height: 63px;
   cursor: pointer;
@@ -3152,7 +3152,7 @@ span[data-descr]:hover::after {
 }
 .set-redemptions {
   top: 584px;
-  left: 1038.5px;
+  left: 968.5px;
   font-size: x-large;
   text-align: center;
   display: inline-block;
