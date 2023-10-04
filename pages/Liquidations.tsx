@@ -11,8 +11,8 @@ import { denoms, Prices } from ".";
 import { coins } from "@cosmjs/stargate";
 import Popup from "../components/Popup";
 import { StabilityPoolClient, StabilityPoolQueryClient } from "../codegen/stability_pool/StabilityPool.client";
-import { PositionsQueryClient } from "../codegen/Positions.client";
-import { NativeToken } from "../codegen/Positions.types";
+import { PositionsQueryClient } from "../codegen/positions/Positions.client";
+import { NativeToken } from "../codegen/positions/Positions.types";
 import Image from "next/image";
 
 //Bar graph scale
