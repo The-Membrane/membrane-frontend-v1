@@ -40,6 +40,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
   //Visuals
   const [progress, setProgress] = useState(0);
   const [totalOSMO, settotalOSMO] = useState(0);
+  const [walletosmoAmount, setwalletosmoAmount] = useState(0);
   const [lockedOSMO, setlockedOSMO] = useState(0);
   const [MBRNreward, setMBRNreward] = useState(0);
   const [rankings, setRankings] = useState<LaunchRankings>({
@@ -396,8 +397,15 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
   const set_totalOSMO = async () => {
     try {
       await queryClient?.client.getBalance((testnetAddrs.launch) as string, denoms.osmo).then((res) => {
-        console.log(res.amount)
         settotalOSMO(parseFloat((parseInt(res.amount) / 1_000_000).toFixed(2)));
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      await queryClient?.client.getBalance((address) as string, denoms.osmo).then((res) => {
+        setwalletosmoAmount(parseFloat((parseInt(res.amount) / 1_000_000).toFixed(2)));
       });
     } catch (error) {
       console.log(error);
@@ -412,7 +420,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
       //Query for deposit list
       get_updateddepositList()
 
-      //Query OSMO contract balance
+      //Query OSMO contract & wallet balance
       set_totalOSMO()
     // }
   }, [address, launch_client, queryClient, baseClient]);
@@ -1268,7 +1276,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             <div className="price-in-axlusdc">: {parseFloat(((MBRNreward / lockedOSMO) / prices?.osmo).toPrecision(3))}</div>
             <div className="infomsg">
               <p className="there-is-10m-mbrn-up-for-grabs">
-                There is 10M MBRN up for grabs in this 7 day event. Deposit * Lock Time = Shares  (Lock MAX: 365 days).
+                There is 10M MBRN up for grabs in this 7 day event. Deposit * Lock Time = Shares  (Lock MAX: 365 DAYS).
               </p>
               <p>Locks boost your “shares” and the full 10M is split & STAKED (4 day unstaking) in accordance to the ratio of said shares.</p>
               <p>MBRN claims unlock daily.</p>
@@ -1368,6 +1376,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
                 </div>
               </button>
             </form>
+          <div className="osmo-wallet-amount">OSMO in wallet: {walletosmoAmount}</div>
           </div>
           <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
         </div>

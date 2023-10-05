@@ -1325,6 +1325,16 @@ span[data-descr]:hover::after {
   left: 30px;
   z-index: 34;
 }
+.osmo-wallet-amount {
+  position: absolute;
+  top: 490px;
+  left: 30px;
+  font-size: var(--font-size-lg);
+  text-align: center;
+  letter-spacing: 0.14em;
+  color: pink;
+  z-index: 11;
+}
 .days,
 .days1,
 .days2,
