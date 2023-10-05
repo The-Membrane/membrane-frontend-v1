@@ -306,7 +306,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           </div>
           <div>
             <label style={{color: "aqua"}}>Msgs:</label>     
-            <input style={{position: "absolute",height: 55}} name="msg" defaultValue={""} type="file" accept="wasm" onChange={(event)=>{
+            <input style={{position: "absolute",height: 55}} name="msg" defaultValue={""} type="file" accept="application/json" onChange={(event)=>{
               event.preventDefault();
               msgs = event.target.files;
             }}/>
