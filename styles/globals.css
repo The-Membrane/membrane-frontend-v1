@@ -933,7 +933,7 @@ span[data-descr]:hover::after {
 .y-axis {
   position: absolute;
   margin:auto;
-  left: 431px;
+  left: 480px;
   border-top: 2px;
   background-color: black;
   width: 3px;
