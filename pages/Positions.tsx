@@ -1173,12 +1173,12 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 <div className="cdp-div2">{maxLTV.toFixed(0)}%</div>
                 <div className="max-ltv-child" />
               </div>
-              <div className="max-borrow-ltv">
-                <div className="cdp-div3">{brwLTV.toFixed(2)}%</div>
+              <div className="max-borrow-ltv" style={{top: 75 + (336 * ((maxLTV-brwLTV)/maxLTV))}}>
+                <div className="cdp-div3" >{brwLTV.toFixed(2)}%</div>
                 <div className="max-borrow-ltv-child" />
               </div>
               <div className="debt-visual-child" />
-              <div className="debt-visual-item" style={{top: 442 - (336 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / maxLTV)), height: (336 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / maxLTV))}}/>
+              <div className="debt-visual-item" style={{top: 465 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / (maxLTV/100))), height: (336 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / (maxLTV/100)))}}/>
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
