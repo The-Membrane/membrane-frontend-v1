@@ -1215,13 +1215,13 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 <div className={axlusdcStyle + " axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY}</div>
                 <div className={axlusdcStyle + " cdp-div9"}>${axlUSDCValue.toFixed(2)}</div>
               </div>
-              <div>
+              <div style={{opacity:0}}>
                 <Image className={atomosmo_poolStyle+" atomosmopool-atom-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
                 <Image className={atomosmo_poolStyle+" atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
                 <div className={atomosmo_poolStyle +" atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div>
                 <div className={atomosmo_poolStyle + " cdp-div11"}>${atomosmo_poolValue.toFixed(2)}</div>
               </div>
-              <div>
+              <div style={{opacity:0}}>
                 <Image className={osmousdc_poolStyle+" osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
                 <Image className={osmousdc_poolStyle+" osmousdcpool-usdc-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
                 <div className={osmousdc_poolStyle+" osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div>

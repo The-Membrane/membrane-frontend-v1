@@ -389,7 +389,8 @@ ul{
 }
 .menu {
   position: absolute;
-  margin-top: 262%;
+  /* margin-top: 262%; */
+  margin-top: 120%;
   width: 75px;
 }
 .menu > li:hover {

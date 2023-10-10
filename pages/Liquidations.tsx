@@ -872,12 +872,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 {menuAsset !== "OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuThree}>OSMO</button>
                 </li>) : null}
-                {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
+                {/* {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuFour}>ATOM-OSMO</button>
                 </li>) : null}
                 {menuAsset !== "OSMO-axlUSDC" ? (<li className="menu-item">
                     <button onClick={handleMenuFive}>OSMO-axlUSDC</button>
-                </li>) : null}
+                </li>) : null} */}
                 </ul>
             ) : null}
           </div>

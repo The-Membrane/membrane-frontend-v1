@@ -29,7 +29,7 @@ export interface PositionsReadOnlyInterface {
     startAfter?: string;
     user?: string;
     userInfo?: UserInfo;
-  }) => Promise<BasketPositionsResponse>;
+  }) => Promise<BasketPositionsResponse[]>;
   getBasket: () => Promise<Basket>;
   getBasketDebtCaps: () => Promise<DebtCap[]>;
   getCreditRate: () => Promise<InterestResponse>;
@@ -83,7 +83,7 @@ export class PositionsQueryClient implements PositionsReadOnlyInterface {
     startAfter?: string;
     user?: string;
     userInfo?: UserInfo;
-  }): Promise<BasketPositionsResponse> => {
+  }): Promise<BasketPositionsResponse[]> => {
     return this.client.queryContractSmart(this.contractAddress, {
       get_basket_positions: {
         limit,
