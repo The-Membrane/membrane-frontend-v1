@@ -1061,17 +1061,22 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             //Set state
             if (userRes != undefined && basketRes != undefined && rateRes != undefined){
                 //setPositionID
+                //@ts-ignore
                 setpositionID(userRes[0].positions[0].position_id)
                 //calc Debt
+                //@ts-ignore
                 var new_debt = parseFloat(((parseInt(userRes[0].positions[0].credit_amount)/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
                 //setDebt
                 setDebt(new_debt)
                 //setLTVs
+                //@ts-ignore
                 setmaxLTV(parseFloat(userRes[0].positions[0].avg_max_LTV) * +100)
+                //@ts-ignore
                 setbrwLTV(parseFloat(userRes[0].positions[0].avg_borrow_LTV) * +100)
                 
                 
                 //setAssetQTYs
+                //@ts-ignore
                 userRes[0].positions[0].collateral_assets.forEach(asset => {
                     // @ts-ignore
                     var actual_asset = asset.asset.info.native_token.denom;
@@ -1103,6 +1108,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 ///setCost///
                 var total_rate = 0.0;
                 //get the positions collateral indices in Basket rates
+                //@ts-ignore
                 userRes[0].positions[0].collateral_assets.forEach((asset, index, _) => {
                     //find the asset's index                
                     var rate_index = basketRes.collateral_types.findIndex((info) => {
@@ -1114,6 +1120,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                     var asset_rate = rateRes.rates[rate_index];
 
                     //add pro-rata rate to sum 
+                    //@ts-ignore
                     total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes[0].positions[0].cAsset_ratios[index])).toFixed(4));
                 })
                 //setCost 
