@@ -7,7 +7,7 @@ import { testnetAddrs } from "../config";
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
-import { Asset, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
+import { Asset, BasketPositionsResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
@@ -762,16 +762,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         setPopupStatus("Success");   
                         //Update Position data
                         fetch_update_positionData();
-                        //getPosition
-                        const userRes = await queryClient?.getBasketPositions(
-                            {
-                                user: address as string,
-                            }
-                        );
-                        if (userRes){
-                            //setPositionID
-                            setpositionID(userRes.positions[0].position_id)
-                        }
                     });
 
                     //Clear intents
@@ -1067,23 +1057,22 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             //query rates
             const rateRes = await queryClient?.getCollateralInterest();
 
-          
-
+            // console.log("userRes: ", userRes)
             //Set state
-            if (userRes && basketRes && rateRes){
+            if (userRes != undefined && basketRes != undefined && rateRes != undefined){
                 //setPositionID
-                setpositionID(userRes.positions[0].position_id)
+                setpositionID(userRes[0].positions[0].position_id)
                 //calc Debt
-                var new_debt = parseFloat(((parseInt(userRes.positions[0].credit_amount)/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
+                var new_debt = parseFloat(((parseInt(userRes[0].positions[0].credit_amount)/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
                 //setDebt
                 setDebt(new_debt)
                 //setLTVs
-                setmaxLTV(parseFloat(userRes.positions[0].avg_max_LTV) * +100)
-                setbrwLTV(parseFloat(userRes.positions[0].avg_borrow_LTV) * +100)
+                setmaxLTV(parseFloat(userRes[0].positions[0].avg_max_LTV) * +100)
+                setbrwLTV(parseFloat(userRes[0].positions[0].avg_borrow_LTV) * +100)
                 
                 
                 //setAssetQTYs
-                userRes.positions[0].collateral_assets.forEach(asset => {
+                userRes[0].positions[0].collateral_assets.forEach(asset => {
                     // @ts-ignore
                     var actual_asset = asset.asset.info.native_token.denom;
                     
@@ -1114,7 +1103,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 ///setCost///
                 var total_rate = 0.0;
                 //get the positions collateral indices in Basket rates
-                userRes.positions[0].collateral_assets.forEach((asset, index, _) => {
+                userRes[0].positions[0].collateral_assets.forEach((asset, index, _) => {
                     //find the asset's index                
                     var rate_index = basketRes.collateral_types.findIndex((info) => {
                         // @ts-ignore
@@ -1125,7 +1114,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                     var asset_rate = rateRes.rates[rate_index];
 
                     //add pro-rata rate to sum 
-                    total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes.positions[0].cAsset_ratios[index])).toFixed(4));
+                    total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes[0].positions[0].cAsset_ratios[index])).toFixed(4));
                 })
                 //setCost 
                 setCost(total_rate);

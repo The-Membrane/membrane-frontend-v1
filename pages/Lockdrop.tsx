@@ -106,7 +106,6 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
         user: address ?? "",
       }).then(async (res) => {
         
-        console.log(res.deposits)
         var total = 0;
         var count = 0;
         for (var i = 0; i < res.deposits.length; i++) {
