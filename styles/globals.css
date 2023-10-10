@@ -2735,7 +2735,7 @@ span[data-descr]:hover::after {
     rgba(79, 202, 187, 0.8)
   );
   width: 144.3px;
-  height: 235px; /*336 is full bar height*/
+  height: 0px; /*336 is full bar height*/
 }
 .debt-visual {
   position: absolute;
