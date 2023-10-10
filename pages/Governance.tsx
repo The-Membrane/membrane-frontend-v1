@@ -457,6 +457,13 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
             }            
           }
         }
+        //Set stake
+        setUserStake(prevState => {
+          return {
+            ...prevState,
+            staked: stakingTotal,
+          }
+        })
         //Calc time left to unstake
         var currentTime = 0;
         stakingClient?.client.getBlock().then( (block) => {
@@ -464,12 +471,14 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           var secondsLeft = Math.max(closestUnstakingDepositTime - currentTime, 0);
           var daysLeft = secondsLeft / SECONDS_PER_DAY;
           //Set user stake
-          setUserStake({
-            staked: stakingTotal,
-            unstaking: {
-              amount: closestUnstakingDeposit,
-              timeLeft: daysLeft,
-            },
+          setUserStake(prevState => {
+            return {              
+              staked: stakingTotal,
+              unstaking: {
+                amount: closestUnstakingDeposit,
+                timeLeft: daysLeft,
+              },
+            }
           })
         })
 
@@ -521,15 +530,25 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         setPopupMsg(<div>Unstaked</div>)
         setPopupStatus("Success")
         //Update user stake
-        setUserStake(prevState => {
-          return {
-            ...prevState,
-            unstaking: {
-              amount: +prevState.unstaking.amount + +(unstakeAmount ?? 0),
-              timeLeft: unstakingPeriod,
+        if (userStake.unstaking.amount === 0) {
+          setUserStake(prevState => {
+            return {              
+              staked: prevState.staked - (unstakeAmount ?? 0),
+              unstaking: {
+                amount: +prevState.unstaking.amount + +(unstakeAmount ?? 0),
+                timeLeft: unstakingPeriod,
+              }
             }
-          }
-        })
+          })
+        } else {
+          setUserStake(prevState => {
+            return {
+              ...prevState,
+              staked: prevState.staked - (unstakeAmount ?? 0),
+            }
+          })
+        }
+
       })
     } catch (error) {
       console.log(error)
