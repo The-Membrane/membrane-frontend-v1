@@ -437,7 +437,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   const getUserStake = async () => {
     try {
       await stakingQueryClient?.userStake({
-        staker: "osmo1zfh6ccddln9e4fkwse7fcquvecpnnxyk0c9elv",
+        staker: address ?? "",
       }).then((res) => {
         //Get staking total & closest unstaking deposit
         var stakingTotal = 0;
