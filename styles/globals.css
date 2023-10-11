@@ -2107,6 +2107,14 @@ span[data-descr]:hover::after {
 .unstaking-mbrn {
   left: 630px;
 }
+.unstaking-mbrn-total {
+  position: absolute;
+  top: 205px;
+  left: 652px;
+  color: white;
+  font-size: small;
+  opacity: 0.5;
+}
 .cdt-claims,
 .mbrn-claims {
   position: relative;

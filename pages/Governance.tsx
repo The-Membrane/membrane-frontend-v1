@@ -55,6 +55,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   })
   const [userStake, setUserStake] = useState({
     staked: 0,
+    unstaking_total: 0,
     unstaking: {
       amount: 0,
       timeLeft: 0,
@@ -441,6 +442,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       }).then((res) => {
         //Get staking total & closest unstaking deposit
         var stakingTotal = 0;
+        var unstakingTotal = 0;
         var closestUnstakingDeposit = 0;
         var closestUnstakingDepositTime = 0;
         console.log(res.deposit_list)
@@ -454,13 +456,15 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
             } else if ((res.deposit_list[i].unstake_start_time ?? 0) < closestUnstakingDepositTime) {
               closestUnstakingDepositTime = res.deposit_list[i].unstake_start_time ?? 0
               closestUnstakingDeposit = parseInt(res.deposit_list[i].amount)
-            }            
+            }
+            unstakingTotal += parseInt(res.deposit_list[i].amount)
           }
         }
         //Set stake
         setUserStake(prevState => {
           return {
             staked: stakingTotal,
+            unstaking_total: unstakingTotal,
             unstaking: {
               amount: closestUnstakingDeposit,
               timeLeft: unstakingPeriod,
@@ -477,6 +481,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           setUserStake(prevState => {
             return {              
               staked: stakingTotal,
+              unstaking_total: unstakingTotal,
               unstaking: {
                 amount: closestUnstakingDeposit,
                 timeLeft: daysLeft,
@@ -507,7 +512,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         setUserStake(prevState => {
           return {
             ...prevState,
-            staked: prevState.staked + (stakeAmount ?? 0),
+            staked: +prevState.staked + +(stakeAmount ?? 0),
           }
         })
       })
@@ -536,7 +541,8 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         if (userStake.unstaking.amount === 0) {
           setUserStake(prevState => {
             return {              
-              staked: prevState.staked - (unstakeAmount ?? 0),
+              staked: +prevState.staked - +(unstakeAmount ?? 0),
+              unstaking_total: +prevState.unstaking_total + +(unstakeAmount ?? 0),
               unstaking: {
                 amount: +prevState.unstaking.amount + +(unstakeAmount ?? 0),
                 timeLeft: unstakingPeriod,
@@ -548,7 +554,8 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           setUserStake(prevState => {
             return {
               ...prevState,
-              staked: prevState.staked - (unstakeAmount ?? 0),
+              unstaking_total: +prevState.unstaking_total + +(unstakeAmount ?? 0),
+              staked: +prevState.staked - +(unstakeAmount ?? 0),
             }
           })
         }
@@ -1187,6 +1194,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="delegators-y2" />
       <div className="staked-mbrn1">{parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
       <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
+      <div className="unstaking-mbrn-total">{"/" + parseFloat((userStake.unstaking_total/1_000_000).toFixed(2))}</div>
       <div className="mbrn-stake-logo">
         <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
       </div>

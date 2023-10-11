@@ -78,6 +78,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [osmousdc_poolStyle, setosmousdc_poolStyle] = useState("low-opacity");
     //Positions Visual
     const [debt, setDebt] = useState(0);
+    const [debtAmount, setdebtAmount] = useState(0);
     const [maxLTV, setmaxLTV] = useState(100);
     const [brwLTV, setbrwLTV] = useState(0);
     const [cost, setCost] = useState(0);
@@ -827,6 +828,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         console.log(res?.events.toString())             
                         //Update mint amount
                         setDebt(+debt + +(amount ?? 0));
+                        setdebtAmount(+debtAmount + +(amount ?? 0));
                         //format pop up
                         setPopupTrigger(true);
                         setPopupMsg("Mint of " +(amount ?? 0)+ " CDT successful");
@@ -855,6 +857,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         console.log(res?.events.toString())
                         //Update mint amount
                         setDebt(+debt - +(amount ?? 0));
+                        setdebtAmount(+debtAmount - +(amount ?? 0));
                         //format pop up
                         setPopupTrigger(true);
                         setPopupMsg("Repayment of " +(amount ?? 0)+ " CDT successful");
@@ -1063,11 +1066,14 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 //setPositionID
                 //@ts-ignore
                 setpositionID(userRes[0].positions[0].position_id)
+
+                var debt_amount = parseInt(userRes[0].positions[0].credit_amount);
                 //calc Debt
                 //@ts-ignore
-                var new_debt = parseFloat(((parseInt(userRes[0].positions[0].credit_amount)/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
+                var new_debt = parseFloat(((debt_amount/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
                 //setDebt
                 setDebt(new_debt)
+                setdebtAmount(debt_amount);
                 //setLTVs
                 //@ts-ignore
                 setmaxLTV(parseFloat(userRes[0].positions[0].avg_max_LTV) * +100)
@@ -1178,7 +1184,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 <div className="max-borrow-ltv-child" />
               </div>
               <div className="debt-visual-child" />
-              <div className="debt-visual-item" style={{top: 465 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / (maxLTV/100))), height: (336 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / (maxLTV/100)))}}/>
+              <div className="debt-visual-item" style={{top: 465 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / (maxLTV/100))), height: (336 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) ?? 0) / (maxLTV/100))}}/>
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
@@ -1253,6 +1259,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
       </div>
       <div className={mintrepayScreen}>   
         <form>
+            { currentfunctionLabel === "repay" ? (<><div className="max-amount-label" onClick={()=>{setAmount(Number(debtAmount/1000000))}}>total debt: {(debtAmount/1000000).toString()}</div></>) : null}
             <label className="amount-label">{mintrepayLabel} amount:</label>     
             <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={amount} type="number" onChange={handlesetAmount}/>
             <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg"  onClick={handleLogoClick}/>
