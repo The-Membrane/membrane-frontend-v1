@@ -437,7 +437,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   const getUserStake = async () => {
     try {
       await stakingQueryClient?.userStake({
-        staker: address ?? "",
+        staker: "osmo1zfh6ccddln9e4fkwse7fcquvecpnnxyk0c9elv",
       }).then((res) => {
         //Get staking total & closest unstaking deposit
         var stakingTotal = 0;
@@ -460,8 +460,11 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         //Set stake
         setUserStake(prevState => {
           return {
-            ...prevState,
             staked: stakingTotal,
+            unstaking: {
+              amount: closestUnstakingDeposit,
+              timeLeft: unstakingPeriod,
+            },
           }
         })
         //Calc time left to unstake
@@ -541,6 +544,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
             }
           })
         } else {
+          //If there is already an unstaking deposit, don't change it
           setUserStake(prevState => {
             return {
               ...prevState,
