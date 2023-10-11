@@ -1160,12 +1160,20 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
             //setAddress
             setAddress(address as string)
 
-            //fetch & Update position data
-            fetch_update_positionData()
+            if (positionID === "0"){
+                //fetch & Update position data
+                fetch_update_positionData()
+            }
+            //Update value of assets
+            setosmoValue(osmoQTY * +prices.osmo);
+            setatomValue(atomQTY * +prices.atom);
+            setaxlusdcValue(axlusdcQTY * +prices.axlUSDC);
+            setatomosmo_poolValue(atomosmo_poolQTY * +prices.atomosmo_pool);
+            setosmousdc_poolValue(osmousdc_poolQTY * +prices.osmousdc_pool);
         } else {        
             console.log("address: ", address)
         }
-    }, [address, cdp_client, queryClient])
+    }, [address, cdp_client, queryClient, prices])
 
   return (
     <div className="positions">
@@ -1247,7 +1255,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
           </div>
           <div className="rdemption-button" onClick={handleredeemScreen}/>
           {/* <div className="close-button" onClick={handlecloseScreen}/> */}
-          <div className="controller">Controller</div>
+          <div className="controller">Vault Remote</div>
           <div className="mint" onClick={handlemintScreen}>MINT</div>
           {/* <div className="close-position" onClick={handlecloseScreen}>CLOSE</div> */}
           <div className="set-redemptions" onClick={handleredeemScreen}>REDEMPTION</div>

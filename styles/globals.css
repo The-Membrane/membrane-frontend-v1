@@ -2870,9 +2870,10 @@ span[data-descr]:hover::after {
   top: 12px;
   left: 18px;
 }
-.qty,
-.value {
-  left: 137px;
+.qty {
+  left: 115px;
+  top: 17px;
+  font-size: large;
 }
 .value {
   left: 228px;
@@ -3134,7 +3135,7 @@ span[data-descr]:hover::after {
 .controller {
   position: absolute;
   top: 191px;
-  left: 992.5px;
+  left: 978px;
   font-size: x-large;
   z-index: 1;
 }
