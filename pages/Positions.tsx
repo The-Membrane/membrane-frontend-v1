@@ -1184,7 +1184,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 <div className="max-borrow-ltv-child" />
               </div>
               <div className="debt-visual-child" />
-              <div className="debt-visual-item" style={{top: 465 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) / (maxLTV/100))), height: (336 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)) ?? 0) / (maxLTV/100))}}/>
+              <div className="debt-visual-item" style={{top: 465 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))), height: (336 * (debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))}}/>
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
