@@ -1209,29 +1209,29 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <div>
                 <Image className={osmoStyle+" osmo-logo-icon"} width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
                 <div className={osmoStyle +" osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY}</div>
-                <div className={osmoStyle +" cdp-div5"}>${(+osmoQTY * +(prices.osmo ?? 0)).toFixed(2)}</div>
+                {/* <div className={osmoStyle +" cdp-div5"}>${(+osmoQTY * +prices.osmo).toFixed(2)}</div> */}
               </div>              
               <div>
                 <Image className={atomStyle + " atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
                 <div className={atomStyle + " atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY}</div>
-                <div className={atomStyle + " cdp-div7"}>${(+atomQTY * +(prices.atom ?? 0)).toFixed(2)}</div>
+                <div className={atomStyle + " cdp-div7"}>${(+atomQTY * +prices.atom).toFixed(2)}</div>
               </div>
               <div>
                 <Image className={axlusdcStyle + " axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
                 <div className={axlusdcStyle + " axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY}</div>
-                <div className={axlusdcStyle + " cdp-div9"}>${(+axlusdcQTY * +(prices.axlUSDC ?? 0)).toFixed(2)}</div>
+                <div className={axlusdcStyle + " cdp-div9"}>${(+axlusdcQTY * +prices.axlUSDC).toFixed(2)}</div>
               </div>
               <div style={{opacity:0}}>
                 <Image className={atomosmo_poolStyle+" atomosmopool-atom-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
                 <Image className={atomosmo_poolStyle+" atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
                 <div className={atomosmo_poolStyle +" atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div>
-                <div className={atomosmo_poolStyle + " cdp-div11"}>${(+atomosmo_poolQTY * +(prices.atomosmo_pool ?? 0)).toFixed(2)}</div>
+                <div className={atomosmo_poolStyle + " cdp-div11"}>${(+atomosmo_poolQTY * +prices.atomosmo_pool).toFixed(2)}</div>
               </div>
               <div style={{opacity:0}}>
                 <Image className={osmousdc_poolStyle+" osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
                 <Image className={osmousdc_poolStyle+" osmousdcpool-usdc-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
                 <div className={osmousdc_poolStyle+" osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div>
-                <div className={osmousdc_poolStyle+" cdp-div13"}>${(+osmousdc_poolQTY * +(prices.osmousdc_pool ?? 0)).toFixed(2)}</div>
+                <div className={osmousdc_poolStyle+" cdp-div13"}>${(+osmousdc_poolQTY * +prices.osmousdc_pool).toFixed(2)}</div>
               </div>
             </div>
           </div>
