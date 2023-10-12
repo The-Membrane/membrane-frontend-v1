@@ -2686,7 +2686,7 @@ span[data-descr]:hover::after {
   left: 330px;
 }
 .max-ltv-child {
-  top: 31.5px;
+  top: 34.5px;
   left: 0;
   width: 349px;
   height: 5px;
@@ -2717,7 +2717,7 @@ span[data-descr]:hover::after {
 }
 .max-borrow-ltv {
   position: absolute;
-  top: 132px;
+  top: 410px;
   left: 77px;
   width: 368.5px;
   height: 30.5px;
@@ -2736,13 +2736,13 @@ span[data-descr]:hover::after {
 .debt-visual-item {
   position: absolute;
   top: 207px; /*106 is top of the bar, 442 is the bottom*/ 
-  left: calc(50% - 71.5px);
+  left: 198px;
   background: linear-gradient(
     180deg,
     rgba(121, 142, 255, 0.68),
     rgba(79, 202, 187, 0.8)
   );
-  width: 144.3px;
+  width: 143.9px;
   height: 0px; /*336 is full bar height*/
 }
 .debt-visual {

@@ -1187,7 +1187,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 <div className="cdp-div2">{maxLTV.toFixed(0)}%</div>
                 <div className="max-ltv-child" />
               </div>
-              <div className="max-borrow-ltv" style={{top: 75 + (336 * ((maxLTV-brwLTV)/maxLTV))}}>
+              <div className="max-borrow-ltv" style={{top: 75 + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 <div className="cdp-div3" >{brwLTV.toFixed(2)}%</div>
                 <div className="max-borrow-ltv-child" />
               </div>
