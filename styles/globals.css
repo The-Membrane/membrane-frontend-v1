@@ -2683,12 +2683,12 @@ span[data-descr]:hover::after {
   opacity: 0.38;
 }
 .cdp-div2 {
-  left: 330px;
+  left: 314px;
 }
 .max-ltv-child {
   top: 34.5px;
-  left: 0;
-  width: 349px;
+  left: 74px;
+  width: 267px;
   height: 5px;
   background-color: #931313;
 }
@@ -2699,8 +2699,8 @@ span[data-descr]:hover::after {
 }
 .max-ltv {
   top: 66px;
-  left: 77px;
-  width: 368px;
+  left: 121px;
+  width: 264px;
   height: 34px;
 }
 .cdp-div3 {
@@ -2710,8 +2710,8 @@ span[data-descr]:hover::after {
 .max-borrow-ltv-child {
   position: absolute;
   top: 28px;
-  left: 0;
-  width: 349px;
+  left: 121px;
+  width: 264px;
   height: 0px;
   border: 2.5px dashed #DCD988;
 }
@@ -2732,6 +2732,13 @@ span[data-descr]:hover::after {
   box-sizing: border-box;
   width: 149px;
   height: 339px;
+}
+.debt-visual-label {
+  position: relative;
+  left: 0px;
+  text-align: center;
+  color: gray;
+  font-size: small;
 }
 .debt-visual-item {
   position: absolute;
@@ -3262,16 +3269,78 @@ span[data-descr]:hover::after {
   width: 199px;
   height: 63px;
 }
+.mint-amount {
+  position: absolute;
+  top: 192px;
+  left: 59px;
+  width: 55px;
+  height: 28px;
+  font-size: medium;
+  border-radius: 0.25rem;
+}
+.mint-amount-label {
+  position: absolute;
+  top: 185px;
+  left: 6px;
+  font-size: large; 
+  height: 28px;
+  padding-top: 0%;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.amount-label:hover,
+.mint-amount-label:hover {
+  background-color: #798eff;
+}
+.range-label {
+  position: absolute;
+  font-size: small;
+  left: 155px
+}
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}
+.neutral {
+  color: lightblue;
+}
+.cdt-amount {
+  position: absolute;
+  top: 192px;
+  left: 190px;
+  width: 55px;
+  height: 28px;
+  border-radius: 0.25rem;
+
+}
 .amount {
   position: absolute;
-  top: 90px;
-  left: 22px;
+  top: 192px;
+  left: 190px;
+  width: 55px;
+  height: 28px;
+  font-size: medium;
+  border-radius: 0.25rem;
 }
 .amount-label {
   position: absolute;
-  top: 60px;
-  left: 22px;
+  top: 185px;
+  left: 127px;
   font-size: large;
+  height: 28px;
+  padding-top: 0%;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+input[type=range][orient=vertical] {
+  appearance: slider-vertical;
+  width: 8px;
+  height: 175px;
+  padding: 0 5px;
 }
 .max-amount-label {
   cursor: pointer;

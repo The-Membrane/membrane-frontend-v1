@@ -26,7 +26,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
     const [popupStatus, setPopupStatus] = useState("User Agreement");
     //Start screen
-    const [startingParagraph, setStarting] = useState("Click an Asset's Quantity to initiate deposits");
+    // const [startingParagraph, setStarting] = useState("Click an Asset's Quantity to initiate deposits");
     //Redemptions
     const [posClick, setposClick] = useState("mint-button-icon3");
     const [negClick, setnegClick] = useState("mint-button-icon4");
@@ -43,9 +43,9 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     });
     const [redemptionRes, setredemptionRes] = useState<RedeemabilityResponse>();
     //Mint repay
-    const [mintrepayScreen, setmintrepayScreen] = useState("mintrepay-screen");
-    const [mintrepayLabel, setmintrepayLabel] = useState("");
-    const [amount, setAmount] = useState<number | undefined>();
+    const [mintrepayScreen, setmintrepayScreen] = useState("mintrepay-screen front-screen");
+    const [mintAmount, setmintAmount] = useState(0);
+    const [repayAmount, setrepayAmount] = useState(0);
     //Close position screen
     // const [closeScreen, setcloseScreen] = useState("mintrepay-screen");
     // const [maxSpread, setSpread] = useState(0.01);
@@ -57,6 +57,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [withdrawStyle, setwithdrawStyle] = useState("cdp-withdraw-label low-opacity");
     const [assetIntent, setassetIntent] = useState<[string , number][]>([]);
     const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
+    const [amount, setAmount] = useState<number | undefined>();
     //Asset specific
         //qty
     const [osmoQTY, setosmoQTY] = useState(0);
@@ -84,6 +85,10 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [cost, setCost] = useState(0);
     const [positionID, setpositionID] = useState("0");
     const [user_address, setAddress] = useState("");
+    const [sliderValue, setsliderValue] = useState(0);
+    const [sliderStyle, setsliderStyle] = useState("neutral");
+    const [creditPrice, setcreditPrice] = useState(0);
+
 
     const handleOSMOqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
@@ -103,7 +108,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setmintrepayScreen("mintrepay-screen");
         // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
-        setStarting("");
     };
     const handleATOMqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
@@ -123,7 +127,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setmintrepayScreen("mintrepay-screen");
         // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
-        setStarting("");
     };
     const handleaxlUSDCqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
@@ -143,7 +146,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setmintrepayScreen("mintrepay-screen");
         // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
-        setStarting("");
     };    
     const handleatomosmo_poolqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
@@ -163,7 +165,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setmintrepayScreen("mintrepay-screen");
         // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
-        setStarting("");
     };
     const handleosmousdc_poolqtyClick = async (currentFunction: string) => {
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
@@ -183,7 +184,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setmintrepayScreen("mintrepay-screen");
         // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
-        setStarting("");
     };
 
    //Redeem
@@ -193,7 +193,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         setdepositwithdrawScreen("deposit-withdraw-screen");
-        setStarting("");
         //Set functionality        
         setcurrentfunctionLabel("redemptions");
         //Format popup to inform user that redemptions are unaudited
@@ -492,10 +491,9 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setredeemScreen("redemption-screen");
         // setcloseScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
-        setStarting("");
         setdepositwithdrawScreen("deposit-withdraw-screen");
         //Update label
-        setmintrepayLabel("Mint");
+        // setmintrepayLabel("Mint");
         //Set functionality        
         setcurrentfunctionLabel("mint");
     };
@@ -506,10 +504,9 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         setredeemScreen("redemption-screen");
         setredeemInfoScreen("redemption-screen");
         // setcloseScreen("redemption-screen");
-        setStarting("");
         setdepositwithdrawScreen("deposit-withdraw-screen");
         //Update label
-        setmintrepayLabel("Repay");
+        // setmintrepayLabel("Repay");
         //Set functionality        
         setcurrentfunctionLabel("repay");
     };
@@ -517,16 +514,23 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
         event.preventDefault();
         setAmount(event.target.value);
       };
-    //Close
-    const handlecloseScreen = () => {
-        // setcloseScreen("redemption-screen front-screen");
-        setmintrepayScreen("mintrepay-screen");
-        setredeemScreen("redemption-screen");
-        setredeemInfoScreen("redemption-screen");
-        setdepositwithdrawScreen("deposit-withdraw-screen");
-        setStarting("");
-        setcurrentfunctionLabel("closePosition");
+    const handlesetmintAmount = (event: any) => {
+        event.preventDefault();
+        setmintAmount(event.target.value);
     };
+const handlesetrepayAmount = (event: any) => {
+    event.preventDefault();
+    setrepayAmount(event.target.value);
+    };
+    //Close
+    // const handlecloseScreen = () => {
+    //     // setcloseScreen("redemption-screen front-screen");
+    //     setmintrepayScreen("mintrepay-screen");
+    //     setredeemScreen("redemption-screen");
+    //     setredeemInfoScreen("redemption-screen");
+    //     setdepositwithdrawScreen("deposit-withdraw-screen");
+    //     setcurrentfunctionLabel("closePosition");
+    // };
     // const handlesetSpread = (event: any) => {
     //     event.preventDefault();
     //     setSpread(event.target.value);
@@ -1071,6 +1075,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 //calc Debt
                 //@ts-ignore
                 var new_debt = parseFloat(((debt_amount/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
+                setcreditPrice(parseFloat(basketRes.credit_price.price))
                 //setDebt
                 setDebt(new_debt)
                 setdebtAmount(debt_amount);
@@ -1109,7 +1114,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                         setosmousdc_poolValue(parseFloat((parseInt(asset.asset.amount) * +prices.osmousdc_pool).toFixed(2)));
                         setosmousdc_poolStyle("");
                     }                    
-            })
+                })
 
                 ///setCost///
                 var total_rate = 0.0;
@@ -1192,7 +1197,16 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
                 <div className="max-borrow-ltv-child" />
               </div>
               <div className="debt-visual-child" />
-              <div className="debt-visual-item" style={{top: 465 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))), height: (336 * (debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))}}/>
+              <div className="debt-visual-item" style={{top: 465 - (363 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))), height: (340 * (debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))}}/>
+              <div className="debt-visual-label" style={{top: 445 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
+              <input className="cdt-amount gradient" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
+                name="amount" type="range" min="0" max={((osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)*(brwLTV/100))/Math.min(creditPrice, 1)} value={sliderValue} orient="vertical" onChange={({ target: { value: radius } }) => {
+                setsliderValue(parseInt(radius));
+              }}/>
+              <div className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
+               style={{top: -(sliderValue * 2.85) + (400) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
+                {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{(sliderValue - (debtAmount/1000000)).toFixed(1)}
+              </div>
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
@@ -1212,7 +1226,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
               <div className="asset-info-child2" />
               <div className="asset-info-child3" />
               <div className="asset">Asset</div>
-              <div className="qty">Qty.</div>
+              <div className="qty">Add/Remove</div>
               <div className="value">Value</div>
               <div>
                 <Image className={osmoStyle+" osmo-logo-icon"} width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
@@ -1248,11 +1262,7 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
           <div className="controller-label"/>
           <div className="repay-button" onClick={handlerepayScreen}/>
           <div className="mint-button" onClick={handlemintScreen}/>
-          <div className="controller-screen-blank">
-            <div className="starting-screen">
-                {startingParagraph}
-            </div>
-          </div>
+          <div className="controller-screen-blank"/>
           <div className="rdemption-button" onClick={handleredeemScreen}/>
           {/* <div className="close-button" onClick={handlecloseScreen}/> */}
           <div className="controller">Vault Remote</div>
@@ -1267,10 +1277,11 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
       </div>
       <div className={mintrepayScreen}>   
         <form>
-            { currentfunctionLabel === "repay" ? (<><div className="max-amount-label" onClick={()=>{setAmount(Number(debtAmount/1000000))}}>total debt: {(debtAmount/1000000).toString()}</div></>) : null}
-            <label className="amount-label">{mintrepayLabel} amount:</label>     
-            <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={amount} type="number" onChange={handlesetAmount}/>
-            <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg"  onClick={handleLogoClick}/>
+            <div>Mint CDT using the value of your collateralized Bundle or repay your debt</div>
+            <button className="btn mint-amount-label">Mint: </button>
+            <input className="mint-amount" style={{backgroundColor:"#454444"}} name="amount" value={mintAmount} type="number" onChange={handlesetmintAmount}/>
+            <button className="btn amount-label">Repay: </button>
+            <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={repayAmount} type="number" onChange={handlesetrepayAmount}/>
         </form>
       </div>
       <div className={redeemScreen}>
