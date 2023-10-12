@@ -13,6 +13,12 @@ import Popup from "../components/Popup";
 import Image from "next/image";
 import { format } from "util";
 
+declare module 'react' {
+    export interface InputHTMLAttributes<T> {
+      orient?: string;
+    }
+  }
+
 interface Props {
     cdp_client: PositionsClient | null;
     queryClient: PositionsQueryClient | null;
@@ -833,6 +839,7 @@ const handlesetrepayAmount = (event: any) => {
                         //Update mint amount
                         setDebt(+debt + +(amount ?? 0));
                         setdebtAmount(+debtAmount + +(amount ?? 0));
+                        setsliderValue((+debtAmount + +(amount ?? 0))/1000000);
                         //format pop up
                         setPopupTrigger(true);
                         setPopupMsg("Mint of " +(amount ?? 0)+ " CDT successful");
@@ -862,6 +869,7 @@ const handlesetrepayAmount = (event: any) => {
                         //Update mint amount
                         setDebt(+debt - +(amount ?? 0));
                         setdebtAmount(+debtAmount - +(amount ?? 0));
+                        setsliderValue((+debtAmount - +(amount ?? 0))/1000000);
                         //format pop up
                         setPopupTrigger(true);
                         setPopupMsg("Repayment of " +(amount ?? 0)+ " CDT successful");
@@ -1063,22 +1071,19 @@ const handlesetrepayAmount = (event: any) => {
             
             //query rates
             const rateRes = await queryClient?.getCollateralInterest();
+            const creditRateRes = await queryClient?.getCreditRate();
+
 
             // console.log("userRes: ", userRes)
             //Set state
-            if (userRes != undefined && basketRes != undefined && rateRes != undefined){
+            if (userRes != undefined){
                 //setPositionID
                 //@ts-ignore
                 setpositionID(userRes[0].positions[0].position_id)
-
+                //Set debtAmount
                 var debt_amount = parseInt(userRes[0].positions[0].credit_amount);
-                //calc Debt
-                //@ts-ignore
-                var new_debt = parseFloat(((debt_amount/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
-                setcreditPrice(parseFloat(basketRes.credit_price.price))
-                //setDebt
-                setDebt(new_debt)
                 setdebtAmount(debt_amount);
+                setsliderValue(debt_amount/1000000);
                 //setLTVs
                 //@ts-ignore
                 setmaxLTV(parseFloat(userRes[0].positions[0].avg_max_LTV) * +100)
@@ -1116,26 +1121,48 @@ const handlesetrepayAmount = (event: any) => {
                     }                    
                 })
 
-                ///setCost///
-                var total_rate = 0.0;
-                //get the positions collateral indices in Basket rates
-                //@ts-ignore
-                userRes[0].positions[0].collateral_assets.forEach((asset, index, _) => {
-                    //find the asset's index                
-                    var rate_index = basketRes.collateral_types.findIndex((info) => {
-                        // @ts-ignore
-                        return info.asset.info.native_token.denom === asset.asset.info.native_token.denom
-                    })
-
-                    //use the index to get its interest rate
-                    var asset_rate = rateRes.rates[rate_index];
-
-                    //add pro-rata rate to sum 
+                if (basketRes != undefined){
+                    
+                    //calc Debt
                     //@ts-ignore
-                    total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes[0].positions[0].cAsset_ratios[index])).toFixed(4));
-                })
-                //setCost 
-                setCost(total_rate);
+                    var new_debt = parseFloat(((debt_amount/ 1_000_000) * parseFloat(basketRes.credit_price.price)).toFixed(2));
+                    setcreditPrice(parseFloat(basketRes.credit_price.price))
+                    //setDebt
+                    setDebt(new_debt)
+                    
+                    if (rateRes != undefined){
+                        ///setCost///
+                        var total_rate = 0.0;
+                        //get the positions collateral indices in Basket rates
+                        //@ts-ignore
+                        userRes[0].positions[0].collateral_assets.forEach((asset, index, _) => {
+                            //find the asset's index                
+                            var rate_index = basketRes.collateral_types.findIndex((info) => {
+                                // @ts-ignore
+                                return info.asset.info.native_token.denom === asset.asset.info.native_token.denom
+                            })
+
+                            //use the index to get its interest rate
+                            var asset_rate = rateRes.rates[rate_index];
+
+                            //add pro-rata rate to sum 
+                            //@ts-ignore
+                            total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes[0].positions[0].cAsset_ratios[index])).toFixed(4));
+                        })
+
+                        if (creditRateRes != undefined){
+                            //Add credit rate to cost
+                            if (creditRateRes.negative_rate){
+                                total_rate -= parseFloat(creditRateRes.credit_interest);
+                            } else {
+                                total_rate += parseFloat(creditRateRes.credit_interest);
+                            }   
+                        }
+                        //setCost 
+                        setCost(total_rate);
+                    }
+                    
+                }
             }
             
         } catch (error) {
@@ -1189,6 +1216,7 @@ const handlesetrepayAmount = (event: any) => {
               <div className="infobox-icon" />
               <div className="infobox-icon1" />
               <div className="max-ltv">
+                <div className="liq-value">${(debt / (maxLTV / 100)).toFixed(2)}</div>
                 <div className="cdp-div2">{maxLTV.toFixed(0)}%</div>
                 <div className="max-ltv-child" />
               </div>

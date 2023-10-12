@@ -2683,12 +2683,20 @@ span[data-descr]:hover::after {
   opacity: 0.38;
 }
 .cdp-div2 {
-  left: 314px;
+  font-size: large;
+  left: 306px;
+  top: 11px;
+}
+.liq-value {
+  position: absolute;
+  font-size: medium;
+  left: 23px;
+  top: 11px;
 }
 .max-ltv-child {
   top: 34.5px;
-  left: 74px;
-  width: 267px;
+  left: 26px;
+  width: 315px;
   height: 5px;
   background-color: #931313;
 }
@@ -2704,7 +2712,8 @@ span[data-descr]:hover::after {
   height: 34px;
 }
 .cdp-div3 {
-  top: 0;
+  font-size: large;
+  top: 5px;
   left: 330.5px;
 }
 .max-borrow-ltv-child {
@@ -3305,7 +3314,7 @@ span[data-descr]:hover::after {
   color: green;
 }
 .neutral {
-  color: lightblue;
+  opacity: 0;
 }
 .cdt-amount {
   position: absolute;
