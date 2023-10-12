@@ -24,9 +24,10 @@ interface Props {
     queryClient: PositionsQueryClient | null;
     address: string | undefined;
     prices: Prices;
+    walletCDT: number;
 }
 
-const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
+const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props) => {
     //Popup
     const [popupTrigger, setPopupTrigger] = useState(true);
     const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
@@ -92,7 +93,6 @@ const Positions = ({cdp_client, queryClient, address, prices}: Props) => {
     const [positionID, setpositionID] = useState("0");
     const [user_address, setAddress] = useState("");
     const [sliderValue, setsliderValue] = useState(0);
-    const [sliderStyle, setsliderStyle] = useState("neutral");
     const [creditPrice, setcreditPrice] = useState(0);
 
 
@@ -1228,8 +1228,12 @@ const handlesetrepayAmount = (event: any) => {
               <div className="debt-visual-item" style={{top: 465 - (363 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))), height: (340 * (debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))}}/>
               <div className="debt-visual-label" style={{top: 445 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
               <input className="cdt-amount gradient" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
-                name="amount" type="range" min="0" max={((osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)*(brwLTV/100))/Math.min(creditPrice, 1)} value={sliderValue} orient="vertical" onChange={({ target: { value: radius } }) => {
-                setsliderValue(parseInt(radius));
+                name="amount" type="range" min="0" max={((osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} orient="vertical" onChange={({ target: { value: radius } }) => {
+                if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
+                    setsliderValue((debtAmount - walletCDT)/1000000);
+                } else {
+                    setsliderValue(parseInt(radius));
+                }    
               }}/>
               <div className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
                style={{top: -(sliderValue * 2.85) + (400) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
@@ -1239,10 +1243,9 @@ const handlesetrepayAmount = (event: any) => {
             <div className="position-stats">
               <div className="infobox-icon2" />
               <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
-              <div className="cost-4">Cost: {cost}%</div>
-              <div className="debt-225">Debt: ${debt}</div>
-              <div className="liq-value-375">Liq. Value: ${(debt / (maxLTV / 100)).toFixed(2)}</div>
-              <div className="tvl-500">TVL: ${(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue).toFixed(2)}</div>
+              <div className="position-visual-words">Mint CDT using the value of your collateralized Bundle</div>
+              <div className="position-visual-words-btmright">Repay your debt using the CDT in your wallet</div>
+              {/* <div className="tvl-500">TVL: ${(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue).toFixed(2)}</div> */}
             </div>
             <div className="asset-info">
               <div className="infobox-icon3"/>
@@ -1258,29 +1261,29 @@ const handlesetrepayAmount = (event: any) => {
               <div className="value">Value</div>
               <div>
                 <Image className={osmoStyle+" osmo-logo-icon"} width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
-                <div className={osmoStyle +" osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY}</div>
-                <div className={osmoStyle +" cdp-div5"}>${(osmoValue).toFixed(2)}</div>
+                <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? (osmoQTY/1000).toFixed(2)+"k" : osmoQTY}</div>
+                <div className={osmoStyle +" cdp-div5"}>${ osmoValue > 1000 ? (osmoValue/1000).toFixed(2)+"k" : osmoValue}</div>
               </div>              
               <div>
                 <Image className={atomStyle + " atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
-                <div className={atomStyle + " atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY}</div>
-                <div className={atomStyle + " cdp-div7"}>${(atomValue).toFixed(2)}</div>
+                <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? (atomQTY/1000).toFixed(2)+"k" : atomQTY}</div>
+                <div className={atomStyle + " cdp-div7"}>${atomValue > 1000 ? (atomValue/1000).toFixed(2)+"k" : atomValue}</div>
               </div>
               <div>
                 <Image className={axlusdcStyle + " axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
-                <div className={axlusdcStyle + " axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY}</div>
-                <div className={axlusdcStyle + " cdp-div9"}>${(axlUSDCValue).toFixed(2)}</div>
+                <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? (axlusdcQTY/1000).toFixed(2)+"k" : axlusdcQTY}</div>
+                <div className={axlusdcStyle + " cdp-div9"}>${axlUSDCValue > 1000 ? (axlUSDCValue/1000).toFixed(2)+"k" : axlUSDCValue}</div>
               </div>
               <div style={{opacity:0}}>
                 <Image className={atomosmo_poolStyle+" atomosmopool-atom-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
                 <Image className={atomosmo_poolStyle+" atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
-                <div className={atomosmo_poolStyle +" atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div>
+                <div className={"atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div>
                 <div className={atomosmo_poolStyle + " cdp-div11"}>${(atomosmo_poolValue).toFixed(2)}</div>
               </div>
               <div style={{opacity:0}}>
                 <Image className={osmousdc_poolStyle+" osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
                 <Image className={osmousdc_poolStyle+" osmousdcpool-usdc-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
-                <div className={osmousdc_poolStyle+" osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div>
+                <div className={"osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div>
                 <div className={osmousdc_poolStyle+" cdp-div13"}>${(osmousdc_poolValue).toFixed(2)}</div>
               </div>
             </div>

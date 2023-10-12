@@ -86,6 +86,7 @@ export default function Home() {
     atomosmo_pool: 0,
     osmousdc_pool: 0,
   });
+  const [walletCDT, setwalletCDT] = useState(0);
 
   //Query prices
   const queryPrices = async () => {        
@@ -142,7 +143,13 @@ export default function Home() {
       queryPrices()
     }
 
-    console.log(prices)
+    if (address !== undefined) {
+      //Get account's balance of cDT
+      oraclequeryClient?.client.getBalance(address as string, denoms.cdt).then((res) => {
+        setwalletCDT(parseInt(res.amount));
+      })
+    }
+    
   }, [oraclequeryClient, prices, address])
 
   return (
@@ -174,7 +181,7 @@ export default function Home() {
         <Dashboard/>        
       </div>
       <div ref={vaultSection}>
-        <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={addr} prices={prices}/>
+        <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={addr} prices={prices} walletCDT={walletCDT}/>
       </div>
       <div ref={liquidationSection}>
         <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={addr} prices={prices}/>
