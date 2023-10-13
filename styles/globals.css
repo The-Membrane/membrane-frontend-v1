@@ -2801,9 +2801,11 @@ span[data-descr]:hover::after {
   object-fit: cover;
 }
 .cost-4 {
-  position: absolute;
-  top: calc(50% + 26.5px);
-  left: 271px;
+  position: relative;
+  top: 407px;
+  text-align: center;
+  left: 2px;
+  font-size: small;
 }
 .debt-225 {
   position: absolute;
@@ -2815,10 +2817,12 @@ span[data-descr]:hover::after {
   top: 120px;
   left: 267px;
 }
-.tvl-500 {
-  position: absolute;
-  top: 530px;
-  left: 127px;
+.tvl-500 {    
+  font-size: large;
+  position: relative;
+  top: 533px;
+  text-align: center;
+  left: 135px;
   z-index: 51;
 }
 .position-stats {
