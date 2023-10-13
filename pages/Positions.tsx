@@ -1239,13 +1239,13 @@ const handlesetrepayAmount = (event: any) => {
                style={{top: -(sliderValue * 2.85) + (400) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{(sliderValue - (debtAmount/1000000)).toFixed(1)}
               </div>
+              <div className="cost-4">{cost > 0 ? "+" : null}{cost}%</div>
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />
               <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
               <div className="position-visual-words">Mint CDT using the value of your collateralized Bundle</div>
               <div className="position-visual-words-btmright">Repay your debt using the CDT in your wallet</div>
-              {/* <div className="tvl-500">TVL: ${(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue).toFixed(2)}</div> */}
             </div>
             <div className="asset-info">
               <div className="infobox-icon3"/>
@@ -1287,6 +1287,7 @@ const handlesetrepayAmount = (event: any) => {
                 <div className={osmousdc_poolStyle+" cdp-div13"}>${(osmousdc_poolValue).toFixed(2)}</div>
               </div>
             </div>
+            <div className="tvl-500">TVL: ${(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue).toFixed(2)}</div>
           </div>
           <div className="controller-border"/>
           <div className="controller-frame"/>

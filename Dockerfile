@@ -1,8 +1,6 @@
-# syntax=docker/dockerfile:1
-
 FROM node:18-alpine
-WORKDIR /app
+WORKDIR ./pages
 COPY . .
 RUN yarn install --production
-CMD ["node", "src/index.js"]
+CMD ["node", "/index.tsx"]
 EXPOSE 3000

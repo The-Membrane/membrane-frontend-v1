@@ -2783,13 +2783,13 @@ span[data-descr]:hover::after {
 .position-visual-words {
   position: absolute;
   top: 25px;
-  left: 69px;
+  left: 51px;
   font-size: medium;
 }
 .position-visual-words-btmright {
   position: absolute;
   top: 125px;
-  left: 92px;
+  left: 73px;
   font-size: medium;
 }
 .cdt-logo-icon-cdp {
@@ -2800,23 +2800,26 @@ span[data-descr]:hover::after {
   height: 55px;
   object-fit: cover;
 }
-.cost-4,
-.debt-225 {
+.cost-4 {
   position: absolute;
   top: calc(50% + 26.5px);
   left: 271px;
 }
 .debt-225 {
-  left: 63px;
-}
-.liq-value-375,
-.tvl-500 {
   position: absolute;
-  top: calc(50% - 53.5px);
+  top: calc(50% + 26.5px);
+  left: 271px;
+}
+.liq-value-375 {
+  position: absolute;
+  top: 120px;
   left: 267px;
 }
 .tvl-500 {
-  left: 63px;
+  position: absolute;
+  top: 530px;
+  left: 127px;
+  z-index: 51;
 }
 .position-stats {
   position: absolute;
@@ -2956,7 +2959,7 @@ span[data-descr]:hover::after {
   left: 228px;
 }
 .cdp-div7 {
-  top: 16px;
+  top: 32px;
 }
 .axlusdc-logo-icon {
   top: 194px;
@@ -2970,7 +2973,7 @@ span[data-descr]:hover::after {
 }
 /* .cdt-logo-icon4, */
 .cdp-div9 {
-  top: -3px;
+  top: 19px;
 }
 .atomosmopool-atom-icon {
   position: absolute;
@@ -3019,7 +3022,7 @@ span[data-descr]:hover::after {
   text-align: center;
 }
 .cdp-div5 {
-  top: 35px;
+  top: 45px;
 }
 .cdt-logo-icon4 {
   top: 254px;
