@@ -589,7 +589,7 @@ input[type="number"]:disabled {
   margin-left: -5%;
 }
 div[data-descr] {
-  position: absolute;
+  position: relative;
 }
 div[data-descr]:hover::after {
   content: attr(data-descr);
@@ -2782,14 +2782,14 @@ span[data-descr]:hover::after {
 }
 .position-visual-words {
   position: absolute;
-  top: 25px;
-  left: 51px;
+  top: 22px;
+  left: 65px;
   font-size: medium;
 }
 .position-visual-words-btmright {
   position: absolute;
   top: 125px;
-  left: 73px;
+  left: 89px;
   font-size: medium;
 }
 .cdt-logo-icon-cdp {
@@ -2822,7 +2822,7 @@ span[data-descr]:hover::after {
   position: relative;
   top: 533px;
   text-align: center;
-  left: 135px;
+  left: 147px;
   z-index: 51;
 }
 .position-stats {
@@ -3112,7 +3112,7 @@ span[data-descr]:hover::after {
   border-radius: 1rem;
   background-color: #585858;
   width: 279px;
-  height: 422px;
+  height: 283px;
   z-index: 1;
 }
 .controller-border {
@@ -3120,7 +3120,7 @@ span[data-descr]:hover::after {
   top: 219px;
   left: 898.5px;
   width: 282px;
-  height: 425px;
+  height: 287px;
 }
 .controller-label {
   position: absolute;
@@ -3135,19 +3135,20 @@ span[data-descr]:hover::after {
 }
 .mint-button,
 .repay-button {
-  position: absolute;
+  position: relative;
   background-color: #2F2F2F;
   border: 2px solid #50C9BD;
   border-radius: 1rem;
-  top: 500px;
-  left: 1046.5px;
+  top: 54px;
+  left: 255px;
   width: 126px;
   height: 63px;
   cursor: pointer;
   z-index: 1;
 }
 .mint-button {
-  left: 908.5px;
+  left: 50px;
+  top: -7px;
 }
 .close-button,
 .controller-screen-blank,
@@ -3197,10 +3198,11 @@ span[data-descr]:hover::after {
 .right-arrow-icon {
   left: 1078.75px;
 }
-.mint {
-  position: absolute;
-  top: 517px;
-  left: 947.5px;
+.mint {    
+  position: relative;
+  text-align: center;
+  top: 13px;
+  left: 0px;
   cursor: pointer;
   z-index: 1;
 }
@@ -3225,11 +3227,12 @@ span[data-descr]:hover::after {
   height: 72px;
 }
 .repay {
-  position: absolute;
-  top: 517px;
-  left: 1079.5px;
+  position: relative;
+  top: 14px;
+  left: 0px;
   cursor: pointer;
   z-index: 1;
+  text-align: center;
 }
 .cdt-logo-icon7 {
   position: absolute;
@@ -3370,9 +3373,11 @@ input[type=range][orient=vertical] {
 }
 .max-amount-label {
   cursor: pointer;
-  position: absolute;
-  top: 235px;
-  left: 37px;
+  opacity: .7;
+  position: relative;
+  text-align: right;
+  top: 128px;
+  left: -14px;
   font-size: large;
 }
 .mintrepay-screen,
@@ -3522,7 +3527,7 @@ input[type=range][orient=vertical] {
 }
 .save-asset-intent-button,
 .user-redemption-button {
-  position: absolute;
+  position: relative;
   background-color: gray;
   border: 2px solid #50C9BD;
   border-radius: 1rem;
@@ -3536,6 +3541,10 @@ input[type=range][orient=vertical] {
 }
 .spacing-top {
   padding-top: 5%;
+}
+.spacing-btm {  
+  position: relative;
+  top: -3px;
 }
 .intents {
   position: absolute;
@@ -3559,7 +3568,10 @@ input[type=range][orient=vertical] {
   z-index: 0;
 }
 .user-redemption-button {
-  top: 250px;
+  top: 479px;
+  z-index: 51;
+  left: 981px;
+  font-size: x-large;
 }
 .red-border {
   border: 2px solid red;
