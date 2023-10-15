@@ -3352,7 +3352,7 @@ span[data-descr]:hover::after {
   width: 55px;
   height: 28px;
   border-radius: 0.25rem;
-
+  background: linear-gradient( 180deg, rgba(121, 142, 255, 0.68), rgba(79, 202, 187, 0.8) );
 }
 .amount {
   position: absolute;

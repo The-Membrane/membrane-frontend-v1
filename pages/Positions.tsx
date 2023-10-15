@@ -1221,7 +1221,7 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
               <div className="debt-visual-child" />
               <div className="debt-visual-item" style={{top: 465 - (363 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))), height: (340 * (debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100))}}/>
               <div className="debt-visual-label" style={{top: 445 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
-              <input className="cdt-amount gradient" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
+              <input className="cdt-amount" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
                 name="amount" type="range" min="0" max={((osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} orient="vertical" onChange={({ target: { value: radius } }) => {
                 if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
                     setsliderValue((debtAmount - walletCDT)/1000000);
