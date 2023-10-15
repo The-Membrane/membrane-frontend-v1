@@ -67,6 +67,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
     mbrnClaims: 0,
     cdtClaims: 0,
   });
+  const [walletMBRN, setwalletMBRN] = useState(0);
   //Delegations
   const [commission, setCommission] = useState(0);
   const [maxCommission, setmaxCommission] = useState(0);
@@ -952,6 +953,12 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       //Get delegation info
       getDelegations()
     }
+    if (walletMBRN === 0){
+      //Get account's balance of MBRN
+      govQueryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
+        setwalletMBRN(parseInt(res.amount) / 1_000_000);
+    })
+    }
   }, [address, govClient, govQueryClient, stakingClient, stakingQueryClient]);
       
   return (
@@ -1218,12 +1225,13 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="delegates-y" />
       <div className="delegators-y1" />
       <div className="delegators-y2" />
-      <div className="staked-mbrn1">{parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
+      <div className="staked-mbrn1">Total: {parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
+      <div className="staked-mbrn2">in Wallet: {walletMBRN}</div>
       <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
       <div className="unstaking-mbrn-total">{"/" + parseFloat((userStake.unstaking_total/1_000_000).toFixed(2))}</div>
-      <div className="mbrn-stake-logo">
+      {/* <div className="mbrn-stake-logo">
         <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
-      </div>
+      </div> */}
       <div className="mbrn-unstake-logo">
       <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
       </div>

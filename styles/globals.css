@@ -1904,12 +1904,12 @@ span[data-descr]:hover::after {
   left: 345px;
   bottom: 4px;
   z-index: 30;
-  top: 133px;
+  top: 214px;
   height: 28px;
 }
 .stake-button1 {
   position: absolute;
-  top: 131px;
+  top: 212px;
   left: 258px;
   width: 154px;
   height: 32px;
@@ -2097,15 +2097,22 @@ span[data-descr]:hover::after {
   height: 2px;
 }
 .staked-mbrn1,
-.unstaking-mbrn {
-  position: absolute;
-  top: 180px;
-  left: 266px;
+.staked-mbrn2 {
+  position: relative;
   color: white;
-  font-size: x-large;
+  width: 125px;
+  font-size: large;
+  left: 266px;
+  top: -315px;
 }
-.unstaking-mbrn {
-  left: 630px;
+.unstaking-mbrn {  
+  position: relative;
+  color: white;
+  top: -333px;
+  left: 604px;
+  width: 100px;
+  font-size: x-large;
+  text-align: center;
 }
 .unstaking-mbrn-total {
   position: absolute;
@@ -2172,7 +2179,7 @@ span[data-descr]:hover::after {
 .mbrn-claim-logo,
 .mbrn-unstake-logo {
   top: 164px;
-  left: 696px;
+  left: 711px;
 }
 .mbrn-claim-logo {
   top: 170px;
