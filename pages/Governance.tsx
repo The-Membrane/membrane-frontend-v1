@@ -367,22 +367,28 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
               setQuorum(parseInt(config.proposal_required_quorum))
               //Get current result
               let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config)
-              //Push to active
-              proposals.active.push([res.proposal_list[i], daysLeft, current_result, quorum])
+              //Push to front of active
+              proposals.active = ([[res.proposal_list[i], daysLeft, current_result, quorum]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.active)
+              //pop end of active
+              proposals.active.pop()
             }
           } else if (res.proposal_list[i].status == "executed") {
             if (proposals.executed.length < 8){
               //Get days left
               var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;
-              //Push to executed
-              proposals.executed.push([res.proposal_list[i], daysLeft, "Executed", 100])
+              //Push to front of executed
+              proposals.executed = ([[res.proposal_list[i], daysLeft, "Executed", 100]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.executed)
+              //pop end of executed
+              proposals.executed.pop()
             }
           } else { //Completed
             if (proposals.completed.length < 8){
               //Get days left
               var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;
-              //Push to completed
-              proposals.active.push([res.proposal_list[i], daysLeft, "Completed", 100])
+              //Push to front of completed
+              proposals.completed = ([[res.proposal_list[i], daysLeft, "Completed", 100]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.completed)
+              //pop end of completed
+              proposals.completed.pop()
             }
           }
         }
@@ -395,7 +401,10 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       .then((res) => {
         //Set pending
         for (let i = 0; i < res.proposal_list.length; i++) {
-          proposals.pending.push([res.proposal_list[i], 1, "Pending", 0])
+          //Push to front
+          proposals.pending = ([[res.proposal_list[i], 1, "Pending", 0]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.pending)
+          //pop end
+          proposals.pending.pop()
         }
       })
 
@@ -877,13 +886,19 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       await stakingQueryClient?.delegations({
         user: address ?? "",
       }).then( async (res) => {
-        console.log(res)
+        var delegationVP = 0;
+        //Set max parse
+        var max_parse = Math.min(res[0].delegation_info.delegated_to.length, 8)
 
         //Set delegations
-        for (let i = 0; i < res[i].delegation_info.delegated_to.length; i++) {
+        for (let i = 0; i < max_parse; i++) {
           delegations[i].amount = parseInt(res[i].delegation_info.delegated_to[i].amount)
           delegations[i].delegator = res[i].delegation_info.delegated_to[i].delegate
           delegations[i].fluid = res[i].delegation_info.delegated_to[i].fluidity
+          //Subtract from user VP
+          if (res[i].delegation_info.delegated_to[i].voting_power_delegation === true) {
+            delegationVP -= parseInt(res[i].delegation_info.delegated_to[i].amount)
+          }
           //Query and set commission
           await stakingQueryClient?.delegations({
             user: res[i].delegation_info.delegated_to[i].delegate,
@@ -892,16 +907,17 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           })
         }
         
+        //Set max parse
+        var max_parse = Math.min(res[0].delegation_info.delegated.length, 8)
         //Set Delegators
-        var delegationVP = 0;
-        for (let i = 0; i < res[i].delegation_info.delegated.length; i++) {
+        for (let i = 0; i < max_parse; i++) {
           delegators[i].amount = parseInt(res[i].delegation_info.delegated[i].amount)
           delegators[i].delegator = res[i].delegation_info.delegated[i].delegate
           delegators[i].fluid = res[i].delegation_info.delegated[i].fluidity
           
           //Add to user total VP
           if (res[i].delegation_info.delegated[i].voting_power_delegation === true) {
-            delegationVP = parseInt(res[i].delegation_info.delegated_to[i].amount)
+            delegationVP += parseInt(res[i].delegation_info.delegated_to[i].amount)
           }          
           //Add to user total VP
           setuserVP(prevState => {
@@ -916,16 +932,26 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   }
 
   useEffect(() => {
-    //Query & set proposals
-    getProposals()
-    //Query & set emissions schedule
-    getEmissionsSchedule()
-    //Get user staked & unstaking MBRN
-    getUserStake()
-    //Get user claims
-    getuserClaims()
-    //Get delegation info
-    getDelegations()
+    if (quorum === 0){
+      //Query & set proposals
+      getProposals()
+    }
+    if (emissionsSchedule.rate === 0){
+      //Query & set emissions schedule
+      getEmissionsSchedule()
+    }
+    if (userStake.staked === 0){
+      //Get user staked & unstaking MBRN
+      getUserStake()
+    }
+    if (userClaims.mbrnClaims === 0 && userClaims.cdtClaims === 0){
+      //Get user claims
+      getuserClaims()
+    }
+    if (delegations[0].amount === 0 && delegators[0].amount === 0){
+      //Get delegation info
+      getDelegations()
+    }
   }, [address, govClient, govQueryClient, stakingClient, stakingQueryClient]);
       
   return (

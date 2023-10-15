@@ -412,16 +412,18 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
   }
 
   useEffect(() => {
-    // if (launch_client && address && queryClient) {
+    if (progress === 0) {
       //Query lockdrop progress
       get_lockdropProgress()
-
+    }
+    if (deposit1.deposit === undefined) {
       //Query for deposit list
       get_updateddepositList()
-
+    }
+    if (totalOSMO === 0) {
       //Query OSMO contract & wallet balance
       set_totalOSMO()
-    // }
+    }
   }, [address, launch_client, queryClient, baseClient]);
 
   const handledeposit1Click = async () => {

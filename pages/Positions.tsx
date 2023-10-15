@@ -535,6 +535,8 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
     //   };
     //Deposit-Withdraw screen    
     const handledepositClick = async () => {
+        //Reset Amount
+        setAmount(0);
         //Set functionality
         setcurrentfunctionLabel("deposit");
         //clear intents
@@ -563,6 +565,9 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         }
     };
     const handlewithdrawClick = async () => {
+        //Reset Amount
+        setAmount(0);
+        //Set functionality
         setcurrentfunctionLabel("withdraw");
         //clear intents
         setassetIntent([]);
@@ -1035,13 +1040,13 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         return workingIntents
     };
     /// zero asset QTY, TVL, debt, liq. value
-    const zeroData = () => {
-        handleQTYsubtraction("OSMO", osmoQTY);
-        handleQTYsubtraction("ATOM", atomQTY);
-        handleQTYsubtraction("axlUSDC", axlusdcQTY);
+    // const zeroData = () => {
+    //     handleQTYsubtraction("OSMO", osmoQTY);
+    //     handleQTYsubtraction("ATOM", atomQTY);
+    //     handleQTYsubtraction("axlUSDC", axlusdcQTY);
 
-        setDebt(0); setmaxLTV(0);
-    };
+    //     setDebt(0); setmaxLTV(0);
+    // };
 
    const fetch_update_positionData = async () => {
         //Query for position data
@@ -1159,20 +1164,20 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         }
    };   
 
-    const getReadableLPQTY = (qty: number) => {
-        {
-            let qty_string = (qty).toExponential();
-            let exponent = parseInt(qty_string.slice(qty_string.length-2));
-            let firstTwoplaces = parseFloat(qty_string.slice(0, 3));
-            if (exponent > 18){
-                return (firstTwoplaces * Math.pow(10, (exponent - 18))).toFixed(2)
-            } else if (exponent < 18){
-                return (firstTwoplaces / Math.pow(10, (18 - exponent))).toFixed(2)
-            } else {
-                return (firstTwoplaces).toFixed(2)
-            }
-        }
-    }
+    // const getReadableLPQTY = (qty: number) => {
+    //     {
+    //         let qty_string = (qty).toExponential();
+    //         let exponent = parseInt(qty_string.slice(qty_string.length-2));
+    //         let firstTwoplaces = parseFloat(qty_string.slice(0, 3));
+    //         if (exponent > 18){
+    //             return (firstTwoplaces * Math.pow(10, (exponent - 18))).toFixed(2)
+    //         } else if (exponent < 18){
+    //             return (firstTwoplaces / Math.pow(10, (18 - exponent))).toFixed(2)
+    //         } else {
+    //             return (firstTwoplaces).toFixed(2)
+    //         }
+    //     }
+    // }
 
     //getuserPosition info && set State
     useEffect(() => {

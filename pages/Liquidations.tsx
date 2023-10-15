@@ -782,11 +782,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   useEffect(() => {
-    console.log(prices)
+    //Set barGraph
     switch(menuAsset){
       case "OSMO": {
         if (barGraph[0][0].tvl === "0K" && prices.osmo !== 0) {
-          console.log("efe")
           queryQueuesaveHeights(denoms.osmo)
         }
         break;
@@ -821,12 +820,18 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       setqueueClaimables()
     }
 
-    //Set SP claimables
-    getSPclaimables()
-    //Set SP TVL
-    getSPTVL()
-    //Check for unstaking positions
-    getunstakingSP()
+    if (SPclaimables === ""){
+      //Set SP claimables
+      getSPclaimables()
+    }
+    if (TVL === 0){
+      //Set SP TVL
+      getSPTVL()
+    }
+    if (unstakingMsg === "") {
+      //Check for unstaking positions
+      getunstakingSP()
+    }
 
   }, [menuAsset, prices, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient])
 
