@@ -1247,7 +1247,7 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
                style={{top: -(sliderValue * 2.85) + (400) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{(sliderValue - (debtAmount/1000000)).toFixed(1)}
               </div>
-              <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%</div>
+              <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%/yr</div>
             </div>
             <div className="position-stats">
               <div className="infobox-icon2" />

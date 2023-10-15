@@ -476,7 +476,7 @@ ul{
 }
 .captial-ahead-label,
 .user-tvl-label {
-  left: 218px;
+  left: 226px;
   display: inline-block;
   width: 50px;
   height: 11px;
@@ -486,11 +486,11 @@ ul{
 .user-tvl-label {
   position: absolute;
   margin: 0 !important;
-  top: 151px;
+  top: 74px;
 }
 .captial-ahead-label {
   position: absolute;
-  top: 268px;
+  top: 185px;
   z-index: 12;
 }
 .x-axis1 {
@@ -524,7 +524,7 @@ ul{
   color: black;
   width: 120px;
   height: 41px;
-  margin-top: 89%;
+  margin-top: 82%;
   margin-left: 37%;
   background-color: #D9D9D9;
 }
@@ -585,7 +585,7 @@ input[type="number"]:disabled {
 }
 .deposit-button-label {
   position: absolute;
-  top: 5px;
+  top: 7px;
   margin-left: -5%;
 }
 div[data-descr] {
@@ -659,7 +659,7 @@ span[data-descr]:hover::after {
 }
 .withdraw-button-label {
   position: absolute;
-  top: 5px;
+  top: 7px;
   margin-left: -5%;
 }
 .deposit-button-omni {  
@@ -674,7 +674,7 @@ span[data-descr]:hover::after {
 }
 .withdraw-button-omni,
 .deposit-button-omni {
-  margin-top: 77%;
+  margin-top: 72%;
 }
 .single-asset-btn {
   margin-top: 80%;
@@ -3178,7 +3178,7 @@ span[data-descr]:hover::after {
 .controller {
   position: absolute;
   top: 191px;
-  left: 978px;
+  left: 975px;
   font-size: x-large;
   z-index: 1;
 }
