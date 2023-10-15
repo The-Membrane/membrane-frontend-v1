@@ -1904,12 +1904,12 @@ span[data-descr]:hover::after {
   left: 345px;
   bottom: 4px;
   z-index: 30;
-  top: 214px;
+  top: 208px;
   height: 28px;
 }
 .stake-button1 {
   position: absolute;
-  top: 212px;
+  top: 206px;
   left: 258px;
   width: 154px;
   height: 32px;
