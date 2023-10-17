@@ -2954,7 +2954,16 @@ span[data-descr]:hover::after {
   border: #7990FE 2px solid;
   border-radius: 1rem;
   background-color: gray;
+  box-shadow: 0px 0px 5px #c1c1c1;
 }
+.osmo-qty:hover,
+.atom-qty:hover,
+.axlUSDC-qty:hover,
+.atomosmopool-qty:hover,
+.osmousdcpool-qty:hover {
+  box-shadow: inset 0px 0px 5px #c1c1c1;
+}
+
 .atom-logo-icon {
   left: 228px;
 }
