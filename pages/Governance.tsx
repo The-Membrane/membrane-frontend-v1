@@ -953,7 +953,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       //Get delegation info
       getDelegations()
     }
-    if (walletMBRN === 0){
+    if (walletMBRN === 0 && address !== undefined){
       //Get account's balance of MBRN
       govQueryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
         setwalletMBRN(parseInt(res.amount) / 1_000_000);

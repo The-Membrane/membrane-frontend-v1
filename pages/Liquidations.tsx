@@ -887,7 +887,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             ) : null}
           </div>
           <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}K</div>
-          <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 33)}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
+          <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (10 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
           <div className="x-axis" />
           <form>
             <input className="deposit-amount" name="amount" value={depositAmount} disabled={premium === undefined} type="number" onChange={handlesetdAmount}/>
