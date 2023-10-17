@@ -1257,19 +1257,19 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
                style={{top: -(sliderValue * 2.85) + (400) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{(sliderValue - (debtAmount/1000000)).toFixed(1)}
               </div>
-              <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%/yr</div>
-            </div>
-            <div className="position-stats">
+              <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%/yr</div>              
+              <div className="position-stats">
               <div className="infobox-icon2" />
               <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleLogoClick}>                
-                <div className="repay" onClick={handleLogoClick}>REPAY</div>
+                  <div className="repay" onClick={handleLogoClick}>REPAY</div>
               </div>
               <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} data-descr={debtAmount === 0 ? "Use the slider to mint/repay" : null} onClick={handleLogoClick}>
-                <div className="mint" onClick={handleLogoClick}>MINT</div>                
+                  <div className="mint" onClick={handleLogoClick}>MINT</div>                
               </div>
               <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
               <div className="position-visual-words">Mint CDT using the value of your collateralized Bundle</div>
               <div className="position-visual-words-btmright">Repay your debt using the CDT in your wallet</div>
+              </div>
             </div>
             <div className="asset-info">
               <div className="infobox-icon3"/>
@@ -1281,7 +1281,7 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
               <div className="asset-info-child2" />
               <div className="asset-info-child3" />
               <div className="asset">Asset</div>
-              <div className="qty">Add/Remove</div>
+              <div className="qty">Quantity</div>
               <div className="value">Value</div>
               <div>
                 <Image className={osmoStyle+" osmo-logo-icon"} width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
@@ -1313,80 +1313,82 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
             </div>
             <div className="tvl-500">TVL: ${(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue).toFixed(2)}</div>
           </div>
-          <div className="controller-border"/>
-          <div className="controller-frame"/>
-          <div className="controller-label"/>
-          <div className="controller-screen-blank"/>
-          {/* <div className="rdemption-button" onClick={handleredeemScreen}/> */}
-          {/* <div className="close-button" onClick={handlecloseScreen}/> */}
-          <div className="controller" onClick={currentfunctionLabel === "redemptions" ? handleredeeminfoClick : handleredeemScreen}>Collateral Ctrl</div>
-          {/* <div className="close-position" onClick={handlecloseScreen}>CLOSE</div> */}
-          {/* <div className="set-redemptions">REDEMPTION</div> */}
+          <div className="controller-item">
+            <div className="controller-border"/>
+            <div className="controller-frame"/>
+            <div className="controller-label"/>
+            <div className="controller-screen-blank"/>
+            {/* <div className="rdemption-button" onClick={handleredeemScreen}/> */}
+            {/* <div className="close-button" onClick={handlecloseScreen}/> */}
+            <div className="controller" onClick={currentfunctionLabel === "redemptions" ? handleredeeminfoClick : handleredeemScreen}>Collateral</div>
+            {/* <div className="close-position" onClick={handlecloseScreen}>CLOSE</div> */}
+            {/* <div className="set-redemptions">REDEMPTION</div> */}
+            <div className={redeemButton} onClick={handleLogoClick}>
+                <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : "<-----" }</div>
+            </div>            
+            {/* <div className={mintrepayScreen}>   
+                <form>
+                    <div>Mint CDT using the value of your collateralized Bundle or repay your debt</div>
+                    <button className="btn mint-amount-label">Mint: </button>
+                    <input className="mint-amount" style={{backgroundColor:"#454444"}} name="amount" value={mintAmount} type="number" onChange={handlesetmintAmount}/>
+                    <button className="btn amount-label">Repay: </button>
+                    <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={repayAmount} type="number" onChange={handlesetrepayAmount}/>
+                </form>
+            </div> */}
+            <div className={redeemScreen}>
+                <form>            
+                    <input className="mint-button-icon2" style={{backgroundColor:"#454444"}} name="premium" value={premium} type="number" onChange={handlesetPremium}/>
+                    <div className={posClick} onClick={handleposClick}/>
+                    <div className={negClick} onClick={handlenegClick}/>
+                    <div className="premium-label">Premium</div>
+                    <input className="mint-button-icon5" style={{backgroundColor:"#454444"}} name="loan-usage" defaultValue={0.01} value={loanUsage} type="number" onChange={handlesetloanUsage}/>
+                    <div className="loan-usage">% Loan Usage</div>
+                </form>
+                <div className="edit-redeemability">Redeemability Status</div>
+                <div className="click-assets-on">
+                {restrictedAssets.sentence}
+                </div>
+            </div>
+            <div className={redeemInfoScreen}>
+                    <div className="user-redemptions">
+                        <div>Premium: {redemptionRes?.premium_infos[0].premium }</div>
+                        { redemptionRes !== undefined ? <div>Left to Redeem: {parseInt(redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].remaining_loan_repayment)/ 1_000_000}</div> : null}
+                        <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>
+                    </div>
+            </div>
+            {/* <div className={closeScreen}>
+                <div className="close-screen">
+                    Close Position uses Apollos Osmosis router to sell collateral to fulfill ALL REMAINING debt
+                </div>
+                <form>
+                    <label className="spread-label">Max spread (ex: 1% as 0.01)</label>     
+                    <input className="spread" style={{backgroundColor:"#454444"}} name="spread" value={maxSpread} type="number" onChange={handlesetSpread}/>
+                </form>
+                <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg"  onClick={handleLogoClick}/>
+            </div> */}
+            <div className={depositwithdrawScreen}>
+                <div className={currentfunctionLabel === "deposit" ? "cdp-deposit-label bold" : "cdp-deposit-label low-opacity"} onClick={handledepositClick}>Deposit</div>
+                <div className="slash">/</div>
+                <div className={currentfunctionLabel === "withdraw" ? "cdp-withdraw-label bold" : "cdp-withdraw-label low-opacity"} onClick={handlewithdrawClick}>Withdraw</div>
+                <form>
+                    { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={()=>{setAmount(Number(maxLPamount))}}>max: {maxLPamount.toString()}</div></>) : null}            
+                    <label className="amount-label">{currentAsset} amount:</label>     
+                    <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmount}/>
+                </form>
+                {/* <div className="save-asset-intent-button" onClick={handleassetIntent}>
+                    <div className="spacing-top">Save {currentfunctionLabel} intent</div>
+                </div> */}
+                <div className="intents">
+                    {assetIntent.map((intent) => (
+                        <>{intent[0]}: {intent[1]},  </>
+                    ))}
+                </div>
+            </div>
+          </div>
         </div>
 
         <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
         <div className="vaults1">VAULTS</div>
-      </div>
-      {/* <div className={mintrepayScreen}>   
-        <form>
-            <div>Mint CDT using the value of your collateralized Bundle or repay your debt</div>
-            <button className="btn mint-amount-label">Mint: </button>
-            <input className="mint-amount" style={{backgroundColor:"#454444"}} name="amount" value={mintAmount} type="number" onChange={handlesetmintAmount}/>
-            <button className="btn amount-label">Repay: </button>
-            <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={repayAmount} type="number" onChange={handlesetrepayAmount}/>
-        </form>
-      </div> */}
-      <div className={redeemScreen}>
-        <form>            
-            <input className="mint-button-icon2" style={{backgroundColor:"#454444"}} name="premium" value={premium} type="number" onChange={handlesetPremium}/>
-            <div className={posClick} onClick={handleposClick}/>
-            <div className={negClick} onClick={handlenegClick}/>
-            <div className="premium-label">Premium</div>
-            <input className="mint-button-icon5" style={{backgroundColor:"#454444"}} name="loan-usage" defaultValue={0.01} value={loanUsage} type="number" onChange={handlesetloanUsage}/>
-            <div className="loan-usage">% Loan Usage</div>
-        </form>
-        <div className="edit-redeemability">Redeemability Status</div>
-        <div className="click-assets-on">
-          {restrictedAssets.sentence}
-        </div>
-      </div>
-      <div className={redeemInfoScreen}>
-            <div className="user-redemptions">
-                <div>Premium: {redemptionRes?.premium_infos[0].premium }</div>
-                { redemptionRes !== undefined ? <div>Left to Redeem: {parseInt(redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].remaining_loan_repayment)/ 1_000_000}</div> : null}
-                <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>
-            </div>
-      </div>
-      <div className={redeemButton} onClick={handleLogoClick}>
-         <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : "<-----" }</div>
-      </div>
-      {/* <div className={closeScreen}>
-        <div className="close-screen">
-            Close Position uses Apollos Osmosis router to sell collateral to fulfill ALL REMAINING debt
-        </div>
-        <form>
-            <label className="spread-label">Max spread (ex: 1% as 0.01)</label>     
-            <input className="spread" style={{backgroundColor:"#454444"}} name="spread" value={maxSpread} type="number" onChange={handlesetSpread}/>
-        </form>
-        <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg"  onClick={handleLogoClick}/>
-      </div> */}
-      <div className={depositwithdrawScreen}>
-        <div className={currentfunctionLabel === "deposit" ? "cdp-deposit-label bold" : "cdp-deposit-label low-opacity"} onClick={handledepositClick}>Deposit</div>
-        <div className="slash">/</div>
-        <div className={currentfunctionLabel === "withdraw" ? "cdp-withdraw-label bold" : "cdp-withdraw-label low-opacity"} onClick={handlewithdrawClick}>Withdraw</div>
-        <form>
-            { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={()=>{setAmount(Number(maxLPamount))}}>max: {maxLPamount.toString()}</div></>) : null}            
-            <label className="amount-label">{currentAsset} amount:</label>     
-            <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmount}/>
-        </form>
-        {/* <div className="save-asset-intent-button" onClick={handleassetIntent}>
-            <div className="spacing-top">Save {currentfunctionLabel} intent</div>
-        </div> */}
-        <div className="intents">
-            {assetIntent.map((intent) => (
-                <>{intent[0]}: {intent[1]},  </>
-            ))}
-        </div>
       </div>
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>

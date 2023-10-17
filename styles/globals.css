@@ -2775,7 +2775,7 @@ span[data-descr]:hover::after {
   position: absolute;
   margin: 0 !important;
   top: 23px;
-  left: 376px;
+  left: 714px;
   width: 539px;
   height: 652px;
   z-index: 0;
@@ -2838,10 +2838,11 @@ span[data-descr]:hover::after {
 .position-stats {
   position: absolute;
   margin: 0 !important;
-  top: 465px;
-  left: 433px;
+  top: 442px;
+  left: 57px;
   width: 428px;
   height: 171px;
+  color: whitesmoke;
   z-index: 1;
 }
 .infobox-icon3 {
@@ -2913,22 +2914,16 @@ span[data-descr]:hover::after {
 .qty,
 .value {
   position: absolute;
-  top: 38px;
-  left: 25px;
-  font-family: monospace;
-  font-size: 20px;
-  text-decoration-line: underline;
+  top: 20px;
+  left: 29px;
+  font-size: 24px;
 }
 .qty {
-  left: 99px;
-  top: 5px;
-  font-size: 22px;
-  color: #7990FE;
-  text-decoration-line: none;
-  font-family: fantasy;
+  left: 117px;
+  top: 19px;
 }
 .value {
-  left: 224px;
+  left: 233px;
 }
 .atom-logo-icon,
 .osmo-qty {
@@ -2951,13 +2946,13 @@ span[data-descr]:hover::after {
   cursor: pointer;
   min-width: 5%;
   height: 37px;
-  max-width: 25%;
+  max-width: 32%;
   position: relative;
-  left: 115px;
+  left: 103px;
   text-align: center;
   z-index: 50;
-  border: #50C9BD 2px solid;
-  border-radius: .25rem;
+  border: #7990FE 2px solid;
+  border-radius: 1rem;
   background-color: gray;
 }
 .atom-logo-icon {
@@ -3113,12 +3108,17 @@ span[data-descr]:hover::after {
   background-color: #2F2F2F;
   border: 3px solid black;
   box-sizing: border-box;
-  width: 959px;
+  width: 1286px;
   height: 704px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+}
+.controller-item {
+  position: absolute;
+  left: -493px;
+  top: 69px;
 }
 .controller-border,
 .controller-frame {
@@ -3128,7 +3128,7 @@ span[data-descr]:hover::after {
   border-radius: 1rem;
   background-color: #585858;
   width: 279px;
-  height: 283px;
+  height: 284px;
   z-index: 1;
 }
 .controller-border {
@@ -3194,7 +3194,7 @@ span[data-descr]:hover::after {
 .controller {
   position: absolute;
   top: 191px;
-  left: 975px;
+  left: 996px;
   font-size: x-large;
   z-index: 1;
 }
