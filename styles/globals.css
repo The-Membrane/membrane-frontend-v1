@@ -1774,6 +1774,7 @@ span[data-descr]:hover::after {
   top: 295px;
   left: 34px;
   background-color: #2F2F2F;
+  border: gray 2.5px solid;
   box-sizing: border-box;
   width: 402px;
   height: 499px;
@@ -1949,6 +1950,7 @@ span[data-descr]:hover::after {
   top: 473px;
   left: 545px;
   background-color: #2F2F2F;
+  border: gray 2.5px solid;
   width: 323px;
   height: 319px;
 }
@@ -2017,6 +2019,7 @@ span[data-descr]:hover::after {
   top: 473px;
   left: 897px;
   background-color: #2F2F2F;
+  border: gray 2.5px solid;
   width: 315px;
   height: 319px;
 }
@@ -2029,10 +2032,10 @@ span[data-descr]:hover::after {
 .delegate-x6 {
   position: absolute;
   top: 518px;
-  left: 544px;
+  left: 548px;
   border-top: 2px solid black;
   box-sizing: border-box;
-  width: 326px;
+  width: 318px;
   height: 2px;
 }
 .delegate-x1 {
@@ -2065,10 +2068,10 @@ span[data-descr]:hover::after {
 .delegator-x6 {
   position: absolute;
   top: 758px;
-  left: 897px;
+  left: 901px;
   border-top: 2px solid black;
   box-sizing: border-box;
-  width: 315px;
+  width: 307px;
   height: 2px;
 }
 .delegator-x {
@@ -2216,12 +2219,12 @@ span[data-descr]:hover::after {
 .delegators-y1,
 .delegators-y2 {
   position: absolute;
-  top: 471.5px;
+  top: 473.5px;
   left: 668.5px;
   border-right: 3px solid #50C9BD;
   box-sizing: border-box;
   width: 3px;
-  height: 322px;
+  height: 318px;
 }
 .delegates-y1 {
   left: 718.5px;
@@ -2829,7 +2832,7 @@ span[data-descr]:hover::after {
   position: relative;
   top: 533px;
   text-align: center;
-  left: 147px;
+  left: 136px;
   z-index: 51;
 }
 .position-stats {
@@ -2910,16 +2913,22 @@ span[data-descr]:hover::after {
 .qty,
 .value {
   position: absolute;
-  top: 12px;
-  left: 18px;
+  top: 38px;
+  left: 25px;
+  font-family: monospace;
+  font-size: 20px;
+  text-decoration-line: underline;
 }
 .qty {
-  left: 115px;
-  top: 17px;
-  font-size: large;
+  left: 99px;
+  top: 5px;
+  font-size: 22px;
+  color: #7990FE;
+  text-decoration-line: none;
+  font-family: fantasy;
 }
 .value {
-  left: 228px;
+  left: 224px;
 }
 .atom-logo-icon,
 .osmo-qty {

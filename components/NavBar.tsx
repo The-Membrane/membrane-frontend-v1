@@ -1,7 +1,7 @@
 import React from 'react';
 import { MutableRefObject, useRef } from 'react';
 
-export const dashboardPosition = 20;
+export const dashboardPosition = 0;
 export const vaultPosition = 700;
 export const liquidationPosition = 1580;
 export const stakingPosition = 2350;

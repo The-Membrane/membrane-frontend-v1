@@ -100,9 +100,11 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         if (currentFunction !== "withdraw") {
             setcurrentfunctionLabel("deposit");
             //Get account's balance
-            queryClient?.client.getBalance(address as string, denoms.osmo).then((res) => {
-                setmaxLPamount(BigInt(res.amount) / 1_000_000n);
-            })
+            if (address !== undefined) {
+                queryClient?.client.getBalance(address as string, denoms.osmo).then((res) => {
+                    setmaxLPamount(BigInt(res.amount) / 1_000_000n);
+                })
+            }
         } else if (currentFunction == "withdraw") {
             //Set max to collateral amount
             setmaxLPamount(BigInt(osmoQTY))
@@ -118,9 +120,11 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         if (currentFunction !== "withdraw") {
             setcurrentfunctionLabel("deposit");
             //Get account's balance
-            queryClient?.client.getBalance(address as string, denoms.atom).then((res) => {
-                setmaxLPamount(BigInt(res.amount) / 1_000_000n);
-            })
+            if (address !== undefined) {
+                queryClient?.client.getBalance(address as string, denoms.atom).then((res) => {
+                    setmaxLPamount(BigInt(res.amount) / 1_000_000n);
+                })
+            }
         } else if (currentFunction == "withdraw") {
             //Set max to collateral amount
             setmaxLPamount(BigInt(atomQTY))
@@ -136,9 +140,11 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         if (currentFunction !== "withdraw") {
             setcurrentfunctionLabel("deposit");
             //Get account's balance
-            queryClient?.client.getBalance(address as string, denoms.axlUSDC).then((res) => {
-                setmaxLPamount(BigInt(res.amount) / 1_000_000n);
-            })
+            if (address !== undefined) {
+                queryClient?.client.getBalance(address as string, denoms.axlUSDC).then((res) => {
+                    setmaxLPamount(BigInt(res.amount) / 1_000_000n);
+                })
+            }
         } else if (currentFunction == "withdraw") {
             //Set max to collateral amount
             setmaxLPamount(BigInt(axlusdcQTY))
@@ -154,9 +160,11 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         if (currentFunction !== "withdraw") {
             setcurrentfunctionLabel("deposit");
             //Get account's balance
-            queryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
-                setmaxLPamount(BigInt(res.amount));
-            })
+            if (address !== undefined) {
+                queryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
+                    setmaxLPamount(BigInt(res.amount));
+                })
+            }
         } else if (currentFunction == "withdraw") {
             //Set max to collateral amount
             setmaxLPamount(BigInt(atomosmo_poolQTY))
@@ -172,9 +180,11 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         if (currentFunction !== "withdraw") {
             setcurrentfunctionLabel("deposit");
             //Get account's balance
-            queryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
-                setmaxLPamount(BigInt(res.amount));
-            })
+            if (address !== undefined) {
+                queryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
+                    setmaxLPamount(BigInt(res.amount));
+                })
+            }
         } else if (currentFunction == "withdraw") {
             //Set max to collateral amount
             setmaxLPamount(BigInt(osmousdc_poolQTY))
