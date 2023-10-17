@@ -793,14 +793,13 @@ span[data-descr]:hover::after {
   cursor: pointer;
 }
 .footer {
-  position: fixed;
-  bottom: 0%;
+  position: absolute;
   height: 18px;
-  top: 661px;
-  left: 1150px;
+  top: 575px;
+  left: 910px;
   width: 175px;
   color: #ffffff;
-  z-index: 0;
+  z-index: 1;
 }
 .liquidationpoolpage {
   top: 0;
@@ -2775,7 +2774,7 @@ span[data-descr]:hover::after {
   position: absolute;
   margin: 0 !important;
   top: 23px;
-  left: 714px;
+  left: 655px;
   width: 539px;
   height: 652px;
   z-index: 0;
@@ -3117,7 +3116,7 @@ span[data-descr]:hover::after {
   background-color: #2F2F2F;
   border: 3px solid black;
   box-sizing: border-box;
-  width: 1286px;
+  width: 1225px;
   height: 704px;
   display: flex;
   flex-direction: column;
@@ -3126,7 +3125,7 @@ span[data-descr]:hover::after {
 }
 .controller-item {
   position: absolute;
-  left: -493px;
+  left: -523px;
   top: 69px;
 }
 .controller-border,
