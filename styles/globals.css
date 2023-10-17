@@ -2219,12 +2219,12 @@ span[data-descr]:hover::after {
 .delegators-y1,
 .delegators-y2 {
   position: absolute;
-  top: 473.5px;
+  top: 475px;
   left: 668.5px;
   border-right: 3px solid #50C9BD;
   box-sizing: border-box;
   width: 3px;
-  height: 318px;
+  height: 315px;
 }
 .delegates-y1 {
   left: 718.5px;
