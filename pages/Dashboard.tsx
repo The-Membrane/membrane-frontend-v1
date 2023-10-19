@@ -12,7 +12,7 @@ const Dashboard = () => {
             <div className="col-sm-6">
                 <div className="card shadow ">
                 <div className="card-body card-design">
-                    <h5 className="card-title ">Collateralized Vaults</h5>
+                    <h5 className="card-title ">Vaults</h5>
                     <p className="card-text dim">
                     Borrow CDT against any combination of available
                     collateral by opening a Cell. Learn more:{" "}
@@ -21,7 +21,7 @@ const Dashboard = () => {
                     </a>
                     </p>
                     <a className="btn buttons" onClick={() => scrollDown(vaultPosition)}>
-                    Open Vault
+                    Mint CDT
                     </a>
                 </div>
                 </div>
@@ -29,7 +29,7 @@ const Dashboard = () => {
             <div className="col-sm-6">
                 <div className="card shadow">
                 <div className="card-body card-design">
-                    <h5 className="card-title ">Liquidation Pools</h5>
+                    <h5 className="card-title ">Liquidations</h5>
                     <p className="card-text">
                     Earn discounted liquidated collateral by depositing
                     CDT into the single or omni-asset liquidation pools. Learn
@@ -39,7 +39,7 @@ const Dashboard = () => {
                     </a>
                     </p>
                     <a className="btn buttons" onClick={() => scrollDown(liquidationPosition)}>
-                    Deposit
+                    Liquidate
                     </a>
                 </div>
                 </div>
@@ -49,7 +49,7 @@ const Dashboard = () => {
             <div className="col-sm-6">
                 <div className="card shadow ">
                 <div className="card-body card-design">
-                    <h5 className="card-title"> Staking</h5>
+                    <h5 className="card-title">Staking</h5>
                     <p className="card-text">
                     Stake MBRN to enable &amp; increase ownership of the protocol.
                     Learn more:{" "}

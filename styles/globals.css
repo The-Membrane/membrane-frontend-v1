@@ -2105,12 +2105,12 @@ span[data-descr]:hover::after {
   width: 125px;
   font-size: large;
   left: 266px;
-  top: -315px;
+  top: -359px;
 }
 .unstaking-mbrn {  
   position: relative;
   color: white;
-  top: -333px;
+  top: -376px;
   left: 604px;
   width: 100px;
   font-size: x-large;
@@ -2158,6 +2158,14 @@ span[data-descr]:hover::after {
   height: 43px;
   overflow: hidden;
   flex-shrink: 0;
+}
+.gov-icon {
+  position: relative;
+  width: 43px;
+  height: 43px;
+  top: -452px;
+  overflow: hidden;
+  left: 171px;
 }
 .logo-shiftDown {
   top: 13px;

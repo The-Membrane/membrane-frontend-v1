@@ -964,7 +964,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   return (
     <div className="governance">
     <h1 className="pagetitle-gov">Governance</h1>
-    <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/staking.svg" />
+    <Image className="gov-icon" width={43} height={48} alt="" src="/images/staking.svg" />
       <div className="proposals-frame">
         <div className="proposal-axis" />
         <div className="proposal-axis1" />
