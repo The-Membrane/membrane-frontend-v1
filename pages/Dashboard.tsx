@@ -1,8 +1,30 @@
 import React from "react";
 import { WalletSection } from "../components";
-import NavBar, { launchPosition, liquidationPosition, scrollDown, stakingPosition, vaultPosition } from '../components/NavBar';
 
-const Dashboard = () => {
+type DashboardProps = {
+    setActiveComponent: (component: string) => void;
+  };
+
+const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
+
+    const onDocsTextClick = () => {
+        window.open(
+          "https://app.gitbook.com/o/kwPbvcB0Itw78v85zOj9/s/FiyuxZGH4mVNtbbTs1KJ/"
+        );
+      };
+    
+      const onGithubTextClick = () => {
+        window.open("https://github.com/MembraneFinance");
+      };
+    
+      const onTwitterTextClick = () => {
+        window.open("https://twitter.com/insaneinthembrn");
+      };
+    
+      const onDiscordTextClick = () => {
+        window.open("https://discord.gg/ksT6cdHpbV");
+      };
+
     return (
         <div className="fullHeight walletconnect">
         <div className="row ">
@@ -20,7 +42,7 @@ const Dashboard = () => {
                         What is a Vault?
                     </a>
                     </p>
-                    <a className="btn buttons" onClick={() => scrollDown(vaultPosition)}>
+                    <a className="btn buttons" onClick={() => setActiveComponent('vault')}>
                     Mint CDT
                     </a>
                 </div>
@@ -38,7 +60,7 @@ const Dashboard = () => {
                         How do liquidations work?
                     </a>
                     </p>
-                    <a className="btn buttons" onClick={() => scrollDown(liquidationPosition)}>
+                    <a className="btn buttons" onClick={() => setActiveComponent('liquidation')}>
                     Liquidate
                     </a>
                 </div>
@@ -57,7 +79,7 @@ const Dashboard = () => {
                         How value flows to MBRN?
                     </a>
                     </p>
-                    <a className="btn buttons" onClick={() => scrollDown(stakingPosition)}>
+                    <a className="btn buttons" onClick={() => setActiveComponent('staking')}>
                     Stake
                     </a>
                 </div>
@@ -74,11 +96,23 @@ const Dashboard = () => {
                         How much is up for grabs at launch?{" "}
                     </a>
                     </p>
-                    <a className="btn buttons" onClick={() => scrollDown(launchPosition)}>
+                    <a className="btn buttons" onClick={() => setActiveComponent('launch')}>
                     Bootstrap
                     </a>
                 </div>
                 </div>                 
+            </div>
+            <div className="footer">
+                <div className="docs1" onClick={onDocsTextClick}>{`Docs `}</div>
+                <div className="github1" onClick={onGithubTextClick}>
+                    Github
+                </div>
+                <div className="twitter1" onClick={onTwitterTextClick}>
+                    Twitter
+                </div>
+                <div className="discord1" onClick={onDiscordTextClick}>
+                    Discord
+                </div>
             </div>
         </div>            
         </div>
