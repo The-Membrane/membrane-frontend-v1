@@ -1,5 +1,5 @@
 import React from 'react';
-import { MutableRefObject, useRef } from 'react';
+import Image from 'next/image'
 
 export const dashboardPosition = 0;
 export const vaultPosition = 700;
@@ -14,25 +14,11 @@ export const launchPosition = 3270;
     });
   };
 
-const NavBar = () => {   
-
-  const onDocsTextClick = () => {
-    window.open(
-      "https://app.gitbook.com/o/kwPbvcB0Itw78v85zOj9/s/FiyuxZGH4mVNtbbTs1KJ/"
-    );
+  type NavBarProps = {
+    setActiveComponent: (component: string) => void;
   };
 
-  const onGithubTextClick = () => {
-    window.open("https://github.com/MembraneFinance");
-  };
-
-  const onTwitterTextClick = () => {
-    window.open("https://twitter.com/insaneinthembrn");
-  };
-
-  const onDiscordTextClick = () => {
-    window.open("https://discord.gg/ksT6cdHpbV");
-  };
+const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {   
 
     return (
         <div>
@@ -40,7 +26,7 @@ const NavBar = () => {
             {/* We are gonna start with the Nav*/}
             {/* this is your logo*/}
             <a className="navbar-brand" href="#">
-            <img className="logo" src="/images/Logo.png" width={30} height={30} alt="" />
+            <Image className="logo" src="/images/Logo.png" width={30} height={30} alt="" />
             </a>
             {/* end*/}
             {/* these are the buttons*/}
@@ -50,97 +36,92 @@ const NavBar = () => {
             role="tablist"
             aria-orientation="vertical"
             >
-            <a
+            <div
                 className="nav-link spacing"
                 id="v-pills-home-tab"
                 data-toggle="pill"
-                href="#v-pills-home"
+                onClick={() => setActiveComponent('dashboard')}
                 role="tab"
                 aria-controls="v-pills-home"
                 aria-selected="true"
             >
                 {" "}
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/dashboard.svg"
                 width={55}
                 height={55}
                 alt="Dashboard"
-                onClick={() => scrollDown(dashboardPosition)}
                 />
-            </a>
-            <a
+            </div>
+            <div
                 className="nav-link spacing"
                 id="v-pills-profile-tab"
                 data-toggle="pill"
-                href="#v-pills-profile"
+                onClick={() => setActiveComponent('vault')}
                 role="tab"
                 aria-controls="v-pills-profile"
                 aria-selected="false"
             >
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/pie_chart.svg"
                 width={45}
                 height={45}
                 alt="Vaults"
-                onClick={() => scrollDown(vaultPosition)}
                 />
-            </a>
-            <a
+            </div>
+            <div
                 className="nav-link  spacing"
                 id="v-pills-messages-tab"
                 data-toggle="pill"
-                href="#v-pills-messages"
+                onClick={() => setActiveComponent('liquidation')}
                 role="tab"
                 aria-controls="v-pills-messages"
                 aria-selected="false"
             >
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/liquidation_pool.svg"
                 width={45}
                 height={45}
                 alt="Liquidation"
-                onClick={() => scrollDown(liquidationPosition)}
                 />
-            </a>
-            <a
+            </div>
+            <div
                 className="nav-link  spacing"
                 id="v-pills-settings-tab"
                 data-toggle="pill"
-                href="#v-pills-settings"
+                onClick={() => setActiveComponent('staking')}
                 role="tab"
                 aria-controls="v-pills-settings"
                 aria-selected="false"
             >
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/staking.svg"
                 width={45}
                 height={45}
                 alt="Staking"
-                onClick={() => scrollDown(stakingPosition)}
                 />
-            </a>
-            <a
+            </div>
+            <div
                 className="nav-link  spacing"
                 id="v-pills-settings-tab"
                 data-toggle="pill"
-                href="#v-pills-settings"
+                onClick={() => setActiveComponent('launch')}
                 role="tab"
                 aria-controls="v-pills-settings"
                 aria-selected="false"
             >
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/lockdrop.svg"
                 width={45}
                 height={45}
                 alt="Lockdrop"
-                onClick={() => scrollDown(launchPosition)}
                 />
-            </a>
+            </div>
             </div>
             <div className="tab-content" id="v-pills-tabContent">
             <div
@@ -176,18 +157,6 @@ const NavBar = () => {
                 ...
             </div>
             </div>
-        </div>
-        <div className="footer">
-          <div className="docs1" onClick={onDocsTextClick}>{`Docs `}</div>
-          <div className="github1" onClick={onGithubTextClick}>
-            Github
-          </div>
-          <div className="twitter1" onClick={onTwitterTextClick}>
-            Twitter
-          </div>
-          <div className="discord1" onClick={onDiscordTextClick}>
-            Discord
-          </div>
         </div>
         </div>
     );

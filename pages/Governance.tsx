@@ -10,7 +10,7 @@ import { denoms } from ".";
 import { NativeToken } from "../codegen/positions/Positions.types";
 import React from "react";
 import Image from "next/image";
-import { GenericAuthorization } from "osmojs/dist/codegen/cosmos/authz/v1beta1/authz";
+
 
 const SECONDS_PER_DAY = 86400;
 const unstakingPeriod = 4; //days
@@ -1227,7 +1227,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="delegators-y1" />
       <div className="delegators-y2" />
       <div className="staked-mbrn1">Staked: {parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
-      <div className="staked-mbrn2">in Wallet: {walletMBRN}</div>
+      <div className="staked-mbrn2">in Wallet: {walletMBRN.toFixed(2)}</div>
       <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
       <div className="unstaking-mbrn-total">{"/" + parseFloat((userStake.unstaking_total/1_000_000).toFixed(2))}</div>
       {/* <div className="mbrn-stake-logo">
