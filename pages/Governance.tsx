@@ -10,7 +10,7 @@ import { denoms } from ".";
 import { NativeToken } from "../codegen/positions/Positions.types";
 import React from "react";
 import Image from "next/image";
-import { GenericAuthorization } from "osmojs/dist/codegen/cosmos/authz/v1beta1/authz";
+
 
 const SECONDS_PER_DAY = 86400;
 const unstakingPeriod = 4; //days

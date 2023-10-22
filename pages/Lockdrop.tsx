@@ -1239,7 +1239,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
     }
   }
 
-  return (    
+  return (  
     <div className="lockdrop">
     <h1 className="pagetitle-lockdrop">Lockdrop</h1>
     <Image className="titleicon-lockdrop" width={55} height={55} alt="" src="/images/lockdrop.svg" />

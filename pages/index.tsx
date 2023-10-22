@@ -1,30 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Divider,
-  Grid,
-  Heading,
-  Text,
-  Stack,
-  Container,
-  Link,
-  Button,
-  Flex,
-  Icon,
-  useColorMode,
-} from '@chakra-ui/react';
-
-import { useChain } from '@cosmos-kit/react';
-
-import {
-  chainName,
-} from '../config';
-
-const library = {
-  title: 'OsmoJS',
-  text: 'OsmoJS',
-  href: 'https://github.com/osmosis-labs/osmojs',
-};
+import { useRouter } from 'next/router';
 
 import Dashboard from './dashboard';
 import { useEffect, useRef, useState } from 'react';
@@ -59,9 +34,9 @@ export interface Prices {
 }
 
 export default function Home() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { status } = useChain(chainName);
 
+  const [activeComponent, setActiveComponent] = useState('dashboard');
+  
   //Set references
   const dashboardSection = useRef(null);
   const vaultSection = useRef(null);
@@ -148,6 +123,20 @@ export default function Home() {
     
   }, [oraclequeryClient, prices, address])
 
+  const renderComponent = () => {
+    if (activeComponent === 'dashboard') {
+      return <Dashboard setActiveComponent={setActiveComponent}/>;
+    } else if (activeComponent === 'vault') {
+      return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} prices={prices} walletCDT={walletCDT} />;
+    } else if (activeComponent === 'liquidation') {
+      return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} prices={prices} />;
+    } else if (activeComponent === 'staking') {
+      return <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined} />;
+    } else if (activeComponent === 'launch') {
+      return <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={address as string | undefined} prices={prices} />;
+    }
+  };
+
   return (
     <>    
     {/* Required meta tags */}
@@ -173,22 +162,8 @@ export default function Home() {
     />
     <div className="fullHeight">
     <div className="row">
-      <div ref={dashboardSection}>
-        <Dashboard/>        
-      </div>
-        <NavBar/>
-      <div ref={vaultSection}>
-        <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} prices={prices} walletCDT={walletCDT}/>
-      </div>
-      <div ref={liquidationSection}>
-        <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} prices={prices}/>
-      </div>
-      <div ref={stakingSection}>
-        <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined}/>
-      </div>
-      <div ref={launchSection}>
-        <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={address as string | undefined} prices={prices}/>
-      </div>      
+        <NavBar setActiveComponent={setActiveComponent}/> 
+        {renderComponent()}
     </div>
     </div>
     

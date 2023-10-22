@@ -1,6 +1,5 @@
 import React from 'react';
-import { MutableRefObject, useRef } from 'react';
-import Image from "next/image";
+import Image from 'next/image'
 
 export const dashboardPosition = 0;
 export const vaultPosition = 700;
@@ -15,25 +14,11 @@ export const launchPosition = 3270;
     });
   };
 
-const NavBar = () => {   
-
-  const onDocsTextClick = () => {
-    window.open(
-      "https://membrane-finance.gitbook.io/membrane-docs-1/"
-    );
+  type NavBarProps = {
+    setActiveComponent: (component: string) => void;
   };
 
-  const onGithubTextClick = () => {
-    window.open("https://github.com/MembraneFinance");
-  };
-
-  const onTwitterTextClick = () => {
-    window.open("https://twitter.com/insaneinthembrn");
-  };
-
-  const onDiscordTextClick = () => {
-    window.open("https://discord.gg/ksT6cdHpbV");
-  };
+const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {   
 
     return (
         <div>
@@ -51,11 +36,11 @@ const NavBar = () => {
             role="tablist"
             aria-orientation="vertical"
             >
-            <a
+            <div
                 className="nav-link spacing"
                 id="dashboard"
                 data-toggle="pill"
-                href="#dashboard"
+                onClick={() => setActiveComponent('dashboard')}
                 role="tab"
                 aria-controls="dashboard"
                 aria-selected="true"
@@ -67,14 +52,13 @@ const NavBar = () => {
                 width={55}
                 height={55}
                 alt="Dashboard"
-                onClick={() => scrollDown(dashboardPosition)}
                 />
-            </a>
-            <a
+            </div>
+            <div
                 className="nav-link spacing"
                 id="vaults"
                 data-toggle="pill"
-                href="#vaults"
+                onClick={() => setActiveComponent('vault')}
                 role="tab"
                 aria-controls="vaults"
                 aria-selected="false"
@@ -85,14 +69,13 @@ const NavBar = () => {
                 width={45}
                 height={45}
                 alt="Vaults"
-                onClick={() => scrollDown(vaultPosition)}
                 />
-            </a>
-            <a
+            </div>
+            <div
                 className="nav-link  spacing"
                 id="liquidations"
                 data-toggle="pill"
-                href="#liquidations"
+                onClick={() => setActiveComponent('liquidation')}
                 role="tab"
                 aria-controls="liquidations"
                 aria-selected="false"
@@ -103,14 +86,13 @@ const NavBar = () => {
                 width={45}
                 height={45}
                 alt="Liquidation"
-                onClick={() => scrollDown(liquidationPosition)}
                 />
-            </a>
-            <a
+            </div>
+            <div
                 className="nav-link  spacing"
                 id="governance"
                 data-toggle="pill"
-                href="#governance"
+                onClick={() => setActiveComponent('staking')}
                 role="tab"
                 aria-controls="governance"
                 aria-selected="false"
@@ -121,14 +103,13 @@ const NavBar = () => {
                 width={45}
                 height={45}
                 alt="Staking"
-                onClick={() => scrollDown(stakingPosition)}
                 />
-            </a>
-            <a
+            </div>
+            <div
                 className="nav-link  spacing"
                 id="lockdrop"
                 data-toggle="pill"
-                href="#lockdrop"
+                onClick={() => setActiveComponent('launch')}
                 role="tab"
                 aria-controls="lockdrop"
                 aria-selected="false"
@@ -139,9 +120,8 @@ const NavBar = () => {
                 width={45}
                 height={45}
                 alt="Lockdrop"
-                onClick={() => scrollDown(launchPosition)}
                 />
-            </a>
+            </div>
             </div>
             <div className="tab-content" id="v-pills-tabContent">
             <div
@@ -177,18 +157,6 @@ const NavBar = () => {
                 ...
             </div>
             </div>
-        </div>
-        <div className="footer">
-          <div className="docs1" onClick={onDocsTextClick}>{`Docs `}</div>
-          <div className="github1" onClick={onGithubTextClick}>
-            Github
-          </div>
-          <div className="twitter1" onClick={onTwitterTextClick}>
-            Twitter
-          </div>
-          <div className="discord1" onClick={onDiscordTextClick}>
-            Discord
-          </div>
         </div>
         </div>
     );
