@@ -16,9 +16,10 @@ export const launchPosition = 3270;
 
   type NavBarProps = {
     setActiveComponent: (component: string) => void;
+    activeComponent: string;
   };
 
-const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {   
+const NavBar: React.FC<NavBarProps> = ({setActiveComponent, activeComponent}) => {   
 
     return (
         <div>
@@ -37,7 +38,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             aria-orientation="vertical"
             >
             <div
-                className="nav-link spacing"
+                className="nav-link spacing hoverColor"
                 style={{zIndex: 2, cursor: "pointer"}}
                 id="dashboard"
                 data-toggle="pill"
@@ -48,7 +49,6 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             >
                 {" "}
                 <Image
-                className="hoverColor"
                 src="/images/dashboard.svg"
                 width={55}
                 height={55}
@@ -56,7 +56,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 />
             </div>
             <div
-                className="nav-link spacing"
+                className="nav-link spacing hoverColor"
                 style={{zIndex: 2, cursor: "pointer"}}
                 id="vaults"
                 data-toggle="pill"
@@ -66,7 +66,6 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 aria-selected="false"
             >
                 <Image
-                className="hoverColor"
                 src="/images/pie_chart.svg"
                 width={45}
                 height={45}
@@ -74,7 +73,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 />
             </div>
             <div
-                className="nav-link  spacing"
+                className="nav-link spacing hoverColor"
                 style={{zIndex: 2, cursor: "pointer"}}
                 id="liquidations"
                 data-toggle="pill"
@@ -84,7 +83,6 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 aria-selected="false"
             >
                 <Image
-                className="hoverColor"
                 src="/images/liquidation_pool.svg"
                 width={45}
                 height={45}
@@ -92,7 +90,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 />
             </div>
             <div
-                className="nav-link  spacing"
+                className="nav-link spacing hoverColor"
                 style={{zIndex: 2, cursor: "pointer"}}
                 id="governance"
                 data-toggle="pill"
@@ -102,7 +100,6 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 aria-selected="false"
             >
                 <Image
-                className="hoverColor"
                 src="/images/staking.svg"
                 width={45}
                 height={45}
@@ -110,7 +107,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 />
             </div>
             <div
-                className="nav-link  spacing"
+                className="nav-link spacing hoverColor"
                 style={{zIndex: 2, cursor: "pointer"}}
                 id="lockdrop"
                 data-toggle="pill"
@@ -120,7 +117,6 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 aria-selected="false"
             >
                 <Image
-                className="hoverColor"
                 src="/images/lockdrop.svg"
                 width={45}
                 height={45}

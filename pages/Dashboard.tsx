@@ -31,7 +31,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <div className="row ">
         <div className="">
         <h1 className="pageTitle"/>
-        <Image className="dash-logo" src="/images/Logo.png" width={55} height={55} alt="" />
+        <Image className="dash-logo" src="/images/Logo.png" width={65} height={55} alt="" />
+        <h1 className="dash-subtitle">Digital cash for the global sovereign</h1>
         <div className="">
             <div className="card-1">
                 <div className="card shadow" style={{borderRadius: "1rem"}}>
@@ -40,9 +41,10 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <p className="card-text dim">
                     Borrow CDT against any combination of available
                     collateral by opening a Cell. Learn more:{" "}
-                    <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/overview">
+                    <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/overview" target="popup">
                         What is a Vault?
                     </a>
+                    <Image className="mint-symbol" src="/images/Mint_Symbol 1.svg" width={155} height={155} alt="" />
                     </p>
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('vault')}>
                     Mint
@@ -58,9 +60,10 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     Earn discounted liquidated collateral by depositing
                     CDT into the single or omni-asset liquidation pools. Learn
                     more:{" "}
-                    <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/liquidation-mechanism">
+                    <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/liquidation-mechanism" target="popup">
                         How do liquidations work?
                     </a>
+                    <Image className="liq-symbol" src="/images/Lever_Symbol 1.svg" width={155} height={155} alt="" />
                     </p>
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('liquidation')}>
                     Liquidate
@@ -75,9 +78,10 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <p className="card-text">
                     Stake MBRN to enable &amp; increase ownership of the protocol.
                     Learn more:{" "}
-                    <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/mbrn-tokenomics#value-flows">
+                    <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/mbrn-tokenomics#value-flows" target="popup">
                         How value flows to MBRN?
                     </a>
+                    <Image className="vote-symbol" src="/images/Vote Symbol.svg" width={55} height={55} alt="" />
                     </p>
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('staking')}>
                     Stake
@@ -92,9 +96,10 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <p className="card-text">
                     Deposit OSMO to earn a share of staked MBRN that can be
                     boosted by voluntary vesting. Learn more:{" "}
-                    <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/lockdrop-launch">
+                    <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/lockdrop-launch" target="popup">
                         How much is up for grabs at launch?{" "}
                     </a>
+                    <Image className="launch-symbol" src="/images/Farm_Symbol 1.svg" width={155} height={155} alt="" />
                     </p>
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('launch')}>
                     Bootstrap

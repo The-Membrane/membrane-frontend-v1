@@ -2,10 +2,39 @@
 body, html {  
   height: 100%; 
 }
+.dash-subtitle {  
+  position: relative;
+  color: white;
+  z-index: 2;
+  top: 118px;
+  left: 567px;
+  font-size: x-large;
+  font-family: "Manuka";
+}
+.mint-symbol {
+  position: relative;  
+  top: 63px;
+  left: 10px;
+}
+.liq-symbol {
+  position: relative;  
+  top: 42px;
+  left: 10px;
+}
+.vote-symbol {
+  position: relative;  
+  top: 63px;
+  left: 59px;
+}
+.launch-symbol {
+  position: relative;  
+  top: 35px;
+  left: 10px;
+}
 .dash-logo {
   position: absolute;
   z-index: 1;
-  left: 670px;
+  left: 684px;
   top: 7px;
   padding-bottom: 25px;
 }
@@ -79,8 +108,8 @@ p{
 .card-design {  
   background-color: #383838;
   border-radius: 1rem;  
-  height: 300px;
-  width: 200px;
+  height: 340px;
+  width: 220px;
 }
 .walletsection{  
   position: absolute;
@@ -90,7 +119,7 @@ p{
 }
 .card-1, .card-2, .card-3, .card-4{
   position: absolute;  
-  top: 100px;
+  top: 220px;
   z-index: 2;
 }
 .card-1 {
@@ -109,6 +138,8 @@ p{
   color: white;
   font-size: 12px;
   opacity: .8;
+  top: 27px;
+  position: relative;
 }
 .card-title{
   color: white;
@@ -152,10 +183,10 @@ ul{
 .hoverColor:hover {
   background-color: #798EFF;
 }
-.buttons{
+.buttons {
   background-color: #798EFF;  
   position: absolute;
-  top: 240px;
+  top: 280px;
   width: 80%;
 }
 .buttons:hover{
@@ -3349,14 +3380,14 @@ span[data-descr]:hover::after {
 }
 .vault-page {
   position: absolute;
-  top: 570px;
+  top: 0px;
   left: 0px;
   background-color: #212121;
   width: 1366px;
   height: 900px;
 }
 .pie-chart-icon1, .vaults1 {  
-  top: 597px;
+  top: 27px;
 }
 .pie-chart-icon1 {
   position: absolute;
