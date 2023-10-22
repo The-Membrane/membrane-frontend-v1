@@ -27,7 +27,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
       };
 
     return (
-        <div className="fullHeight walletconnect">
+        <div className="fullHeight walletconnect" style={{height: "621px", width: "100%", overflow: "hidden"}}>
         <div className="row ">
         <div className="">
         <h1 className="pageTitle"/>

@@ -29,9 +29,9 @@ interface Props {
 
 const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props) => {
     //Popup
-    const [popupTrigger, setPopupTrigger] = useState(true);
-    const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
-    const [popupStatus, setPopupStatus] = useState("User Agreement");
+    const [popupTrigger, setPopupTrigger] = useState(false);
+    const [popupMsg, setPopupMsg] = useState("");
+    const [popupStatus, setPopupStatus] = useState("");
     //Start screen
     // const [startingParagraph, setStarting] = useState("Click an Asset's Quantity to initiate deposits");
     //Redemptions

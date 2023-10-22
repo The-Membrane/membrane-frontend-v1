@@ -38,6 +38,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             >
             <div
                 className="nav-link spacing"
+                style={{zIndex: 2, cursor: "pointer"}}
                 id="dashboard"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('dashboard')}
@@ -56,6 +57,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             </div>
             <div
                 className="nav-link spacing"
+                style={{zIndex: 2, cursor: "pointer"}}
                 id="vaults"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('vault')}
@@ -73,6 +75,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             </div>
             <div
                 className="nav-link  spacing"
+                style={{zIndex: 2, cursor: "pointer"}}
                 id="liquidations"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('liquidation')}
@@ -90,6 +93,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             </div>
             <div
                 className="nav-link  spacing"
+                style={{zIndex: 2, cursor: "pointer"}}
                 id="governance"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('staking')}
@@ -107,6 +111,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             </div>
             <div
                 className="nav-link  spacing"
+                style={{zIndex: 2, cursor: "pointer"}}
                 id="lockdrop"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('launch')}

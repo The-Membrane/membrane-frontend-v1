@@ -18,7 +18,7 @@ body, html {
   left: -37px;
   z-index: 1;
   height: 290px;
-  width: 1500px;
+  width: 1390px;
   position: absolute;
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
 }
@@ -49,7 +49,7 @@ input {
   height: 100%;
   background-color: #212121;
   font-family: 'Abel', sans-serif;
-  overflow:auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -84,7 +84,7 @@ p{
 }
 .walletsection{  
   position: absolute;
-  left: 89%;
+  left: 88%;
   top: 3%;
   z-index: 2;
 }

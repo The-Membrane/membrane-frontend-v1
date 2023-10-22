@@ -1,15 +1,16 @@
 import React from "react";
 import { useRouter } from 'next/router';
 
-import Dashboard from './dashboard';
+import Dashboard from './Dashboard';
 import { useEffect, useRef, useState } from 'react';
 import NavBar from '../components/NavBar';
-import LiquidationPools from './liquidations';
-import Lockdrop from './lockdrop';
-import Governance from './governance';
-import Positions from './vaults';
+import LiquidationPools from './Liquidations';
+import Lockdrop from './Lockdrop';
+import Governance from './Governance';
+import Positions from './Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
+import Popup from "../components/Popup";
 
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
@@ -36,6 +37,11 @@ export interface Prices {
 export default function Home() {
 
   const [activeComponent, setActiveComponent] = useState('dashboard');
+  
+  //Popup
+  const [popupTrigger, setPopupTrigger] = useState(true);
+  const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
+  const [popupStatus, setPopupStatus] = useState("User Agreement");
   
   //Set references
   const dashboardSection = useRef(null);
@@ -163,7 +169,8 @@ export default function Home() {
     <div className="fullHeight">
     <div className="row">
         <NavBar setActiveComponent={setActiveComponent}/> 
-        {renderComponent()}
+        {renderComponent()}        
+        <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>
     </div>
     
