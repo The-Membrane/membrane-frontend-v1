@@ -16,7 +16,7 @@ export const ConnectWalletButton = ({
     <Button
       w="full"
       minW="fit-content"
-      size="lg"
+      size="md"
       isLoading={isLoading}
       isDisabled={isDisabled}
       bgImage="linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)"

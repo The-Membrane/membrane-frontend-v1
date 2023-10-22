@@ -11,7 +11,7 @@ import { Asset, BasketPositionsResponse, NativeToken, PositionResponse, Redeemab
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
-import { format } from "util";
+import { relative } from "path";
 
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
@@ -23,11 +23,11 @@ interface Props {
     cdp_client: PositionsClient | null;
     queryClient: PositionsQueryClient | null;
     address: string | undefined;
-    prices: Prices;
     walletCDT: number;
+    prices: Prices;
 }
 
-const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props) => {
+const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props) => {
     //Popup
     const [popupTrigger, setPopupTrigger] = useState(true);
     const [popupMsg, setPopupMsg] = useState("HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.");
@@ -49,13 +49,6 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
         assets: [] as string[],
     });
     const [redemptionRes, setredemptionRes] = useState<RedeemabilityResponse>();
-    //Mint repay
-    // const [mintrepayScreen, setmintrepayScreen] = useState("mintrepay-screen");
-    // const [mintAmount, setmintAmount] = useState(0);
-    // const [repayAmount, setrepayAmount] = useState(0);
-    //Close position screen
-    // const [closeScreen, setcloseScreen] = useState("mintrepay-screen");
-    // const [maxSpread, setSpread] = useState(0.01);
     //Deposit-Withdraw screen
     const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
     const [currentfunctionLabel, setcurrentfunctionLabel] = useState("");
@@ -845,7 +838,7 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
                         setsliderValue((+debtAmount + +(amount ?? 0))/1000000);
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Mint of " +(amount ?? 0)+ " CDT successful");
+                        setPopupMsg("Mint of " +(amount ?? 0)+ " CDT into your wallet successful. Be aware that now that you've minted, you can't withdraw collateral that would push your LTV past the yellow line & you'll be liquidated down to said line if you reach the red.");
                         setPopupStatus("Success");
                     })
                     
@@ -1173,21 +1166,16 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
             console.log(error)
         }
    };   
-
-    // const getReadableLPQTY = (qty: number) => {
-    //     {
-    //         let qty_string = (qty).toExponential();
-    //         let exponent = parseInt(qty_string.slice(qty_string.length-2));
-    //         let firstTwoplaces = parseFloat(qty_string.slice(0, 3));
-    //         if (exponent > 18){
-    //             return (firstTwoplaces * Math.pow(10, (exponent - 18))).toFixed(2)
-    //         } else if (exponent < 18){
-    //             return (firstTwoplaces / Math.pow(10, (18 - exponent))).toFixed(2)
-    //         } else {
-    //             return (firstTwoplaces).toFixed(2)
-    //         }
-    //     }
-    // }
+   const onTFMTextClick = () => {
+        window.open(
+        "https://tfm.com/ibc"
+        );
+   };  
+   const onSquidTextClick = () => {
+        window.open(
+        "https://app.squidrouter.com/"
+        );
+   };
 
     //getuserPosition info && set State
     useEffect(() => {
@@ -1317,24 +1305,19 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
             <div className="controller-border"/>
             <div className="controller-frame"/>
             <div className="controller-label"/>
-            <div className="controller-screen-blank"/>
-            {/* <div className="rdemption-button" onClick={handleredeemScreen}/> */}
-            {/* <div className="close-button" onClick={handlecloseScreen}/> */}
+            <div className="controller-screen-blank"> 
+                <div className="starting-screen">
+                    { currentfunctionLabel === "" ? 
+                    <>Depositing requires assets on Osmosis. Bridge/swap to using:&nbsp;
+                    <a className="nowrap" style={{textDecoration: "underline"}} onClick={onTFMTextClick}>TFM</a> for IBC or <a className="nowrap" style={{textDecoration: "underline"}} onClick={onSquidTextClick}>Squid</a>
+                    &nbsp;if outside IBC-connected chains.</>
+                    : null}
+                </div>
+            </div>
             <div className="controller" onClick={currentfunctionLabel === "redemptions" ? handleredeeminfoClick : handleredeemScreen}>Collateral</div>
-            {/* <div className="close-position" onClick={handlecloseScreen}>CLOSE</div> */}
-            {/* <div className="set-redemptions">REDEMPTION</div> */}
             <div className={redeemButton} onClick={handleLogoClick}>
                 <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : "<-----" }</div>
-            </div>            
-            {/* <div className={mintrepayScreen}>   
-                <form>
-                    <div>Mint CDT using the value of your collateralized Bundle or repay your debt</div>
-                    <button className="btn mint-amount-label">Mint: </button>
-                    <input className="mint-amount" style={{backgroundColor:"#454444"}} name="amount" value={mintAmount} type="number" onChange={handlesetmintAmount}/>
-                    <button className="btn amount-label">Repay: </button>
-                    <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={repayAmount} type="number" onChange={handlesetrepayAmount}/>
-                </form>
-            </div> */}
+            </div>    
             <div className={redeemScreen}>
                 <form>            
                     <input className="mint-button-icon2" style={{backgroundColor:"#454444"}} name="premium" value={premium} type="number" onChange={handlesetPremium}/>
@@ -1356,16 +1339,6 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
                         <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>
                     </div>
             </div>
-            {/* <div className={closeScreen}>
-                <div className="close-screen">
-                    Close Position uses Apollos Osmosis router to sell collateral to fulfill ALL REMAINING debt
-                </div>
-                <form>
-                    <label className="spread-label">Max spread (ex: 1% as 0.01)</label>     
-                    <input className="spread" style={{backgroundColor:"#454444"}} name="spread" value={maxSpread} type="number" onChange={handlesetSpread}/>
-                </form>
-                <Image className="cdt-logo-icon7" width={45} height={45} alt="" src="/images/CDT.svg"  onClick={handleLogoClick}/>
-            </div> */}
             <div className={depositwithdrawScreen}>
                 <div className={currentfunctionLabel === "deposit" ? "cdp-deposit-label bold" : "cdp-deposit-label low-opacity"} onClick={handledepositClick}>Deposit</div>
                 <div className="slash">/</div>
@@ -1375,14 +1348,6 @@ const Positions = ({cdp_client, queryClient, address, prices, walletCDT}: Props)
                     <label className="amount-label">{currentAsset} amount:</label>     
                     <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmount}/>
                 </form>
-                {/* <div className="save-asset-intent-button" onClick={handleassetIntent}>
-                    <div className="spacing-top">Save {currentfunctionLabel} intent</div>
-                </div> */}
-                <div className="intents">
-                    {assetIntent.map((intent) => (
-                        <>{intent[0]}: {intent[1]},  </>
-                    ))}
-                </div>
             </div>
           </div>
         </div>

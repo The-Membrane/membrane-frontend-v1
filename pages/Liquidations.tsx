@@ -923,7 +923,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl_container.svg" />
           <div className="premium">10%</div>
           <form>
-            <input className="omni-deposit-amount low-opacity" name="amount" value={omnidepositAmount} type="number" onChange={handlesetomnidAmount}/>
+            <input className="omni-deposit-amount low-opacity" name="amount" disabled={true} value={omnidepositAmount} type="number" onChange={handlesetomnidAmount}/>
             <button className="btn buttons deposit-button-omni low-opacity" type="button">{/* onClick={handleStabilityDeposit} */}
               <div className="deposit-button-label low-opacity" >{/* onClick={handleStabilityDeposit} */}
                 <span tabIndex={0} style={{cursor:"pointer"}} data-descr="NOTE: Funds can be used to liquidate during the 1 day unstaking">Deposit:</span>

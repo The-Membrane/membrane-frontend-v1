@@ -67,7 +67,7 @@ export function useClients(): {
         }
 
         console.log({address, status});
-
+        
         //Set Clients
         setCosmwasmClient(cosmwasmClient);
         setlaunchClient(new LaunchClient(cosmwasmClient, address, testnetAddrs.launch));
@@ -104,6 +104,7 @@ export function useQueryClients(): {
   governancequeryClient: GovernanceQueryClient | null;
   stakingqueryClient: StakingQueryClient | null;
 } {
+
     var query_errored = true;
     const { getCosmWasmClient } = useChain(chainName);
     ///I can change the RPC node here

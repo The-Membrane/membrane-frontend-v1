@@ -1,5 +1,6 @@
 import React from 'react';
 import { MutableRefObject, useRef } from 'react';
+import Image from "next/image";
 
 export const dashboardPosition = 0;
 export const vaultPosition = 700;
@@ -18,7 +19,7 @@ const NavBar = () => {
 
   const onDocsTextClick = () => {
     window.open(
-      "https://app.gitbook.com/o/kwPbvcB0Itw78v85zOj9/s/FiyuxZGH4mVNtbbTs1KJ/"
+      "https://membrane-finance.gitbook.io/membrane-docs-1/"
     );
   };
 
@@ -40,27 +41,27 @@ const NavBar = () => {
             {/* We are gonna start with the Nav*/}
             {/* this is your logo*/}
             <a className="navbar-brand" href="#">
-            <img className="logo" src="/images/Logo.png" width={30} height={30} alt="" />
+            <Image className="logo" src="/images/Logo.png" width={30} height={30} alt="" />
             </a>
             {/* end*/}
             {/* these are the buttons*/}
             <div
             className="nav flex-column nav-pills "
-            id="v-pills-tab"
+            id="dashboard"
             role="tablist"
             aria-orientation="vertical"
             >
             <a
                 className="nav-link spacing"
-                id="v-pills-home-tab"
+                id="dashboard"
                 data-toggle="pill"
-                href="#v-pills-home"
+                href="#dashboard"
                 role="tab"
-                aria-controls="v-pills-home"
+                aria-controls="dashboard"
                 aria-selected="true"
             >
                 {" "}
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/dashboard.svg"
                 width={55}
@@ -71,14 +72,14 @@ const NavBar = () => {
             </a>
             <a
                 className="nav-link spacing"
-                id="v-pills-profile-tab"
+                id="vaults"
                 data-toggle="pill"
-                href="#v-pills-profile"
+                href="#vaults"
                 role="tab"
-                aria-controls="v-pills-profile"
+                aria-controls="vaults"
                 aria-selected="false"
             >
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/pie_chart.svg"
                 width={45}
@@ -89,14 +90,14 @@ const NavBar = () => {
             </a>
             <a
                 className="nav-link  spacing"
-                id="v-pills-messages-tab"
+                id="liquidations"
                 data-toggle="pill"
-                href="#v-pills-messages"
+                href="#liquidations"
                 role="tab"
-                aria-controls="v-pills-messages"
+                aria-controls="liquidations"
                 aria-selected="false"
             >
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/liquidation_pool.svg"
                 width={45}
@@ -107,14 +108,14 @@ const NavBar = () => {
             </a>
             <a
                 className="nav-link  spacing"
-                id="v-pills-settings-tab"
+                id="governance"
                 data-toggle="pill"
-                href="#v-pills-settings"
+                href="#governance"
                 role="tab"
-                aria-controls="v-pills-settings"
+                aria-controls="governance"
                 aria-selected="false"
             >
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/staking.svg"
                 width={45}
@@ -125,14 +126,14 @@ const NavBar = () => {
             </a>
             <a
                 className="nav-link  spacing"
-                id="v-pills-settings-tab"
+                id="lockdrop"
                 data-toggle="pill"
-                href="#v-pills-settings"
+                href="#lockdrop"
                 role="tab"
-                aria-controls="v-pills-settings"
+                aria-controls="lockdrop"
                 aria-selected="false"
             >
-                <img
+                <Image
                 className="hoverColor"
                 src="/images/lockdrop.svg"
                 width={45}
@@ -145,33 +146,33 @@ const NavBar = () => {
             <div className="tab-content" id="v-pills-tabContent">
             <div
                 className="tab-pane fade show active"
-                id="v-pills-home"
+                id="vaults"
                 role="tabpanel"
-                aria-labelledby="v-pills-home-tab"
+                aria-labelledby="vaults"
             >
                 ...
             </div>
             <div
                 className="tab-pane fade"
-                id="v-pills-profile"
+                id="liquidations"
                 role="tabpanel"
-                aria-labelledby="v-pills-profile-tab"
+                aria-labelledby="liquidations"
             >
                 ...
             </div>
             <div
                 className="tab-pane fade"
-                id="v-pills-messages"
+                id="staking"
                 role="tabpanel"
-                aria-labelledby="v-pills-messages-tab"
+                aria-labelledby="staking"
             >
                 ...
             </div>
             <div
                 className="tab-pane fade"
-                id="v-pills-settings"
+                id="launch"
                 role="tabpanel"
-                aria-labelledby="v-pills-settings-tab"
+                aria-labelledby="launch"
             >
                 ...
             </div>

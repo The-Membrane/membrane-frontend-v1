@@ -1,27 +1,36 @@
 
-/* body{
-  background-color: #212121;
-  font-family: 'Abel', sans-serif;
-  margin:auto;
-  color: #ffffff;
-
-} */
-/* .card {
+body, html {  
+  height: 100%; 
+}
+.dash-logo {
+  position: absolute;
+  z-index: 1;
+  left: 670px;
+  top: 7px;
+  padding-bottom: 25px;
+}
+.pageTitle {  
+  background-image: url(../public/images/Background_Header.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-top: 0%;
+  left: -37px;
+  z-index: 1;
+  height: 290px;
+  width: 1500px;
+  position: absolute;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+}
+.background-image {
+  background-image: url(../public/images/Background_Header.png);
+  height: 100%;
+  width: 100%;
   position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #131313;
-  background-clip: border-box;
-  border: 1px solid rgba(0,0,0,.125);
-  border-radius: 0.25rem;
-} */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 .card {
   opacity: .8;
 }
@@ -57,6 +66,9 @@ h5{
 p{
   color: white;
 }
+.card {
+  width: auto;
+}
 .card-body a{
   text-decoration: underline;
   color: white
@@ -66,13 +78,41 @@ p{
 }
 .card-design {  
   background-color: #383838;
+  border-radius: 1rem;  
+  height: 300px;
+  width: 200px;
+}
+.walletsection{  
+  position: absolute;
+  left: 89%;
+  top: 3%;
+  z-index: 2;
+}
+.card-1, .card-2, .card-3, .card-4{
+  position: absolute;  
+  top: 100px;
+  z-index: 2;
+}
+.card-1 {
+  left: 19%;
+}
+.card-2 {
+  left: 36%;
+}
+.card-3 {
+  left: 53%;
+}
+.card-4 {
+  left: 70%;
 }
 .card-text{
   color: white;
+  font-size: 12px;
+  opacity: .8;
 }
 .card-title{
   color: white;
-  font-family: "Roboto", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
 }
 .mgTop{
   margin-top: 5%;
@@ -107,16 +147,19 @@ ul{
   height: 100%;
   position: fixed;
   bottom: 0%;
+  z-index: 0;
 }
 .hoverColor:hover {
   background-color: #798EFF;
 }
 .buttons{
   background-color: #798EFF;  
+  position: absolute;
+  top: 240px;
+  width: 80%;
 }
-.pageTitle{  
-  margin-top: 4.25%;
-  color: #ffffff;
+.buttons:hover{
+  box-shadow: inset 0px 0px 50px #50C9BD;
 }
 .walletconnect{
   overflow-x: hidden;
@@ -796,7 +839,7 @@ span[data-descr]:hover::after {
   position: absolute;
   height: 18px;
   top: 575px;
-  left: 910px;
+  left: 1140px;
   width: 175px;
   color: #ffffff;
   z-index: 1;
@@ -3182,6 +3225,19 @@ span[data-descr]:hover::after {
   left: 50px;
   top: -7px;
 }
+.controller-screen-blank{
+  font-size: small;
+}
+.nowrap {
+  white-space: nowrap;
+  cursor: pointer;
+}
+.starting-screen {  
+  position: relative;
+  left: -2px;
+  top: 66px;
+  text-align: center;
+}
 .close-button,
 .controller-screen-blank,
 .rdemption-button {
@@ -3293,15 +3349,17 @@ span[data-descr]:hover::after {
 }
 .vault-page {
   position: absolute;
-  top: 0;
+  top: 570px;
   left: 0px;
   background-color: #212121;
   width: 1366px;
   height: 900px;
 }
+.pie-chart-icon1, .vaults1 {  
+  top: 597px;
+}
 .pie-chart-icon1 {
   position: absolute;
-  top: 27px;
   left: 99px;
   width: 48px;
   height: 48px;
@@ -3310,7 +3368,6 @@ span[data-descr]:hover::after {
 }
 .vaults1 {
   position: absolute;
-  top: 27px;
   left: 10px;
   font-size: xx-large;
 }
@@ -3515,7 +3572,7 @@ input[type=range][orient=vertical] {
   width: 189px;
   height: 60px;
 }
-.starting-screen {
+/* .starting-screen {
   position: absolute;
   top: 100px;
   left: 42px;
@@ -3525,7 +3582,7 @@ input[type=range][orient=vertical] {
   width: 189px;
   height: 60px;
   z-index: 0;
-}
+} */
 .positions {
   position: relative;
   width: 1366px;

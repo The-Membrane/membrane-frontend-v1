@@ -1,16 +1,18 @@
 import React from "react";
 import { WalletSection } from "../components";
 import NavBar, { launchPosition, liquidationPosition, scrollDown, stakingPosition, vaultPosition } from '../components/NavBar';
+import Image from "next/image";
 
 const Dashboard = () => {
     return (
         <div className="fullHeight walletconnect">
         <div className="row ">
-        <div className="col shiftRight">
-        <h1 className="pageTitle">Dashboard</h1>
-        <div className="row mgTop">
-            <div className="col-sm-6">
-                <div className="card shadow ">
+        <div className="">
+        <h1 className="pageTitle"/>
+        <Image className="dash-logo" src="/images/Logo.png" width={55} height={55} alt="" />
+        <div className="">
+            <div className="card-1">
+                <div className="card shadow" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design">
                     <h5 className="card-title ">Vaults</h5>
                     <p className="card-text dim">
@@ -20,14 +22,14 @@ const Dashboard = () => {
                         What is a Vault?
                     </a>
                     </p>
-                    <a className="btn buttons" onClick={() => scrollDown(vaultPosition)}>
-                    Mint CDT
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => scrollDown(vaultPosition)}>
+                    Mint
                     </a>
                 </div>
                 </div>
             </div>
-            <div className="col-sm-6">
-                <div className="card shadow">
+            <div className="card-2">
+                <div className="card shadow" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design">
                     <h5 className="card-title ">Liquidations</h5>
                     <p className="card-text">
@@ -38,16 +40,14 @@ const Dashboard = () => {
                         How do liquidations work?
                     </a>
                     </p>
-                    <a className="btn buttons" onClick={() => scrollDown(liquidationPosition)}>
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => scrollDown(liquidationPosition)}>
                     Liquidate
                     </a>
                 </div>
                 </div>
             </div>
-            </div>
-            <div className="row">
-            <div className="col-sm-6">
-                <div className="card shadow ">
+            <div className="card-3">
+                <div className="card shadow" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design">
                     <h5 className="card-title">Staking</h5>
                     <p className="card-text">
@@ -57,14 +57,14 @@ const Dashboard = () => {
                         How value flows to MBRN?
                     </a>
                     </p>
-                    <a className="btn buttons" onClick={() => scrollDown(stakingPosition)}>
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => scrollDown(stakingPosition)}>
                     Stake
                     </a>
                 </div>
                 </div>
             </div>
-            <div className="col-sm-6">
-                <div className="card shadow">
+            <div className="card-4">
+                <div className="card shadow" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design">
                     <h5 className="card-title">Lockdrop</h5>
                     <p className="card-text">
@@ -74,16 +74,16 @@ const Dashboard = () => {
                         How much is up for grabs at launch?{" "}
                     </a>
                     </p>
-                    <a className="btn buttons" onClick={() => scrollDown(launchPosition)}>
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => scrollDown(launchPosition)}>
                     Bootstrap
                     </a>
                 </div>
                 </div>                 
             </div>
+            </div>
         </div>            
         </div>
         <WalletSection />
-        </div>
         </div>
     );
 }

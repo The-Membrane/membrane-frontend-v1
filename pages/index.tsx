@@ -1,5 +1,4 @@
 import React from "react";
-import Head from 'next/head';
 import {
   Box,
   Divider,
@@ -14,15 +13,11 @@ import {
   Icon,
   useColorMode,
 } from '@chakra-ui/react';
-import { BsFillMoonStarsFill, BsFillSunFill } from 'react-icons/bs';
 
 import { useChain } from '@cosmos-kit/react';
-import { WalletStatus } from '@cosmos-kit/core';
 
 import {
   chainName,
-  dependencies,
-  products,
 } from '../config';
 
 const library = {
@@ -31,14 +26,15 @@ const library = {
   href: 'https://github.com/osmosis-labs/osmojs',
 };
 
-import Dashboard from './Dashboard';
+import Dashboard from './dashboard';
 import { useEffect, useRef, useState } from 'react';
 import NavBar from '../components/NavBar';
-import LiquidationPools from './Liquidations';
-import Lockdrop from './Lockdrop';
-import Governance from './Governance';
-import Positions from './Positions';
+import LiquidationPools from './liquidations';
+import Lockdrop from './lockdrop';
+import Governance from './governance';
+import Positions from './vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
+import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
@@ -76,7 +72,8 @@ export default function Home() {
   //Get Clients
   const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, base_client, address } = useClients();
   const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, governancequeryClient, stakingqueryClient, oraclequeryClient } = useQueryClients();
-  const addr = address as string | undefined;
+  
+
 
   //Set Prices
   const [prices, setPrices] = useState<Prices>({
@@ -128,7 +125,6 @@ export default function Home() {
                 axlUSDC: parseFloat(res[2].price),
                 atomosmo_pool: parseFloat(res[3].price),
                 osmousdc_pool: parseFloat(res[4].price),
-
             })
         })
     } catch (error) {
@@ -168,6 +164,7 @@ export default function Home() {
       crossOrigin="anonymous"
     />
     <title>Membrane</title>
+    <link rel="icon" type="image/png" href="favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
     <link
@@ -176,21 +173,21 @@ export default function Home() {
     />
     <div className="fullHeight">
     <div className="row">
-        <NavBar/>
       <div ref={dashboardSection}>
         <Dashboard/>        
       </div>
+        <NavBar/>
       <div ref={vaultSection}>
-        <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={addr} prices={prices} walletCDT={walletCDT}/>
+        <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} prices={prices} walletCDT={walletCDT}/>
       </div>
       <div ref={liquidationSection}>
-        <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={addr} prices={prices}/>
+        <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} prices={prices}/>
       </div>
       <div ref={stakingSection}>
-        <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={addr}/>
+        <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined}/>
       </div>
       <div ref={launchSection}>
-        <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={addr} prices={prices}/>
+        <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={address as string | undefined} prices={prices}/>
       </div>      
     </div>
     </div>
