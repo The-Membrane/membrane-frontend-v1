@@ -3466,10 +3466,10 @@ span[data-descr]:hover::after {
   padding-right: 0.75rem;
   padding-bottom: 0.75rem;
 }
-.amount-label:hover,
+/* .amount-label:hover,
 .mint-amount-label:hover {
   background-color: #798eff;
-}
+} */
 .range-label {
   position: absolute;
   font-size: small;
@@ -3516,7 +3516,7 @@ input[type=range][orient=vertical] {
   position: relative;
   text-align: right;
   top: 128px;
-  left: -14px;
+  left: -26px;
   font-size: large;
 }
 .mintrepay-screen,
