@@ -178,8 +178,9 @@ ul{
   height: 100%;
   position: fixed;
   bottom: 0%;
-  z-index: 0;
-}
+  z-index: 2;
+  opacity: 0.8
+  }
 .hoverColor:hover {
   background-color: #798EFF;
 }
