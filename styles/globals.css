@@ -47,7 +47,7 @@ body, html {
   left: -37px;
   z-index: 1;
   height: 290px;
-  width: 1390px;
+  width: 1397px;
   position: absolute;
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
 }
@@ -202,6 +202,7 @@ ul{
 .pool-titles {
   position: relative;
   margin-left: 5%;
+  font-size: 24px;
   margin-top: 5%;
   color: white;
 }
@@ -512,17 +513,36 @@ ul{
   left: 23px;
   border-top: 2px;
   background-color: #ffffff;
-  width: 425px;
+  width: 415px;
   height: 2px;
   z-index: 25;
 }
+.total-bids-card {
+  width: 110px;
+  height: 75px;
+  top: 30px;
+  left: 458px;
+  font-size: medium;
+  text-align: left;
+  font-family: 'Space Grotesk';
+}
+.total-bids {
+  top: 9px;
+  left: 7px;
+  position: relative;
+}
+.total-user-bids {
+  top: 17px;
+  left: 7px;
+  position: relative;
+}
 .singleassetframe {
   position: absolute;
-  top: 80px;
-  padding-left: 30%;
+  top: 65px;
+  left: 12px;
   background-color: #383838;
-  border: 3px solid black;
-  width: 487px;
+  box-shadow: 0px 0px 5px #c1c1c1;
+  width: 584.5px;
   height: 550px;
   display: flex;
   flex-direction: column;
@@ -597,9 +617,9 @@ ul{
   z-index: 13;
   color: black;
   width: 120px;
-  height: 41px;
-  margin-top: 82%;
-  margin-left: 37%;
+  height: 41px; 
+  top: 497px;
+  margin-left: 30.5%;
   background-color: #D9D9D9;
 }
 .withdraw-button,
@@ -610,26 +630,35 @@ ul{
 .omni-withdraw-amount,
 .withdraw-button-omni,
 .deposit-button-omni {
-  position: absolute;
+  position: relative;
   z-index: 20;
   color: black;
   width: 111px;
   height: 38px;
-  margin-top: 70%;
   background-color: #4FCABB;
+}
+.deposit-button-omni {
+  top: 357px;
+  left: 75px;
+}
+.withdraw-button-omni {
+  top: 357px;
+  left: 175px;
 }
 .deposit-button {
   left: 45px;
+  top: 357px;
 }
 .withdraw-button {
-  left: -15px;
+  left: 185px;
+  top: 357px;
 }
 .deposit-amount,
 .omni-deposit-amount{
   position: absolute;
   border: 1px solid #AAA;
   border-radius: 4px;
-  top: 101px;
+  top: 459px;
   left: 105px;
   width: 44px;
   height: 22px;
@@ -643,19 +672,17 @@ input[type="number"]:disabled {
   position: absolute;
   border: 1px solid #AAA;
   border-radius: 4px;
-  top: 101px;
-  left: 393px;
+  top: 459px;
+  left: 365px;
   width: 40px;
   height: 22px;
   z-index: 21;
 }
 .omni-deposit-amount { 
-  top: 114px;
-  left: 105px;
+  left: 137px;
 }
 .omni-withdraw-amount {  
-  top: 114px;
-  left: 374px;
+  left: 357px;
 }
 .deposit-button-label {
   position: absolute;
@@ -734,24 +761,7 @@ span[data-descr]:hover::after {
 .withdraw-button-label {
   position: absolute;
   top: 7px;
-  margin-left: -5%;
-}
-.deposit-button-omni {  
-  margin-left: 9%;
-}
-.withdraw-button,
-.withdraw-button-omni {
-  margin-left: 70%;
-}
-.withdraw-button-omni {
-  margin-left: 66%;
-}
-.withdraw-button-omni,
-.deposit-button-omni {
-  margin-top: 72%;
-}
-.single-asset-btn {
-  margin-top: 80%;
+  left: 4px;
 }
 .capital-ahead-info-circle,
 .omni-asset-info-circle,
@@ -800,12 +810,12 @@ span[data-descr]:hover::after {
 }
 .omniassetframe {
   position: absolute;
-  top: 80px;
-  left: 532px;
+  top: 65px;
+  left: 621px;
   background-color: #383838;
-  border: 3px solid black;
+  box-shadow: 0px 0px 5px #c1c1c1;
   box-sizing: border-box;
-  width: 467px;
+  width: 584.5px;
   height: 550px;
   display: flex;
   flex-direction: column;
@@ -814,20 +824,19 @@ span[data-descr]:hover::after {
 }
 .titleicon {
   position: absolute;
-  top: 0px;
-  left: 260px;
+  top: 7px;
+  left: 238px;
   width: 45px;
   height: 45px;
 }
 .middleborder {
   position: absolute;
-  top: 80px;
-  left: 486px;
+  top: 65px;
+  left: 597px;
   background: linear-gradient(180deg, #798eff, #4fcabb);
-  border-top: 3px solid black;
-  border-bottom: 3px solid black;
+  box-shadow: 0px 0px 5px #c1c1c1;
   box-sizing: border-box;
-  width: 46px;
+  width: 23px;
   height: 550px;
 }
 .docs1,
@@ -880,9 +889,10 @@ span[data-descr]:hover::after {
   left: 50px;
 }
 .pagetitle {
-  top: 29px;
-  left: 98px;
-  margin-bottom: 30%;
+  position: absolute;
+  top: 12px;
+  left: 27px;
+  font-size: xx-large;
   color: #ffffff;
 }
 .logo-icon1 {
@@ -960,10 +970,17 @@ span[data-descr]:hover::after {
 }
 .liquidation-pools {
   position: relative;
-  width: 1440px;
-  height: 630px;
+  width: 1225px;
+  height: 704px;
+  left: -27px;
   overflow: hidden;
   text-align: left;
+  background-color: #2F2F2F;
+  border: 3px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 /*LOCKDROP SPECIFIC*/
@@ -2179,12 +2196,12 @@ span[data-descr]:hover::after {
   width: 125px;
   font-size: large;
   left: 266px;
-  top: -359px;
+  top: -329px;
 }
 .unstaking-mbrn {  
   position: relative;
   color: white;
-  top: -376px;
+  top: -337px;
   left: 604px;
   width: 100px;
   font-size: x-large;
@@ -3196,7 +3213,7 @@ span[data-descr]:hover::after {
 .vault-subframe {
   position: absolute;
   top: 104px;
-  left: 12px;
+  left: -27px;
   background-color: #2F2F2F;
   border: 3px solid black;
   box-sizing: border-box;
@@ -3209,7 +3226,7 @@ span[data-descr]:hover::after {
 }
 .controller-item {
   position: absolute;
-  left: -495px;
+  left: -535px;
   top: 69px;
 }
 .controller-border,
@@ -3393,7 +3410,7 @@ span[data-descr]:hover::after {
 }
 .pie-chart-icon1 {
   position: absolute;
-  left: 126px;
+  left: 94px;
   width: 48px;
   height: 48px;
   overflow: hidden;
@@ -3401,7 +3418,7 @@ span[data-descr]:hover::after {
 }
 .vaults1 {
   position: absolute;
-  left: 40px;
+  left: 4px;
   font-size: xx-large;
 }
 .vault-frame {
@@ -3623,6 +3640,15 @@ input[type=range][orient=vertical] {
   margin-left: 10%;
   text-align: left;
   font-size: x-large;
+  color: white;
+  font-family: 'Abel';
+}
+.liquidations {
+  position: relative;
+  width: 1366px;
+  height: 666px;
+  margin-left: 10%;
+  text-align: left;
   color: white;
   font-family: 'Abel';
 }

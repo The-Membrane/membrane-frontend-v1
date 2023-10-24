@@ -16,10 +16,9 @@ export const launchPosition = 3270;
 
   type NavBarProps = {
     setActiveComponent: (component: string) => void;
-    activeComponent: string;
   };
 
-const NavBar: React.FC<NavBarProps> = ({setActiveComponent, activeComponent}) => {   
+const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {   
 
     return (
         <div>

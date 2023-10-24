@@ -838,7 +838,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                         setsliderValue((+debtAmount + +(amount ?? 0))/1000000);
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Mint of " +(amount ?? 0)+ " CDT into your wallet successful. Be aware that now that you've minted, you can't withdraw collateral that would push your LTV past the yellow line & you'll be liquidated down to said line if you reach the red.");
+                        setPopupMsg("Mint of " +(amount ?? 0)+ " CDT into your wallet successful. Be aware that now that you've minted, you can't withdraw collateral that would push your LTV past the yellow line & you'll be liquidated down to said line if you reach the red. Also, you can't pay below minimum debt so if you've minted at the minimum you'll need to repay in full + interest.");
                         setPopupStatus("Success");
                     })
                     
@@ -1206,7 +1206,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
           <div className="vault-subframe">
             <div className="debt-visual">
               <div className="infobox-icon" />
-              {/* <div className="infobox-icon1" /> */}
               <div className="max-ltv">
                 <div className="liq-value">${(debt / (maxLTV / 100)).toFixed(2)}</div>
                 <div className="cdp-div2">{maxLTV.toFixed(0)}%</div>

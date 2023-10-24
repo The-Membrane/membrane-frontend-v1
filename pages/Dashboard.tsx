@@ -32,7 +32,6 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <div className="">
         <h1 className="pageTitle"/>
         <Image className="dash-logo" src="/images/Logo.png" width={65} height={55} alt="" />
-        <h1 className="dash-subtitle">Digital cash for the global sovereign</h1>
         <div className="">
             <div className="card-1">
                 <div className="card shadow" style={{borderRadius: "1rem"}}>

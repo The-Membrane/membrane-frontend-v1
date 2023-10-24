@@ -837,9 +837,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
 
   return (
     
-    <div className="fullHeight" style={{overflow:"hidden"}}>
-    <div className="row ">
-    <div className="col shiftRight">
+    <div className="liquidations">
+    {/* // <div className="row ">
+    // <div className="col shiftRight"> */}
     <div className="liquidation-pools">
     <h1 className="pagetitle">Liquidation Pools</h1>
         <div className="singleassetframe">
@@ -890,6 +890,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}K</div>
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (10 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
           <div className="x-axis" />
+          {/* <div className="card total-bids-card" style={{backgroundColor: "#585858", position: "relative"}}>
+            <div className="total-bids">Total Bids: {}</div>
+            <div className="total-user-bids">Your Bids: {}</div>
+          </div> */}
           <form>
             <input className="deposit-amount" name="amount" value={depositAmount} disabled={premium === undefined} type="number" onChange={handlesetdAmount}/>
             <button className="btn buttons deposit-button" onClick={handledepositClick} disabled={premium === undefined} type="button">
@@ -908,7 +912,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
               </div>
             </button>
           </form> 
-          <a className="btn buttons claim-button single-asset-btn" onClick={handleclaimClick}>
+          <a className="btn buttons claim-button" style={{marginLeft: "28.5%"}} onClick={handleclaimClick}>
             <p tabIndex={0} data-descr={lqClaimables.display} style={{color: "black"}} onClick={handleclaimClick}>Claim</p>
           </a>
         </div>
@@ -951,10 +955,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         </div>
         <Image className="titleicon" width={45} height={45} alt="" src="/images/liquidation_pool.svg" />
         <div className="middleborder" />
-      </div>
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
-    </div>
-    </div>
+      </div>
+    {/* // </div>
+    // </div> */}
     </div>
   );
 };
