@@ -1220,28 +1220,30 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
               <div className="debt-visual-label" style={{top: 445 - (359 * ((debt/(osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
               <input className="cdt-amount" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
                 name="amount" type="range" min="0" max={((osmoValue + atomValue + axlUSDCValue + atomosmo_poolValue + osmousdc_poolValue)*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} orient="vertical" onChange={({ target: { value: radius } }) => {
-                if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
-                    setsliderValue((debtAmount - walletCDT)/1000000);
-
-                    //Bc we know this is a repay (less than current debt), set amount to Wallet CDT
-                    setAmount((walletCDT/1000000));
-                    setcurrentfunctionLabel("repay");
-                } else {
+                
                     setsliderValue(parseInt(radius));
+                // if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
+                //     setsliderValue((debtAmount - walletCDT)/1000000);
 
-                    if (parseInt(radius) > (debtAmount/1000000)){
-                        //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
-                        setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
-                        setcurrentfunctionLabel("mint");
-                    } else {
-                        //Bc we know this is a repay (less than current debt), set amount to radius
-                        setAmount(parseInt(parseInt(radius).toFixed(0)));
-                        setcurrentfunctionLabel("repay");
-                    }
-                }
+                //     //Bc we know this is a repay (less than current debt), set amount to Wallet CDT
+                //     setAmount((walletCDT/1000000));
+                //     setcurrentfunctionLabel("repay");
+                // } else {
+                //     setsliderValue(parseInt(radius));
+
+                //     if (parseInt(radius) > (debtAmount/1000000)){
+                //         //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
+                //         setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
+                //         setcurrentfunctionLabel("mint");
+                //     } else {
+                //         //Bc we know this is a repay (less than current debt), set amount to radius
+                //         setAmount(parseInt(parseInt(radius).toFixed(0)));
+                //         setcurrentfunctionLabel("repay");
+                //     }
+                // }
               }}/>
               <div className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-               style={{top: -(sliderValue * 2.85) + (400) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
+               style={{top: -(sliderValue * 1.8) + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{(sliderValue - (debtAmount/1000000)).toFixed(1)}
               </div>
               <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%/yr</div>              
