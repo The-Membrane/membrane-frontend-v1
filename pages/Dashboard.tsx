@@ -27,7 +27,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
       };
 
     return (
-        <div className="fullHeight">
+        <div className="fullHeight" style={{height: "100vh"}}>
         <div className="row ">
         <div className="">
         <div className="pageTitle"/>
@@ -36,7 +36,9 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             <div className="card-1">
                 <div className="card" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design shadow">
-                    <h5 className="card-title ">Vaults</h5>
+                    <h5 className="card-title logoNav">
+                    <b><a>V</a><span>A</span><a>U</a><span>L</span><a>T</a><span>S</span></b>
+                    </h5>
                     <p className="card-text dim">
                     Borrow CDT against any combination of available
                     collateral by opening a Cell. Learn more:{" "}

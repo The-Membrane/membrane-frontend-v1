@@ -1,3 +1,66 @@
+@import url(//fonts.googleapis.com/css?family=Vibur);
+
+.logoNav {
+  user-select: none;
+  text-align: center;
+  height: 18px;
+  background-blend-mode: hard-light;
+  background-position-y:top;
+  background-position-x: center;
+  background-size: 100%;
+}
+/* #50C9BD, #7990FE */
+.logoNav b{
+  font: 400 4vh "Vibur";
+  color: #fee;
+  text-shadow: 0 -40px 100px, 0 0 0.2px, 0 0 1em #50C9BD, 0 0 0.5em #50C9BD, 0 0 0.1em #50C9BD, 0 10px 3px #000;
+}
+.logoNav b span{
+  display: inline-block;
+  font-size: 40px;
+  animation: blink linear infinite 2s;
+}
+
+.logoNav b a{
+  display: inline-block;
+  font-size: 40px;
+}
+.logoNav b span:nth-of-type(2){
+  animation: blink linear infinite 3s;
+}
+@keyframes blink {
+  78% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  79%{
+     color: #333;
+  }
+  80% {
+
+    text-shadow: none;
+  }
+  81% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  82% {
+    color: #333;
+    text-shadow: none;
+  }
+  83% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  92% {
+    color: #333;
+    text-shadow: none;
+  }
+  92.5% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+}
 
 body, html {  
   height: 100%; 
@@ -79,8 +142,8 @@ input {
   margin-bottom: 10%;
 }
 .fullHeight{
-  height: 100vh;
-  width: 100%;
+  min-height: 100vh;
+  max-width: 100vw;
   background-color: #212121;
   font-family: 'Abel', sans-serif;
   position: relative;
@@ -3398,8 +3461,8 @@ span[data-descr]:hover::after {
   top: -111px;
   left: 0px;
   background-color: #212121;
-  width: 1366px;
-  height: 900px;
+  width: 100vw;
+  height: 100vh;
 }
 .pie-chart-icon1, .vaults1 {  
   top: 20px;
@@ -3631,9 +3694,9 @@ input[type=range][orient=vertical] {
 } */
 .positions {
   position: relative;
-  width: 1366px;
-  height: 621px;
-  margin-left: 10%;
+  width: 100vw;
+  height: 111vh;
+  margin-left: 9vw;
   text-align: left;
   font-size: x-large;
   color: white;
@@ -3641,9 +3704,9 @@ input[type=range][orient=vertical] {
 }
 .liquidations {
   position: relative;
-  width: 1366px;
-  height: 666px;
-  margin-left: 10%;
+  width: 100vw;
+  height: 111vh;
+  margin-left: 9vw;
   text-align: left;
   color: white;
   font-family: 'Abel';

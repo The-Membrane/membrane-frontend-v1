@@ -40,8 +40,6 @@ export default function Home() {
   const siteId = 3709543;
   const hotjarVersion = 6;
 
-  Hotjar.init(siteId, hotjarVersion);
-
   const [activeComponent, setActiveComponent] = useState('dashboard');
   
   //Popup
@@ -118,6 +116,10 @@ export default function Home() {
         console.log(error)
     }
   }
+
+  useEffect(() => {    
+    Hotjar.init(siteId, hotjarVersion);
+  }, []);
 
   useEffect(() => {
 
