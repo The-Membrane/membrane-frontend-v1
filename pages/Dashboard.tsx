@@ -34,8 +34,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <Image className="dash-logo" src="/images/Logo.png" width={65} height={55} alt="" />
         <div className="">
             <div className="card-1">
-                <div className="card shadow" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design">
+                <div className="card" style={{borderRadius: "1rem"}}>
+                <div className="card-body card-design shadow">
                     <h5 className="card-title ">Vaults</h5>
                     <p className="card-text dim">
                     Borrow CDT against any combination of available
@@ -52,8 +52,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                 </div>
             </div>
             <div className="card-2">
-                <div className="card shadow" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design">
+                <div className="card" style={{borderRadius: "1rem"}}>
+                <div className="card-body card-design shadow">
                     <h5 className="card-title ">Liquidations</h5>
                     <p className="card-text">
                     Earn discounted liquidated collateral by depositing
@@ -71,8 +71,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                 </div>
             </div>
             <div className="card-3">
-                <div className="card shadow" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design">
+                <div className="card" style={{borderRadius: "1rem"}}>
+                <div className="card-body card-design shadow">
                     <h5 className="card-title">Staking</h5>
                     <p className="card-text">
                     Stake MBRN to enable &amp; increase ownership of the protocol.
@@ -89,8 +89,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                 </div>
             </div>
             <div className="card-4">
-                <div className="card shadow" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design">
+                <div className="card" style={{borderRadius: "1rem"}}>
+                <div className="card-body card-design shadow">
                     <h5 className="card-title">Lockdrop</h5>
                     <p className="card-text">
                     Deposit OSMO to earn a share of staked MBRN that can be
