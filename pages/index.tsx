@@ -11,6 +11,7 @@ import Positions from './Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import Popup from "../components/Popup";
+import Hotjar from '@hotjar/browser';
 
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
@@ -35,6 +36,11 @@ export interface Prices {
 }
 
 export default function Home() {
+
+  const siteId = 3709543;
+  const hotjarVersion = 6;
+
+  Hotjar.init(siteId, hotjarVersion);
 
   const [activeComponent, setActiveComponent] = useState('dashboard');
   
@@ -158,7 +164,7 @@ export default function Home() {
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossOrigin="anonymous"
     />
-    <title>Membrane</title>
+    <title>Membrane</title>  
     <link rel="icon" type="image/png" href="favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />

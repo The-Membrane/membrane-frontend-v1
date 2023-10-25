@@ -26,7 +26,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             {/* We are gonna start with the Nav*/}
             {/* this is your logo*/}
             <a className="navbar-brand" href="#">
-            <Image className="logo" src="/images/Logo.png" width={30} height={30} alt="" />
+            {/* <Image className="logo" src="/images/Logo.png" width={30} height={30} alt="" /> */}
             </a>
             {/* end*/}
             {/* these are the buttons*/}
@@ -37,8 +37,8 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             aria-orientation="vertical"
             >
             <div
-                className="nav-link spacing hoverColor"
-                style={{zIndex: 2, cursor: "pointer"}}
+                className="nav-link nav-home-logo hoverColor"
+                style={{zIndex: 2, cursor: "pointer", display: "flex"}}
                 id="dashboard"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('dashboard')}
@@ -46,17 +46,16 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 aria-controls="dashboard"
                 aria-selected="true"
             >
-                {" "}
                 <Image
                 src="/images/dashboard.svg"
-                width={55}
-                height={55}
+                width={45}
+                height={45}
                 alt="Dashboard"
                 />
             </div>
             <div
                 className="nav-link spacing hoverColor"
-                style={{zIndex: 2, cursor: "pointer"}}
+                style={{zIndex: 2, cursor: "pointer", display: "flex"}}
                 id="vaults"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('vault')}
@@ -73,7 +72,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             </div>
             <div
                 className="nav-link spacing hoverColor"
-                style={{zIndex: 2, cursor: "pointer"}}
+                style={{zIndex: 2, cursor: "pointer", display: "flex"}}
                 id="liquidations"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('liquidation')}
@@ -90,7 +89,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             </div>
             <div
                 className="nav-link spacing hoverColor"
-                style={{zIndex: 2, cursor: "pointer"}}
+                style={{zIndex: 2, cursor: "pointer", display: "flex"}}
                 id="governance"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('staking')}
@@ -107,7 +106,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             </div>
             <div
                 className="nav-link spacing hoverColor"
-                style={{zIndex: 2, cursor: "pointer"}}
+                style={{zIndex: 2, cursor: "pointer", display: "flex"}}
                 id="lockdrop"
                 data-toggle="pill"
                 onClick={() => setActiveComponent('launch')}
