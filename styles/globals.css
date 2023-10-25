@@ -1,32 +1,40 @@
 @import url(//fonts.googleapis.com/css?family=Vibur);
 
-.logoNav {
+.neonSign, .neonSign2, .neonSign3, .neonSign4 {
   user-select: none;
   text-align: center;
-  height: 18px;
+  height: 40px;
   background-blend-mode: hard-light;
   background-position-y:top;
   background-position-x: center;
   background-size: 100%;
 }
-/* #50C9BD, #7990FE */
-.logoNav b{
+.neonSign, .neonSign2, .neonSign3, .neonSign4 {
   font: 400 4vh "Vibur";
   color: #fee;
   text-shadow: 0 -40px 100px, 0 0 0.2px, 0 0 1em #50C9BD, 0 0 0.5em #50C9BD, 0 0 0.1em #50C9BD, 0 10px 3px #000;
 }
-.logoNav b span{
+.neonSign b span, .neonSign2 b span, .neonSign3 b span, .neonSign4 b span{
   display: inline-block;
-  font-size: 40px;
-  animation: blink linear infinite 2s;
+  font-size: 30px;
+  animation: blink linear infinite 5s;
 }
 
-.logoNav b a{
+.neonSign b a, .neonSign2 b a, .neonSign3 b a, .neonSign4 b a {
   display: inline-block;
-  font-size: 40px;
+  font-size: 30px;
 }
-.logoNav b span:nth-of-type(2){
-  animation: blink linear infinite 3s;
+.neonSign b span:nth-of-type(2) {
+  animation: blink reverse infinite 8s;
+}
+.neonSign2 b span:nth-of-type(2) {
+  animation: blink reverse infinite 6s;
+}
+.neonSign3 b span:nth-of-type(2) {
+  animation: blink reverse infinite 4s;
+}
+.neonSign4 b span:nth-of-type(2) {
+  animation: blink reverse infinite 2s;
 }
 @keyframes blink {
   78% {
@@ -79,22 +87,22 @@ body, html {
 }
 .mint-symbol {
   position: relative;  
-  top: 63px;
+  top: 53px;
   left: 10px;
 }
 .liq-symbol {
   position: relative;  
-  top: 42px;
+  top: 32px;
   left: 10px;
 }
 .vote-symbol {
   position: relative;  
-  top: 63px;
+  top: 53px;
   left: 59px;
 }
 .launch-symbol {
   position: relative;  
-  top: 35px;
+  top: 25px;
   left: 10px;
 }
 .dash-logo {
@@ -202,10 +210,6 @@ p{
   opacity: .8;
   top: 27px;
   position: relative;
-}
-.card-title{
-  color: white;
-  font-family: "Space Grotesk", sans-serif;
 }
 .mgTop{
   margin-top: 5%;

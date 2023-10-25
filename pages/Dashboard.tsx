@@ -36,7 +36,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             <div className="card-1">
                 <div className="card" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design shadow">
-                    <h5 className="card-title logoNav">
+                    <h5 className="neonSign">
                     <b><a>V</a><span>A</span><a>U</a><span>L</span><a>T</a><span>S</span></b>
                     </h5>
                     <p className="card-text dim">
@@ -56,7 +56,9 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             <div className="card-2">
                 <div className="card" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design shadow">
-                    <h5 className="card-title ">Liquidations</h5>
+                    <h5 className="neonSign2">
+                        <b><a>L</a><span>i</span><a>q</a><span>u</span><a>i</a><span>d</span><a>a</a><span>t</span><a>i</a><span>o</span><a>n</a><span>s</span></b>
+                    </h5>
                     <p className="card-text">
                     Earn discounted liquidated collateral by depositing
                     CDT into the single or omni-asset liquidation pools. Learn
@@ -75,7 +77,9 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             <div className="card-3">
                 <div className="card" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design shadow">
-                    <h5 className="card-title">Staking</h5>
+                    <h5 className="neonSign3">
+                        <b><a>S</a><span>t</span><a>a</a><span>k</span><a>i</a><span>n</span><a>g</a></b>
+                    </h5>
                     <p className="card-text">
                     Stake MBRN to enable &amp; increase ownership of the protocol.
                     Learn more:{" "}
@@ -93,7 +97,9 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             <div className="card-4">
                 <div className="card" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design shadow">
-                    <h5 className="card-title">Lockdrop</h5>
+                    <h5 className="neonSign4">
+                        <b><a>L</a><span>o</span><a>c</a><span>k</span><a>d</a><span>r</span><a>o</a><span>p</span></b>
+                    </h5>
                     <p className="card-text">
                     Deposit OSMO to earn a share of staked MBRN that can be
                     boosted by voluntary vesting. Learn more:{" "}
