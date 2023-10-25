@@ -44,10 +44,10 @@ body, html {
   background-repeat: no-repeat;
   background-size: cover;
   margin-top: 0%;
-  margin-left: 7.6%;
+  margin-left: 7.6vw;
   z-index: 1;
   height: 290px;
-  width: 100%;
+  width: 100vw;
   overflow: hidden;
   position: absolute;
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
@@ -76,11 +76,11 @@ input {
   margin-bottom: 10%;
 }
 .fullHeight{
-  height: 100%;
+  height: 100vh;
   width: 100%;
   background-color: #212121;
   font-family: 'Abel', sans-serif;
-  position: absolute;
+  position: relative;
   overflow: hidden;
 }
 shadow{
@@ -114,8 +114,8 @@ p{
 }
 .walletsection{  
   position: absolute;
-  left: 88%;
-  top: 3%;
+  left: 88vw;
+  top: 3vh;
   z-index: 2;
 }
 .card-1, .card-2, .card-3, .card-4{
@@ -124,16 +124,16 @@ p{
   z-index: 2;
 }
 .card-1 {
-  left: 19%;
+  left: 19vw;
 }
 .card-2 {
-  left: 36%;
+  left: 36vw;
 }
 .card-3 {
-  left: 53%;
+  left: 53vw;
 }
 .card-4 {
-  left: 70%;
+  left: 70vw;
 }
 .card-text{
   color: white;
@@ -176,7 +176,7 @@ ul{
   font-size: var(--font-size-xl);
 }
 .sticky {
-  height: 100%;
+  height: 100vh;
   position: fixed;
   bottom: 0%;
   z-index: 2;
