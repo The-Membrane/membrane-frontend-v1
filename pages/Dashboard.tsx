@@ -31,7 +31,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <div className="row ">
         <div className="">
         <div className="pageTitle"/>
-        <Image className="dash-logo" src="/images/Logo.png" width={65} height={55} alt="" />
+        <Image className="dash-logo" src="/images/Logo.svg" width={65} height={55} alt="" />
         <div className="">
             <div className="card-1">
                 <div className="card" style={{borderRadius: "1rem"}}>
