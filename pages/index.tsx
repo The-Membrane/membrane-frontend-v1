@@ -167,11 +167,9 @@ export default function Home() {
       rel="stylesheet"
     />
     <div className="fullHeight">
-    <div className="row">
         <NavBar setActiveComponent={setActiveComponent}/> 
         {renderComponent()}        
         <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
-    </div>
     </div>
     
   </>

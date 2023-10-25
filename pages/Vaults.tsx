@@ -507,7 +507,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
     //     // setcloseScreen("redemption-screen");
     //     setdepositwithdrawScreen("deposit-withdraw-screen");
     //     //Update label
-    //     // setmintrepayLabel("Repay");handleLogoClick
+    //     // setmintrepayLabel("Repay");handleExecution
     //     //Set functionality        
     //     setcurrentfunctionLabel("repay");
     // };
@@ -738,7 +738,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
             }
           }
     };
-    const handleLogoClick = async () => {
+    const handleExecution = async () => {
         //create a variable for asset_intents so we can mutate it within the function
         //duplicate intents dont work
         var asset_intent = assetIntent;
@@ -883,34 +883,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                 }
                 break;
             }
-            // case "closePosition":{
-            //     try {
-            //         ///Execute the contract
-            //         await cdp_client?.closePosition({
-            //             maxSpread: maxSpread.toString(),
-            //             positionId: positionID,
-            //         }, "auto", undefined).then((res) => {
-            //             console.log(res?.events.toString())
-            //             //set all position data to 0 on success
-            //             zeroData()
-            //             //format pop up
-            //             setPopupTrigger(true);
-            //             setPopupMsg("Position closed successfully");
-            //             setPopupStatus("Success");
-            //         })
-
-            //     } catch (error){
-            //         ////Error message
-            //         const e = error as { message: string }
-            //         console.log(e.message)
-            //         ///Format Pop up
-            //         setPopupTrigger(true);
-            //         setPopupMsg(e.message);
-            //         setPopupStatus("ClosePosition Error");
-            //     }
-
-            //     break;
-            // }
             case "redemptions": {
                 try {                    
                     ///Execute the contract
@@ -1247,11 +1219,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
               <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%/yr</div>              
               <div className="position-stats">
               <div className="infobox-icon2" />
-              <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleLogoClick}>                
-                  <div className="repay" onClick={handleLogoClick}>REPAY</div>
+              <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
+                  <div className="repay" onClick={handleExecution}>REPAY</div>
               </div>
-              <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} data-descr={debtAmount === 0 ? "Use the slider to mint/repay" : null} onClick={handleLogoClick}>
-                  <div className="mint" onClick={handleLogoClick}>MINT</div>                
+              <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} data-descr={debtAmount === 0 ? "Use the slider to mint/repay" : null} onClick={handleExecution}>
+                  <div className="mint" onClick={handleExecution}>MINT</div>                
               </div>
               <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
               <div className="position-visual-words">Mint CDT using the value of your collateralized Bundle</div>
@@ -1314,7 +1286,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                 </div>
             </div>
             <div className="controller" onClick={currentfunctionLabel === "redemptions" ? handleredeeminfoClick : handleredeemScreen}>Collateral</div>
-            <div className={redeemButton} onClick={handleLogoClick}>
+            <div className={redeemButton} onClick={handleExecution}>
                 <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : "<-----" }</div>
             </div>    
             <div className={redeemScreen}>

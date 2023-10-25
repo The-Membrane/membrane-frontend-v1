@@ -27,10 +27,10 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
       };
 
     return (
-        <div className="fullHeight walletconnect" style={{height: "621px", width: "100%", overflow: "hidden"}}>
+        <div className="fullHeight">
         <div className="row ">
         <div className="">
-        <h1 className="pageTitle"/>
+        <div className="pageTitle"/>
         <Image className="dash-logo" src="/images/Logo.png" width={65} height={55} alt="" />
         <div className="">
             <div className="card-1">

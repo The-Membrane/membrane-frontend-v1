@@ -44,10 +44,11 @@ body, html {
   background-repeat: no-repeat;
   background-size: cover;
   margin-top: 0%;
-  left: -37px;
+  margin-left: 7.6%;
   z-index: 1;
   height: 290px;
-  width: 1397px;
+  width: 100%;
+  overflow: hidden;
   position: absolute;
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
 }
@@ -76,11 +77,11 @@ input {
 }
 .fullHeight{
   height: 100%;
+  width: 100%;
   background-color: #212121;
   font-family: 'Abel', sans-serif;
+  position: absolute;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 shadow{
   background-color: #131313;
