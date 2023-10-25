@@ -174,8 +174,8 @@ ul{
   position: fixed;
   bottom: 0%;
   z-index: 2;
-  /* opacity: 0.8; */
-  filter: brightness(80%);
+  opacity: 0.9;
+  filter: brightness(70%);
 }
 .hoverColor:hover {
   background-color: #798EFF;
