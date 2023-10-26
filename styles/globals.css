@@ -236,6 +236,11 @@ ul{
   gap: var(--gap-xs);
   font-size: var(--font-size-xl);
 }
+.nav-label {
+  color: white;
+  position: relative;
+  top: -2vh;
+}
 .sticky {
   height: 100vh;
   position: fixed;
@@ -2995,7 +3000,7 @@ span[data-descr]:hover::after {
   position: relative;
   top: 533px;
   text-align: center;
-  left: 136px;
+  left: 148px;
   z-index: 51;
 }
 .position-stats {

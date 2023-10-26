@@ -10,7 +10,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
 
     const onDocsTextClick = () => {
         window.open(
-          "https://app.gitbook.com/o/kwPbvcB0Itw78v85zOj9/s/FiyuxZGH4mVNtbbTs1KJ/"
+          "https://membrane-finance.gitbook.io/membrane-docs-1/"
         );
       };
     
@@ -31,7 +31,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <div className="row ">
         <div className="">
         <div className="pageTitle"/>
-        <Image className="dash-logo" src="/images/Logo.svg" width={65} height={55} alt="" />
+        <Image className="dash-logo" src="/images/MBRN-logo-template.svg" width={65} height={55} alt="" />
         <div className="">
             <div className="card-1">
                 <div className="card" style={{borderRadius: "1rem"}}>
@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <Image className="liq-symbol" src="/images/Lever_Symbol 1.svg" width={155} height={155} alt="" />
                     </p>
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('liquidation')}>
-                    Liquidate
+                    Bid
                     </a>
                 </div>
                 </div>
@@ -109,7 +109,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <Image className="launch-symbol" src="/images/Farm_Symbol 1.svg" width={155} height={155} alt="" />
                     </p>
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('launch')}>
-                    Bootstrap
+                    Claim
                     </a>
                 </div>
                 </div>                 
