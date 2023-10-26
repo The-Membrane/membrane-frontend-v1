@@ -30,7 +30,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <div className="fullHeight" style={{height: "100vh"}}>
         <div className="row ">
         <div className="">
-        <div className="pageTitle"/>
+        <div className="pageTitle" />
         <Image className="dash-logo" src="/images/MBRN-logo-template.svg" width={65} height={55} alt="" />
         <div className="">
             <div className="card-1">
