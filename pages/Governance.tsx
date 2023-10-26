@@ -522,7 +522,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         setUserStake(prevState => {
           return {
             ...prevState,
-            staked: +prevState.staked + +(stakeAmount ?? 0),
+            staked: +prevState.staked + +((stakeAmount ?? 0)* 1_000_000),
           }
         })
       })
@@ -551,10 +551,10 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         if (userStake.unstaking.amount === 0) {
           setUserStake(prevState => {
             return {              
-              staked: +prevState.staked - +(unstakeAmount ?? 0),
-              unstaking_total: +prevState.unstaking_total + +(unstakeAmount ?? 0),
+              staked: +prevState.staked - +((unstakeAmount ?? 0)* 1_000_000),
+              unstaking_total: +prevState.unstaking_total + +((unstakeAmount ?? 0)* 1_000_000),
               unstaking: {
-                amount: +prevState.unstaking.amount + +(unstakeAmount ?? 0),
+                amount: +prevState.unstaking.amount + +((unstakeAmount ?? 0)* 1_000_000),
                 timeLeft: unstakingPeriod,
               }
             }
@@ -564,8 +564,8 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           setUserStake(prevState => {
             return {
               ...prevState,
-              unstaking_total: +prevState.unstaking_total + +(unstakeAmount ?? 0),
-              staked: +prevState.staked - +(unstakeAmount ?? 0),
+              unstaking_total: +prevState.unstaking_total + +((unstakeAmount ?? 0)* 1_000_000),
+              staked: +prevState.staked - +((unstakeAmount ?? 0)* 1_000_000),
             }
           })
         }
