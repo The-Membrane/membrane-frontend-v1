@@ -739,6 +739,12 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
           }
     };
     const handleExecution = async () => {
+        //Check if wallet is connected
+        if (address === undefined) {
+          setPopupMsg("Connect your wallet on the dashboard")
+          setPopupStatus("Wallet not connected")
+          setPopupTrigger(true)      
+        }
         //create a variable for asset_intents so we can mutate it within the function
         //duplicate intents dont work
         var asset_intent = assetIntent;

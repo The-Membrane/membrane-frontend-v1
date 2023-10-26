@@ -1222,6 +1222,11 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
     }
   }
   const handleclaimClick = async () => {
+    if (address === undefined) {
+      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     try {
       await launch_client?.claim().then((res) => {        
         //Format popup message

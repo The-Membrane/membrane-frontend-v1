@@ -509,6 +509,12 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   }
 
   const handlestakeClick = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg(<>"Connect your wallet on the dashboard"</>)
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     try {
       await stakingClient?.stake({}
         ,"auto", undefined, coins((stakeAmount ?? 0) * 1_000_000, denoms.mbrn)
@@ -537,6 +543,12 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   }
 
   const handleunstakeClick = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg(<>"Connect your wallet on the dashboard"</>)
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     try {      
       await stakingClient?.unstake({
         mbrnAmount: ((unstakeAmount ?? 0) * 1_000_000).toString(),
@@ -581,6 +593,12 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
     }
   }
   const handleclaimClick = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg(<>"Connect your wallet on the dashboard"</>)
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     try {
       await stakingClient?.claimRewards({
         restake: false,

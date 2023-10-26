@@ -344,6 +344,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handledepositClick = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     //Get denom from menu asset
     let workingDenom: string = "";
     switch(menuAsset){
@@ -397,6 +403,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handlewithdrawClick = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     //Get denom from menu asset
     let workingDenom: string = "";
     switch(menuAsset){
@@ -483,6 +495,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handleclaimClick = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     try {
       //Claim for each bidFor asset
       for (let i = 0; i < lqClaimables.bidFor.length; i++) {     
@@ -518,6 +536,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handleStabilityDeposit = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     try {
       await sp_client?.deposit({}
         , "auto", undefined, coins(((omnidepositAmount ?? 0) * 1_000_000), denoms.cdt)
@@ -568,6 +592,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
   }
   const handleStabilityWithdraw = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     try {
       await sp_client?.withdraw({
         amount: ((omniwithdrawAmount ?? 0) * 1_000_000).toString(),
@@ -675,6 +705,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handleStabilityClaim = async () => {
+    //Check if wallet is connected
+    if (address === undefined) {
+      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupStatus("Wallet not connected")
+      setPopupTrigger(true)      
+    }
     try { 
       await sp_client?.claimRewards("auto", undefined).then((res) => {
         console.log(res)

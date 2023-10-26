@@ -113,7 +113,6 @@ body, html {
   padding-bottom: 25px;
 }
 .pageTitle {  
-  /* background-image: url(../public/images/Background_Header\ 1.png); */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -121,7 +120,6 @@ body, html {
   filter: brightness(80%);
   margin-left: 6.8vw;
   z-index: 1;
-  /* height: 290px; */
   width: 100vw;
   overflow: hidden;
   position: absolute;
