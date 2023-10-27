@@ -12,6 +12,7 @@ import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
 import { relative } from "path";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
@@ -25,57 +26,135 @@ interface Props {
     address: string | undefined;
     walletCDT: number;
     prices: Prices;
-}
-
-const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props) => {
-    //Popup
-    const [popupTrigger, setPopupTrigger] = useState(false);
-    const [popupMsg, setPopupMsg] = useState("");
-    const [popupStatus, setPopupStatus] = useState("");
+    //State
+    popupTrigger: boolean;
+    setPopupTrigger: (popupTrigger: boolean) => void;
+    popupMsg: ReactJSXElement;
+    setPopupMsg: (popupMsg: ReactJSXElement) => void;
+    popupStatus: string;
+    setPopupStatus: (popupStatus: string) => void;
     //Redemptions
-    const [posClick, setposClick] = useState("mint-button-icon3");
-    const [negClick, setnegClick] = useState("mint-button-icon4");
-    const [redeemScreen, setredeemScreen] = useState("redemption-screen");
-    const [redeemInfoScreen, setredeemInfoScreen] = useState("redemption-screen");
-    const [redeemButton, setredeemButton] = useState("user-redemption-button");
-    const [redeemability, setRedeemability] = useState<boolean>();
-    const [premium, setPremium] = useState();
-    const [loanUsage, setloanUsage] = useState();
-    const [restrictedAssets, setRestricted] = useState({
-        sentence: "Click Assets on the left to restrict redemption from, currently restricted: ",
-        readable_assets: [] as string[],
-        assets: [] as string[],
-    });
-    const [redemptionRes, setredemptionRes] = useState<RedeemabilityResponse>();
+    posClick: string;
+    setposClick: (posClick: string) => void;
+    negClick: string;
+    setnegClick: (negClick: string) => void;
+    redeemScreen: string;
+    setredeemScreen: (redeemScreen: string) => void;
+    redeemInfoScreen: string;
+    setredeemInfoScreen: (redeemInfoScreen: string) => void;
+    redeemButton: string;
+    setredeemButton: (redeemButton: string) => void;
+    redeemability: boolean | undefined;
+    setRedeemability: (redeemability: boolean | undefined) => void;
+    premium: number | undefined;
+    setPremium: (premium: number) => void;
+    loanUsage: string | undefined;
+    setloanUsage: (loanUsage: string) => void;
+    restrictedAssets: {
+        sentence: string,
+        readable_assets: string[],
+        assets: string[],
+    };
+    setRestricted: (restrictedAssets: {
+        sentence: string,
+        readable_assets: string[],
+        assets: string[],
+    }) => void;
+    redemptionRes: RedeemabilityResponse | undefined;
+    setredemptionRes: (redemptionRes: RedeemabilityResponse | undefined) => void;
     //Deposit-Withdraw screen
-    const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
-    const [currentfunctionLabel, setcurrentfunctionLabel] = useState("");
-    const [currentAsset, setcurrentAsset] = useState("");
-    const [assetIntent, setassetIntent] = useState<[string , number][]>([]);
-    const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
-    const [amount, setAmount] = useState<number | undefined>();
+    depositwithdrawScreen: string;
+    setdepositwithdrawScreen: (depositwithdrawScreen: string) => void;
+    currentfunctionLabel: string;
+    setcurrentfunctionLabel: (currentfunctionLabel: string) => void;
+    currentAsset: string;
+    setcurrentAsset: (currentAsset: string) => void;
+    assetIntent: [string, number][];
+    setassetIntent: (assetIntent: [string, number][]) => void;
+    maxLPamount: bigint;
+    setmaxLPamount: (maxLPamount: bigint) => void;
+    amount: number | undefined;
+    setAmount: (amount: number | undefined) => void;
     //Asset specific
         //qty
-    const [osmoQTY, setosmoQTY] = useState(0);
-    const [atomQTY, setatomQTY] = useState(0);
-    const [axlusdcQTY, setaxlusdcQTY] = useState(0);
-    const [atomosmo_poolQTY, setatomosmo_poolQTY] = useState(0);
-    const [osmousdc_poolQTY, setosmousdc_poolQTY] = useState(0);
+    osmoQTY: number;
+    setosmoQTY: (osmoQTY: number) => void;
+    atomQTY: number;
+    setatomQTY: (atomQTY: number) => void;
+    axlusdcQTY: number;
+    setaxlusdcQTY: (axlusdcQTY: number) => void;
+    atomosmo_poolQTY: number;
+    setatomosmo_poolQTY: (atomosmo_poolQTY: number) => void;
+    osmousdc_poolQTY: number;
+    setosmousdc_poolQTY: (osmousdc_poolQTY: number) => void;
         //style
-    const [osmoStyle, setosmoStyle] = useState("low-opacity");
-    const [atomStyle, setatomStyle] = useState("low-opacity");
-    const [axlusdcStyle, setaxlusdcStyle] = useState("low-opacity");
-    const [atomosmo_poolStyle, setatomosmo_poolStyle] = useState("low-opacity");
-    const [osmousdc_poolStyle, setosmousdc_poolStyle] = useState("low-opacity");
+    osmoStyle: string;
+    setosmoStyle: (osmoStyle: string) => void;
+    atomStyle: string;
+    setatomStyle: (atomStyle: string) => void;
+    axlusdcStyle: string;
+    setaxlusdcStyle: (axlusdcStyle: string) => void;
+    atomosmo_poolStyle: string;
+    setatomosmo_poolStyle: (atomosmo_poolStyle: string) => void;
+    osmousdc_poolStyle: string;
+    setosmousdc_poolStyle: (osmousdc_poolStyle: string) => void;
     //Positions Visual
-    const [debtAmount, setdebtAmount] = useState(0);
-    const [maxLTV, setmaxLTV] = useState(100);
-    const [brwLTV, setbrwLTV] = useState(0);
-    const [cost, setCost] = useState(0);
-    const [positionID, setpositionID] = useState("0");
-    const [user_address, setAddress] = useState("");
-    const [sliderValue, setsliderValue] = useState(0);
-    const [creditPrice, setcreditPrice] = useState(0);
+    debtAmount: number;
+    setdebtAmount: (debtAmount: number) => void;
+    maxLTV: number;
+    setmaxLTV: (maxLTV: number) => void;
+    brwLTV: number;
+    setbrwLTV: (brwLTV: number) => void;
+    cost: number;
+    setCost: (cost: number) => void;
+    positionID: string;
+    setpositionID: (positionID: string) => void;
+    user_address: string;
+    setAddress: (user_address: string) => void;
+    sliderValue: number;
+    setsliderValue: (sliderValue: number) => void;
+    creditPrice: number;
+    setcreditPrice: (creditPrice: number) => void;          
+}
+
+const Positions = ({cdp_client, queryClient, address, walletCDT, prices, 
+    popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
+    posClick, setposClick,
+    negClick, setnegClick,
+    redeemScreen, setredeemScreen,
+    redeemInfoScreen, setredeemInfoScreen,
+    redeemButton, setredeemButton,
+    redeemability, setRedeemability,
+    premium, setPremium,
+    loanUsage, setloanUsage,
+    restrictedAssets, setRestricted,
+    redemptionRes, setredemptionRes,
+    depositwithdrawScreen, setdepositwithdrawScreen,
+    currentfunctionLabel, setcurrentfunctionLabel,
+    currentAsset, setcurrentAsset,
+    assetIntent, setassetIntent,
+    maxLPamount, setmaxLPamount,
+    amount, setAmount,
+    osmoQTY, setosmoQTY,
+    atomQTY, setatomQTY,
+    axlusdcQTY, setaxlusdcQTY,
+    atomosmo_poolQTY, setatomosmo_poolQTY,
+    osmousdc_poolQTY, setosmousdc_poolQTY,
+    osmoStyle, setosmoStyle,
+    atomStyle, setatomStyle,
+    axlusdcStyle, setaxlusdcStyle,
+    atomosmo_poolStyle, setatomosmo_poolStyle,
+    osmousdc_poolStyle, setosmousdc_poolStyle,
+    debtAmount, setdebtAmount,
+    maxLTV, setmaxLTV,
+    brwLTV, setbrwLTV,
+    cost, setCost,
+    positionID, setpositionID,
+    user_address, setAddress,
+    sliderValue, setsliderValue,
+    creditPrice, setcreditPrice
+}: Props) => {
+    
 
 
     const handleOSMOqtyClick = async (currentFunction: string) => {
@@ -189,7 +268,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
         //
         //Format popup to inform user that redemptions are unaudited
         setPopupTrigger(true);
-        setPopupMsg("Redemptions are unaudited & fully opt-in, so please use at your own risk.");
+        setPopupMsg(<div>"Redemptions are unaudited & fully opt-in, so please use at your own risk."</div>);
         setPopupStatus("Warning");
     };
     const handleredeeminfoClick = async () => {
@@ -722,7 +801,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
     const handleExecution = async () => {
         //Check if wallet is connected
         if (address === undefined) {
-          setPopupMsg("Connect your wallet on the dashboard")
+          setPopupMsg(<div>Connect your wallet on the dashboard</div>)
           setPopupStatus("Wallet not connected")
           setPopupTrigger(true)
           return;
@@ -753,10 +832,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                         var readable_asset_intent = asset_intent.map((asset) => {
                             return asset[1] + " " + asset[0]
                         })
-                        setPopupMsg("Deposit of " +readable_asset_intent+ " successful");
+                        setPopupMsg(<div>Deposit of {readable_asset_intent} successful</div>);
                         setPopupStatus("Success");   
                         //Update Position data
-                        fetch_update_positionData();
+                        // fetch_update_positionData();
                     });
 
                     //Clear intents
@@ -767,7 +846,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                     console.log(e.message)
                     ///Format Pop up
                     setPopupTrigger(true);
-                    setPopupMsg(e.message);
+                    setPopupMsg(<div>{e.message}</div>);
                     setPopupStatus("Deposit Error");
                 }
                break;
@@ -793,10 +872,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                         })
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Withdrawal of " +readable_asset_intent+ " successful");
+                        setPopupMsg(<div>Withdrawal of {readable_asset_intent} successful</div>);
                         setPopupStatus("Success");              
                         //Update Position data
-                        fetch_update_positionData();
+                        // fetch_update_positionData();
                     })
 
                     //Clear intents
@@ -807,7 +886,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                     console.log(e.message)
                     ///Format Pop up
                     setPopupTrigger(true);
-                    setPopupMsg(e.message);
+                    setPopupMsg(<div>{e.message}</div>);
                     setPopupStatus("Withdrawal Error");
                 } 
                 break;
@@ -825,7 +904,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                         setsliderValue((+debtAmount + +((amount ?? 0) * 1_000_000))/1000000);
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Mint of " +(amount ?? 0)+ " CDT into your wallet successful. Be aware that now that you've minted, you can't withdraw collateral that would push your LTV past the yellow line & you'll be liquidated down to said line if you reach the red. Also, you can't pay below minimum debt so if you've minted at the minimum you'll need to repay in full + interest.");
+                        setPopupMsg(<div>Mint of {(amount ?? 0)} CDT into your wallet successful. Be aware that now that you've minted, you can't withdraw collateral that would push your LTV past the yellow line & you'll be liquidated down to said line if you reach the red. Also, you can't pay below minimum debt so if you've minted at the minimum you'll need to repay in full + interest.</div>);
                         setPopupStatus("Success");
                     })
                     
@@ -835,7 +914,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                     console.log(e.message)
                     ///Format Pop up
                     setPopupTrigger(true);
-                    setPopupMsg(e.message);
+                    setPopupMsg(<div>{e.message}</div>);
                     setPopupStatus("Mint Error");
                 }
                 
@@ -854,7 +933,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                         setsliderValue((+debtAmount - +(amount ?? 0))/1000000);
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Repayment of " +(amount ?? 0)+ " CDT successful");
+                        setPopupMsg(<div>Repayment of {(amount ?? 0)} CDT successful</div>);
                         setPopupStatus("Success");
                     })
                     
@@ -864,7 +943,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                     console.log(e.message)
                     ///Format Pop up
                     setPopupTrigger(true);
-                    setPopupMsg(e.message);
+                    setPopupMsg(<div>{e.message}</div>);
                     setPopupStatus("Repay Error");
                 }
                 break;
@@ -883,7 +962,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                         console.log(res?.events.toString())
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg("Redemption settings updated successfully");
+                        setPopupMsg(<div>Redemption settings updated successfully</div>);
                         setPopupStatus("Success");
                     })
 
@@ -893,21 +972,21 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
                     console.log(e.message)
                     ///Format Pop up
                     setPopupTrigger(true);
-                    setPopupMsg(e.message);
+                    setPopupMsg(<div>{e.message}</div>);
                     setPopupStatus("Edit Redemption Info Error");
                 }
             }
         }
 
     };
-    const handleassetIntent = () => {
-        if (amount !== undefined && amount > 0){
-            setassetIntent(prevState => [
-                ...prevState,
-                [currentAsset, amount]
-            ]);
-        }
-    };
+    // const handleassetIntent = () => {
+    //     if (amount !== undefined && amount > 0){
+    //         setassetIntent(prevState => [
+    //             ...prevState,
+    //             [currentAsset, amount]
+    //         ]);
+    //     }
+    // };
     //we add decimals to the asset amounts
     const getcoinsfromassetIntents = (intents: [string, number][]) => {
         var workingIntents: Coin[] = [];
@@ -1000,114 +1079,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
         })
         return workingIntents
     };
-
-   const fetch_update_positionData = async () => {
-        //Query for position data
-        try {
-            
-            //getBasket
-            const basketRes = await queryClient?.getBasket();
-
-            //getPosition
-            const userRes = await queryClient?.getBasketPositions(
-                {
-                    user: address as string,
-                }
-            );
-            
-            //query rates
-            const rateRes = await queryClient?.getCollateralInterest();
-            const creditRateRes = await queryClient?.getCreditRate();
-
-
-            // console.log("userRes: ", userRes)
-            //Set state
-            if (userRes != undefined){
-                //setPositionID
-                //@ts-ignore
-                setpositionID(userRes[0].positions[0].position_id)
-                //Set debtAmount
-                var debt_amount = parseInt(userRes[0].positions[0].credit_amount);
-                setdebtAmount(debt_amount);
-                setsliderValue(debt_amount/1000000);
-                //setLTVs
-                //@ts-ignore
-                setmaxLTV(parseFloat(userRes[0].positions[0].avg_max_LTV) * +100)
-                //@ts-ignore
-                setbrwLTV(parseFloat(userRes[0].positions[0].avg_borrow_LTV) * +100)
-                
-                
-                //setAssetQTYs
-                //@ts-ignore
-                userRes[0].positions[0].collateral_assets.forEach(asset => {
-                    // @ts-ignore
-                    var actual_asset = asset.asset.info.native_token.denom;
-                    
-                    console.log("actual_asset: ", actual_asset)
-                    if (actual_asset === denoms.osmo) {
-                        setosmoQTY(parseInt(asset.asset.amount) / 1_000_000)                            
-                        setosmoStyle("");
-                    } else if (actual_asset === denoms.atom) {
-                        setatomQTY(parseInt(asset.asset.amount) / 1_000_000)
-                        setatomStyle("");
-                    } else if (actual_asset === denoms.axlUSDC) {
-                        setaxlusdcQTY(parseInt(asset.asset.amount) / 1_000_000)
-                        setaxlusdcStyle("");
-                    } else if (actual_asset === denoms.atomosmo_pool) {
-                        setatomosmo_poolQTY(parseInt(asset.asset.amount))
-                        setatomosmo_poolStyle("");
-                    } else if (actual_asset === denoms.osmousdc_pool) {
-                        setosmousdc_poolQTY(parseInt(asset.asset.amount))
-                        setosmousdc_poolStyle("");
-                    }                    
-                })
-
-                if (basketRes != undefined){
-                    
-                    //calc Debt
-                    //@ts-ignore
-                    setcreditPrice(parseFloat(basketRes.credit_price.price))
-                    
-                    if (rateRes != undefined){
-                        ///setCost///
-                        var total_rate = 0.0;
-                        //get the positions collateral indices in Basket rates
-                        //@ts-ignore
-                        userRes[0].positions[0].collateral_assets.forEach((asset, index, _) => {
-                            //find the asset's index                
-                            var rate_index = basketRes.collateral_types.findIndex((info) => {
-                                // @ts-ignore
-                                return info.asset.info.native_token.denom === asset.asset.info.native_token.denom
-                            })
-
-                            //use the index to get its interest rate
-                            var asset_rate = rateRes.rates[rate_index];
-
-                            //add pro-rata rate to sum 
-                            //@ts-ignore
-                            total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes[0].positions[0].cAsset_ratios[index])).toFixed(4));
-                        })
-
-                        if (creditRateRes != undefined){
-                            //Add credit rate to cost
-                            if (creditRateRes.negative_rate && basketRes.negative_rates){
-                                total_rate -= parseFloat(creditRateRes.credit_interest);
-                                console.log(creditRateRes.negative_rate && basketRes.negative_rates)
-                            } else {
-                                total_rate += parseFloat(creditRateRes.credit_interest);
-                            }   
-                        }
-                        //setCost 
-                        setCost(total_rate);
-                    }
-                    
-                }
-            }
-            
-        } catch (error) {
-            console.log(error)
-        }
-   };   
+      
    const onTFMTextClick = () => {
         window.open(
         "https://tfm.com/ibc"
@@ -1133,10 +1105,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices}: Props)
             //setAddress
             setAddress(address as string)
 
-            if (positionID === "0"){
-                //fetch & Update position data
-                fetch_update_positionData()
-            }
+            // if (positionID === "0"){
+            //     //fetch & Update position data
+            //     fetch_update_positionData()
+            // }
         } else {        
             console.log("address: ", address)
         }
