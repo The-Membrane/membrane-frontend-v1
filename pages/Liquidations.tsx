@@ -349,6 +349,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       setPopupMsg("Connect your wallet on the dashboard")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
+      return;
     }
     //Get denom from menu asset
     let workingDenom: string = "";
@@ -408,6 +409,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       setPopupMsg("Connect your wallet on the dashboard")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
+      return;
     }
     //Get denom from menu asset
     let workingDenom: string = "";
@@ -499,7 +501,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     if (address === undefined) {
       setPopupMsg("Connect your wallet on the dashboard")
       setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
+      setPopupTrigger(true)     
+      return; 
     }
     try {
       //Claim for each bidFor asset
@@ -540,7 +543,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     if (address === undefined) {
       setPopupMsg("Connect your wallet on the dashboard")
       setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
+      setPopupTrigger(true)     
+      return; 
     }
     try {
       await sp_client?.deposit({}
@@ -597,6 +601,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       setPopupMsg("Connect your wallet on the dashboard")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
+      return;
     }
     try {
       await sp_client?.withdraw({
@@ -710,6 +715,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       setPopupMsg("Connect your wallet on the dashboard")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
+      return;
     }
     try { 
       await sp_client?.claimRewards("auto", undefined).then((res) => {

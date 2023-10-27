@@ -514,6 +514,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       setPopupMsg(<>"Connect your wallet on the dashboard"</>)
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
+      return;
     }
     try {
       await stakingClient?.stake({}
@@ -548,6 +549,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       setPopupMsg(<>"Connect your wallet on the dashboard"</>)
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
+      return;
     }
     try {      
       await stakingClient?.unstake({
@@ -598,6 +600,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       setPopupMsg(<>"Connect your wallet on the dashboard"</>)
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
+      return;
     }
     try {
       await stakingClient?.claimRewards({
