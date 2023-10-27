@@ -125,15 +125,6 @@ body, html {
   position: absolute;
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
 }
-/* .background-image {
-  background-image: url(../public/images/Background_Header.png);
-  height: 100%;
-  width: 100%;
-  position: relative;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-} */
 .card {
   opacity: .8;
 }
