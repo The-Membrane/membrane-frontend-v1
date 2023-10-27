@@ -605,7 +605,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
             })
         }
     };
-    const handlesetAmount = (event: any) => {
+    const handlesetAmountInput = (event: any) => {
         event.preventDefault();
         setAmount(event.target.value);
         if (currentfunctionLabel === "deposit"){
@@ -623,6 +623,24 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
             handleQTYsubtraction(currentAsset, +(event.target.value) - +(amount as number));
         }
       };
+    const handlesetAmount = () => {
+        var newAmount = Number(maxLPamount);
+        setAmount(newAmount);
+        if (currentfunctionLabel === "deposit"){
+            //Subtract from qty to reset amount to the actual ownership
+            // handleQTYsubtraction(currentAsset, amount as number);
+            //Add to qty to enable responsive Data/Visuals
+            handleQTYaddition(currentAsset, newAmount - (amount??0) as number);            
+        } else if (currentfunctionLabel === "withdraw"){
+            if (newAmount > maxLPamount) {
+                setAmount(Number(maxLPamount));
+            }
+            //Add to qty to reset amount to the actual ownership
+            // handleQTYaddition(currentAsset, amount as number);    
+            //Subtract from qty to enable responsive Data/Visuals
+            handleQTYsubtraction(currentAsset, +(newAmount) - +(amount as number));
+        }
+    };
     //Reset QTYs to their contract based values
     const resetQTYs = () => {
         setosmoQTY(contractQTYs.osmo);
@@ -1243,7 +1261,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                 </div>
             </div>
             <div className="controller" onClick={currentfunctionLabel === "redemptions" ? handleredeeminfoClick : handleredeemScreen}>Collateral</div>
-            <div className={redeemButton} onClick={handleExecution}>
+            <div className={getTVL()*(maxLTV/100) < (debtAmount/1000000)*creditPrice ? "user-redemption-button red-border" : redeemButton} onClick={handleExecution}>
                 <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : "<-----" }</div>
             </div>    
             <div className={redeemScreen}>
@@ -1272,9 +1290,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                 <div className="slash">/</div>
                 <div className={currentfunctionLabel === "withdraw" ? "cdp-withdraw-label bold" : "cdp-withdraw-label low-opacity"} onClick={handlewithdrawClick}>Withdraw</div>
                 <form>
-                    { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={()=>{setAmount(Number(maxLPamount))}}>max: {maxLPamount.toString()}</div></>) : null}            
+                    { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={handlesetAmount}>max: {maxLPamount.toString()}</div></>) : null}            
                     <label className="amount-label">{currentAsset} amount:</label>     
-                    <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmount}/>
+                    <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmountInput}/>
                 </form>
             </div>
           </div>

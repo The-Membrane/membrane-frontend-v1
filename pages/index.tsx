@@ -302,7 +302,7 @@ export default function Home() {
           osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}
           osmoStyle={osmoStyle} setosmoStyle={setosmoStyle} atomStyle={atomStyle} setatomStyle={setatomStyle} axlusdcStyle={axlusdcStyle} setaxlusdcStyle={setaxlusdcStyle} atomosmo_poolStyle={atomosmo_poolStyle} setatomosmo_poolStyle={setatomosmo_poolStyle} osmousdc_poolStyle={osmousdc_poolStyle} setosmousdc_poolStyle={setosmousdc_poolStyle}
           debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
-          
+
       />;
     } else if (activeComponent === 'liquidation') {
       return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} prices={prices} />;
