@@ -12,8 +12,7 @@
 .neonSign, .neonSign2, .neonSign3, .neonSign4 {
   font: 400 4vh "Vibur";
   color: #fee;
-  text-shadow: 0 -40px 100px, 0 0 0.2px, 0 0 1em #50C9BD, 0 0 0.5em #50C9BD, 0 0 0.1em #50C9BD, 0 10px 3px #000;
-}
+  text-shadow: 0 -40px 100px, 0 0 0.2px, 0 0 1em #50C9BD, 0 0 0.5em #50C9BD, 0 0 0.1em #50C9BD, 0 10px 3px #000;}
 .neonSign b span, .neonSign2 b span, .neonSign3 b span, .neonSign4 b span{
   display: inline-block;
   font-size: 30px;
@@ -2950,14 +2949,21 @@ span[data-descr]:hover::after {
 .position-visual-words {
   position: absolute;
   top: 22px;
-  left: 65px;
+  left: 18px;
+  width: 29vw;
   font-size: medium;
 }
 .position-visual-words-btmright {
   position: absolute;
   top: 125px;
-  left: 89px;
+  width: 27vw;
+  left: 38px;
   font-size: medium;
+}
+.slider-desc {  
+  font-weight: bolder;
+  font-family: "Space Grotesk";
+  color: #7990FE;
 }
 .cdt-logo-icon-cdp {
   position: absolute;

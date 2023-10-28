@@ -60,21 +60,6 @@ interface Props {
         readable_assets: string[],
         assets: string[],
     }) => void;
-    redemptionRes: RedeemabilityResponse | undefined;
-    setredemptionRes: (redemptionRes: RedeemabilityResponse | undefined) => void;
-    //Deposit-Withdraw screen
-    depositwithdrawScreen: string;
-    setdepositwithdrawScreen: (depositwithdrawScreen: string) => void;
-    currentfunctionLabel: string;
-    setcurrentfunctionLabel: (currentfunctionLabel: string) => void;
-    currentAsset: string;
-    setcurrentAsset: (currentAsset: string) => void;
-    assetIntent: [string, number][];
-    setassetIntent: (assetIntent: [string, number][]) => void;
-    maxLPamount: bigint;
-    setmaxLPamount: (maxLPamount: bigint) => void;
-    amount: number | undefined;
-    setAmount: (amount: number | undefined) => void;
     //Asset specific
         //qty
     osmoQTY: number;
@@ -128,13 +113,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
     premium, setPremium,
     loanUsage, setloanUsage,
     restrictedAssets, setRestricted,
-    redemptionRes, setredemptionRes,
-    depositwithdrawScreen, setdepositwithdrawScreen,
-    currentfunctionLabel, setcurrentfunctionLabel,
-    currentAsset, setcurrentAsset,
-    assetIntent, setassetIntent,
-    maxLPamount, setmaxLPamount,
-    amount, setAmount,
     osmoQTY, setosmoQTY,
     atomQTY, setatomQTY,
     axlusdcQTY, setaxlusdcQTY,
@@ -154,6 +132,16 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice
 }: Props) => {
+    
+    const [redemptionRes, setredemptionRes] = useState<RedeemabilityResponse>();
+    //Deposit-Withdraw screen
+    const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
+    const [currentfunctionLabel, setcurrentfunctionLabel] = useState("");
+    const [currentAsset, setcurrentAsset] = useState("");
+    const [assetIntent, setassetIntent] = useState<[string , number][]>([]);
+    const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
+    const [amount, setAmount] = useState<number | undefined>();
+
     const [contractQTYs, setcontractQTYs] = useState({
         osmo: osmoQTY,
         atom: atomQTY,
@@ -1197,12 +1185,12 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
               <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
                   <div className="repay" onClick={handleExecution}>REPAY</div>
               </div>
-              <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} data-descr={debtAmount === 0 ? "Use the slider to mint/repay" : null} onClick={handleExecution}>
+              <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} onClick={handleExecution}>
                   <div className="mint" onClick={handleExecution}>MINT</div>                
               </div>
               <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
-              <div className="position-visual-words">Mint CDT using the value of your collateralized Bundle</div>
-              <div className="position-visual-words-btmright">Repay your debt using the CDT in your wallet</div>
+              <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using the value of your collateralized Bundle</div>
+              <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay your debt using the CDT in your wallet</div>
               </div>
             </div>
             <div className="asset-info">
