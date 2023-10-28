@@ -947,7 +947,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
             } 
             case "repay": {
                 try {
-                    ///Execute the contract
+                    console.log((amount??0) * 1_000_000)
                     var res = await cdp_client?.repay({
                         positionId: positionID,
                     }, "auto", undefined, coins((amount ?? 0) * 1_000_000, denoms.cdt))
@@ -1168,9 +1168,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                         //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
                         setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
                         setcurrentfunctionLabel("mint");
+                    } else if (parseInt(radius) === 0){
+                        //Repay it all
+                        setAmount((debtAmount/1000000));
+                        setcurrentfunctionLabel("repay");
                     } else {
                         //Bc we know this is a repay (less than current debt), set amount to radius
-                        setAmount(parseInt(parseInt(radius).toFixed(0)));
+                        setAmount(parseFloat(((debtAmount/1000000) - parseInt(radius)).toFixed(6)));
                         setcurrentfunctionLabel("repay");
                     }
                 }
