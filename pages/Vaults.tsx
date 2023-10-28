@@ -286,7 +286,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
         //
         //Format popup to inform user that redemptions are unaudited
         setPopupTrigger(true);
-        setPopupMsg(<div>"Redemptions are unaudited & fully opt-in, so please use at your own risk."</div>);
+        setPopupMsg(<div>Redemptions are unaudited & fully opt-in, so please use at your own risk.</div>);
         setPopupStatus("Warning");
     };
     const handleredeeminfoClick = async () => {
@@ -929,7 +929,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                         setsliderValue((+debtAmount + +((amount ?? 0) * 1_000_000))/1000000);
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg(<div>Mint of {(amount ?? 0)} CDT into your wallet successful. Be aware that now that you've minted, you can't withdraw collateral that would push your LTV past the yellow line & you'll be liquidated down to said line if you reach the red. Also, you can't pay below minimum debt so if you've minted at the minimum you'll need to repay in full + interest.</div>);
+                        setPopupMsg(<div>Mint of {(amount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the yellow line & you will be liquidated down to said line if you reach the red. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.</div>);
                         setPopupStatus("Success");
                     })
                     

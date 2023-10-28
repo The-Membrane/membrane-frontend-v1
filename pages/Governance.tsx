@@ -511,7 +511,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   const handlestakeClick = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg(<>"Connect your wallet on the dashboard"</>)
+      setPopupMsg(<>Connect your wallet on the dashboard</>)
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
       return;
@@ -546,7 +546,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   const handleunstakeClick = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg(<>"Connect your wallet on the dashboard"</>)
+      setPopupMsg(<>Connect your wallet on the dashboard</>)
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
       return;
@@ -597,7 +597,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   const handleclaimClick = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg(<>"Connect your wallet on the dashboard"</>)
+      setPopupMsg(<>Connect your wallet on the dashboard</>)
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
       return;
