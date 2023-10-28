@@ -1132,7 +1132,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
         } else {        
             console.log("address: ", address)
         }
-    }, [])
+    })
 
   return (
     <div className="positions">
