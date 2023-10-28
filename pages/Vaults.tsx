@@ -1142,12 +1142,12 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
             <div className="debt-visual">
               <div className="infobox-icon" />
               <div className="max-ltv">
-                <div className="liq-value">${(((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)).toFixed(2)}</div>
-                <div className="cdp-div2">{maxLTV.toFixed(0)}%</div>
+                <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
+                <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
                 <div className="max-ltv-child" />
               </div>
               <div className="max-borrow-ltv" style={{top: 75 + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
-                <div className="cdp-div3" >{brwLTV.toFixed(2)}%</div>
+                <div className="cdp-div3" >{(brwLTV ?? 0).toFixed(2)}%</div>
                 <div className="max-borrow-ltv-child" />
               </div>
               <div className="debt-visual-child" />
@@ -1179,12 +1179,12 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                     }
                 }
               }}/>
-              <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
+              <label  className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
                style={{top: -(sliderValue * ((445)/((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1))))
                 + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
-                {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{(sliderValue - (debtAmount/1000000)).toFixed(1)}
+                {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(1)}
               </label>
-              <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%/yr</div>              
+              <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
               <div className="position-stats">
               <div className="infobox-icon2" />
               <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
@@ -1212,33 +1212,33 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
               <div className="value">Value</div>
               <div>
                 <Image className={osmoQTY > 0 ? "osmo-logo-icon" : "low-opacity osmo-logo-icon" } width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
-                <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? (osmoQTY/1000).toFixed(2)+"k" : osmoQTY}</div>
-                <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? ((osmoQTY * +prices.osmo)/1000).toFixed(2)+"k" : (osmoQTY * +prices.osmo).toFixed(2)}</div>
+                <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? ((osmoQTY/1000) ?? 0).toFixed(2)+"k" : osmoQTY}</div>
+                <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? (((osmoQTY * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((osmoQTY * +prices.osmo) ?? 0).toFixed(2)}</div>
               </div>              
               <div>
                 <Image className={atomQTY > 0 ? "atom-logo-icon" : "low-opacity atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
-                <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? (atomQTY/1000).toFixed(2)+"k" : atomQTY}</div>
-                <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${(atomQTY * +prices.atom) > 1000 ? ((atomQTY * +prices.atom)/1000).toFixed(2)+"k" : (atomQTY * +prices.atom).toFixed(2)}</div>
+                <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? ((atomQTY/1000) ?? 0).toFixed(2)+"k" : atomQTY}</div>
+                <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${(atomQTY * +prices.atom) > 1000 ? (((atomQTY * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((atomQTY * +prices.atom) ?? 0).toFixed(2)}</div>
               </div>
               <div>
                 <Image className={axlusdcQTY > 0 ? "axlusdc-logo-icon" : "low-opacity axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
-                <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? (axlusdcQTY/1000).toFixed(2)+"k" : axlusdcQTY}</div>
-                <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${(axlusdcQTY * +prices.axlUSDC) > 1000 ? ((axlusdcQTY * +prices.axlUSDC)/1000).toFixed(2)+"k" : (axlusdcQTY * +prices.axlUSDC).toFixed(2)}</div>
+                <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? ((axlusdcQTY/1000) ?? 0).toFixed(2)+"k" : axlusdcQTY}</div>
+                <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${(axlusdcQTY * +prices.axlUSDC) > 1000 ? (((axlusdcQTY * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((axlusdcQTY * +prices.axlUSDC) ?? 0).toFixed(2)}</div>
               </div>
               <div style={{opacity:0}}>
                 <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-atom-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
                 <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-osmo-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
                 {/* <div className={"atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div> */}
-                <div className={atomosmo_poolQTY > 0 ?  "cdp-div11" : "low-opacity cdp-div11"}>${(atomosmo_poolQTY * +prices.atomosmo_pool).toFixed(2)}</div>
+                <div className={atomosmo_poolQTY > 0 ?  "cdp-div11" : "low-opacity cdp-div11"}>${((atomosmo_poolQTY * +prices.atomosmo_pool) ?? 0).toFixed(2)}</div>
               </div>
               <div style={{opacity:0}}>
                 <Image className={osmousdc_poolQTY > 0 ? " osmousdcpool-osmo-icon": "low-opacity osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
                 <Image className={osmousdc_poolQTY > 0 ? " osmousdcpool-usdc-icon": "low-opacity osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
                 {/* <div className={"osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div> */}
-                <div className={osmousdc_poolQTY > 0 ?  "cdp-div13" : "low-opacity cdp-div13"}>${(osmousdc_poolQTY * +prices.osmousdc_pool).toFixed(2)}</div>
+                <div className={osmousdc_poolQTY > 0 ?  "cdp-div13" : "low-opacity cdp-div13"}>${((osmousdc_poolQTY * +prices.osmousdc_pool) ?? 0).toFixed(2)}</div>
               </div>
             </div>
-            {/* <div className="tvl-500">TVL: ${(getTVL()).toFixed(2)}</div> */}
+            <div className="tvl-500">TVL: ${(getTVL() ?? 0).toFixed(2)}</div>
           </div>
           <div className="controller-item">
             <div className="controller-border"/>
