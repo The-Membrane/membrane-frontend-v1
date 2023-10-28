@@ -980,7 +980,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         setwalletMBRN(parseInt(res.amount) / 1_000_000);
     })
     }
-  }, [address, govClient, govQueryClient, stakingClient, stakingQueryClient]);
+  }, []);
       
   return (
     <div className="governance">
