@@ -72,8 +72,8 @@ export default function Home() {
   const [redeemInfoScreen, setredeemInfoScreen] = useState("redemption-screen");
   const [redeemButton, setredeemButton] = useState("user-redemption-button");
   const [redeemability, setRedeemability] = useState<boolean>();
-  const [premium, setPremium] = useState<number>();
-  const [loanUsage, setloanUsage] = useState<string>();
+  const [premium, setPremium] = useState<number>(0);
+  const [loanUsage, setloanUsage] = useState<string>("");
   const [restrictedAssets, setRestricted] = useState({
       sentence: "Click Assets on the left to restrict redemption from, currently restricted: ",
       readable_assets: [] as string[],

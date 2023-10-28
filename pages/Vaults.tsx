@@ -1180,7 +1180,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                 }
               }}/>
               <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-               style={{top: -(sliderValue * 1.8) + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
+               style={{top: -(sliderValue * ((445)/((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1))))
+                + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{(sliderValue - (debtAmount/1000000)).toFixed(1)}
               </label>
               <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%/yr</div>              
@@ -1237,7 +1238,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                 <div className={osmousdc_poolQTY > 0 ?  "cdp-div13" : "low-opacity cdp-div13"}>${(osmousdc_poolQTY * +prices.osmousdc_pool).toFixed(2)}</div>
               </div>
             </div>
-            <div className="tvl-500">TVL: ${getTVL().toFixed(2)}</div>
+            {/* <div className="tvl-500">TVL: ${(getTVL()).toFixed(2)}</div> */}
           </div>
           <div className="controller-item">
             <div className="controller-border"/>
