@@ -143,11 +143,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
     const [amount, setAmount] = useState<number>(0);
 
     const [contractQTYs, setcontractQTYs] = useState({
-        osmo: osmoQTY,
-        atom: atomQTY,
-        axlusdc: axlusdcQTY,
-        atomosmo_pool: atomosmo_poolQTY,
-        osmousdc_pool: osmousdc_poolQTY
+        osmo: (osmoQTY ?? 0),
+        atom: (atomQTY ?? 0),
+        axlusdc: (axlusdcQTY ?? 0),
+        atomosmo_pool: (atomosmo_poolQTY ?? 0),
+        osmousdc_pool: (osmousdc_poolQTY ?? 0)
     });
 
     const handleOSMOqtyClick = async (currentFunction: string) => {
@@ -1154,7 +1154,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
               <div className="debt-visual-item" style={{top: 465 - (363 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))), height: (340 * (((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))}}/>
               <div className="debt-visual-label" style={{top: 445 - (359 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
               <input className="cdt-amount" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
-                name="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} orient="vertical" onChange={({ target: { value: radius } }) => {
+                id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} orient="vertical" onChange={({ target: { value: radius } }) => {
                 if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
                     setsliderValue((debtAmount - walletCDT)/1000000);
 
@@ -1179,7 +1179,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                     }
                 }
               }}/>
-              <label  className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
+              <label for="amount" className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
                style={{top: -(sliderValue * ((445)/((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1))))
                 + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(1)}
