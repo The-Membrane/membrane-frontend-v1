@@ -140,7 +140,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
     const [currentAsset, setcurrentAsset] = useState("");
     const [assetIntent, setassetIntent] = useState<[string , number][]>([]);
     const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
-    const [amount, setAmount] = useState<number | undefined>();
+    const [amount, setAmount] = useState<number>(0);
 
     const [contractQTYs, setcontractQTYs] = useState({
         osmo: osmoQTY,
@@ -1179,10 +1179,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                     }
                 }
               }}/>
-              <div className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
+              <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
                style={{top: -(sliderValue * 1.8) + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{(sliderValue - (debtAmount/1000000)).toFixed(1)}
-              </div>
+              </label>
               <div className="cost-4">{cost > 0 ? "+" : null}{cost.toFixed(4)}%/yr</div>              
               <div className="position-stats">
               <div className="infobox-icon2" />
