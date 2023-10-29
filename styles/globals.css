@@ -109,7 +109,7 @@ body, html {
   z-index: 1;
   left: 50.3vw;
   top: 1.5vh;
-  padding-bottom: 25px;
+  width: 4.5vw;
 }
 .pageTitle {  
   background-position: center;
