@@ -583,6 +583,15 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             //Subtract from qty to enable responsive Data/Visuals
             handleQTYsubtraction(currentAsset, +(event.target.value) - +(amount as number));
         }
+        //Get avg MAX/BRW LTV
+        //which likely requires us to add a rate variable passed in from index.tsx
+
+        //Get asset ratios
+
+        //Get pro-rata cost
+        //Get pro-rata LTV
+
+
       };
     const handlesetAmount = () => {
         var newAmount = Number(maxLPamount);
@@ -910,6 +919,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         //Update contract QTYs
                         handlecontractQTYupdate();
                     });
+                    //
 
                     //Clear intents
                     setassetIntent([])
@@ -1215,7 +1225,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         setcurrentfunctionLabel("mint");
                     } else if (parseInt(radius) === 0){
                         //Repay it all
-                        setAmount((debtAmount/1000000));
+                        setAmount((walletCDT/1000000));
                         setcurrentfunctionLabel("repay");
                     } else {
                         //Bc we know this is a repay (less than current debt), set amount to radius
