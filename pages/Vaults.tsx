@@ -50,16 +50,6 @@ interface Props {
     setPremium: (premium: number) => void;
     loanUsage: string | undefined;
     setloanUsage: (loanUsage: string) => void;
-    restrictedAssets: {
-        sentence: string,
-        readable_assets: string[],
-        assets: string[],
-    };
-    setRestricted: (restrictedAssets: {
-        sentence: string,
-        readable_assets: string[],
-        assets: string[],
-    }) => void;
     //Asset specific
         //qty
     osmoQTY: number;
@@ -112,7 +102,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     redeemability, setRedeemability,
     premium, setPremium,
     loanUsage, setloanUsage,
-    restrictedAssets, setRestricted,
     osmoQTY, setosmoQTY,
     atomQTY, setatomQTY,
     axlusdcQTY, setaxlusdcQTY,
@@ -141,6 +130,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
     const [amount, setAmount] = useState<number>(0);
 
+    
+    const [restrictedAssets, setRestricted] = useState({
+        sentence: "Click Assets on the left to restrict redemption from, currently restricted: ",
+        readable_assets: [] as string[],
+        assets: [] as string[],
+    });
+
     const [contractQTYs, setcontractQTYs] = useState({
         osmo: osmoQTY,
         atom: atomQTY,
@@ -155,6 +151,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
       atomosmo_pool: 0,
       osmousdc_pool: 0,
     });
+
 
     const handleOSMOqtyClick = async (currentFunction: string) => {
         //Reset Amount
