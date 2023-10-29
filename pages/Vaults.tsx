@@ -211,7 +211,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             //Get account's balance
             if (address !== undefined) {
                 queryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
-                    setmaxLPamount(BigInt(res.amount));
+                    setmaxLPamount(BigInt(res.amount) / 1_000_000_000_000_000_000n);
                 })
             }
         } else if (currentFunction == "withdraw") {
@@ -236,7 +236,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             //Get account's balance
             if (address !== undefined) {
                 queryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
-                    setmaxLPamount(BigInt(res.amount));
+                    setmaxLPamount(BigInt(res.amount) / 1_000_000_000_000_000_000n);
                 })
             }
         } else if (currentFunction == "withdraw") {
