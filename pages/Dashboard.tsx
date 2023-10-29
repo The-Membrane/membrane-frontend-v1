@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React from "react";
 import { WalletSection } from "../components";
 import Image from "next/image";
 
@@ -6,31 +6,7 @@ type DashboardProps = {
     setActiveComponent: (component: string) => void;
   };
 
-function useWindowSize() {
-  const [windowWidth, setwindowWidth] = useState<number|undefined>(undefined);
-    
-  useEffect(() => {
-      function handleResize() {
-          // Set window width/height to state
-          setwindowWidth(window.innerWidth);
-      }
-      
-      // Add event listener
-      window.addEventListener("resize", handleResize);
-      
-      // Call handler right away so state gets updated with initial window size
-      handleResize();
-      
-      // Remove event listener on cleanup
-      return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-    return windowWidth;
-}
-
 const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
-
-    const windowWidth = useWindowSize();
 
     const onDocsTextClick = () => {
         window.open(
@@ -54,8 +30,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <div className="fullHeight" style={{height: "100vh"}}>
         <div className="row ">
         <div className="">
-        <Image className="pageTitle" src="/images/Background_Header 1.svg" height={290} width={windowWidth??0} alt="Membrane background header"/>
-        <Image className="dash-logo" src="/images/MBRN-logo-template.svg" width={65} height={55} alt="" />
+        <Image className="pageTitle" src="/images/Background_Header 1.svg" height={0} width={0} alt="Membrane background header"/>
+        <Image className="dash-logo" src="/images/MBRN-logo-template.svg" width={0} height={0} alt="" />
         <div className="">
             <div className="card-1">
                 <div className="card" style={{borderRadius: "1rem"}}>
@@ -159,4 +135,3 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
 };
 
 export default Dashboard;
-
