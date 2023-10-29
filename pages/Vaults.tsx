@@ -33,23 +33,6 @@ interface Props {
     setPopupMsg: (popupMsg: ReactJSXElement) => void;
     popupStatus: string;
     setPopupStatus: (popupStatus: string) => void;
-    //Redemptions
-    posClick: string;
-    setposClick: (posClick: string) => void;
-    negClick: string;
-    setnegClick: (negClick: string) => void;
-    redeemScreen: string;
-    setredeemScreen: (redeemScreen: string) => void;
-    redeemInfoScreen: string;
-    setredeemInfoScreen: (redeemInfoScreen: string) => void;
-    redeemButton: string;
-    setredeemButton: (redeemButton: string) => void;
-    redeemability: boolean | undefined;
-    setRedeemability: (redeemability: boolean | undefined) => void;
-    premium: number | undefined;
-    setPremium: (premium: number) => void;
-    loanUsage: string | undefined;
-    setloanUsage: (loanUsage: string) => void;
     //Asset specific
         //qty
     osmoQTY: number;
@@ -62,17 +45,6 @@ interface Props {
     setatomosmo_poolQTY: (atomosmo_poolQTY: number) => void;
     osmousdc_poolQTY: number;
     setosmousdc_poolQTY: (osmousdc_poolQTY: number) => void;
-        //style
-    osmoStyle: string;
-    setosmoStyle: (osmoStyle: string) => void;
-    atomStyle: string;
-    setatomStyle: (atomStyle: string) => void;
-    axlusdcStyle: string;
-    setaxlusdcStyle: (axlusdcStyle: string) => void;
-    atomosmo_poolStyle: string;
-    setatomosmo_poolStyle: (atomosmo_poolStyle: string) => void;
-    osmousdc_poolStyle: string;
-    setosmousdc_poolStyle: (osmousdc_poolStyle: string) => void;
     //Positions Visual
     debtAmount: number;
     setdebtAmount: (debtAmount: number) => void;
@@ -94,24 +66,11 @@ interface Props {
 
 const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
     popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
-    posClick, setposClick,
-    negClick, setnegClick,
-    redeemScreen, setredeemScreen,
-    redeemInfoScreen, setredeemInfoScreen,
-    redeemButton, setredeemButton,
-    redeemability, setRedeemability,
-    premium, setPremium,
-    loanUsage, setloanUsage,
     osmoQTY, setosmoQTY,
     atomQTY, setatomQTY,
     axlusdcQTY, setaxlusdcQTY,
     atomosmo_poolQTY, setatomosmo_poolQTY,
     osmousdc_poolQTY, setosmousdc_poolQTY,
-    osmoStyle, setosmoStyle,
-    atomStyle, setatomStyle,
-    axlusdcStyle, setaxlusdcStyle,
-    atomosmo_poolStyle, setatomosmo_poolStyle,
-    osmousdc_poolStyle, setosmousdc_poolStyle,
     debtAmount, setdebtAmount,
     maxLTV, setmaxLTV,
     brwLTV, setbrwLTV,
@@ -121,6 +80,16 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice
 }: Props) => {
+    
+    //Redemptions
+    const [posClick, setposClick] = useState("mint-button-icon3");
+    const [negClick, setnegClick] = useState("mint-button-icon4");
+    const [redeemScreen, setredeemScreen] = useState("redemption-screen");
+    const [redeemInfoScreen, setredeemInfoScreen] = useState("redemption-screen");
+    const [redeemButton, setredeemButton] = useState("user-redemption-button");
+    const [redeemability, setRedeemability] = useState<boolean>();
+    const [premium, setPremium] = useState<number>(0);
+    const [loanUsage, setloanUsage] = useState<string>("");
     const [redemptionRes, setredemptionRes] = useState<RedeemabilityResponse>();
     //Deposit-Withdraw screen
     const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
@@ -136,7 +105,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         readable_assets: [] as string[],
         assets: [] as string[],
     });
-
+    //This is used to keep track of what asses the user has in the contract
+    //bc the input/output asset quantities are updated in responsive to the user's actions
     const [contractQTYs, setcontractQTYs] = useState({
         osmo: osmoQTY,
         atom: atomQTY,
@@ -713,50 +683,30 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 var new_qty = Math.max(+osmoQTY + +amount, 0);
                 setosmoQTY(new_qty);
 
-                //Remove opacity if above 0
-                if (new_qty > 0){
-                    setosmoStyle("");
-                }
                 break;
               }
             case 'ATOM':{
                 var new_qty =  Math.max(+atomQTY + +amount, 0);
                 setatomQTY(new_qty);
                 
-                //Remove opacity if above 0
-                if (new_qty > 0){
-                    setatomStyle("");
-                }
                 break;
               }
             case 'axlUSDC':{
                 var new_qty =  Math.max(+axlusdcQTY + +amount, 0);
                 setaxlusdcQTY(new_qty);
 
-                //Remove opacity if above 0
-                if (new_qty > 0){
-                    setaxlusdcStyle("");
-                }
                 break;
               }
             case 'atomosmo_pool':{
                 var new_qty =  Math.max(+atomosmo_poolQTY + +amount, 0);
                 setatomosmo_poolQTY(new_qty);
 
-                //Remove opacity if above 0
-                if (new_qty > 0){
-                    setatomosmo_poolStyle("");
-                }
                 break;
             }
             case 'osmousdc_pool':{
                 var new_qty =  Math.max(+osmousdc_poolQTY + +amount, 0);
                 setosmousdc_poolQTY(new_qty);
 
-                //Remove opacity if above 0
-                if (new_qty > 0){
-                    setosmousdc_poolStyle("");
-                }
                 break;
             }
           }
@@ -768,9 +718,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 var new_qty = Math.max(+osmoQTY - +amount, 0);
                 setosmoQTY(new_qty);
 
-                //Set opacity if 0 & set to if below
+                //Set to 0 if below
                 if (new_qty <= 0){
-                    setosmoStyle("low-opacity");
                     setosmoQTY(0);
                     new_qty = 0;
                 }
@@ -780,9 +729,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 var new_qty = Math.max(+atomQTY - +amount, 0);
                 setatomQTY(new_qty);
 
-                //Set opacity if 0 & set to if below
+                //Set to 0 if below
                 if (new_qty <= 0){
-                    setatomStyle("low-opacity");
                     setatomQTY(0);
                     new_qty = 0;
                 }
@@ -792,9 +740,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 var new_qty = Math.max(+axlusdcQTY - +amount, 0);
                 setaxlusdcQTY(new_qty);
 
-                //Set opacity if 0 & set to if below
+                //Set to 0 if below
                 if (new_qty <= 0){
-                    setaxlusdcStyle("low-opacity");
                     setaxlusdcQTY(0);
                     new_qty = 0;
                 }
@@ -804,9 +751,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 var new_qty = Math.max(+atomosmo_poolQTY - +amount, 0);
                 setatomosmo_poolQTY(new_qty);
 
-                //Set opacity if 0 & set to if below
+                //Set to 0 if below
                 if (new_qty <= 0){
-                    setatomosmo_poolStyle("low-opacity");
                     setatomosmo_poolQTY(0);
                     new_qty = 0;
                 }
@@ -816,9 +762,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 var new_qty = Math.max(+osmousdc_poolQTY - +amount, 0);
                 setosmousdc_poolQTY(new_qty);
 
-                //Set opacity if 0 & set to if below
+                //Set to 0 if below
                 if (new_qty <= 0){
-                    setosmousdc_poolStyle("low-opacity");
                     setosmousdc_poolQTY(0);
                     new_qty = 0;
                 }
@@ -826,6 +771,106 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
           }
     };
+    const handlecontractQTYupdate = () => {
+        switch (currentAsset) {
+            case "OSMO": {
+                if (currentfunctionLabel === "deposit"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            osmo: +prevState.osmo + +(amount??0),
+                        }
+                    })
+                }
+                else if (currentfunctionLabel === "withdraw"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            osmo: +prevState.osmo - +(amount??0),
+                        }
+                    })
+                }
+                break;
+            }
+            case "ATOM": {
+                if (currentfunctionLabel === "deposit"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            atom: +prevState.atom + +(amount??0),
+                        }
+                    })
+                }
+                else if (currentfunctionLabel === "withdraw"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            atom: +prevState.atom - +(amount??0),
+                        }
+                    })
+                }
+                
+                break;
+            }
+            case "axlUSDC": {
+                if (currentfunctionLabel === "deposit"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            axlusdc: +prevState.axlusdc + +(amount??0),
+                        }
+                    })
+                }
+                else if (currentfunctionLabel === "withdraw"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            axlusdc: +prevState.axlusdc - +(amount??0),
+                        }
+                    })
+                }
+                break;
+            }
+            case "ATOM-OSMO LP": {
+                if (currentfunctionLabel === "deposit"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            atomosmo_pool: +prevState.atomosmo_pool + +(amount??0),
+                        }
+                    })
+                }
+                else if (currentfunctionLabel === "withdraw"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            atomosmo_pool: +prevState.atomosmo_pool - +(amount??0),
+                        }
+                    })
+                }
+                break;
+            }
+            case "OSMO-axlUSDC LP": {
+                if (currentfunctionLabel === "deposit"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            osmousdc_pool: +prevState.osmousdc_pool + +(amount??0),
+                        }
+                    })
+                }
+                else if (currentfunctionLabel === "withdraw"){
+                    setcontractQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            osmousdc_pool: +prevState.osmousdc_pool - +(amount??0),
+                        }
+                    })
+                }
+                break;
+            }
+        }
+    }
     const handleExecution = async () => {
         //Check if wallet is connected
         if (address === undefined) {
@@ -862,8 +907,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         })
                         setPopupMsg(<div>Deposit of {readable_asset_intent} successful</div>);
                         setPopupStatus("Success");   
-                        //Update Position data
-                        // fetch_update_positionData();
+                        //Update contract QTYs
+                        handlecontractQTYupdate();
                     });
 
                     //Clear intents
@@ -901,9 +946,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         //format pop up
                         setPopupTrigger(true);
                         setPopupMsg(<div>Withdrawal of {readable_asset_intent} successful</div>);
-                        setPopupStatus("Success");              
-                        //Update Position data
-                        // fetch_update_positionData();
+                        setPopupStatus("Success");       
+                        //Update contract QTYs
+                        handlecontractQTYupdate();   
                     })
 
                     //Clear intents
@@ -1031,12 +1076,12 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     workingIntents.push(coin(intent[1] * 1_000_000, denoms.axlUSDC))
                     break;
                 }
-                case "ATOM-OSMO LP": { //No normalization bc we are excepting 18 decimal
-                    workingIntents.push(coin(intent[1].toString(), denoms.atomosmo_pool))
+                case "ATOM-OSMO LP": { 
+                    workingIntents.push(coin((BigInt(intent[1]) * 1_000_000_000_000_000_000n).toString(), denoms.atomosmo_pool))
                     break;
                 }
-                case "OSMO-axlUSDC LP": { //No normalization bc we are excepting 18 decimal
-                    workingIntents.push(coin(intent[1].toString(), denoms.osmousdc_pool))
+                case "OSMO-axlUSDC LP": {
+                    workingIntents.push(coin((BigInt(intent[1]) * 1_000_000_000_000_000_000n).toString(), denoms.osmousdc_pool))
                     break;
                 }
             }
@@ -1082,7 +1127,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "ATOM-OSMO LP": { //18 decimal instead of 6
                     workingIntents.push({
-                        amount: (intent[1]).toString(),
+                        amount: (BigInt(intent[1]) * 1_000_000_000_000_000_000n).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1093,7 +1138,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "OSMO-axlUSDC LP": { //18 decimal instead of 6
                     workingIntents.push({
-                        amount: (intent[1]).toString(),
+                        amount: (BigInt(intent[1]) * 1_000_000_000_000_000_000n).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1129,13 +1174,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     useEffect(() => {
         setPrices(pricez);
         if (address) {
-            console.log("address: ", address)
             //setAddress
             setAddress(address as string)
-        } else {        
-            console.log("address: ", address)
         }
-    }, [pricez])
+    }, [pricez, address])
 
   return (
     <div className="positions">

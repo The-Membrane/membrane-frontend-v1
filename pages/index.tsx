@@ -63,30 +63,14 @@ export default function Home() {
   });
   const [walletCDT, setwalletCDT] = useState(0);
 
-  ////Positions////
-  
-  //Redemptions
-  const [posClick, setposClick] = useState("mint-button-icon3");
-  const [negClick, setnegClick] = useState("mint-button-icon4");
-  const [redeemScreen, setredeemScreen] = useState("redemption-screen");
-  const [redeemInfoScreen, setredeemInfoScreen] = useState("redemption-screen");
-  const [redeemButton, setredeemButton] = useState("user-redemption-button");
-  const [redeemability, setRedeemability] = useState<boolean>();
-  const [premium, setPremium] = useState<number>(0);
-  const [loanUsage, setloanUsage] = useState<string>("");
+  ////Positions////  
   //Asset specific
-      //qty
+  //qty
   const [osmoQTY, setosmoQTY] = useState(0);
   const [atomQTY, setatomQTY] = useState(0);
   const [axlusdcQTY, setaxlusdcQTY] = useState(0);
   const [atomosmo_poolQTY, setatomosmo_poolQTY] = useState(0);
   const [osmousdc_poolQTY, setosmousdc_poolQTY] = useState(0);
-      //style
-  const [osmoStyle, setosmoStyle] = useState("low-opacity");
-  const [atomStyle, setatomStyle] = useState("low-opacity");
-  const [axlusdcStyle, setaxlusdcStyle] = useState("low-opacity");
-  const [atomosmo_poolStyle, setatomosmo_poolStyle] = useState("low-opacity");
-  const [osmousdc_poolStyle, setosmousdc_poolStyle] = useState("low-opacity");
   //Positions Visual
   const [debtAmount, setdebtAmount] = useState(0);
   const [maxLTV, setmaxLTV] = useState(100);
@@ -188,20 +172,15 @@ export default function Home() {
                 
                 console.log("actual_asset: ", actual_asset)
                 if (actual_asset === denoms.osmo) {
-                    setosmoQTY(parseInt(asset.asset.amount) / 1_000_000)                            
-                    setosmoStyle("");
+                    setosmoQTY(parseInt(asset.asset.amount) / 1_000_000)      
                 } else if (actual_asset === denoms.atom) {
                     setatomQTY(parseInt(asset.asset.amount) / 1_000_000)
-                    setatomStyle("");
                 } else if (actual_asset === denoms.axlUSDC) {
                     setaxlusdcQTY(parseInt(asset.asset.amount) / 1_000_000)
-                    setaxlusdcStyle("");
                 } else if (actual_asset === denoms.atomosmo_pool) {
-                    setatomosmo_poolQTY(parseInt(asset.asset.amount))
-                    setatomosmo_poolStyle("");
+                    setatomosmo_poolQTY(Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n))
                 } else if (actual_asset === denoms.osmousdc_pool) {
-                    setosmousdc_poolQTY(parseInt(asset.asset.amount))
-                    setosmousdc_poolStyle("");
+                    setosmousdc_poolQTY(Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n))
                 }                    
             })
 
@@ -283,10 +262,8 @@ export default function Home() {
       return <Dashboard setActiveComponent={setActiveComponent}/>;
     } else if (activeComponent === 'vault') {
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
-          popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}
-          posClick={posClick} setposClick={setposClick} negClick={negClick} setnegClick={setnegClick} redeemScreen={redeemScreen} setredeemScreen={setredeemScreen} redeemInfoScreen={redeemInfoScreen} setredeemInfoScreen={setredeemInfoScreen} redeemButton={redeemButton} setredeemButton={setredeemButton} redeemability={redeemability} setRedeemability={setRedeemability} premium={premium} setPremium={setPremium} loanUsage={loanUsage} setloanUsage={setloanUsage}
-          osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}
-          osmoStyle={osmoStyle} setosmoStyle={setosmoStyle} atomStyle={atomStyle} setatomStyle={setatomStyle} axlusdcStyle={axlusdcStyle} setaxlusdcStyle={setaxlusdcStyle} atomosmo_poolStyle={atomosmo_poolStyle} setatomosmo_poolStyle={setatomosmo_poolStyle} osmousdc_poolStyle={osmousdc_poolStyle} setosmousdc_poolStyle={setosmousdc_poolStyle}
+          popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
+          osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
           debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
 
       />;
