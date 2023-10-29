@@ -1131,7 +1131,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
 
     //getuserPosition info && set State
     useEffect(() => {
-        setPrices(prices);
+        setPrices(pricez);
         if (address) {
             console.log("address: ", address)
             //setAddress
@@ -1139,7 +1139,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         } else {        
             console.log("address: ", address)
         }
-    })
+    }, [pricez])
 
   return (
     <div className="positions">
