@@ -74,11 +74,6 @@ export default function Home() {
   const [redeemability, setRedeemability] = useState<boolean>();
   const [premium, setPremium] = useState<number>(0);
   const [loanUsage, setloanUsage] = useState<string>("");
-  const [restrictedAssets, setRestricted] = useState({
-      sentence: "Click Assets on the left to restrict redemption from, currently restricted: ",
-      readable_assets: [] as string[],
-      assets: [] as string[],
-  });
   //Asset specific
       //qty
   const [osmoQTY, setosmoQTY] = useState(0);
@@ -289,7 +284,7 @@ export default function Home() {
     } else if (activeComponent === 'vault') {
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
           popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}
-          posClick={posClick} setposClick={setposClick} negClick={negClick} setnegClick={setnegClick} redeemScreen={redeemScreen} setredeemScreen={setredeemScreen} redeemInfoScreen={redeemInfoScreen} setredeemInfoScreen={setredeemInfoScreen} redeemButton={redeemButton} setredeemButton={setredeemButton} redeemability={redeemability} setRedeemability={setRedeemability} premium={premium} setPremium={setPremium} loanUsage={loanUsage} setloanUsage={setloanUsage} restrictedAssets={restrictedAssets} setRestricted={setRestricted}
+          posClick={posClick} setposClick={setposClick} negClick={negClick} setnegClick={setnegClick} redeemScreen={redeemScreen} setredeemScreen={setredeemScreen} redeemInfoScreen={redeemInfoScreen} setredeemInfoScreen={setredeemInfoScreen} redeemButton={redeemButton} setredeemButton={setredeemButton} redeemability={redeemability} setRedeemability={setRedeemability} premium={premium} setPremium={setPremium} loanUsage={loanUsage} setloanUsage={setloanUsage}
           osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}
           osmoStyle={osmoStyle} setosmoStyle={setosmoStyle} atomStyle={atomStyle} setatomStyle={setatomStyle} axlusdcStyle={axlusdcStyle} setaxlusdcStyle={setaxlusdcStyle} atomosmo_poolStyle={atomosmo_poolStyle} setatomosmo_poolStyle={setatomosmo_poolStyle} osmousdc_poolStyle={osmousdc_poolStyle} setosmousdc_poolStyle={setosmousdc_poolStyle}
           debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
