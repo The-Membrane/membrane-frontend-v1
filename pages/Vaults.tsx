@@ -1004,29 +1004,88 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 break;
             } 
             case "repay": {
-                try {
-                    var res = await cdp_client?.repay({
-                        positionId: positionID,
-                    }, "auto", undefined, coins(Math.ceil(((amount??0) * 1_000_000)), denoms.cdt))
-                    .then((res) => {           
-                        console.log(res?.events.toString())
-                        //Update mint amount
-                        setdebtAmount(+debtAmount - +(amount ?? 0));
-                        setsliderValue((+debtAmount - +(amount ?? 0))/1000000);
-                        //format pop up
+                //if trying to full repay, because sending back excess debt doesn't work...
+                //repay needs to accrue & then query new debt amount and then repay
+                if (((amount ?? 0)* 1_000_000) >= debtAmount) {
+                    //execute an accrue msg first
+                    try {
+                        ///Execute the Accrue
+                        await cdp_client?.accrue({
+                            positionIds: [positionID],
+                            positionOwner: user_address,
+                        }, "auto", undefined).then(async (res) => {           
+                            console.log(res?.events.toString())
+                            //Query position
+                            //getPosition
+                            await queryClient?.getBasketPositions(
+                                {
+                                    user: address as string,
+                                }
+                            ).then((res) => {
+                                //Set amount to new debt amount
+                                var repay_amount = parseInt(res[0].positions[0].credit_amount);
+                                //Execute the Repay
+                                try {
+                                    ///Execute the Repay
+                                    cdp_client?.repay({
+                                        positionId: positionID,
+                                    }, "auto", undefined, coins(repay_amount, denoms.cdt)).then((res) => {           
+                                        console.log(res?.events.toString())
+                                        //Update mint amount
+                                        setdebtAmount(+debtAmount - +(repay_amount* 1_000_000));
+                                        setsliderValue((+debtAmount - +(repay_amount* 1_000_000))/1000000);
+                                        //format pop up
+                                        setPopupTrigger(true);
+                                        setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
+                                        setPopupStatus("Success");
+                                    })
+                                    
+                                } catch (error){
+                                    ////Error message
+                                    const e = error as { message: string }
+                                    console.log(e.message)
+                                    ///Format Pop up
+                                    setPopupTrigger(true);
+                                    setPopupMsg(<div>{e.message}</div>);
+                                    setPopupStatus("Repay Error");
+                                }
+                            })
+                        })
+                        
+                    } catch (error){
+                        ////Error message
+                        const e = error as { message: string }
+                        console.log(e.message)
+                        ///Format Pop up
                         setPopupTrigger(true);
-                        setPopupMsg(<div>Repayment of {(amount ?? 0)} CDT successful</div>);
-                        setPopupStatus("Success");
-                    })
-                    
-                } catch (error){
-                    ////Error message
-                    const e = error as { message: string }
-                    console.log(e.message)
-                    ///Format Pop up
-                    setPopupTrigger(true);
-                    setPopupMsg(<div>{e.message}</div>);
-                    setPopupStatus("Repay Error");
+                        setPopupMsg(<div>{e.message}</div>);
+                        setPopupStatus("Accrue Error");
+                    }
+                } else {
+                    try {
+                        var res = await cdp_client?.repay({
+                            positionId: positionID,
+                        }, "auto", undefined, coins(Math.ceil(((amount??0) * 1_000_000)), denoms.cdt))
+                        .then((res) => {           
+                            console.log(res?.events.toString())
+                            //Update mint amount
+                            setdebtAmount(+debtAmount - +((amount ?? 0)* 1_000_000));
+                            setsliderValue((+debtAmount - +((amount ?? 0)* 1_000_000))/1000000);
+                            //format pop up
+                            setPopupTrigger(true);
+                            setPopupMsg(<div>Repayment of {(amount ?? 0)} CDT successful</div>);
+                            setPopupStatus("Success");
+                        })
+                        
+                    } catch (error){
+                        ////Error message
+                        const e = error as { message: string }
+                        console.log(e.message)
+                        ///Format Pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>{e.message}</div>);
+                        setPopupStatus("Repay Error");
+                    }
                 }
                 break;
             }
