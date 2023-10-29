@@ -346,7 +346,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handledepositClick = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupMsg("Connect your wallet on the Home page")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
       return;
@@ -406,7 +406,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handlewithdrawClick = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupMsg("Connect your wallet on the Home page")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
       return;
@@ -499,7 +499,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleclaimClick = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupMsg("Connect your wallet on the Home page")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)     
       return; 
@@ -541,7 +541,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleStabilityDeposit = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupMsg("Connect your wallet on the Home page")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)     
       return; 
@@ -598,7 +598,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleStabilityWithdraw = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupMsg("Connect your wallet on the Home page")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
       return;
@@ -712,7 +712,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleStabilityClaim = async () => {
     //Check if wallet is connected
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupMsg("Connect your wallet on the Home page")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
       return;

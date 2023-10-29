@@ -1223,7 +1223,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
   }
   const handleclaimClick = async () => {
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the dashboard")
+      setPopupMsg("Connect your wallet on the Home page")
       setPopupStatus("Wallet not connected")
       setPopupTrigger(true)      
       return;

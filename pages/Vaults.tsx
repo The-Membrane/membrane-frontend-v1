@@ -829,7 +829,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const handleExecution = async () => {
         //Check if wallet is connected
         if (address === undefined) {
-          setPopupMsg(<div>Connect your wallet on the dashboard</div>)
+          setPopupMsg(<div>Connect your wallet on the Home page</div>)
           setPopupStatus("Wallet not connected")
           setPopupTrigger(true)
           return;
@@ -950,10 +950,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             } 
             case "repay": {
                 try {
-                    console.log((amount??0) * 1_000_000)
                     var res = await cdp_client?.repay({
                         positionId: positionID,
-                    }, "auto", undefined, coins((amount ?? 0) * 1_000_000, denoms.cdt))
+                    }, "auto", undefined, coins(Math.ceil(((amount??0) * 1_000_000)), denoms.cdt))
                     .then((res) => {           
                         console.log(res?.events.toString())
                         //Update mint amount
