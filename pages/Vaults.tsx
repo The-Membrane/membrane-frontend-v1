@@ -25,7 +25,7 @@ interface Props {
     queryClient: PositionsQueryClient | null;
     address: string | undefined;
     walletCDT: number;
-    prices: Prices;
+    pricez: Prices;
     //State
     popupTrigger: boolean;
     setPopupTrigger: (popupTrigger: boolean) => void;
@@ -102,7 +102,7 @@ interface Props {
     setcreditPrice: (creditPrice: number) => void;          
 }
 
-const Positions = ({cdp_client, queryClient, address, walletCDT, prices, 
+const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
     popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
     posClick, setposClick,
     negClick, setnegClick,
@@ -147,6 +147,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
         axlusdc: axlusdcQTY,
         atomosmo_pool: atomosmo_poolQTY,
         osmousdc_pool: osmousdc_poolQTY
+    });
+    const [prices, setPrices] = useState<Prices>({
+      osmo: 0,
+      atom: 0,
+      axlUSDC: 0,
+      atomosmo_pool: 0,
+      osmousdc_pool: 0,
     });
 
     const handleOSMOqtyClick = async (currentFunction: string) => {
@@ -1124,13 +1131,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
 
     //getuserPosition info && set State
     useEffect(() => {
-        prices = {
-            osmo: 0,
-            atom: 0,
-            axlUSDC: 0,
-            atomosmo_pool: 0,
-            osmousdc_pool: 0,
-        };
+        setPrices(prices);
         if (address) {
             console.log("address: ", address)
             //setAddress
