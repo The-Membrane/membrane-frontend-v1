@@ -143,11 +143,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
     const [amount, setAmount] = useState<number>(0);
 
     const [contractQTYs, setcontractQTYs] = useState({
-        osmo: (osmoQTY ?? 0),
-        atom: (atomQTY ?? 0),
-        axlusdc: (axlusdcQTY ?? 0),
-        atomosmo_pool: (atomosmo_poolQTY ?? 0),
-        osmousdc_pool: (osmousdc_poolQTY ?? 0)
+        osmo: ( 0),
+        atom: ( 0),
+        axlusdc: (0),
+        atomosmo_pool: (0),
+        osmousdc_pool: (0)
     });
 
     const handleOSMOqtyClick = async (currentFunction: string) => {
@@ -1180,7 +1180,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                 }
               }}/>
               <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-               style={{top: -(sliderValue * ((445)/((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1))))
+               style={{top: -(sliderValue * 1.8)
                 + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(1)}
               </label>
