@@ -132,7 +132,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice
 }: Props) => {
-    
     const [redemptionRes, setredemptionRes] = useState<RedeemabilityResponse>();
     //Deposit-Withdraw screen
     const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
@@ -143,11 +142,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
     const [amount, setAmount] = useState<number>(0);
 
     const [contractQTYs, setcontractQTYs] = useState({
-        osmo: ( 0),
-        atom: ( 0),
-        axlusdc: (0),
-        atomosmo_pool: (0),
-        osmousdc_pool: (0)
+        osmo: osmoQTY,
+        atom: atomQTY,
+        axlusdc: axlusdcQTY,
+        atomosmo_pool: atomosmo_poolQTY,
+        osmousdc_pool: osmousdc_poolQTY
     });
 
     const handleOSMOqtyClick = async (currentFunction: string) => {
@@ -1125,6 +1124,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
 
     //getuserPosition info && set State
     useEffect(() => {
+        prices = {
+            osmo: 0,
+            atom: 0,
+            axlUSDC: 0,
+            atomosmo_pool: 0,
+            osmousdc_pool: 0,
+        };
         if (address) {
             console.log("address: ", address)
             //setAddress
@@ -1179,8 +1185,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, prices,
                     }
                 }
               }}/>
-              <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-               style={{top: -(sliderValue * 1.8)
+              <label for="amount" className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
+               style={{top: -(sliderValue * ((445)/((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1))))
                 + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(1)}
               </label>
