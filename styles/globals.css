@@ -2975,9 +2975,10 @@ span[data-descr]:hover::after {
 }
 .cost-4 {
   position: relative;
-  top: 407px;
+  top: 367px;
   text-align: center;
-  left: 2px;
+  left: 205px;
+  width: 20vh;
   font-size: small;
 }
 .debt-225 {
@@ -3534,7 +3535,7 @@ span[data-descr]:hover::after {
   background-color: #798eff;
 } */
 .range-label {
-  position: absolute;
+  position: relative;
   font-size: small;
   left: 155px
 }

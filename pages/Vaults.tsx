@@ -7,7 +7,7 @@ import { testnetAddrs } from "../config";
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
 import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
-import { Asset, BasketPositionsResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
+import { Asset, Basket, BasketPositionsResponse, CollateralInterestResponse, InterestResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
@@ -26,6 +26,12 @@ interface Props {
     address: string | undefined;
     walletCDT: number;
     pricez: Prices;
+    rateRes: CollateralInterestResponse | undefined;
+    setrateRes: (rateRes: CollateralInterestResponse) => void;
+    creditRateRes: InterestResponse | undefined;
+    setcreditRateRes: (creditRateRes: InterestResponse) => void;
+    basketRes: Basket | undefined;
+    setbasketRes: (basketRes: Basket) => void;
     //State
     popupTrigger: boolean;
     setPopupTrigger: (popupTrigger: boolean) => void;
@@ -66,6 +72,8 @@ interface Props {
 
 const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
     popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
+    rateRes, creditRateRes, basketRes,
+    setrateRes, setcreditRateRes, setbasketRes,
     osmoQTY, setosmoQTY,
     atomQTY, setatomQTY,
     axlusdcQTY, setaxlusdcQTY,
@@ -112,7 +120,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         atom: atomQTY,
         axlusdc: axlusdcQTY,
         atomosmo_pool: atomosmo_poolQTY,
-        osmousdc_pool: osmousdc_poolQTY
+        osmousdc_pool: osmousdc_poolQTY,
+        max_LTV: maxLTV,
+        brw_LTV: brwLTV,
+        cost: cost
     });
     const [prices, setPrices] = useState<Prices>({
       osmo: 0,
@@ -127,7 +138,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Reset Amount
         setAmount(0);
         //Reset QTYs
-        resetQTYs();
+        resettoContractPosition();
         //Set functionality
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("OSMO");
@@ -152,7 +163,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Reset Amount
         setAmount(0);
         //Reset QTYs
-        resetQTYs();
+        resettoContractPosition();
         //Set functionality
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("ATOM");
@@ -177,7 +188,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Reset Amount
         setAmount(0);
         //Reset QTYs
-        resetQTYs();
+        resettoContractPosition();
         //Set functionality
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("axlUSDC");
@@ -202,7 +213,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Reset Amount
         setAmount(0);
         //Reset QTYs
-        resetQTYs();
+        resettoContractPosition();
         //Set functionality
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("ATOM-OSMO LP");
@@ -227,7 +238,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Reset Amount
         setAmount(0);
         //Reset QTYs
-        resetQTYs();
+        resettoContractPosition();
         //Set functionality
         setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
         setcurrentAsset("OSMO-axlUSDC LP");
@@ -583,14 +594,12 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             //Subtract from qty to enable responsive Data/Visuals
             handleQTYsubtraction(currentAsset, +(event.target.value) - +(amount as number));
         }
-        //Get avg MAX/BRW LTV
-        //which likely requires us to add a rate variable passed in from index.tsx
-        
-        //Get asset ratios
-
-        //Get pro-rata cost
-        //Get pro-rata LTV
-
+        //Set avg MAX/BRW LTV
+        let LTVs = getRataLTV();
+        setmaxLTV(LTVs[1]);
+        setbrwLTV(LTVs[0]);
+        //Set cost
+        setCost(getRataCost());
 
       };
     const handlesetAmount = () => {
@@ -611,20 +620,24 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             handleQTYsubtraction(currentAsset, +(newAmount) - +(amount as number));
         }
     };
-    //Reset QTYs to their contract based values
-    const resetQTYs = () => {
+    //Reset position data to its contract based values
+    const resettoContractPosition = () => {
         setosmoQTY(contractQTYs.osmo);
         setatomQTY(contractQTYs.atom);
         setaxlusdcQTY(contractQTYs.axlusdc);
         setatomosmo_poolQTY(contractQTYs.atomosmo_pool);
         setosmousdc_poolQTY(contractQTYs.osmousdc_pool);
+        setmaxLTV(contractQTYs.max_LTV);
+        setbrwLTV(contractQTYs.brw_LTV);
+        setCost(contractQTYs.cost);
+        setsliderValue(0);
     }
     //Deposit-Withdraw screen    
     const handledepositClick = async () => {
         //Reset Amount
         setAmount(0);
         //Reset QTYs
-        resetQTYs();
+        resettoContractPosition();
         //Set functionality
         setcurrentfunctionLabel("deposit");
         //clear intents
@@ -656,7 +669,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Reset Amount
         setAmount(0);
         //Reset QTYs
-        resetQTYs();
+        resettoContractPosition();
         //Set functionality
         setcurrentfunctionLabel("withdraw");
         //clear intents
@@ -780,7 +793,19 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
           }
     };
-    const handlecontractQTYupdate = () => {
+    const handlecontractQTYupdate = () => {        
+        //Set new LTVs & costs
+        let LTVs = getRataLTV();
+        let cost = getRataCost();
+        setcontractQTYs(prevState => {
+            return { 
+                ...prevState,
+                max_LTV: LTVs[1],
+                brw_LTV: LTVs[0],
+                cost: cost
+            }
+        })
+        //Set QTYs
         switch (currentAsset) {
             case "OSMO": {
                 if (currentfunctionLabel === "deposit"){
@@ -1120,14 +1145,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         }
 
     };
-    // const handleassetIntent = () => {
-    //     if (amount !== undefined && amount > 0){
-    //         setassetIntent(prevState => [
-    //             ...prevState,
-    //             [currentAsset, amount]
-    //         ]);
-    //     }
-    // };
     //we add decimals to the asset amounts
     const getcoinsfromassetIntents = (intents: [string, number][]) => {
         var workingIntents: Coin[] = [];
@@ -1238,15 +1255,160 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         + (atomosmo_poolQTY * +prices.atomosmo_pool) + (osmousdc_poolQTY * +prices.osmousdc_pool)
     )
    }
+   function getassetRatios() {
+    return(
+        {
+            osmo: (osmoQTY * +prices.osmo) / getTVL(),
+            atom: (atomQTY * +prices.atom) / getTVL(),
+            axlusdc: (axlusdcQTY * +prices.axlUSDC) / getTVL(),
+            atomosmo_pool: (atomosmo_poolQTY * +prices.atomosmo_pool) / getTVL(),
+            osmousdc_pool: (osmousdc_poolQTY * +prices.osmousdc_pool) / getTVL(),
+        }
+    )
+   }
+   /// Get pro-rata LTV
+   function getRataLTV() {
+    var ratios = getassetRatios();
+    var maxLTV = 0;
+    var brwLTV = 0;
+    console.log(basketRes)
+    basketRes?.collateral_types.forEach((collateral) => {      
+        //@ts-ignore
+        if (collateral.asset.info.native_token.denom === denoms.osmo){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.osmo;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.osmo;  
+        //@ts-ignore          
+        } else if (collateral.asset.info.native_token.denom === denoms.atom){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.atom;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.atom;   
+        //@ts-ignore          
+        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.axlusdc;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.axlusdc;   
+        //@ts-ignore          
+        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.atomosmo_pool;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.atomosmo_pool;  
+        //@ts-ignore           
+        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.osmousdc_pool;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.osmousdc_pool;  
+        }
+    });
+
+    return( [brwLTV, maxLTV] )
+   }
+   ///Get pro-rata cost
+    function getRataCost() {
+        var ratios = getassetRatios();
+        var cost = 0;
+
+        if (osmoQTY > 0){
+            //find the asset's index in the basket                
+            var rate_index = basketRes?.collateral_types.findIndex((info) => {
+                // @ts-ignore
+                return info.asset.info.native_token.denom === denoms.osmo
+            })
+
+            if (rate_index){
+                //use the index to get its interest rate
+                var asset_rate = rateRes?.rates[rate_index];
+
+                //add pro-rata rate to sum 
+                //@ts-ignore
+                cost += parseFloat((parseFloat(asset_rate) * ratios.osmo).toFixed(4));
+            }
+        }
+        if (atomQTY > 0){
+            //find the asset's index in the basket                
+            var rate_index = basketRes?.collateral_types.findIndex((info) => {
+                // @ts-ignore
+                return info.asset.info.native_token.denom === denoms.atom
+            })
+
+            if (rate_index){
+                //use the index to get its interest rate
+                var asset_rate = rateRes?.rates[rate_index];
+
+                //add pro-rata rate to sum 
+                //@ts-ignore
+                cost += parseFloat((parseFloat(asset_rate) * ratios.atom).toFixed(4));
+            }
+        }
+        if (axlusdcQTY > 0){
+            //find the asset's index in the basket                
+            var rate_index = basketRes?.collateral_types.findIndex((info) => {
+                // @ts-ignore
+                return info.asset.info.native_token.denom === denoms.axlUSDC
+            })
+
+            if (rate_index){
+                //use the index to get its interest rate
+                var asset_rate = rateRes?.rates[rate_index];
+
+                //add pro-rata rate to sum 
+                //@ts-ignore
+                cost += parseFloat((parseFloat(asset_rate) * ratios.axlusdc).toFixed(4));
+            }
+        }
+        if (atomosmo_poolQTY > 0){
+            //find the asset's index in the basket                
+            var rate_index = basketRes?.collateral_types.findIndex((info) => {
+                // @ts-ignore
+                return info.asset.info.native_token.denom === denoms.atomosmo_pool
+            })
+
+            if (rate_index){
+                //use the index to get its interest rate
+                var asset_rate = rateRes?.rates[rate_index];
+
+                //add pro-rata rate to sum 
+                //@ts-ignore
+                cost += parseFloat((parseFloat(asset_rate) * ratios.atomosmo_pool).toFixed(4));
+            }
+        }
+        if (osmousdc_poolQTY > 0){
+            //find the asset's index in the basket                
+            var rate_index = basketRes?.collateral_types.findIndex((info) => {
+                // @ts-ignore
+                return info.asset.info.native_token.denom === denoms.osmousdc_pool
+            })
+
+            if (rate_index){
+                //use the index to get its interest rate
+                var asset_rate = rateRes?.rates[rate_index];
+
+                //add pro-rata rate to sum 
+                //@ts-ignore
+                cost += parseFloat((parseFloat(asset_rate) * ratios.osmousdc_pool).toFixed(4));
+            }
+        }
+
+        //Now add credit redemption rate to the cost
+        if (creditRateRes){
+            //Add credit rate to cost
+            if (creditRateRes.negative_rate && basketRes?.negative_rates){
+                cost -= parseFloat(creditRateRes.credit_interest);
+            } else {
+                cost += parseFloat(creditRateRes.credit_interest);
+            }   
+        }
+
+        return(cost)
+    }
 
     //getuserPosition info && set State
-    useEffect(() => {
-        setPrices(pricez);
+    useEffect(() => {    
         if (address) {
             //setAddress
             setAddress(address as string)
         }
-    }, [pricez, address])
+        if (prices.osmo === 0 ){ setPrices(pricez) }
+        setrateRes(rateRes as CollateralInterestResponse)
+        setcreditRateRes(creditRateRes as InterestResponse)
+        setbasketRes(basketRes as Basket)
+
+    }, [pricez, address, rateRes, creditRateRes, basketRes])
 
   return (
     <div className="positions">
@@ -1268,7 +1430,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
               <div className="debt-visual-item" style={{top: 465 - (363 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))), height: (340 * (((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))}}/>
               <div className="debt-visual-label" style={{top: 445 - (359 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
               <input className="cdt-amount" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
-                id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} orient="vertical" onChange={({ target: { value: radius } }) => {
+                id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} defaultValue={1} orient="vertical" onChange={({ target: { value: radius } }) => {                
                 if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
                     setsliderValue((debtAmount - walletCDT)/1000000);
 
@@ -1294,9 +1456,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
               }}/>
               <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-               style={{top: -(sliderValue * ((445)/((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1))))
-                + (407) + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
-                {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(1)}
+              //-(ratio of slidervalue to max value * the borrow_LTVs top position) + 395
+               style={{top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (395 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
+                + (395)}}>
+                {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
               </label>
               <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
               <div className="position-stats">

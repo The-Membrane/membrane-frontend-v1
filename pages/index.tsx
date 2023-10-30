@@ -13,7 +13,7 @@ import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Posi
 import Popup from "../components/Popup";
 import Hotjar from '@hotjar/browser';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { RedeemabilityResponse } from "../codegen/positions/Positions.types";
+import { Basket, CollateralInterestResponse, InterestResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
@@ -61,6 +61,9 @@ export default function Home() {
     atomosmo_pool: 0,
     osmousdc_pool: 0,
   });
+  const [rateRes, setrateRes] = useState<CollateralInterestResponse>();
+  const [creditRateRes, setcreditRateRes] = useState<InterestResponse>();
+  const [basketRes, setbasketRes] = useState<Basket>();
   const [walletCDT, setwalletCDT] = useState(0);
 
   ////Positions////  
@@ -134,6 +137,12 @@ export default function Home() {
         
         //getBasket
         const basketRes = await cdpqueryClient?.getBasket();
+        setbasketRes(basketRes as Basket);        
+        //query rates
+        const rateRes = await cdpqueryClient?.getCollateralInterest();
+        setrateRes(rateRes as CollateralInterestResponse);
+        const creditRateRes = await cdpqueryClient?.getCreditRate();
+        setcreditRateRes(creditRateRes as InterestResponse);
 
         //getPosition
         const userRes = await cdpqueryClient?.getBasketPositions(
@@ -141,15 +150,9 @@ export default function Home() {
                 user: address as string,
             }
         );
-        
-        //query rates
-        const rateRes = await cdpqueryClient?.getCollateralInterest();
-        const creditRateRes = await cdpqueryClient?.getCreditRate();
 
-
-        // console.log("userRes: ", userRes)
         //Set state
-        if (userRes != undefined){
+        if (userRes != undefined && address != undefined){
             //setPositionID
             //@ts-ignore
             setpositionID(userRes[0].positions[0].position_id)
@@ -249,10 +252,11 @@ export default function Home() {
       oraclequeryClient?.client.getBalance(address as string, denoms.cdt).then((res) => {
         setwalletCDT(parseInt(res.amount));
       })
-      if (positionID === "0"){
-        //fetch & Update position data
-        fetch_update_positionData()
-      }
+    }
+    
+    if (positionID === "0"){
+      //fetch & Update position data
+      fetch_update_positionData()
     }
     
   }, [oraclequeryClient, cdpqueryClient, prices, address])
@@ -262,6 +266,7 @@ export default function Home() {
       return <Dashboard setActiveComponent={setActiveComponent}/>;
     } else if (activeComponent === 'vault') {
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
+          rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
           popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
           osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
           debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
