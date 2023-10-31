@@ -1,13 +1,13 @@
 import React from "react";
 import { useRouter } from 'next/router';
 
-import Dashboard from './Dashboard';
+import Dashboard from '../components/Dashboard';
 import { useEffect, useRef, useState } from 'react';
 import NavBar from '../components/NavBar';
-import LiquidationPools from './Liquidations';
-import Lockdrop from './Lockdrop';
-import Governance from './Governance';
-import Positions from './Vaults';
+import LiquidationPools from '../components/Liquidations';
+import Lockdrop from '../components/Lockdrop';
+import Governance from '../components/Governance';
+import Positions from '../components/Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import Popup from "../components/Popup";

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import ProgressBar from "../components/progress_bar";
+import ProgressBar from "./progress_bar";
 import { GovernanceClient, GovernanceQueryClient } from "../codegen/governance/Governance.client";
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { Proposal, ProposalResponse, Config, ProposalMessage } from "../codegen/governance/Governance.types";
-import Popup from "../components/Popup";
+import Popup from "./Popup";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { coins } from "@cosmjs/stargate";
-import { denoms } from ".";
+import { denoms } from "../pages";
 import { NativeToken } from "../codegen/positions/Positions.types";
 import React from "react";
 import Image from "next/image";
