@@ -1,5 +1,5 @@
 import React from "react";
-import { WalletSection } from "../components";
+import { WalletSection } from ".";
 import Image from "next/image";
 
 type DashboardProps = {

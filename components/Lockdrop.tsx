@@ -1,13 +1,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import ProgressBar from "../components/progress_bar";
+import ProgressBar from "./progress_bar";
 import { LaunchClient, LaunchQueryClient } from "../codegen/launch/Launch.client";
 import { OracleQueryClient } from "../codegen/oracle/Oracle.client";
 import { Lock, Uint128, UserRatio } from "../codegen/launch/Launch.types";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { coin } from "@cosmjs/stargate";
-import { denoms, Prices } from ".";
-import Popup from "../components/Popup";
+import { denoms, Prices } from "../pages";
+import Popup from "./Popup";
 import Image from "next/image";
 import { testnetAddrs } from "../config";
 
