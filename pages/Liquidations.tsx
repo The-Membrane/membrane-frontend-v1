@@ -58,6 +58,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     display: "",
     bidFor: [""],
   });
+  const [saFunctionLabel, setsaFunctionLabel] = useState("Place");
   //Pool visuals
   interface Bar {
     height: number;
@@ -65,15 +66,15 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     tvl: string;
   }
   const [barGraph, setbarGraph] = useState<Bar[][]>([[
+    { height: 0, color: "rgba(79, 202, 187, 0.85)", tvl: "0K" },
     { height: 0, color: "#000000", tvl: "0K" },
     { height: 0, color: "#000000", tvl: "0K" },
     { height: 0, color: "#000000", tvl: "0K" },
     { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "rgba(79, 202, 187, 0.85)", tvl: "0K" },
     { height: 0, color: "#000000", tvl: "0K" },
     { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "rgba(79, 202, 187, 0.85)", tvl: "0K" },
     { height: 0, color: "#000000", tvl: "0K" },
   ],[
     { height: 0, color: "#000000", tvl: "0K" },
@@ -877,6 +878,38 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
 
   }, [menuAsset, prices, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient])
 
+  function plusPremium() {
+    if (((premium??0) < 9) && saFunctionLabel === "Place") {
+      setPremium(prevState => (prevState??0) + 1)
+    }
+    //If user is retracting, only allow them to retract from premiums they have bids in
+    var already_set = false;
+    if (saFunctionLabel === "Retract") {
+      barGraph[barIndex].forEach((bar, index) => {
+        if (bar.color !== "#000000" && index > (premium??0) && !already_set) {
+          already_set = true;
+          setPremium(index)
+        }
+        return;
+      })
+    }
+  }
+  function minusPremium() {
+    if (((premium??0) > 0) && saFunctionLabel === "Place") {
+      setPremium(prevState => (prevState??0) - 1)
+    }
+    //If user is retracting, only allow them to retract from premiums they have bids in
+    if (saFunctionLabel === "Retract") {
+      barGraph[barIndex].forEach((bar, index) => {
+        if (bar.color !== "#000000" && index < (premium??0)) {
+          setPremium(index)
+        }
+        return;
+      })
+    }
+  }
+  
+
   return (
     
     <div className="liquidations">
@@ -936,6 +969,23 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             <div className="total-bids">Total Bids: {}</div>
             <div className="total-user-bids">Your Bids: {}</div>
           </div> */}
+          <form className="bid-actionbox">
+            <div>
+              <div className="bid-actionlabel" style={saFunctionLabel === "Place" ? {} : {opacity: 0.3}} onClick={()=>{setsaFunctionLabel("Place")}}>Place </div>
+              <>/ </>
+              <div className="bid-actionlabel" style={saFunctionLabel === "Retract" ? {} : {opacity: 0.3}} onClick={()=>{setsaFunctionLabel("Retract")}}>Retract </div>
+               Bid
+            </div>
+            <div className="bid-actionbox-labels">Premium: </div>
+            <input className="bid-actionbox-input" value={premium} defaultValue={0} style={{width: "3.2vw"}}/>
+            <div style={{display: "inline-block", backgroundColor: "#454444", height: "4vh"}}>%</div>
+            <div className="premium-toggle">
+              <a className="plus-premium" onClick={plusPremium}>+</a>
+              <a className="minus-premium" onClick={minusPremium}>-</a>
+            </div>
+            <div className="bid-actionbox-labels">Amount: </div><input className="bid-actionbox-input" style={{marginTop: "0.3vh"}}/><div className="bid-actionbox-labels"  style={{textAlign: "center", width: "3vw"}}> CDT</div>
+            <div className="btn bid-button">{saFunctionLabel} Bid</div>
+          </form>
           <form>
             <input className="deposit-amount" name="amount" value={depositAmount} disabled={premium === undefined} type="number" onChange={handlesetdAmount}/>
             <button className="btn buttons deposit-button" onClick={handledepositClick} disabled={premium === undefined} type="button">

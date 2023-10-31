@@ -1456,7 +1456,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
               }}/>
               <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-              //-(ratio of slidervalue to max value * the borrow_LTVs top position) + 395
+              //-(ratio of slidervalue to max value * (label starting point - the borrow_LTVs top position) + 395
                style={{top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (395 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
                 + (395)}}>
                 {(sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}

@@ -72,6 +72,10 @@
 body, html {  
   height: 100%; 
 }
+input:focus {
+  outline: none;
+  box-sizing: none;
+}
 .shadow {
   box-shadow: 0px 0px 7px white;
 }
@@ -572,6 +576,75 @@ ul{
   width: 415px;
   height: 2px;
   z-index: 25;
+}
+.bid-actionbox {
+  position: relative;
+  width: 11vw;
+  left: 32vw;
+}
+.bid-actionbox-input{  
+  background-color: rgb(69, 68, 68);
+  width: 4.2vw;
+  text-align: center;
+  height: 4vh;
+  display: inline-block;
+  position: relative;
+  top: 1px;
+}
+.bid-actionbox-labels {
+  background-color: rgb(69, 68, 68);
+  display: inline-block;
+  height: 4vh;  
+  margin-top: 0.3vh;
+}
+.bid-button {
+  position: relative;
+  width: 11vw;
+  margin-top: 1vh;
+  background-color: #798EFF;
+}
+.bid-actionlabel {
+  display: inline;
+}
+.premium-toggle {
+  position: relative;
+  top: -6px;
+  display: inline-grid;
+  width: 2vw;
+  height: 4vh;
+  justify-items: center;
+}
+.plus-premium {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: .875rem;
+  position: relative;
+  background-color: #454444;
+  height: 2vh;
+  width: 1.5vw;
+  top: -2px;
+  display: inline-flex;
+  user-select: none;
+  align-items: center;
+  justify-content: center;
+}
+.minus-premium {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: .875rem;
+  position: relative;
+  background-color: #454444;
+  height: 2vh;
+  width: 1.5vw;
+  top: 1px;
+  display: inline-flex;
+  user-select: none;
+  align-items: center;
+  justify-content: center;
+}
+.plus-premium:hover,
+.minus-premium:hover {
+  background-color: #798EFF;
 }
 .total-bids-card {
   width: 110px;
