@@ -985,6 +985,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             </div>
             <div className="bid-actionbox-labels">Amount: </div><input className="bid-actionbox-input" style={{marginTop: "0.3vh"}}/><div className="bid-actionbox-labels"  style={{textAlign: "center", width: "3vw"}}> CDT</div>
             <div className="btn bid-button">{saFunctionLabel} Bid</div>
+            <div className="btn sa-claim-button" data-descr={lqClaimables.display} style={lqClaimables.display === "No Claims" ? {opacity: 0.1, color: "black", padding: "0px", cursor: "default"} : {color: "black", padding: "0px"}} onClick={handleclaimClick}>Claim</div>
           </form>
           <form>
             <input className="deposit-amount" name="amount" value={depositAmount} disabled={premium === undefined} type="number" onChange={handlesetdAmount}/>
@@ -1004,9 +1005,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
               </div>
             </button>
           </form> 
-          <a className="btn buttons claim-button" style={{marginLeft: "28.5%"}} onClick={handleclaimClick}>
-            <p tabIndex={0} data-descr={lqClaimables.display} style={{color: "black"}} onClick={handleclaimClick}>Claim</p>
-          </a>
         </div>
         <div className="omniassetframe">
           <h3 className="pool-titles">OMNI-ASSET</h3>

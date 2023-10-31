@@ -580,7 +580,8 @@ ul{
 .bid-actionbox {
   position: relative;
   width: 11vw;
-  left: 32vw;
+  left: 31.8vw;
+  top: 10vh;
 }
 .bid-actionbox-input{  
   background-color: rgb(69, 68, 68);
@@ -645,6 +646,16 @@ ul{
 .plus-premium:hover,
 .minus-premium:hover {
   background-color: #798EFF;
+}
+.sa-claim-button {
+  z-index: 13;
+  color: black;
+  width: 8.2vw;
+  height: 4vh;
+  position: relative;
+  top: 0vh;
+  left: 1.5vw;
+  background-color: #D9D9D9;
 }
 .total-bids-card {
   width: 110px;
