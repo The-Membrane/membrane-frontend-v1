@@ -1620,11 +1620,14 @@ span[data-descr]:hover::after {
   z-index: 31;
 }
 /*Governance Specific*/
+.title {
+  display: flex;
+  flex-direction: row;
+}
+
 .pagetitle-gov {
-  top: 29px;
-  left: 150px;
-  margin-bottom: 30%;
   color: #ffffff;
+  margin-left: 3vw;
 }
 .proposal-axis,
 .proposal-axis1,
@@ -1917,7 +1920,7 @@ span[data-descr]:hover::after {
 }
 .proposals-frame {
   position: absolute;
-  top: 295px;
+  top: 350px;
   left: 34px;
   background-color: #2F2F2F;
   border: gray 2.5px solid;
@@ -1946,25 +1949,27 @@ span[data-descr]:hover::after {
   background-color:whitesmoke;
   border-radius: 50%;
 }
-.delegate-button:hover,
-.unstake-button:hover,
-.stake-button1:hover,
-.gov-claim-button:hover {
+.stButton:hover {
   background-color: #50C9BD;
+  cursor: pointer;
+}
+.vp {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 8vw;
+  justify-content: center;
 }
 .total-vp-label {
-  position: absolute;
+  align-self: center;
   color: white;
-  top: 30px;
-  left: 635px;
   font-size: larger;
   color: white;
 }
 .total-vp-amount {
-  position: absolute;
+  margin-left: 2vw;
   color: white;
-  top: 17px;
-  left: 710px;
+  align-self: center;
   font-size: xx-large;
   color: #50C9BD;
 }
@@ -1973,22 +1978,6 @@ span[data-descr]:hover::after {
   color: white;
   top: 434px;
   left: 550px;
-}
-.claim {
-  position: absolute;
-  top: -10%;
-  left: 33%;
-  font-size: 150%;
-}
-.gov-claim-button {
-  position: absolute;
-  top: 131px;
-  left: 984px;
-  width: 154px;
-  height: 32px;
-  text-align: center;
-  color: black;
-  background-color: whitesmoke;
 }
 .commission {
   position: absolute;
@@ -1999,79 +1988,74 @@ span[data-descr]:hover::after {
 .commission:hover {
   color: #585858;
 }
-.unstake {
-  position: absolute;
-  top: -10%;
-  left: 1px;
+.staking {
+  display: flex;
+  flex-direction: row;
+  justify-content:space-evenly;
+  width: 100%;
+  height: 12vw;
+}
+.stake-text {
+  color: white;
+  margin-left: 2vw;
+  align-self: left;
+  font-size: large;
+}
+.claim-ct {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-top: 1vw;
+}
+.claim-amount {
+  color: white;
   font-size: 150%;
 }
-.unstake-input {
-  position: absolute;
+.coin-icon {
+  height: 3vw;
+  width: 3vw;
+}
+.button-frame {
+  height: 100%;
+  width: 15vw;
+  background-color: #585858;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.2vw;
+}
+.btn-text {
+  width: 40%;
+  font-size: 120%;
+  font-weight: bold;
+  align-self: center;
+}
+.input {
+  align-self: center;
   background-color: white;
   border: 1px solid aqua;
-  width: 55px;
-  bottom: 4px;
-  left: 702px;
-  bottom: 4px;
+  width: 40%;
   z-index: 30;
-  top: 133px;
-  height: 28px;
 }
-.unstake-button {
-  position: absolute;
-  top: 131px;
-  left: 611px;
-  width: 154px;
-  height: 32px;
-  text-align: center;
+.stButton {
+  margin-top: 1vw;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  justify-content: space-between;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  width: 80%;
+  height: 2.6vw;
   color: black;
   background-color: whitesmoke;
-}
-.unstake-button-frame { 
-  position: absolute;
-  top: 120px;
-  left: 596px;
-  background-color: #585858;
-  width: 185px;
-  height: 135px;
-  border-radius: 1rem;
-}
-.stake {
-  position: absolute;
-  top: -10%;
-  left: 5;
-  text-align: center;
-  font-size: 150%;
-}
-.stake-input {
-  position: absolute;
-  background-color: white;
-  border: 1px solid aqua;
-  width: 55px;
-  left: 345px;
-  bottom: 4px;
-  z-index: 30;
-  top: 208px;
-  height: 28px;
-}
-.stake-button1 {
-  position: absolute;
-  top: 206px;
-  left: 258px;
-  width: 154px;
-  height: 32px;
-  text-align: center;
-  color: black;
-  background-color: whitesmoke;
-}
-.stake-button-frame { 
-  position: absolute;
-  top: 120px;
-  left: 243px;
-  background-color: #585858;
-  width: 185px;
-  height: 135px;
-  border-radius: 1rem;
+  align-self: center;
+  display: flex;
+  flex-direction: row;
 }
 .button-icon {
   position: absolute;
@@ -2086,7 +2070,7 @@ span[data-descr]:hover::after {
   position: relative;
 }
 .status-dropdown {
-  position: absolute;
+  
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -2245,74 +2229,12 @@ span[data-descr]:hover::after {
   top: 758px;
   height: 2px;
 }
-.staked-mbrn1,
-.staked-mbrn2 {
-  position: relative;
-  color: white;
-  width: 125px;
-  font-size: large;
-  left: 266px;
-  top: -329px;
-}
-.unstaking-mbrn {  
-  position: relative;
-  color: white;
-  top: -337px;
-  left: 604px;
-  width: 100px;
-  font-size: x-large;
-  text-align: center;
-}
-.unstaking-mbrn-total {
-  position: absolute;
-  top: 205px;
-  left: 652px;
-  color: white;
-  font-size: small;
-  opacity: 0.5;
-}
-.cdt-claims,
-.mbrn-claims {
-  position: relative;
-  width: 60%;
-  height: auto;
-  padding: 10px;
-  color: white;
-  font-size: x-large;
-}
-.cdt-claims {
-  top: 89px;
-  margin-right: auto;
-}
-.mbrn-claims {
-  top: 33px;
-  margin-left: auto;
-}
-.claim-button-frame { 
-  position: absolute;
-  top: 120px;
-  left: 969px;
-  background-color: #585858;
-  width: 185px;
-  height: 135px;
-  display: inline-block;
-  text-align: center;
-  border-radius: 1rem;
-}
 .logo-icon1 {
   position: relative;
   width: 43px;
   height: 43px;
   overflow: hidden;
   flex-shrink: 0;
-}
-.gov-icon {
-  position: relative;
-  width: 43px;
-  height: 43px;
-  top: -452px;
-  overflow: hidden;
-  left: 171px;
 }
 .logo-shiftDown {
   top: 13px;
@@ -2321,50 +2243,16 @@ span[data-descr]:hover::after {
   position: relative;
   display: none;
 }
-.mbrn-claim-logo,
-.mbrn-stake-logo,
-.mbrn-unstake-logo {
-  position: absolute;
-  top: 163px;
-  left: 352px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-xs);
-}
-.mbrn-claim-logo,
-.mbrn-unstake-logo {
-  top: 164px;
-  left: 711px;
-}
-.mbrn-claim-logo {
-  top: 170px;
-  left: 1080px;
-  width: 49px;
-  height: 49px;
-}
 .unstaking-progress-bar {
-  position: absolute;
-  top: 175px;
-  left: 560px;
   border-radius: 50%;
   width: 157px;
   height: 14px;
 }
-.cdt-logo-icon,
 .emissions-schedule {
   position: absolute;
   color: white;
   top: 222px;
   left: 290px;
-}
-.cdt-logo-icon {
-  top: 170px;
-  left: 1000px;
-  width: 45px;
-  height: 45px;
-  object-fit: cover;
 }
 .delegates-y,
 .delegates-y1,
@@ -2397,9 +2285,11 @@ span[data-descr]:hover::after {
 }
 .governance {
   position: relative;
-  width: 1366px;
-  height: 912px;
-  margin-left: 10%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin-left: 7%;
   text-align: left;
   font-family: 'Abel';
 }
@@ -2428,7 +2318,7 @@ span[data-descr]:hover::after {
 }
 .proposal-axis-labels {
   position: absolute;
-  top: 270px;
+  top: 330px;
   left: 247px;
   color: white;
   font-size: small;

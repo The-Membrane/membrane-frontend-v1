@@ -984,8 +984,54 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       
   return (
     <div className="governance">
-    <h1 className="pagetitle-gov">Governance</h1>
-    <Image className="gov-icon" width={43} height={48} alt="" src="/images/staking.svg" />
+      <div className ="title">
+        <h1 className="pagetitle-gov">Governance</h1>
+        <Image className="gov-icon" width={43} height={48} alt="" src="/images/staking.svg" />
+      </div>
+      <div className="vp">
+        <div className="total-vp-label">Total VP: </div>
+        <div className="total-vp-amount">{Math.sqrt(parseInt((userVP/1_000_000).toFixed(0))).toFixed(2)}</div>
+      </div>
+      <div className="staking">
+        <div className="button-frame">
+          <form>
+            <button className="stButton" type="button" onClick={handlestakeClick}>
+              <div className="btn-text">Stake:</div>
+              <input className="input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
+            </button>
+          </form>
+          <div className="stake-text">Staked: {parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
+          <div className="stake-text">in Wallet: {walletMBRN.toFixed(2)}</div>
+        </div>
+        <div className="button-frame">
+          <form>
+            <button className="stButton" type="button" onClick={handleunstakeClick}>
+              <div className="btn-text">Unstake:</div>
+              <input className="input" name="amount" value={unstakeAmount} type="number" onChange={handlesetunstakeAmount}/>
+            </button>
+          </form>
+          <div className="claim-ct"> 
+            <Image className="coin-icon" width={0} height={0} alt="" src="/images/Logo.svg" />
+          
+          {userStake.unstaking.amount !== 0 ? (<div className="unstaking-progress-bar" >
+          <ProgressBar bgcolor="#50C9BD" progress={parseFloat((((unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod) * 100).toFixed(2))}  height={20} />
+          </div>) : <div className="claim-amount">0</div>}
+          </div>
+        </div>
+        <div className="button-frame">
+          <div className="stButton" onClick={handleclaimClick}>
+            <div className="btn-text">Claim</div>
+          </div>
+          <div className="claim-ct"> 
+            <Image className="coin-icon" width={0} height={0} alt="" src="/images/CDT.svg" />      
+            <div className="claim-amount">{userClaims.cdtClaims.toFixed(2)}</div>
+          </div> 
+          <div className="claim-ct"> 
+            <Image className="coin-icon" width={43} height={48} alt="" src="/images/Logo.svg" />
+            <div className="claim-amount">{userClaims.mbrnClaims.toFixed(2)}</div>
+          </div> 
+        </div>
+      </div>
       <div className="proposals-frame">
         <div className="proposal-axis" />
         <div className="proposal-axis1" />
@@ -1112,31 +1158,8 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="btn delegate-button" onClick={() => handledelegateForm()}>
         <div className="delegate">Delegate</div>
       </div>
-      <div className="total-vp-label">Total VP: </div>
-      <div className="total-vp-amount">{Math.sqrt(parseInt((userVP/1_000_000).toFixed(0))).toFixed(2)}</div>
       <div className="delegated-to">Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fluid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comm.&nbsp;&nbsp;&nbsp;&nbsp;Undele.</div>
-      <div className="claim-button-frame">        
-        <div className="cdt-claims">{userClaims.cdtClaims}</div>
-        <div className="mbrn-claims">{userClaims.mbrnClaims}</div>
-      </div>
-      <div className="btn gov-claim-button" onClick={handleclaimClick}>
-        <div className="claim">Claim</div>
-      </div>
       <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>
-      <div className="unstake-button-frame"/>
-      <form>
-        <input className="unstake-input" name="amount" value={unstakeAmount} type="number" onChange={handlesetunstakeAmount}/>
-        <button className="btn unstake-button" type="button" onClick={handleunstakeClick}>
-          <div className="unstake">Unstake:</div>
-        </button>
-      </form>
-      <div className="stake-button-frame"/>
-      <form>
-        <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
-        <button className="btn stake-button1" type="button" onClick={handlestakeClick}>
-          <div className="stake">Stake:</div>
-        </button>
-      </form>
       <div className="status-dropdown">
         <Image className="button-icon" width={11.26} height={13.5} alt="" src="images/button.svg" />
         <div className="dropdown proposal-dropdown">
@@ -1247,26 +1270,15 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       <div className="delegates-y" />
       <div className="delegators-y1" />
       <div className="delegators-y2" />
-      <div className="staked-mbrn1">Staked: {parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
-      <div className="staked-mbrn2">in Wallet: {walletMBRN.toFixed(2)}</div>
       <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
       <div className="unstaking-mbrn-total">{"/" + parseFloat((userStake.unstaking_total/1_000_000).toFixed(2))}</div>
       {/* <div className="mbrn-stake-logo">
         <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
       </div> */}
-      <div className="mbrn-unstake-logo">
-      <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
-      </div>
-      <div className="mbrn-claim-logo">
-      <Image className="logo-icon1" width={43} height={48} alt="" src="/images/Logo.svg" />
-      </div>
-      {userStake.unstaking.amount !== 0 ? (<div className="unstaking-progress-bar" >
-        <ProgressBar bgcolor="#50C9BD" progress={parseFloat((((unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod) * 100).toFixed(2))}  height={20} />
-      </div>) : null}
       {(emissionsSchedule.rate !== 0 && emissionsSchedule.monthsLeft !== 0) ? 
       (<div className="emissions-schedule">{emissionsSchedule.rate}%/{emissionsSchedule.monthsLeft} months</div>)
       : null}
-      <Image className="cdt-logo-icon" width={45} height={45} alt="" src="/images/CDT.svg" />      
+            
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>    
   );
