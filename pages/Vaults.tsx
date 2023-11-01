@@ -1488,7 +1488,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
               </div></>
               : 
                 <div className="squid-router">
-                    <SquidWidget config={
+                    {/* <SquidWidget config={
                         {integratorId: "membrane-swap-widget",
                         companyName:"Membrane",
                         slippage:3,
@@ -1496,7 +1496,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         showOnRampLink: true,
                         initialToChainId: "osmosis-1",
                         initialFromChainId: "cosmoshub-4",
-                    }}
+                    }} */}
                     />
                 </div>
                }

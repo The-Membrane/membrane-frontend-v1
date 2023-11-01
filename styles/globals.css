@@ -548,15 +548,22 @@ ul{
   border: 1px solid grey;
   background-color: #798eff;
 }
+.queue-stats-box {
+  position: relative;  
+  top: 54vh;
+  left: 0.5vw;
+  display: inline-flex;
+}
+.queue-stats-item {
+  margin-left: 2vw;
+}
 .collateral-tvl-label {
-  position: absolute;
-  top: 70px;
-  left: 163px;
-  display: inline-block;
-  min-width: 197px;
+  text-align: center;
+  display: flex;
+  width: 112px;
   height: 21px;
-  flex-shrink: 0;
-  z-index: 23;
+  font-size: large;
+  flex-direction: column;
 }
 .highest-tvl-bar-label {
   position: absolute;

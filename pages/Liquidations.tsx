@@ -60,6 +60,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   });
   const [saFunctionLabel, setsaFunctionLabel] = useState("Place");
   //Pool visuals
+  const [queueuserBids, setqueueuserBids] = useState(0);
+  const [queue, setQueue] = useState<QueueResponse>();
   interface Bar {
     height: number;
     color: string;
@@ -205,18 +207,25 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             barGraph[barIndex][premium_index].color = "#000000";
           }
         }
-        //Set the color of any slots the user is in to blue
+        //Set the color of any slots the user is in to blue & tally user's bids
         if (address !== undefined) {
+          var user_bids = 0;
+
           for (let i = 0; i < resp.length; i++) {
             let premium_index =  parseInt((parseFloat(resp[i].liq_premium) * 100).toFixed(0));
             if (premium_index < 10){
               for (let x = 0; x < resp[i].bids.length; x++) {
                 if (resp[i].bids[x].user === address){
+                  //Set bar to colored
                   barGraph[barIndex][premium_index].color = "rgba(79, 202, 187, 0.85)";
+                  //Add to user's bids
+                  user_bids += parseInt(resp[i].bids[x].amount) / 1_000_000;
                 }
               }
             }
           }
+          //Set user's bids
+          setqueueuserBids(user_bids);
         }
         //Save new barGraph
         setbarGraph(barGraph);
@@ -272,6 +281,22 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             }
           }
         }
+      })
+    } catch (error) {
+      //We don't popup for query errors
+      console.log(error)
+    }
+
+    //Query queue
+    try {
+      await queryClient?.queue({
+        bidFor: {
+          native_token: {
+            denom: asset,
+          }
+        },
+      }).then((res) => {
+        setQueue(res);
       })
     } catch (error) {
       //We don't popup for query errors
@@ -879,7 +904,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }, [menuAsset, prices, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient])
 
   function plusPremium() {
-    if (((premium??0) < 9) && saFunctionLabel === "Place") {
+    if (((premium??0) < parseInt(queue?.max_premium ?? "9")) && saFunctionLabel === "Place") {
       setPremium(prevState => (prevState??0) + 1)
     }
     //If user is retracting, only allow them to retract from premiums they have bids in
@@ -906,6 +931,25 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         }
         return;
       })
+    }
+  }
+  function getmenuAssetPrice() {
+    switch(menuAsset){
+      case "OSMO": {
+        return prices.osmo;
+      }
+      case "ATOM": {
+        return prices.atom;
+      }
+      case "axlUSDC": {
+        return prices.axlUSDC;
+      }
+      case "ATOM-OSMO": {
+        return prices.atomosmo_pool;
+      }
+      case "OSMO-axlUSDC": {
+        return prices.osmousdc_pool;
+      }
     }
   }
   
@@ -962,7 +1006,24 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 </ul>
             ) : null}
           </div>
-          {/* <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}K</div> */}
+          <div className="queue-stats-box">
+            <div className="queue-stats-item">
+              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{collateralTVL}K</div>
+             <div className="collateral-tvl-label" >TVL as Collateral</div>
+            </div>
+            <div className="queue-stats-item">
+              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{(parseInt(queue?.bid_asset.amount ?? "0") / 1000_000_000).toFixed(2)}K</div>
+             <div className="collateral-tvl-label" >Total Bids</div>
+            </div>
+            <div className="queue-stats-item">
+              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>${getmenuAssetPrice()?.toFixed(4)}</div>
+             <div className="collateral-tvl-label" >Collateral Price</div>
+             </div>
+            <div className="queue-stats-item">
+              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{queueuserBids} CDT</div>
+             <div className="collateral-tvl-label" >Your Bids</div>
+            </div>
+          </div>
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (10 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
           <div className="x-axis" />
           {/* <div className="card total-bids-card" style={{backgroundColor: "#585858", position: "relative"}}>
