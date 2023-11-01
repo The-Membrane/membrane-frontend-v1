@@ -14,6 +14,8 @@ import Image from "next/image";
 import { relative } from "path";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
+import { SquidWidget } from "@0xsquid/widget";
+
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
       orient?: string;
@@ -99,6 +101,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const [premium, setPremium] = useState<number>(0);
     const [loanUsage, setloanUsage] = useState<string>("");
     const [redemptionRes, setredemptionRes] = useState<RedeemabilityResponse>();
+    const [restrictedAssets, setRestricted] = useState({
+        sentence: "Click Assets on the left to restrict redemption from, currently restricted: ",
+        readable_assets: [] as string[],
+        assets: [] as string[],
+    });
     //Deposit-Withdraw screen
     const [depositwithdrawScreen, setdepositwithdrawScreen] = useState("deposit-withdraw-screen");
     const [currentfunctionLabel, setcurrentfunctionLabel] = useState("");
@@ -107,12 +114,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
     const [amount, setAmount] = useState<number>(0);
 
+    //Squid Widget
+    const [swapScreen, setswapScreen] = useState(false);    
     
-    const [restrictedAssets, setRestricted] = useState({
-        sentence: "Click Assets on the left to restrict redemption from, currently restricted: ",
-        readable_assets: [] as string[],
-        assets: [] as string[],
-    });
     //This is used to keep track of what asses the user has in the contract
     //bc the input/output asset quantities are updated in responsive to the user's actions
     const [contractQTYs, setcontractQTYs] = useState({
@@ -906,6 +910,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         }
     }
     const handleExecution = async () => {
+        //Check if we are just going back to the mint visual
+        if (swapScreen === true) {
+            setswapScreen(false)
+            return;
+        }
         //Check if wallet is connected
         if (address === undefined) {
           setPopupMsg(<div>Connect your wallet on the Home page</div>)
@@ -1243,11 +1252,14 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         "https://tfm.com/ibc"
         );
    };  
-   const onSquidTextClick = () => {
-        window.open(
-        "https://app.squidrouter.com/"
-        );
+   const handleswapClick = () => {
+        setswapScreen(true);
    };
+//    const onSquidTextClick = () => {
+//         window.open(
+//         "https://app.squidrouter.com/"
+//         );
+//    };
 
    function getTVL() {
     return(
@@ -1416,7 +1428,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         <div className="vault-page">
           <div className="vault-subframe">
             <div className="debt-visual">
-              <div className="infobox-icon" />
+              {swapScreen === false ? <><div className="infobox-icon" />
               <div className="max-ltv">
                 <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
                 <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
@@ -1473,7 +1485,21 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
               <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
               <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using the value of your collateralized Bundle</div>
               <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay your debt using the CDT in your wallet</div>
-              </div>
+              </div></>
+              : 
+                <div className="squid-router">
+                    <SquidWidget config={
+                        {integratorId: "membrane-swap-widget",
+                        companyName:"Membrane",
+                        slippage:3,
+                        hideAnimations: true,
+                        showOnRampLink: true,
+                        initialToChainId: "osmosis-1",
+                        initialFromChainId: "cosmoshub-4",
+                    }}
+                    />
+                </div>
+               }
             </div>
             <div className="asset-info">
               <div className="infobox-icon3"/>
@@ -1521,18 +1547,18 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             <div className="controller-border"/>
             <div className="controller-frame"/>
             <div className="controller-label"/>
-            <div className="controller-screen-blank"> 
+            <div className="controller-screen-blank">                 
                 <div className="starting-screen">
                     { currentfunctionLabel === "" ? 
-                    <>Depositing requires assets on Osmosis. Bridge/swap to using:&nbsp;
-                    <a className="nowrap" style={{textDecoration: "underline"}} onClick={onTFMTextClick}>TFM</a> for IBC or <a className="nowrap" style={{textDecoration: "underline"}} onClick={onSquidTextClick}>Squid</a>
-                    &nbsp;if outside IBC-connected chains.</>
+                    <div style={{fontSize: "medium", left: ".5vw", position: "relative"}}>Depositing requires assets on Osmosis. &nbsp;
+                    <div className="nowrap" style={{textDecoration: "underline", display: "inline"}} onClick={onTFMTextClick}>IBC Bridge</div> / <div className="btn swap-button" onClick={handleswapClick}>Swap</div>
+                    </div>
                     : null}
                 </div>
             </div>
             <div className="controller" onClick={currentfunctionLabel === "redemptions" ? handleredeeminfoClick : handleredeemScreen}>Collateral</div>
             <div className={getTVL()*(maxLTV/100) < (debtAmount/1000000)*creditPrice ? "user-redemption-button red-border" : redeemButton} onClick={handleExecution}>
-                <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : "<-----" }</div>
+                <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : swapScreen === true ? "Back to Minting" : getTVL() > 0 ? "Mint ---->" : "<---- Deposit" }</div>
             </div>    
             <div className={redeemScreen}>
                 <form>            

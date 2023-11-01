@@ -962,7 +962,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 </ul>
             ) : null}
           </div>
-          <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}K</div>
+          {/* <div className="collateral-tvl-label">TVL as Collateral: {collateralTVL}K</div> */}
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (10 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
           <div className="x-axis" />
           {/* <div className="card total-bids-card" style={{backgroundColor: "#585858", position: "relative"}}>
@@ -987,7 +987,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             <div className="btn bid-button">{saFunctionLabel} Bid</div>
             <div className="btn sa-claim-button" data-descr={lqClaimables.display} style={lqClaimables.display === "No Claims" ? {opacity: 0.1, color: "black", padding: "0px", cursor: "default"} : {color: "black", padding: "0px"}} onClick={handleclaimClick}>Claim</div>
           </form>
-          <form>
+          {/* <form>
             <input className="deposit-amount" name="amount" value={depositAmount} disabled={premium === undefined} type="number" onChange={handlesetdAmount}/>
             <button className="btn buttons deposit-button" onClick={handledepositClick} disabled={premium === undefined} type="button">
               <div className="deposit-button-label" onClick={handledepositClick}>
@@ -1004,7 +1004,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 ) : <>Withdraw:</> }     
               </div>
             </button>
-          </form> 
+          </form>  */}
         </div>
         <div className="omniassetframe">
           <h3 className="pool-titles">OMNI-ASSET</h3>

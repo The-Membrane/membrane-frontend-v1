@@ -512,7 +512,7 @@ ul{
 }
 .asset-dropdown {
   position: absolute;
-  top: 30px;
+  top: -10px;
   left: 195px;
   background-color: #798eff;
   width: 75px;
@@ -581,7 +581,7 @@ ul{
   position: relative;
   width: 11vw;
   left: 31.8vw;
-  top: 10vh;
+  top: -7vh;
 }
 .bid-actionbox-input{  
   background-color: rgb(69, 68, 68);
@@ -606,6 +606,7 @@ ul{
 }
 .bid-actionlabel {
   display: inline;
+  cursor: pointer;
 }
 .premium-toggle {
   position: relative;
@@ -650,11 +651,10 @@ ul{
 .sa-claim-button {
   z-index: 13;
   color: black;
-  width: 8.2vw;
+  width: 11vw;
   height: 4vh;
   position: relative;
   top: 0vh;
-  left: 1.5vw;
   background-color: #D9D9D9;
 }
 .total-bids-card {
@@ -682,7 +682,7 @@ ul{
   left: 12px;
   background-color: #383838;
   box-shadow: 0px 0px 5px #c1c1c1;
-  width: 584.5px;
+  width: 593.5px;
   height: 550px;
   display: flex;
   flex-direction: column;
@@ -972,11 +972,10 @@ span[data-descr]:hover::after {
 .middleborder {
   position: absolute;
   top: 65px;
-  left: 597px;
-  background: linear-gradient(180deg, #798eff, #4fcabb);
-  box-shadow: 0px 0px 5px #c1c1c1;
+  left: 603px;
+  background: gray;
   box-sizing: border-box;
-  width: 23px;
+  width: 17px;
   height: 550px;
 }
 .docs1,
@@ -2980,6 +2979,13 @@ span[data-descr]:hover::after {
   width: 368.5px;
   height: 30.5px;
 }
+.squid-router{
+  position: relative;
+  left: 5vw;
+}
+.swap-button {
+  background-color: #798EFF;
+}
 .debt-visual-child {
   position: absolute;
   top: 106px;
@@ -3802,11 +3808,13 @@ input[type=range][orient=vertical] {
 }
 .cdp-deposit-label {
   position: absolute;
+  cursor: pointer;
   top: 0px;
   left: 40px;
 }
 .cdp-withdraw-label {
   position: absolute;
+  cursor: pointer;
   top: 0px;
   left: 132px;
 }
@@ -3817,6 +3825,9 @@ input[type=range][orient=vertical] {
 }
 .low-opacity {
   opacity: 44%;
+}
+.hidden {
+  opacity: 0%;
 }
 .bold {  
   font-weight: bold;
@@ -3840,7 +3851,6 @@ input[type=range][orient=vertical] {
 }
 .spacing-btm {  
   position: relative;
-  top: -3px;
 }
 .intents {
   position: absolute;
@@ -3867,7 +3877,7 @@ input[type=range][orient=vertical] {
   top: 479px;
   z-index: 51;
   left: 981px;
-  font-size: x-large;
+  font-size: large;
 }
 .red-border {
   border: 2px solid red;
