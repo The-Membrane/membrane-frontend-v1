@@ -51,8 +51,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     display: string;
     bidFor: string[];
   }
-  const [depositAmount, setdAmount] = useState();
-  const [withdrawAmount, setwAmount] = useState();
+  const [bidAmount, setbidAmount] = useState(5);
   const [premium, setPremium] = useState<number>();
   const [lqClaimables, setlqClaimables] = useState<LQClaims>({
     display: "",
@@ -159,14 +158,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     setMenuAsset("OSMO-axlUSDC");
     setbarIndex(4);
   };
-  const handlesetdAmount = (event: any) => {
-    event.preventDefault();
-    setdAmount(event.target.value);
-  };
-  const handlesetwAmount = (event: any) => {
-    event.preventDefault();
-    setwAmount(event.target.value);
-  };  
   const handlesetomnidAmount = (event: any) => {
     event.preventDefault();
     setomnidAmount(event.target.value);
@@ -370,6 +361,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handledepositClick = async () => {
+    var depositAmount = bidAmount;
     //Check if wallet is connected
     if (address === undefined) {
       setPopupMsg("Connect your wallet on the Home page")
@@ -430,6 +422,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handlewithdrawClick = async () => {
+    var withdrawAmount = bidAmount;
     //Check if wallet is connected
     if (address === undefined) {
       setPopupMsg("Connect your wallet on the Home page")
@@ -952,6 +945,23 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
     }
   }
+  function setBidAmount(event: any) {
+    event.preventDefault();
+    //Set lqAmount everytime to change the visual
+    setbidAmount(event.target.value)
+  }
+  function handlebidExecution() {    
+    switch (saFunctionLabel) {
+      case "Place": {
+        handledepositClick();
+        break;
+      }
+      case "Retract": {
+        handlewithdrawClick();
+        break;
+      }
+    }
+  }
   
 
   return (
@@ -1012,7 +1022,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
              <div className="collateral-tvl-label" >TVL as Collateral</div>
             </div>
             <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{(parseInt(queue?.bid_asset.amount ?? "0") / 1000_000_000).toFixed(2)}K</div>
+              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{(parseInt(queue?.bid_asset.amount ?? "0") / 1000_000_000).toFixed(2)}K CDT</div>
              <div className="collateral-tvl-label" >Total Bids</div>
             </div>
             <div className="queue-stats-item">
@@ -1026,13 +1036,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           </div>
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (10 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
           <div className="x-axis" />
-          {/* <div className="card total-bids-card" style={{backgroundColor: "#585858", position: "relative"}}>
-            <div className="total-bids">Total Bids: {}</div>
-            <div className="total-user-bids">Your Bids: {}</div>
-          </div> */}
           <form className="bid-actionbox">
             <div>
-              <div className="bid-actionlabel" style={saFunctionLabel === "Place" ? {} : {opacity: 0.3}} onClick={()=>{setsaFunctionLabel("Place")}}>Place </div>
+              <div className="bid-actionlabel" style={saFunctionLabel === "Place" ? {} : {opacity: 0.3}} onClick={()=>{setsaFunctionLabel("Place"); setbidAmount(5)}}>Place </div>
               <>/ </>
               <div className="bid-actionlabel" style={saFunctionLabel === "Retract" ? {} : {opacity: 0.3}} onClick={()=>{setsaFunctionLabel("Retract")}}>Retract </div>
                Bid
@@ -1044,28 +1050,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
               <a className="plus-premium" onClick={plusPremium}>+</a>
               <a className="minus-premium" onClick={minusPremium}>-</a>
             </div>
-            <div className="bid-actionbox-labels">Amount: </div><input className="bid-actionbox-input" style={{marginTop: "0.3vh"}}/><div className="bid-actionbox-labels"  style={{textAlign: "center", width: "3vw"}}> CDT</div>
-            <div className="btn bid-button">{saFunctionLabel} Bid</div>
+            <div className="bid-actionbox-labels">Amount: </div><input className="bid-actionbox-input" style={{marginTop: "0.3vh"}} value={bidAmount} onChange={setBidAmount}/><div className="bid-actionbox-labels"  style={{textAlign: "center", width: "3vw"}}> CDT</div>
+            <div className="btn bid-button" onClick={handlebidExecution}>{saFunctionLabel} Bid</div>
             <div className="btn sa-claim-button" data-descr={lqClaimables.display} style={lqClaimables.display === "No Claims" ? {opacity: 0.1, color: "black", padding: "0px", cursor: "default"} : {color: "black", padding: "0px"}} onClick={handleclaimClick}>Claim</div>
           </form>
-          {/* <form>
-            <input className="deposit-amount" name="amount" value={depositAmount} disabled={premium === undefined} type="number" onChange={handlesetdAmount}/>
-            <button className="btn buttons deposit-button" onClick={handledepositClick} disabled={premium === undefined} type="button">
-              <div className="deposit-button-label" onClick={handledepositClick}>
-                {premium === undefined ? (
-                <span tabIndex={0} data-descr="select a premium">Deposit:</span>
-                ) : <>Deposit:</> }                
-              </div>
-            </button>
-            <input className="withdraw-amount" name="amount" value={withdrawAmount} disabled={premium === undefined} type="number" onChange={handlesetwAmount}/>
-            <button className="btn buttons withdraw-button" onClick={handlewithdrawClick} disabled={premium === undefined} type="button">
-              <div className="withdraw-button-label"  onClick={handlewithdrawClick}>
-                {premium === undefined ? (
-                <span tabIndex={0} data-descr="select a premium">Withdraw:</span>
-                ) : <>Withdraw:</> }     
-              </div>
-            </button>
-          </form>  */}
         </div>
         <div className="omniassetframe">
           <h3 className="pool-titles">OMNI-ASSET</h3>

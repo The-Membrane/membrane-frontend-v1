@@ -1496,8 +1496,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         showOnRampLink: true,
                         initialToChainId: "osmosis-1",
                         initialFromChainId: "cosmoshub-4",
-                    }} */}
-                    />
+                    }}
+                    /> */}
                 </div>
                }
             </div>
