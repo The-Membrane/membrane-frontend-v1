@@ -30,7 +30,7 @@ interface Props {
   sp_client: StabilityPoolClient | null;
   cdp_queryClient: PositionsQueryClient | null;
   address: string | undefined;
-  prices: Prices;  
+  pricez: Prices;  
   index_lqClaimables: LQClaims;
   //SP
   capitalAhead: number;
@@ -47,9 +47,16 @@ interface Props {
   setunstakingMsg: (unstakingMsg: string) => void;
 }
 
-const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, prices, index_lqClaimables,
+const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, pricez, index_lqClaimables,
   capitalAhead, setcapitalAhead, userclosestDeposit, setuserclosestDeposit, userTVL, setuserTVL, TVL, setTVL, SPclaimables, setSPclaimables, unstakingMsg, setunstakingMsg
 }: Props) => {
+  const [prices, setPrices] = useState<Prices>({
+    osmo: 0,
+    atom: 0,
+    axlUSDC: 0,
+    atomosmo_pool: 0,
+    osmousdc_pool: 0,
+  });
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState("");
@@ -661,6 +668,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   
 
   useEffect(() => {
+    //Set prices
+    if (prices.osmo === 0 ){ setPrices(pricez) }
     //Set barGraph
     switch(menuAsset){
       case "OSMO": {
