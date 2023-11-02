@@ -67,62 +67,62 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     tvl: string;
   }
   const [barGraph, setbarGraph] = useState<Bar[][]>([[
-    { height: 0, color: "rgba(79, 202, 187, 0.85)", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "rgba(79, 202, 187, 0.85)", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "rgba(79, 202, 187, 0.85)", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
   ],[
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
   ],
   [
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
   ],
   [
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
   ],[
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
-    { height: 0, color: "#000000", tvl: "0K" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
   ]]);
   const [collateralTVL, setcollateralTVL] = useState(0);
   //index for highest bar in barGraph
@@ -187,9 +187,15 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           if (premium_index < 10){
             //Divide to get X per pixel.Add 6 decimals to account for the extra decimals of a native token
             barGraph[barIndex][premium_index].height = parseFloat(resp[i].total_bid_amount) / CDTperPIXEL;
-            //Set tvl
-            barGraph[barIndex][premium_index].tvl = (parseFloat(resp[i].total_bid_amount) / 1_000_000000).toFixed(2)+ "K";
-
+            //Set tvl            
+            var tvl = parseInt(resp[i].total_bid_amount) / 1_000000;
+            var tvl_label = tvl.toString();
+            if (tvl >= 1000){
+              tvl_label = (tvl/1000).toString() + "K";
+            } else if (tvl >= 1000000){
+              tvl_label = (tvl/1000000).toString() + "M";
+            }
+            barGraph[barIndex][premium_index].tvl = tvl_label;
             //Check if this is the highest bar
             if (barGraph[barIndex][premium_index].height > barGraph[barIndex][highest].height) {
               highest = premium_index;
@@ -846,31 +852,31 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Set barGraph
     switch(menuAsset){
       case "OSMO": {
-        if (barGraph[0][0].tvl === "0K" && prices.osmo !== 0) {
+        if (barGraph[0][0].tvl === "0" && prices.osmo !== 0) {
           queryQueuesaveHeights(denoms.osmo)
         }
         break;
       }
       case "ATOM": {
-        if (barGraph[1][0].tvl === "0K" && prices.atom !== 0) {
+        if (barGraph[1][0].tvl === "0" && prices.atom !== 0) {
           queryQueuesaveHeights(denoms.atom)
         }
         break;
       }
       case "axlUSDC": {
-        if (barGraph[2][0].tvl === "0K" && prices.axlUSDC !== 0) {
+        if (barGraph[2][0].tvl === "0" && prices.axlUSDC !== 0) {
           queryQueuesaveHeights(denoms.axlUSDC)
         }
         break;
       }
       case "ATOM-OSMO": {
-        if (barGraph[3][0].tvl === "0K" && prices.atomosmo_pool !== 0) {
+        if (barGraph[3][0].tvl === "0" && prices.atomosmo_pool !== 0) {
           queryQueuesaveHeights(denoms.atomosmo_pool)
         }
         break;
       }
       case "OSMO-axlUSDC": {
-        if (barGraph[4][0].tvl === "0K" && prices.osmousdc_pool !== 0) {
+        if (barGraph[4][0].tvl === "0" && prices.osmousdc_pool !== 0) {
           queryQueuesaveHeights(denoms.osmousdc_pool)
         }
         break;
@@ -1034,7 +1040,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
              <div className="collateral-tvl-label" >Your Bids</div>
             </div>
           </div>
-          <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (10 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl}</div>
+          <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (7 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl} CDT</div>
           <div className="x-axis" />
           <form className="bid-actionbox">
             <div>
