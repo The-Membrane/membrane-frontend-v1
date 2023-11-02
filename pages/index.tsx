@@ -14,6 +14,7 @@ import Popup from "../components/Popup";
 import Hotjar from '@hotjar/browser';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Basket, CollateralInterestResponse, InterestResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
+import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
@@ -234,6 +235,222 @@ export default function Home() {
     }
   };
 
+  //Liquidation Page state
+  interface LQClaims {
+    display: string;
+    bidFor: string[];
+  }
+  const [lqClaimables, setlqClaimables] = useState<LQClaims>({
+    display: "",
+    bidFor: [""],
+  });
+  const [capitalAhead, setcapitalAhead] = useState(0);
+  const [userclosestDeposit, setuserclosestDeposit] = useState(0);
+  const [userTVL, setuserTVL] = useState(0);
+  const [spTVL, setspTVL] = useState(0);
+  const [SPclaimables, setSPclaimables] = useState("");
+  const [unstakingMsg, setunstakingMsg] = useState("");
+
+  const setqueueClaimables = async () => {
+    try {
+      await liqqueuequeryClient?.userClaims({
+        user: address as string ?? "",
+      }).then((res) => {
+        let resp = res as ClaimsResponse[];
+        let new_display = "";
+        let new_bidFor: string[] = [];
+
+        //Add claims from each response
+        for (let i = 0; i < resp.length; i++) {
+          let asset_claims = parseInt(resp[i].pending_liquidated_collateral) / 1_000_000; //Remove native token decimals
+          
+          if (asset_claims > 1) {           
+            //Add asset to display
+            switch (resp[i].bid_for) {
+              case denoms.osmo: {     
+                new_display += asset_claims + " OSMO, ";
+                break;
+              }
+              case denoms.atom: {
+                new_display += asset_claims + " ATOM, ";
+                break;
+              }
+              case denoms.axlUSDC: {
+                new_display += asset_claims + " axlUSDC, ";
+                break;
+              }
+              case denoms.atomosmo_pool: {
+                new_display += asset_claims + " ATOM-OSMO LP, ";
+                break;
+              }
+              case denoms.osmousdc_pool: {
+                new_display += asset_claims + " OSMO-axlUSDC LP, ";
+                break;
+              }
+            }
+
+            //Add asset to bidFor
+            new_bidFor.push(resp[i].bid_for);
+          }
+        }
+        //Set lqClaimables
+        setlqClaimables(prevState => {
+          return { 
+            bidFor: new_bidFor, 
+            display: new_display
+          }
+        });
+        //If no claims, set display to "No Claims"
+        if (resp.length === 0 || new_display === "") {
+          setlqClaimables(prevState => {
+            return { ...prevState, display: "No Claims"}
+          });
+        }
+      })
+    } catch (error) {
+      setlqClaimables(prevState => {
+        return { ...prevState, display: "No Claims"}
+      });
+      console.log(error)
+    }
+  }
+  const getSPclaimables = async () => {
+    var claims = "";
+    //Claimable Liquidations
+    try {
+      await stabilitypoolqueryClient?.userClaims({
+        user: address as string ?? "",
+      }).then((res) => {
+        console.log(res)
+
+        //add SP claimables
+        for (let i = 0; i < res.claims.length; i++) {
+          console.log(res.claims)
+          switch (res.claims[i].denom) {
+            case denoms.osmo: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " OSMO, "
+              break;
+            }
+            case denoms.atom: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " ATOM, "
+              break;
+            }
+            case denoms.axlUSDC: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " axlUSDC, "
+              break;
+            }
+            case denoms.atomosmo_pool: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " ATOM-OSMO LP, "
+              break;
+            }
+            case denoms.osmousdc_pool: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " OSMO-axlUSDC LP, "
+              break;
+            }
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    //Incentives
+    try {
+      await stabilitypoolqueryClient?.unclaimedIncentives({
+        user: address as string ?? "",
+      }).then((res) => {
+        //add SP incentives
+        if (parseInt(res)/1_000_000 < 1) {
+          claims += parseInt(res)/1_000_000 + " MBRN, "
+        }
+        
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    if (claims === "") {
+      claims = "No Claims"
+    }    
+    setSPclaimables(claims)
+  }
+  //Get leading unstaking deposit from the SP for the user
+  const getunstakingSP = async () => {
+    try {
+      await stabilitypoolqueryClient?.assetPool({
+        user: address as string ?? "",
+      }).then((res) => {
+        //Check if user has an unstaking deposit
+        if (res.deposits.length > 0) {
+          for (let i = 0; i < res.deposits.length; i++) {
+            if (res.deposits[i].unstake_time !== null && res.deposits[i].unstake_time !== undefined) {
+              //Get block time
+              var current_time = 0; 
+              liq_queue_client?.client.getBlock().then( (block) => {
+                current_time = Date.parse(block.header.time)
+              })
+              var unstake_time_left_seconds = res.deposits[i].unstake_time? - current_time : 0;
+              //Format tooltip
+              setunstakingMsg("You have an unstaking deposit of " + parseInt(res.deposits[i].amount)/1_000_000 + " CDT finished in " + unstake_time_left_seconds + " seconds")
+              break;
+            }
+          }
+        }
+
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const getSPTVL = async () => {
+    try {
+      //Query total deposits
+      await stabilitypoolqueryClient?.assetPool({
+        depositLimit: 0,
+      }).then((res) => {
+        //set TVL in Ms
+        setspTVL(parseFloat((parseInt(res.credit_asset.amount) / 1000_000_000).toFixed(2)))
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    //User specific
+    try {      
+      var tvl = 0;      
+      //Query user's total deposit
+      await stabilitypoolqueryClient?.assetPool({
+        user: address as string ?? "",
+      }).then((res) => {
+        console.log(res)
+        //Calc user tvl
+        for (let i = 0; i < res.deposits.length; i++) {
+          tvl += parseInt(res.deposits[i].amount) / 1_000_000;
+        }
+        //set user tvl
+        setuserTVL(tvl)
+      })
+
+      //Query capital ahead of user deposit
+      await stabilitypoolqueryClient?.capitalAheadOfDeposit({
+        user: address as string ?? "",
+      }).then((res) => {
+        //set capital ahead of user deposit in K
+        //@ts-ignore
+        setcapitalAhead(parseInt(res[0]?.capital_ahead ?? 0) / 1000_000_000)
+        //set user closest deposit in K
+        if (res.deposit !== undefined) {
+          setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
+        } else {  
+          //use TVL if no deposit        
+          setuserclosestDeposit(tvl)
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {    
     Hotjar.init(siteId, hotjarVersion);
   }, []);
@@ -244,7 +461,6 @@ export default function Home() {
       //Get prices
       queryPrices()
     }
-
     if (address !== undefined) {
       //setAddress
       setAddress(address as string)
@@ -252,11 +468,27 @@ export default function Home() {
       oraclequeryClient?.client.getBalance(address as string, denoms.cdt).then((res) => {
         setwalletCDT(parseInt(res.amount));
       })
-    }
-    
+    }    
     if (positionID === "0"){
       //fetch & Update position data
       fetch_update_positionData()
+    }
+    /////Liquidation Page Queries
+    //Set LQ claimables
+    if (lqClaimables.display === "" || lqClaimables.display === "No Claims"){
+      setqueueClaimables()
+    }
+    if (SPclaimables === ""){
+      //Set SP claimables
+      getSPclaimables()
+    }    
+    if (spTVL === 0){
+      //Set SP TVL
+      getSPTVL()
+    }
+    if (unstakingMsg === "") {
+      //Check for unstaking positions
+      getunstakingSP()
     }
     
   }, [oraclequeryClient, cdpqueryClient, prices, address])
@@ -273,7 +505,9 @@ export default function Home() {
 
       />;
     } else if (activeComponent === 'liquidation') {
-      return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} prices={prices} />;
+      return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} prices={prices} index_lqClaimables={lqClaimables}
+        capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL} setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead}
+      />;
     } else if (activeComponent === 'staking') {
       return <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined} />;
     } else if (activeComponent === 'launch') {
