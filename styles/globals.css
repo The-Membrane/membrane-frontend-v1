@@ -3634,7 +3634,8 @@ span[data-descr]:hover::after {
 .range-label {
   position: relative;
   font-size: small;
-  left: 155px
+  left: 11vw;
+  user-select: none;
 }
 .red {
   color: red;

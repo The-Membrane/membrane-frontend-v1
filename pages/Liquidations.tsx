@@ -61,9 +61,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState("");
   const [popupStatus, setPopupStatus] = useState("");
-  //Stability Pool execution  
-  const [omnidepositAmount, setomnidAmount] = useState();
-  const [omniwithdrawAmount, setomniwAmount] = useState();
+  //Stability Pool execution
+  const [omniAmount, setomniAmount] = useState(5);
   //Menu
   const [open, setOpen] = useState(false);
   const [menuAsset, setMenuAsset] = useState("OSMO" as string);
@@ -75,6 +74,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     bidFor: [""],
   });
   const [saFunctionLabel, setsaFunctionLabel] = useState("Place");
+  const [oaFunctionLabel, setoaFunctionLabel] = useState("Join");
   //Pool visuals
   const [queueuserBids, setqueueuserBids] = useState(0);
   const [queue, setQueue] = useState<QueueResponse>();
@@ -526,12 +526,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
     try {
       await sp_client?.deposit({}
-        , "auto", undefined, coins(((omnidepositAmount ?? 0) * 1_000_000), denoms.cdt)
+        , "auto", undefined, coins(((omniAmount ?? 0) * 1_000_000), denoms.cdt)
         ).then(async (res) => {
           console.log(res)
           //Format popup
           setPopupStatus("Success")
-          setPopupMsg("Deposited " + omnidepositAmount + " CDT")
+          setPopupMsg("Deposited " + omniAmount + " CDT")
           setPopupTrigger(true)
 
           //Query capital ahead of user deposit
@@ -583,7 +583,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
     try {
       await sp_client?.withdraw({
-        amount: ((omniwithdrawAmount ?? 0) * 1_000_000).toString(),
+        amount: ((omniAmount ?? 0) * 1_000_000).toString(),
       }, "auto", undefined)
         .then(async (res) => {
           console.log(res)
@@ -618,11 +618,11 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             }
             //Format pop-up
             if (tvl < userTVL){
-              setPopupMsg("Withdrew " + omnidepositAmount + " CDT")
+              setPopupMsg("Withdrew " + omniAmount + " CDT")
               //set user tvl
               setuserTVL(tvl)
             } else {              
-              setPopupMsg("Unstaked " + omnidepositAmount + " CDT")
+              setPopupMsg("Unstaked " + omniAmount + " CDT")
             }
 
           })
@@ -759,8 +759,11 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
   function setBidAmount(event: any) {
     event.preventDefault();
-    //Set lqAmount everytime to change the visual
     setbidAmount(event.target.value)
+  }
+  function setOmniAmount(event: any) {
+    event.preventDefault();
+    setomniAmount(event.target.value)
   }
   function handlebidExecution() {    
     switch (saFunctionLabel) {
@@ -770,6 +773,18 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "Retract": {
         handlewithdrawClick();
+        break;
+      }
+    }
+  }
+  function handleOmniExecution() {    
+    switch (oaFunctionLabel) {
+      case "Join": {
+        handleStabilityDeposit();
+        break;
+      }
+      case "Exit": {
+        handleStabilityWithdraw();
         break;
       }
     }
@@ -877,26 +892,22 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <div className="x-axis1" />
           <div className="total-tvl-label">TVL: {TVL}K</div>
           <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl_container.svg" />
-          <div className="premium">10%</div>
-          <form>
-            <input className="omni-deposit-amount low-opacity" name="amount" disabled={true} value={omnidepositAmount} type="number" onChange={handlesetomnidAmount}/>
-            <button className="btn buttons deposit-button-omni low-opacity" type="button">{/* onClick={handleStabilityDeposit} */}
-              <div className="deposit-button-label low-opacity" >{/* onClick={handleStabilityDeposit} */}
-                <span tabIndex={0} style={{cursor:"pointer"}} data-descr="NOTE: Funds can be used to liquidate during the 1 day unstaking">Deposit:</span>
-              </div>
-            </button>
-            <input className="omni-withdraw-amount" name="amount" value={omniwithdrawAmount}  type="number" onChange={handlesetomniwAmount}/>
-            <button className="btn buttons withdraw-button-omni" onClick={handleStabilityWithdraw}  type="button">
-              <div className="withdraw-button-label" onClick={handleStabilityWithdraw}>
+          <div className="premium">10%</div>          
+          <form className="bid-actionbox">
+            <div>
+              <div className="bid-actionlabel" style={oaFunctionLabel === "Join" ? {} : {opacity: 0.3}} onClick={()=>{setoaFunctionLabel("Join"); setomniAmount(5)}}>Join </div>
+              <>/ </>
+              <div className="bid-actionlabel" style={oaFunctionLabel === "Exit" ? {} : {opacity: 0.3}} onClick={()=>{setoaFunctionLabel("Exit")}}>Exit </div>
+               the Queue
+            </div>
+            <div className="bid-actionbox-labels">Amount: </div><input className="bid-actionbox-input" style={{marginTop: "0.3vh"}} value={omniAmount} onChange={setOmniAmount}/><div className="bid-actionbox-labels"  style={{textAlign: "center", width: "3vw"}}> CDT</div>
+            <div className="btn bid-button" onClick={handleOmniExecution} style={oaFunctionLabel === "Join" ? {opacity: 0.3} : {}}>{oaFunctionLabel} Queue</div>
+            <div className="btn sa-claim-button" data-descr={SPclaimables} style={SPclaimables === "No Claims" ? {opacity: 0.1, color: "black", padding: "0px", cursor: "default"} : {color: "black", padding: "0px"}} onClick={handleStabilityClaim}>Claim</div>
+          </form>
+          {/*
               {(unstakingMsg !== "") ? (
                 <span tabIndex={0} data-descr={unstakingMsg}>Withdraw:</span>
-              ) : <>Withdraw:</>}
-              </div>
-            </button>
-          </form> 
-          <a className="btn buttons claim-button" onClick={handleStabilityClaim}>
-            <p tabIndex={0} data-descr={SPclaimables} style={{color: "black"}} onClick={handleStabilityClaim}>Claim</p>
-          </a>
+              ) : <>Withdraw:</>}*/}
           <Image
             width={82} height={145} 
             className="water-drops-deco-icon"
