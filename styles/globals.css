@@ -1999,7 +1999,7 @@ span[data-descr]:hover::after {
   color: white;
   margin-left: 2vw;
   align-self: left;
-  font-size: large;
+  font-size: 1.9vw;
 }
 .claim-ct {
   display: flex;
@@ -2009,7 +2009,7 @@ span[data-descr]:hover::after {
 }
 .claim-amount {
   color: white;
-  font-size: 150%;
+  font-size: 1.9vw;
 }
 .coin-icon {
   height: 3vw;
@@ -2026,8 +2026,7 @@ span[data-descr]:hover::after {
   padding: 0.2vw;
 }
 .btn-text {
-  width: 40%;
-  font-size: 120%;
+  font-size: 1.5vw;
   font-weight: bold;
   align-self: center;
 }
@@ -2037,6 +2036,7 @@ span[data-descr]:hover::after {
   border: 1px solid aqua;
   width: 40%;
   z-index: 30;
+  height: 1.7vw;
 }
 .stButton {
   margin-top: 1vw;
@@ -2057,15 +2057,7 @@ span[data-descr]:hover::after {
   display: flex;
   flex-direction: row;
 }
-.button-icon {
-  position: absolute;
-  margin: 0 !important;
-  top: 9.5px;
-  left: 63.87px;
-  width: 11.26px;
-  height: 13.5px;
-  z-index: 0;
-}
+
 .status-label {
   position: relative;
 }

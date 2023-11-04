@@ -1020,7 +1020,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         </div>
         <div className="button-frame">
           <div className="stButton" onClick={handleclaimClick}>
-            <div className="btn-text">Claim</div>
+            <div className="btn-text">Claim:</div>
           </div>
           <div className="claim-ct"> 
             <Image className="coin-icon" width={0} height={0} alt="" src="/images/CDT.svg" />      
