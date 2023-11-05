@@ -539,14 +539,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             user: address ?? "",
           }).then((res) => {
             console.log(res)
-            //set capital ahead of user deposit in K
-            setcapitalAhead(parseInt(res.capital_ahead ?? 0) / 1000_000_000)
+            //set capital ahead of user deposit
+            setcapitalAhead(parseInt(res.capital_ahead ?? 0) / 1_000_000)
             //set user closest deposit in K
             if (res.deposit !== undefined) {
               setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
             } else {  
-              //use TVL if no deposit        
-              setuserclosestDeposit(TVL)
+              //set to 0 if no deposit        
+              setuserclosestDeposit(0)
             }
           })
           //Query user's total deposit
@@ -596,14 +596,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             user: address ?? "",
           }).then((res) => {
             console.log(res)
-            //set capital ahead of user deposit in K
-            setcapitalAhead(parseInt(res.capital_ahead ?? 0) / 1000_000_000)
+            //set capital ahead of user deposit
+            setcapitalAhead(parseInt(res.capital_ahead ?? 0) / 1_000_000)
             //set user closest deposit in K
             if (res.deposit !== undefined) {
               setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
             } else {  
-              //use TVL if no deposit        
-              setuserclosestDeposit(TVL)
+              //set to 0 if no deposit        
+              setuserclosestDeposit(0)
             }
           })
           //Query user's total deposit
@@ -799,7 +799,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     <div className="liquidation-pools">
     <h1 className="pagetitle">Liquidation Pools</h1>
         <div className="singleassetframe">
-          <h3 className="pool-titles">SINGLE ASSET</h3>
+          <h3 className="pool-titles" data-descr="Liquidations start at the lowest, capitalized premium & distribute assets based on your proportion of the premium's TVL">SINGLE ASSET*</h3>
           <div className="single-asset-info-circle" />
           <div className="bar-icon" data-descr={barGraph[barIndex][0].tvl} style={{height: barGraph[barIndex][0].height, backgroundColor: barGraph[barIndex][0].color,}}/>
           <div className="bar-icon1" data-descr={barGraph[barIndex][1].tvl} style={{height: barGraph[barIndex][1].height, backgroundColor: barGraph[barIndex][1].color,}}/>
@@ -849,7 +849,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
              <div className="collateral-tvl-label" >TVL as Collateral</div>
             </div>
             <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{(parseInt(queue?.bid_asset.amount ?? "0") / 1000_000_000).toFixed(2)}K CDT</div>
+              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{ parseInt(queue?.bid_asset.amount ?? "0") > 1000000_000000 ? (parseInt(queue?.bid_asset.amount ?? "0") / 1000000_000_000).toFixed(2)+"M CDT" : parseInt(queue?.bid_asset.amount ?? "0") > 1000_000000 ? (parseInt(queue?.bid_asset.amount ?? "0") / 1000_000_000).toFixed(1)+"K CDT" : (parseInt(queue?.bid_asset.amount ?? "0") / 1_000_000) + " CDT" }</div>
              <div className="collateral-tvl-label" >Total Bids</div>
             </div>
             <div className="queue-stats-item">
@@ -863,7 +863,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           </div>
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (7 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl} CDT</div>
           <div className="x-axis" />
-          <form className="bid-actionbox">
+          <form className="bid-actionbox" style={{top: "-9vh"}}>
             <div>
               <div className="bid-actionlabel" style={saFunctionLabel === "Place" ? {} : {opacity: 0.3}} onClick={()=>{setsaFunctionLabel("Place"); setbidAmount(5)}}>Place </div>
               <>/ </>
@@ -883,16 +883,16 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           </form>
         </div>
         <div className="omniassetframe">
-          <h3 className="pool-titles">OMNI-ASSET</h3>
-          <div className="pool-subtitle">1 day unstaking</div>
-          <div className="captial-ahead-box" />
+          <h3 className="pool-titles" data-descr="Liquidations are distributed to deposits first-in-first-out (FIFO) so you are essentially waiting in line for the liquidated collateral.">OMNI-ASSET*</h3>
+          <div className="pool-subtitle" data-descr="NOTE: Funds can be used to liquidate during the 1 day unstaking">1 day unstaking*
+          </div>
+          <div className="capital-ahead-box" />
           <div className="user-tvl-box" />
-          <div className="user-tvl-label" data-descr={"Closest TVL: "+userclosestDeposit+", Total TVL: "+userTVL}>{userclosestDeposit /1000}K</div>
-          <div className="captial-ahead-label" data-descr="Capital ahead of you">{capitalAhead}K</div>
-          <div className="x-axis1" />
-          <div className="total-tvl-label">TVL: {TVL}K</div>
+          <div className="user-tvl-label" data-descr={"Your TVL: "+userTVL}>{userclosestDeposit > 1000000 ? (userclosestDeposit /1000000).toFixed(2) + "M" : userclosestDeposit > 1000 ? (userclosestDeposit /1000).toFixed(1) + "K" : userclosestDeposit}</div>
+          <div className="captial-ahead-label" data-descr="Capital ahead of you">{capitalAhead > 1000000 ? (capitalAhead /1000000).toFixed(2) + "M" : capitalAhead > 1000 ? (capitalAhead /1000).toFixed(1) + "K" : capitalAhead}</div>
+          <div className="total-tvl-label">TVL: {TVL > 1000000 ? TVL /1000000 + "M" : TVL > 1000 ? TVL /1000 + "K" : TVL} CDT</div>
           <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl_container.svg" />
-          <div className="premium">10%</div>          
+          <div className="premium">10%</div>
           <form className="bid-actionbox">
             <div>
               <div className="bid-actionlabel" style={oaFunctionLabel === "Join" ? {} : {opacity: 0.3}} onClick={()=>{setoaFunctionLabel("Join"); setomniAmount(5)}}>Join </div>
@@ -904,16 +904,29 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             <div className="btn bid-button" onClick={handleOmniExecution} style={oaFunctionLabel === "Join" ? {opacity: 0.3} : {}}>{oaFunctionLabel} Queue</div>
             <div className="btn sa-claim-button" data-descr={SPclaimables} style={SPclaimables === "No Claims" ? {opacity: 0.1, color: "black", padding: "0px", cursor: "default"} : {color: "black", padding: "0px"}} onClick={handleStabilityClaim}>Claim</div>
           </form>
-          {/*
-              {(unstakingMsg !== "") ? (
-                <span tabIndex={0} data-descr={unstakingMsg}>Withdraw:</span>
-              ) : <>Withdraw:</>}*/}
-          <Image
-            width={82} height={145} 
-            className="water-drops-deco-icon"
-            alt=""
-            src="/images/Water_drops_deco.svg"
-          />
+          <div className="omni-stats-box">
+            <div className="queue-stats-item">
+              <div style={{textAlign: "center", borderBottom: "2px solid #798EFF", fontSize: "large"}}>{TVL > 1000000 ? (TVL /1000000).toFixed(2) + "M" : TVL > 1000 ? (TVL /1000).toFixed(1) + "K" : TVL} CDT</div>
+             <div className="collateral-tvl-label" >Total TVL</div>
+            </div>
+            <div className="queue-stats-item">
+              <div style={{textAlign: "center", borderBottom: "2px solid #798EFF", fontSize: "large"}}>{userTVL > 1000000 ? (userTVL /1000000).toFixed(2) + "M" : userTVL > 1000 ? (userTVL /1000).toFixed(1) + "K" : userTVL} CDT</div>
+             <div className="collateral-tvl-label" >Your TVL</div>
+            </div>
+            <div className="queue-stats-item">
+              <div style={{textAlign: "center", borderBottom: "2px solid #798EFF", fontSize: "large"}}>{userclosestDeposit > 1000000 ? (userclosestDeposit /1000000).toFixed(2) + "M" : userclosestDeposit > 1000 ? (userclosestDeposit /1000).toFixed(1) + "K" : userclosestDeposit} CDT</div>
+             <div className="collateral-tvl-label" >Your Nearest Position</div>
+            </div>
+            <div className="queue-stats-item">
+              <div style={{textAlign: "center", borderBottom: "2px solid #798EFF", fontSize: "large"}}>{capitalAhead > 1000000 ? (capitalAhead /1000000).toFixed(2) + "M" : capitalAhead > 1000 ? (capitalAhead /1000).toFixed(1) + "K" : capitalAhead} CDT</div>
+             <div className="collateral-tvl-label" >Capital Ahead of Nearest</div>
+            </div>
+          </div>          
+            {(unstakingMsg !== "") ? (
+              <div className="omni-unstaking-msg">
+                <div style={{top: "1vh", position: "relative"}}>{unstakingMsg}</div>
+              </div>
+            ) : null}
         </div>
         <Image className="titleicon" width={45} height={45} alt="" src="/images/liquidation_pool.svg" />
         <div className="middleborder" />

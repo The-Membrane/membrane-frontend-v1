@@ -382,19 +382,30 @@ export default function Home() {
       }).then((res) => {
         //Check if user has an unstaking deposit
         if (res.deposits.length > 0) {
+          var got_first_unstaking = false;
+          var total_unstaking_deposits = 0;
           for (let i = 0; i < res.deposits.length; i++) {
             if (res.deposits[i].unstake_time !== null && res.deposits[i].unstake_time !== undefined) {
-              //Get block time
-              var current_time = 0; 
-              liq_queue_client?.client.getBlock().then( (block) => {
-                current_time = Date.parse(block.header.time)
-              })
-              var unstake_time_left_seconds = res.deposits[i].unstake_time? - current_time : 0;
-              //Format tooltip
-              setunstakingMsg("You have an unstaking deposit of " + parseInt(res.deposits[i].amount)/1_000_000 + " CDT finished in " + unstake_time_left_seconds + " seconds")
-              break;
+              if (!got_first_unstaking){                  
+                //Get block time
+                var current_time = 0; 
+                liq_queue_client?.client.getBlock().then( (block) => {
+                  current_time = Date.parse(block.header.time)
+                })
+                var unstake_time_left_seconds = res.deposits[i].unstake_time? - current_time : 0;
+                //Format tooltip
+                setunstakingMsg(parseInt(res.deposits[i].amount)/1_000_000 + " CDT finishing in " + unstake_time_left_seconds + " seconds")
+              }
+              //Otherwise just count number of unstaking deposits
+              total_unstaking_deposits += 1;
+              
+              got_first_unstaking = true;
             }
           }
+          //Update msg with unstaking deposit total
+          setunstakingMsg(prevState => {
+            return "You have " +total_unstaking_deposits+" unstaking deposit(s), the first of which is " + prevState
+          })
         }
 
       })
@@ -408,8 +419,8 @@ export default function Home() {
       await stabilitypoolqueryClient?.assetPool({
         depositLimit: 0,
       }).then((res) => {
-        //set TVL in Ms
-        setspTVL(parseFloat((parseInt(res.credit_asset.amount) / 1000_000_000).toFixed(2)))
+        //set TVL
+        setspTVL((parseInt(res.credit_asset.amount) / 1_000_000))
       })
     } catch (error) {
       console.log(error)
@@ -435,15 +446,15 @@ export default function Home() {
       await stabilitypoolqueryClient?.capitalAheadOfDeposit({
         user: address as string ?? "",
       }).then((res) => {
-        //set capital ahead of user deposit in K
+        //set capital ahead of user deposit
         //@ts-ignore
-        setcapitalAhead(parseInt(res[0]?.capital_ahead ?? 0) / 1000_000_000)
-        //set user closest deposit in K
+        setcapitalAhead(parseInt(res[0]?.capital_ahead ?? 0) / 1_000_000)
+        //set user closest deposit
         if (res.deposit !== undefined) {
           setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
         } else {  
-          //use TVL if no deposit        
-          setuserclosestDeposit(tvl)
+          //set to 0 if no deposit        
+          setuserclosestDeposit(0)
         }
       })
     } catch (error) {

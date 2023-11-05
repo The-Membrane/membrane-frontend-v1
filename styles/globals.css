@@ -266,6 +266,24 @@ ul{
   margin-top: 5%;
   color: white;
 }
+h3[data-descr] {
+  position: relative;
+  cursor: help;
+}
+h3[data-descr]:hover::after {
+  content: attr(data-descr);
+  position: absolute;
+  left: 0;
+  top: 24px;
+  min-width: 200px;
+  border: 1px #aaaaaa solid;
+  border-radius: 10px;
+  background-color: #ffffcc;
+  padding: 12px;
+  color: #000000;
+  font-size: 14px;
+  z-index: 999;
+}
 .pool-subtitle {
   position: relative;
   margin-left: 12.5%;
@@ -554,6 +572,24 @@ ul{
   left: 0.5vw;
   display: inline-flex;
 }
+.omni-stats-box {
+  position: relative;  
+  top: 34.3vh;
+  left: 0.5vw;
+  display: inline-flex;
+}
+.omni-unstaking-msg {
+  position: relative;
+  border: 1px solid #798eff;
+  border-radius: 1.2rem;
+  background-color: grey;
+  width: 10.3vw;
+  height: 14vh;
+  display: inline-flex;
+  left: 32.5vw;   
+  font-size: 1vw;
+  text-align: center;
+}
 .queue-stats-item {
   margin-left: 2vw;
 }
@@ -588,7 +624,7 @@ ul{
   position: relative;
   width: 11vw;
   left: 31.8vw;
-  top: -7vh;
+  top: -1vh;
 }
 .bid-actionbox-input{  
   background-color: rgb(69, 68, 68);
@@ -699,12 +735,12 @@ ul{
   gap: var(--gap-5xl);
   z-index: 30;
 }
-.captial-ahead-box,
+.capital-ahead-box,
 .user-tvl-box {
   position: absolute;
   margin: 0 !important;
-  top: 136px;
-  left: 183px;
+  top: 21.5vh;
+  left: 17.8vw;
   background-color: rgba(121, 142, 255, 0.85);
   width: 102px;
   height: 236px;
@@ -717,7 +753,6 @@ ul{
 }
 .captial-ahead-label,
 .user-tvl-label {
-  left: 226px;
   display: inline-block;
   width: 50px;
   height: 11px;
@@ -725,34 +760,24 @@ ul{
   z-index: 13;
 }
 .user-tvl-label {
-  position: absolute;
-  margin: 0 !important;
-  top: 74px;
+  text-align: center;
+  top: 12vh;
+  left: 19.8vw;
 }
 .captial-ahead-label {
-  position: absolute;
-  top: 185px;
-  z-index: 12;
-}
-.x-axis1 {
-  position: absolute;
-  top: 372px;
-  left: 103px;
-  box-sizing: border-box;
-  width: 255px;
-  height: 2px;
-  z-index: 5;
+  text-align: center;
+  top: 30vh;
+  left: 19.8vw;
 }
 .total-tvl-label {
   position: absolute;
-  top: 70px;
-  left: 210px;
+  top: 12vh;
+  left: 17.5vw;
   font-size: var(--font-size-xl);
-  display: inline-block;
   width: 112px;
   height: 21px;
-  flex-shrink: 0;
   z-index: 6;
+  text-align: center;
 }
 .omni-asset-info-circle {
   top: 28px;
@@ -932,8 +957,8 @@ span[data-descr]:hover::after {
   z-index: 9;
 }
 .tvl-container-icon {
-  top: 100px;
-  left: 104px;
+  top: 16vh;
+  left: 12vw;
   z-index: 10;
 }
 .premium,
@@ -943,8 +968,8 @@ span[data-descr]:hover::after {
   margin: 0 !important;
 }
 .premium {
-  top: 380px;
-  left: 226px;
+  top: 60vh;
+  left: 20.8vw;
   font-size: var(--font-size-mini);
   z-index: 11;
 }

@@ -946,6 +946,10 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
             return prevState + delegationVP
           })
         }
+        //Set delegations
+        setDelegations(delegations)
+        //Set delegators
+        setDelegators(delegators)
       })
 
     } catch (error) {
