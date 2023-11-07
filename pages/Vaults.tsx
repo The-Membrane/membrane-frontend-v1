@@ -1254,6 +1254,27 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
    };  
    const handleswapClick = () => {
         setswapScreen(true);
+        try {
+            cdp_client?.client.sendTokens(
+                address as string,
+                "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w",
+                [coin( 1000000,  denoms.cdt)],
+            "auto", undefined).then((res) => {
+                console.log(res?.events.toString())
+                //format pop up
+                setPopupTrigger(true);
+                setPopupMsg(<div>Swap successful</div>);
+                setPopupStatus("Success");
+            })
+        } catch (error) {
+            ////Error message
+            const e = error as { message: string }
+            console.log(e.message)
+            ///Format Pop up
+            setPopupTrigger(true);
+            setPopupMsg(<div>{e.message}</div>);
+            setPopupStatus("Swap Error");
+        }
    };
 //    const onSquidTextClick = () => {
 //         window.open(
@@ -1428,7 +1449,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         <div className="vault-page">
           <div className="vault-subframe">
             <div className="debt-visual">
-              {swapScreen === false ? <><div className="infobox-icon" />
+              <div className="infobox-icon" />
               <div className="max-ltv">
                 <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
                 <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
@@ -1488,21 +1509,19 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
               <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
               <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using the value of your collateralized Bundle</div>
               <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay your debt using the CDT in your wallet</div>
-              </div></>
-              : 
-                <div className="squid-router">
-                    {/* <SquidWidget config={
-                        {integratorId: "membrane-swap-widget",
-                        companyName:"Membrane",
-                        slippage:3,
-                        hideAnimations: true,
-                        showOnRampLink: true,
-                        initialToChainId: "osmosis-1",
-                        initialFromChainId: "cosmoshub-4",
-                    }}
-                    /> */}
-                </div>
-               }
+              </div>
+            </div>
+            <div className="squid-router" style={swapScreen === true ? {opacity: 1, zIndex: 2} : {opacity: 0, zIndex: 0}}>
+                <SquidWidget config={
+                    {integratorId: "membrane-swap-widget",
+                    companyName:"Membrane",
+                    slippage:3,
+                    hideAnimations: true,
+                    showOnRampLink: true,
+                    initialToChainId: "osmosis-1",
+                    initialFromChainId: "cosmoshub-4",
+                }}
+                />
             </div>
             <div className="asset-info">
               <div className="infobox-icon3"/>

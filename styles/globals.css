@@ -3014,6 +3014,8 @@ span[data-descr]:hover::after {
 .squid-router{
   position: relative;
   left: 5vw;
+  opacity: 1;
+  z-index: 0;
 }
 .swap-button {
   background-color: #798EFF;
@@ -3055,7 +3057,7 @@ span[data-descr]:hover::after {
   left: 655px;
   width: 539px;
   height: 652px;
-  z-index: 0;
+  z-index: 1;
   color: black;
 }
 .infobox-icon2 {
