@@ -2369,17 +2369,17 @@ span[data-descr]:hover::after {
 .staked-mbrn2 {
   position: relative;
   color: white;
-  width: 125px;
+  width: 9vw;
   font-size: large;
-  left: 266px;
-  top: -329px;
+  left: 19vw;
+  top: -58vh;
 }
 .unstaking-mbrn {  
   position: relative;
   color: white;
-  top: -337px;
-  left: 604px;
-  width: 100px;
+  top: -60.5vh;
+  left: 44.2vw;
+  width: 7.5vw;
   font-size: x-large;
   text-align: center;
 }
