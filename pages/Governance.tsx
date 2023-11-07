@@ -16,6 +16,7 @@ const SECONDS_PER_DAY = 86400;
 const unstakingPeriod = 4; //days
 
 interface Props {
+  connect: () => void;
   govClient: GovernanceClient | null;
   govQueryClient: GovernanceQueryClient | null;
   stakingClient: StakingClient | null;
@@ -23,7 +24,7 @@ interface Props {
   address: string | undefined;
 }
 
-const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClient, address}: Props) => {
+const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQueryClient, address}: Props) => {
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState<ReactJSXElement>();
@@ -509,12 +510,9 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   }
 
   const handlestakeClick = async () => {
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg(<>Connect your wallet on the Home page</>)
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
-      return;
+      connect();
     }
     try {
       await stakingClient?.stake({}
@@ -544,12 +542,9 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
   }
 
   const handleunstakeClick = async () => {
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg(<>Connect your wallet on the Home page</>)
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
-      return;
+      connect();
     }
     try {      
       await stakingClient?.unstake({
@@ -595,12 +590,9 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
     }
   }
   const handleclaimClick = async () => {
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg(<>Connect your wallet on the Home page</>)
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
-      return;
+      connect();
     }
     try {
       await stakingClient?.claimRewards({

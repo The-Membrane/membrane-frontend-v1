@@ -36,7 +36,7 @@ export const ConnectWalletButton = ({
       onClick={onClickConnectBtn}
     >
       <Icon as={icon ? icon : IoWallet} mr={2} />
-      {buttonText ? buttonText : 'Connect Wallet'}
+      {buttonText ? buttonText : ''}
     </Button>
   );
 };

@@ -179,6 +179,11 @@ p{
   top: 1.5vh;
   z-index: 2;
 }
+.nav-walletsection { 
+  width: 5vw;
+  margin-top: 5vh;
+  margin-left: 0.3vw;
+}
 .card-1, .card-2, .card-3, .card-4{
   position: absolute;  
   top: 220px;
@@ -3013,9 +3018,7 @@ span[data-descr]:hover::after {
 }
 .squid-router{
   position: relative;
-  left: 5vw;
-  opacity: 1;
-  z-index: 0;
+  left: 52vw;
 }
 .swap-button {
   background-color: #798EFF;
@@ -3118,9 +3121,9 @@ span[data-descr]:hover::after {
 .tvl-500 {    
   font-size: large;
   position: relative;
-  top: 533px;
+  top: -24vh;
   text-align: center;
-  left: 148px;
+  left: 17.8vw;
   z-index: 51;
 }
 .position-stats {

@@ -23,9 +23,10 @@ export function useClients(): {
   governance_client: GovernanceClient | null;
   staking_client: StakingClient | null;
   base_client: SigningCosmWasmClient | null;
-  address: String | undefined; 
+  address: String | undefined;
+  connect: () => void;
 } {
-  const { getSigningCosmWasmClient, address, status, getOfflineSigner } = useChain(chainName);
+  const { getSigningCosmWasmClient, address, status, getOfflineSigner, connect } = useChain(chainName);
 
   const [launchClient, setlaunchClient] = useState<LaunchClient | null>(  null  );
   const [cdpClient, setcdpClient] = useState<PositionsClient | null>(  null  );
@@ -91,7 +92,8 @@ export function useClients(): {
     governance_client: governanceClient ?? null,
     staking_client: stakingClient ?? null,
     base_client: cosmwasmClient ?? null,
-    address: address 
+    address: address, 
+    connect: connect,
   };
 }
 

@@ -23,6 +23,7 @@ declare module 'react' {
   }
 
 interface Props {
+    connect: () => void;
     cdp_client: PositionsClient | null;
     queryClient: PositionsQueryClient | null;
     address: string | undefined;
@@ -72,7 +73,7 @@ interface Props {
     setcreditPrice: (creditPrice: number) => void;          
 }
 
-const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
+const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez, 
     popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
     rateRes, creditRateRes, basketRes,
     setrateRes, setcreditRateRes, setbasketRes,
@@ -915,12 +916,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             setswapScreen(false)
             return;
         }
-        //Check if wallet is connected
+        //Check if wallet is connected & connect if not
         if (address === undefined) {
-          setPopupMsg(<div>Connect your wallet on the Home page</div>)
-          setPopupStatus("Wallet not connected")
-          setPopupTrigger(true)
-          return;
+            connect();
         }
         //create a variable for asset_intents so we can mutate it within the function
         //duplicate intents dont work

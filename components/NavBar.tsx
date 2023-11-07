@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image'
+import { WalletSection } from './wallet';
 
 export const dashboardPosition = 0;
 export const vaultPosition = 700;
@@ -125,7 +126,8 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 alt="Lockdrop"
                 />
                 <div className='nav-label'>Claim</div>
-            </div>
+            </div>            
+            <WalletSection nav={true}/>
             </div>
             <div className="tab-content" id="v-pills-tabContent">
             <div

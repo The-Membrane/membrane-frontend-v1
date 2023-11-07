@@ -128,7 +128,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             </div>
         </div>            
         </div>
-        <WalletSection />
+        <WalletSection nav={false}/>
         </div>
         </div>
     );

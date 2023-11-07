@@ -12,6 +12,7 @@ import Image from "next/image";
 import { testnetAddrs } from "../config";
 
 interface Props {
+  connect: () => void;
   launch_client: LaunchClient | null;
   queryClient: LaunchQueryClient | null;
   baseClient: SigningCosmWasmClient | null;
@@ -19,7 +20,7 @@ interface Props {
   prices: Prices;
 }
 
-const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Props) => {
+const Lockdrop = ({connect, launch_client, queryClient, baseClient, address, prices}: Props) => {
 
   interface LockDisplay {
     deposit: number | undefined;
@@ -1222,11 +1223,9 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
     }
   }
   const handleclaimClick = async () => {
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the Home page")
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
-      return;
+      connect();
     }
     try {
       await launch_client?.claim().then((res) => {        

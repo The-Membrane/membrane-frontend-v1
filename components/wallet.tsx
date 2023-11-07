@@ -29,7 +29,11 @@ import {
 } from '../components';
 import { chainName } from '../config';
 
-export const WalletSection = () => {
+interface Props {
+  nav: boolean;
+}
+
+export const WalletSection = ({nav} : Props) => {
   const {
     connect,
     openView,
@@ -65,16 +69,16 @@ export const WalletSection = () => {
     <WalletConnectComponent
       walletStatus={status}
       disconnect={
-        <Disconnected buttonText="Connect Wallet" onClick={onClickConnect} />
+        <Disconnected buttonText={nav === true ? "" : "Connect Wallet"} onClick={onClickConnect} />
       }
       connecting={<Connecting />}
       connected={
-        <Connected buttonText={'My Wallet'} onClick={onClickOpenView} />
+        <Connected buttonText={nav === true ? "" : 'My Wallet'} onClick={onClickOpenView} />
       }
-      rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
-      error={<Error buttonText="Change Wallet" onClick={onClickOpenView} />}
+      rejected={<Rejected buttonText={nav === true ? "" : "Reconnect"} onClick={onClickConnect} />}
+      error={<Error buttonText={nav === true ? "" : "Change Wallet"} onClick={onClickOpenView} />}
       notExist={
-        <NotExist buttonText="Install Wallet" onClick={onClickOpenView} />
+        <NotExist buttonText={nav === true ? "" : "Install Wallet"} onClick={onClickOpenView} />
       }
     />
   );
@@ -108,7 +112,7 @@ export const WalletSection = () => {
   );
 
   return (
-    <div className="walletsection">
+    <div className={nav === true ? "nav-walletsection" : "walletsection"}>
       {connectWalletButton}
     </div>
   );

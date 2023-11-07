@@ -24,6 +24,7 @@ interface LQClaims {
 }
 
 interface Props {
+  connect: () => void;
   queryClient: LiquidationQueueQueryClient | null;
   liq_queueClient: LiquidationQueueClient | null;
   sp_queryClient: StabilityPoolQueryClient | null;
@@ -47,7 +48,7 @@ interface Props {
   setunstakingMsg: (unstakingMsg: string) => void;
 }
 
-const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, pricez, index_lqClaimables,
+const LiquidationPools = ({connect, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, pricez, index_lqClaimables,
   capitalAhead, setcapitalAhead, userclosestDeposit, setuserclosestDeposit, userTVL, setuserTVL, TVL, setTVL, SPclaimables, setSPclaimables, unstakingMsg, setunstakingMsg
 }: Props) => {
   const [prices, setPrices] = useState<Prices>({
@@ -174,14 +175,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     setOpen(false);
     setMenuAsset("OSMO-axlUSDC");
     setbarIndex(4);
-  };
-  const handlesetomnidAmount = (event: any) => {
-    event.preventDefault();
-    setomnidAmount(event.target.value);
-  };
-  const handlesetomniwAmount = (event: any) => {
-    event.preventDefault();
-    setomniwAmount(event.target.value);
   };
   
   // Query premiums slots and save new heights
@@ -321,12 +314,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
 
   const handledepositClick = async () => {
     var depositAmount = bidAmount;
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the Home page")
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
-      return;
+      connect();
     }
     //Get denom from menu asset
     let workingDenom: string = "";
@@ -382,12 +372,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
 
   const handlewithdrawClick = async () => {
     var withdrawAmount = bidAmount;
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the Home page")
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
-      return;
+      connect();
     }
     //Get denom from menu asset
     let workingDenom: string = "";
@@ -475,12 +462,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handleclaimClick = async () => {
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the Home page")
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)     
-      return; 
+      connect();
     }
     try {
       //Claim for each bidFor asset
@@ -517,12 +501,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   }
 
   const handleStabilityDeposit = async () => {
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the Home page")
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)     
-      return; 
+      connect();
     }
     try {
       await sp_client?.deposit({}
@@ -574,12 +555,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
   }
   const handleStabilityWithdraw = async () => {
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the Home page")
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
-      return;
+      connect();
     }
     try {
       await sp_client?.withdraw({
@@ -641,12 +619,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   
 
   const handleStabilityClaim = async () => {
-    //Check if wallet is connected
+    //Check if wallet is connected & connect if not
     if (address === undefined) {
-      setPopupMsg("Connect your wallet on the Home page")
-      setPopupStatus("Wallet not connected")
-      setPopupTrigger(true)      
-      return;
+      connect();
     }
     try { 
       await sp_client?.claimRewards("auto", undefined).then((res) => {
