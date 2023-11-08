@@ -1,21 +1,15 @@
-import { background } from "@chakra-ui/react";
-import { color, px } from "framer-motion";
 import { useEffect, useState } from "react";
 import React from "react";
 
-import { testnetAddrs } from "../config";
 import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
-import { StargateClient } from "@cosmjs/stargate";
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import { Asset, Basket, BasketPositionsResponse, CollateralInterestResponse, InterestResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
-import { relative } from "path";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 import { SquidWidget } from "@0xsquid/widget";
-import { get } from "http";
 
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
