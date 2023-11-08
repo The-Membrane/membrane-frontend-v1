@@ -6,15 +6,16 @@ import { useEffect, useRef, useState } from 'react';
 import NavBar from '../components/NavBar';
 import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
-import Governance from './Governance';
+import Governance, { Delegation, Delegator, EmissionsSchedule, ProposalList, UserClaims, UserStake } from './Governance';
 import Positions from './Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import Popup from "../components/Popup";
 import Hotjar from '@hotjar/browser';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { Basket, CollateralInterestResponse, InterestResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
+import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
+import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
 
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
@@ -42,6 +43,9 @@ export default function Home() {
 
   const siteId = 3709543;
   const hotjarVersion = 6;
+
+  const SECONDS_PER_DAY = 86400;
+  const unstakingPeriod = 4; //days
 
   const [activeComponent, setActiveComponent] = useState('dashboard');
   
@@ -462,6 +466,400 @@ export default function Home() {
     }
   }
 
+  ///Governance state and functions///
+  const [delegations, setDelegations] = useState<Delegation[]>([
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }
+  ]);
+  const [delegators, setDelegators] = useState<Delegator[]>([
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }
+  ]);
+  const [quorum, setQuorum] = useState(0);
+  //Proposal, Days left, Current Status, Quorum 
+  const [proposals, setProposals] = useState<ProposalList>({
+    active: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
+    pending: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
+    completed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
+    executed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
+});
+  const [userVP, setuserVP] = useState(0);
+  //Staking//
+  //Emissions Schedule
+  const [emissionsSchedule, setEmissionsSchedule] = useState<EmissionsSchedule>({
+    rate: 0,
+    monthsLeft: 0,
+  })
+  const [userStake, setUserStake] = useState<UserStake>({
+    staked: 0,
+    unstaking_total: 0,
+    unstaking: {
+      amount: 0,
+      timeLeft: 0,
+    },
+  });
+  const [userClaims, setuserClaims] = useState<UserClaims>({
+    mbrnClaims: 0,
+    cdtClaims: 0,
+  });
+  
+  const [walletMBRN, setwalletMBRN] = useState(0);
+  //Delegations
+  
+  const getDelegations = async () => {
+    try {
+      await stakingqueryClient?.delegations({
+        user: address as string ?? "",
+      }).then( async (res) => {
+        var delegationVP = 0;
+        //Set max parse
+        var max_parse = Math.min(res[0].delegation_info.delegated_to.length, 8)
+
+        //Set delegations
+        for (let i = 0; i < max_parse; i++) {
+          delegations[i].amount = parseInt(res[i].delegation_info.delegated_to[i].amount)
+          delegations[i].delegator = res[i].delegation_info.delegated_to[i].delegate
+          delegations[i].fluid = res[i].delegation_info.delegated_to[i].fluidity
+          //Subtract from user VP
+          if (res[i].delegation_info.delegated_to[i].voting_power_delegation === true) {
+            delegationVP -= parseInt(res[i].delegation_info.delegated_to[i].amount)
+          }
+          //Query and set commission
+          await stakingqueryClient?.delegations({
+            user: res[i].delegation_info.delegated_to[i].delegate,
+          }).then((res) => {
+            delegations[i].commission = parseInt(res[0].delegation_info.commission) * 100 //Commission is a % so multiply by 100
+          })
+        }
+        
+        //Set max parse
+        var max_parse = Math.min(res[0].delegation_info.delegated.length, 8)
+        //Set Delegators
+        for (let i = 0; i < max_parse; i++) {
+          delegators[i].amount = parseInt(res[i].delegation_info.delegated[i].amount)
+          delegators[i].delegator = res[i].delegation_info.delegated[i].delegate
+          delegators[i].fluid = res[i].delegation_info.delegated[i].fluidity
+          
+          //Add to user total VP
+          if (res[i].delegation_info.delegated[i].voting_power_delegation === true) {
+            delegationVP += parseInt(res[i].delegation_info.delegated_to[i].amount)
+          }          
+          //Add to user total VP
+          setuserVP(prevState => {
+            return prevState + delegationVP
+          })
+        }
+        //Set delegations
+        setDelegations(delegations)
+        //Set delegators
+        setDelegators(delegators)
+      })
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  const getuserClaims = async () => {
+    try {
+      await stakingqueryClient?.userRewards({
+        user: address as string ?? "",
+      }).then((res) => {
+        console.log(res)
+        //Set user claims
+        for (let i = 0; i < res.claimables.length; i++) {
+          if("denom" in res.claimables[i].info) {
+            if ((res.claimables[i].info as unknown as NativeToken).denom === denoms.cdt) {
+              setuserClaims(prevState => {
+                return {
+                  ...prevState,
+                  cdtClaims: parseInt(res.claimables[i].amount) / 1_000_000,
+                }
+              })
+            }
+          }
+        }
+        //Set MBRN claims
+        setuserClaims(prevState => {
+          return {
+            ...prevState,
+            mbrnClaims: parseInt(res.accrued_interest) / 1_000_000,
+          }
+        })
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  //Get user staked & unstaking MBRN
+  const getUserStake = async () => {
+    try {
+      await stakingqueryClient?.userStake({
+        staker: address as string ?? "",
+      }).then((res) => {
+        //Get staking total & closest unstaking deposit
+        var stakingTotal = 0;
+        var unstakingTotal = 0;
+        var closestUnstakingDeposit = 0;
+        var closestUnstakingDepositTime = 0;
+        console.log(res.deposit_list)
+        for (let i = 0; i < res.deposit_list.length; i++) {
+          if (res.deposit_list[i].unstake_start_time === null || res.deposit_list[i].unstake_start_time === undefined) {
+            stakingTotal += parseInt(res.deposit_list[i].amount)
+          } else {
+            if (closestUnstakingDepositTime === 0){
+              closestUnstakingDepositTime = res.deposit_list[i].unstake_start_time ?? 0
+              closestUnstakingDeposit = parseInt(res.deposit_list[i].amount)
+            } else if ((res.deposit_list[i].unstake_start_time ?? 0) < closestUnstakingDepositTime) {
+              closestUnstakingDepositTime = res.deposit_list[i].unstake_start_time ?? 0
+              closestUnstakingDeposit = parseInt(res.deposit_list[i].amount)
+            }
+            unstakingTotal += parseInt(res.deposit_list[i].amount)
+          }
+        }
+        //Set stake
+        setUserStake(prevState => {
+          return {
+            staked: stakingTotal,
+            unstaking_total: unstakingTotal,
+            unstaking: {
+              amount: closestUnstakingDeposit,
+              timeLeft: unstakingPeriod,
+            },
+          }
+        })
+        //Calc time left to unstake
+        var currentTime = 0;
+        staking_client?.client.getBlock().then( (block) => {
+          currentTime = Date.parse(block.header.time) / 1000;
+          var secondsLeft = Math.max(closestUnstakingDepositTime - currentTime, 0);
+          var daysLeft = secondsLeft / SECONDS_PER_DAY;
+          //Set user stake
+          setUserStake(prevState => {
+            return {              
+              staked: stakingTotal,
+              unstaking_total: unstakingTotal,
+              unstaking: {
+                amount: closestUnstakingDeposit,
+                timeLeft: daysLeft,
+              },
+            }
+          })
+        })
+
+        //Set user VP
+        setuserVP(parseInt(res.total_staked))
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  //Get emissions schedule
+  const getEmissionsSchedule = async () => {
+    try {
+      //Get emissions schedule
+      await stakingqueryClient?.incentiveSchedule()
+      .then(async (res) => {
+        console.log(res)
+        //Get block time
+        staking_client?.client.getBlock().then((block) => {
+          let start_in_seconds = res.start_time;
+          let durations_in_seconds = res.ownership_distribution.duration * SECONDS_PER_DAY;
+          //Calc months left
+          let seconds_left = (start_in_seconds + durations_in_seconds) - (Date.parse(block.header.time) / 1000);
+          //Seconds to months
+          let monthsLeft = seconds_left / (SECONDS_PER_DAY * 30);
+          //Set emissions schedule
+          setEmissionsSchedule({
+            rate: parseInt(res.ownership_distribution.rate),
+            monthsLeft: monthsLeft,
+          })
+        })
+
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getProposals = async () => {
+    try {
+      //Get current time in seconds
+      var currentTime = 0;
+      governance_client?.client.getBlock().then( (block) => {
+        currentTime = Date.parse(block.header.time) / 1000;;
+      })
+      //Get active
+      await governancequeryClient?.activeProposals({})
+      .then(async (res) => {
+        //Set active, completed & executed
+        for (let i = 0; i < res.proposal_list.length; i++) {
+          if (res.proposal_list[i].status == "active") {
+            if (proposals.active.length < 8){
+              //Get days left
+              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;            
+              //Get total voting power
+              var totalVotingPower = 0;
+              await governancequeryClient?.totalVotingPower({
+                proposalId: parseInt(res.proposal_list[i].proposal_id)
+              }).then((res) => {
+                totalVotingPower = parseInt(res);
+              })
+              //Calc quorum
+              var quorum = (parseInt(res.proposal_list[i].against_power) + parseInt(res.proposal_list[i].for_power) + parseInt(res.proposal_list[i].aligned_power) + parseInt(res.proposal_list[i].amendment_power) + parseInt(res.proposal_list[i].removal_power)) / totalVotingPower;
+              //Query config
+              var config = await governancequeryClient?.config()
+              //Set quorum from config
+              setQuorum(parseInt(config.proposal_required_quorum))
+              //Get current result
+              let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config)
+              //Push to front of active
+              proposals.active = ([[res.proposal_list[i], daysLeft, current_result, quorum]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.active)
+              //pop end of active
+              proposals.active.pop()
+            }
+          } else if (res.proposal_list[i].status == "executed") {
+            if (proposals.executed.length < 8){
+              //Get days left
+              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;
+              //Push to front of executed
+              proposals.executed = ([[res.proposal_list[i], daysLeft, "Executed", 100]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.executed)
+              //pop end of executed
+              proposals.executed.pop()
+            }
+          } else { //Completed
+            if (proposals.completed.length < 8){
+              //Get days left
+              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;
+              //Push to front of completed
+              proposals.completed = ([[res.proposal_list[i], daysLeft, "Completed", 100]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.completed)
+              //pop end of completed
+              proposals.completed.pop()
+            }
+          }
+        }
+      })
+
+      //Get pending
+      await governancequeryClient?.pendingProposals({
+        limit: 8,
+      })
+      .then((res) => {
+        //Set pending
+        for (let i = 0; i < res.proposal_list.length; i++) {
+          //Push to front
+          proposals.pending = ([[res.proposal_list[i], 1, "Pending", 0]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.pending)
+          //pop end
+          proposals.pending.pop()
+        }
+      })
+
+      //Set proposals
+      setProposals(proposals)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  const getProposalResult = (totalVotes: number, forVotes: number, amend: number, remove: number, config: Config) => {
+    if (forVotes / totalVotes > parseInt(config.proposal_required_threshold)) {
+      return "For";
+    } else if (amend / totalVotes > parseInt(config.proposal_required_threshold)) {
+      return "Amend";
+    } else if (remove / totalVotes > parseInt(config.proposal_required_quorum)) {
+      return "Remove";
+    } else {
+      return "Against";
+    }
+  }
+  
+
   useEffect(() => {    
     Hotjar.init(siteId, hotjarVersion);
   }, []);
@@ -501,6 +899,33 @@ export default function Home() {
       //Check for unstaking positions
       getunstakingSP()
     }
+    ///Governance queries
+    if (quorum === 0){
+      //Query & set proposals
+      getProposals()
+    }
+    if (emissionsSchedule.rate === 0){
+      //Query & set emissions schedule
+      getEmissionsSchedule()
+    }
+    if (userStake.staked === 0){
+      //Get user staked & unstaking MBRN
+      getUserStake()
+    }
+    if (userClaims.mbrnClaims === 0 && userClaims.cdtClaims === 0){
+      //Get user claims
+      getuserClaims()
+    }
+    if (delegations[0].amount === 0 && delegators[0].amount === 0){
+      //Get delegation info
+      getDelegations()
+    }
+    if (walletMBRN === 0 && address !== undefined){
+      //Get account's balance of MBRN
+      governancequeryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
+        setwalletMBRN(parseInt(res.amount) / 1_000_000);
+    })
+    }
     
   }, [oraclequeryClient, cdpqueryClient, prices, address])
 
@@ -520,7 +945,10 @@ export default function Home() {
         capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL} setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead}
       />;
     } else if (activeComponent === 'staking') {
-      return <Governance connect={connect} govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined} />;
+      return <Governance connect={connect} govClient={governance_client} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined} 
+        delegations={delegations} delegators={delegators} quorum={quorum} proposals={proposals} userVP={userVP} emissionsSchedule={emissionsSchedule} userStake={userStake} userClaims={userClaims} walletMBRN={walletMBRN}
+        setDelegations={setDelegations} setDelegators={setDelegators} setQuorum={setQuorum} setProposals={setProposals} setuserVP={setuserVP} setemissionsSchedule={setEmissionsSchedule} setUserStake={setUserStake} setUserClaims={setuserClaims} setwalletMBRN={setwalletMBRN}
+      />;
     } else if (activeComponent === 'launch') {
       return <Lockdrop connect={connect} launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={address as string | undefined} prices={prices} />;
     }

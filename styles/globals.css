@@ -3214,7 +3214,31 @@ span[data-descr]:hover::after {
   top: 19px;
 }
 .value {
-  left: 233px;
+  left: 16.5vw;
+  top: 3vh;
+}
+.value-menu-dropdown {  
+  border: 2px solid #798eff;
+  width: 5.5vw;
+  height: 6vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  z-index: 22;
+  color: white;
+}
+.value-menu {  
+  position: absolute;
+  margin-top: 181%;
+  width: 5.5vw;
+}
+.value-menu-item {
+  border: 1px solid #798eff;
+  background-color: #454444;
+  position: relative;
+  text-align: center;
 }
 .atom-logo-icon,
 .osmo-qty {
@@ -3286,7 +3310,6 @@ span[data-descr]:hover::after {
 .axlUSDC-qty {
   top: 55px;
 }
-/* .cdt-logo-icon4, */
 .cdp-div9 {
   top: 19px;
 }
@@ -3328,13 +3351,13 @@ span[data-descr]:hover::after {
   height: 45px;
   z-index: 51;
 }
-/* .cdt-logo-icon4, */
 .cdp-div5,
 .cdp-div7,
 .cdp-div9 {
   position: relative;
-  left: 90px;
+  left: 15.3vw;
   text-align: center;
+  width: 8vw;
 }
 .cdp-div5 {
   top: 45px;

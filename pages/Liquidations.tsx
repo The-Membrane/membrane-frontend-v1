@@ -797,17 +797,17 @@ const LiquidationPools = ({connect, queryClient, liq_queueClient, sp_queryClient
           <div className="label12" data-tvl={barGraph[barIndex][8].tvl} style={(premium === 8) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(8)}}>8%</div>
           <div className="label13" data-tvl={barGraph[barIndex][9].tvl} style={(premium === 9) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(9)}}>9%</div>
           <div className="dropdown asset-dropdown">
-            <button onClick={handleOpen}>{menuAsset}</button>
+            <button onClick={handleOpen} style={{outline: "none"}}>{menuAsset}</button>
             {open ? (
                 <ul className="menu">
                 {menuAsset !== "ATOM" ? (<li className="menu-item">
-                    <button onClick={handleMenuOne}>ATOM</button>
+                    <button onClick={handleMenuOne} style={{outline: "none"}}>ATOM</button>
                 </li>) : null}
                 {menuAsset !== "axlUSDC" ? (<li className="menu-item">
-                    <button onClick={handleMenuTwo}>axlUSDC</button>
+                    <button onClick={handleMenuTwo} style={{outline: "none"}}>axlUSDC</button>
                 </li>) : null}
                 {menuAsset !== "OSMO" ? (<li className="menu-item">
-                    <button onClick={handleMenuThree}>OSMO</button>
+                    <button onClick={handleMenuThree} style={{outline: "none"}}>OSMO</button>
                 </li>) : null}
                 {/* {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuFour}>ATOM-OSMO</button>

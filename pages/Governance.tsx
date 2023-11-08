@@ -2,29 +2,79 @@ import { useEffect, useState } from "react";
 import ProgressBar from "../components/progress_bar";
 import { GovernanceClient, GovernanceQueryClient } from "../codegen/governance/Governance.client";
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
-import { Proposal, ProposalResponse, Config, ProposalMessage } from "../codegen/governance/Governance.types";
+import { ProposalResponse, ProposalMessage } from "../codegen/governance/Governance.types";
 import Popup from "../components/Popup";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { coins } from "@cosmjs/stargate";
 import { denoms } from ".";
-import { NativeToken } from "../codegen/positions/Positions.types";
 import React from "react";
 import Image from "next/image";
 
 
-const SECONDS_PER_DAY = 86400;
 const unstakingPeriod = 4; //days
 
+export interface Delegation {
+  delegator: string;
+  fluid: boolean | undefined;
+  amount: number | undefined;
+  commission: number | undefined;
+}
+export interface Delegator {
+  delegator: string;
+  fluid: boolean | undefined;
+  amount: number | undefined;
+}
+export interface ProposalList {
+  active: [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][];
+  pending: [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][];
+  completed: [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][];
+  executed: [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][];
+}
+export interface EmissionsSchedule {
+  rate: number;
+  monthsLeft: number;
+}
+export interface UserStake {
+  staked: number;
+  unstaking_total: number;
+  unstaking: {
+    amount: number;
+    timeLeft: number;
+  };
+}
+export interface UserClaims {
+  mbrnClaims: number;
+  cdtClaims: number;
+}
 interface Props {
   connect: () => void;
   govClient: GovernanceClient | null;
-  govQueryClient: GovernanceQueryClient | null;
   stakingClient: StakingClient | null;
   stakingQueryClient: StakingQueryClient | null;
   address: string | undefined;
+  delegations: Delegation[];
+  setDelegations: (delegations: Delegation[]) => void;
+  delegators: Delegator[];
+  setDelegators: (delegators: Delegator[]) => void;
+  quorum: number;
+  setQuorum: (quorum: number) => void;
+  proposals: ProposalList;
+  setProposals: (proposals: ProposalList) => void;
+  userVP: number;
+  setuserVP: (userVP: number) => void;
+  emissionsSchedule: EmissionsSchedule;
+  setemissionsSchedule: (emissionsSchedule: EmissionsSchedule) => void;
+  userStake: UserStake;
+  setUserStake: (userStake: UserStake) => void;
+  userClaims: UserClaims;
+  setUserClaims: (userClaims: UserClaims) => void;
+  walletMBRN: number;
+  setwalletMBRN: (walletMBRN: number) => void;
 }
 
-const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQueryClient, address}: Props) => {
+const Governance = ({connect, govClient, stakingClient, stakingQueryClient, address,
+  delegations, setDelegations, delegators, setDelegators, quorum, setQuorum, proposals, setProposals, userVP, setuserVP, emissionsSchedule, setemissionsSchedule, userStake, setUserStake, userClaims, setUserClaims, walletMBRN, setwalletMBRN
+}: Props) => {
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState<ReactJSXElement>();
@@ -33,148 +83,11 @@ const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQ
   const [open, setOpen] = useState(false);
   const [proposalType, setproposalType] = useState("Active");
   const [proposalColor, setproposalColor] = useState("#567c39");
-  const [quorum, setQuorum] = useState(0);
-  //Proposal, Days left, Current Status, Quorum 
-  interface ProposalList {
-      active: [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][];
-      pending: [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][];
-      completed: [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][];
-      executed: [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][];
-  }
-  const [proposals, setProposals] = useState<ProposalList>({
-      active: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
-      pending: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
-      completed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
-      executed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
-  });
-  const [userVP, setuserVP] = useState(0);
-  //Staking//
-  //Emissions Schedule
-  const [emissionsSchedule, setEmissionsSchedule] = useState({
-    rate: 0,
-    monthsLeft: 0,
-  })
-  const [userStake, setUserStake] = useState({
-    staked: 0,
-    unstaking_total: 0,
-    unstaking: {
-      amount: 0,
-      timeLeft: 0,
-    },
-  });
   const [stakeAmount, setstakeAmount] = useState();
   const [unstakeAmount, setunstakeAmount] = useState();
-  const [userClaims, setuserClaims] = useState({
-    mbrnClaims: 0,
-    cdtClaims: 0,
-  });
-  const [walletMBRN, setwalletMBRN] = useState(0);
-  //Delegations
+
   const [commission, setCommission] = useState(0);
   const [maxCommission, setmaxCommission] = useState(0);
-  interface Delegation {
-    delegator: string;
-    fluid: boolean | undefined;
-    amount: number | undefined;
-    commission: number | undefined;
-  }
-  interface Delegator {
-    delegator: string;
-    fluid: boolean | undefined;
-    amount: number | undefined;
-  }
-  const [delegations, setDelegations] = useState<Delegation[]>([
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-      commission: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-      commission: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-      commission: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-      commission: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-      commission: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-      commission: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-      commission: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-      commission: undefined,
-    }
-  ]);
-  const [delegators, setDelegators] = useState<Delegator[]>([
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-    }, 
-    {
-      delegator: "",
-      fluid: undefined,
-      amount: undefined,
-    }
-  ]);
 
   const handlesetstakeAmount = (event: any) => {
     event.preventDefault();
@@ -325,189 +238,8 @@ const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQ
     setPopupStatus("Submit Proposal")
   }
   
-  
-  const getProposalResult = (totalVotes: number, forVotes: number, amend: number, remove: number, config: Config) => {
-    if (forVotes / totalVotes > parseInt(config.proposal_required_threshold)) {
-      return "For";
-    } else if (amend / totalVotes > parseInt(config.proposal_required_threshold)) {
-      return "Amend";
-    } else if (remove / totalVotes > parseInt(config.proposal_required_quorum)) {
-      return "Remove";
-    } else {
-      return "Against";
-    }
-  }
 
-  const getProposals = async () => {
-    try {
-      //Get current time in seconds
-      var currentTime = 0;
-      govClient?.client.getBlock().then( (block) => {
-        currentTime = Date.parse(block.header.time) / 1000;;
-      })
-      //Get active
-      await govQueryClient?.activeProposals({})
-      .then(async (res) => {
-        //Set active, completed & executed
-        for (let i = 0; i < res.proposal_list.length; i++) {
-          if (res.proposal_list[i].status == "active") {
-            if (proposals.active.length < 8){
-              //Get days left
-              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;            
-              //Get total voting power
-              var totalVotingPower = 0;
-              await govQueryClient?.totalVotingPower({
-                proposalId: parseInt(res.proposal_list[i].proposal_id)
-              }).then((res) => {
-                totalVotingPower = parseInt(res);
-              })
-              //Calc quorum
-              var quorum = (parseInt(res.proposal_list[i].against_power) + parseInt(res.proposal_list[i].for_power) + parseInt(res.proposal_list[i].aligned_power) + parseInt(res.proposal_list[i].amendment_power) + parseInt(res.proposal_list[i].removal_power)) / totalVotingPower;
-              //Query config
-              var config = await govQueryClient?.config()
-              //Set quorum from config
-              setQuorum(parseInt(config.proposal_required_quorum))
-              //Get current result
-              let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config)
-              //Push to front of active
-              proposals.active = ([[res.proposal_list[i], daysLeft, current_result, quorum]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.active)
-              //pop end of active
-              proposals.active.pop()
-            }
-          } else if (res.proposal_list[i].status == "executed") {
-            if (proposals.executed.length < 8){
-              //Get days left
-              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;
-              //Push to front of executed
-              proposals.executed = ([[res.proposal_list[i], daysLeft, "Executed", 100]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.executed)
-              //pop end of executed
-              proposals.executed.pop()
-            }
-          } else { //Completed
-            if (proposals.completed.length < 8){
-              //Get days left
-              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;
-              //Push to front of completed
-              proposals.completed = ([[res.proposal_list[i], daysLeft, "Completed", 100]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.completed)
-              //pop end of completed
-              proposals.completed.pop()
-            }
-          }
-        }
-      })
 
-      //Get pending
-      await govQueryClient?.pendingProposals({
-        limit: 8,
-      })
-      .then((res) => {
-        //Set pending
-        for (let i = 0; i < res.proposal_list.length; i++) {
-          //Push to front
-          proposals.pending = ([[res.proposal_list[i], 1, "Pending", 0]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.pending)
-          //pop end
-          proposals.pending.pop()
-        }
-      })
-
-      //Set proposals
-      setProposals(proposals)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  //Get emissions schedule
-  const getEmissionsSchedule = async () => {
-    try {
-      //Get emissions schedule
-      await stakingQueryClient?.incentiveSchedule()
-      .then(async (res) => {
-        console.log(res)
-        //Get block time
-        stakingClient?.client.getBlock().then((block) => {
-          let start_in_seconds = res.start_time;
-          let durations_in_seconds = res.ownership_distribution.duration * SECONDS_PER_DAY;
-          //Calc months left
-          let seconds_left = (start_in_seconds + durations_in_seconds) - (Date.parse(block.header.time) / 1000);
-          //Seconds to months
-          let monthsLeft = seconds_left / (SECONDS_PER_DAY * 30);
-          //Set emissions schedule
-          setEmissionsSchedule({
-            rate: parseInt(res.ownership_distribution.rate),
-            monthsLeft: monthsLeft,
-          })
-        })
-
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  //Get user staked & unstaking MBRN
-  const getUserStake = async () => {
-    try {
-      await stakingQueryClient?.userStake({
-        staker: address ?? "",
-      }).then((res) => {
-        //Get staking total & closest unstaking deposit
-        var stakingTotal = 0;
-        var unstakingTotal = 0;
-        var closestUnstakingDeposit = 0;
-        var closestUnstakingDepositTime = 0;
-        console.log(res.deposit_list)
-        for (let i = 0; i < res.deposit_list.length; i++) {
-          if (res.deposit_list[i].unstake_start_time === null || res.deposit_list[i].unstake_start_time === undefined) {
-            stakingTotal += parseInt(res.deposit_list[i].amount)
-          } else {
-            if (closestUnstakingDepositTime === 0){
-              closestUnstakingDepositTime = res.deposit_list[i].unstake_start_time ?? 0
-              closestUnstakingDeposit = parseInt(res.deposit_list[i].amount)
-            } else if ((res.deposit_list[i].unstake_start_time ?? 0) < closestUnstakingDepositTime) {
-              closestUnstakingDepositTime = res.deposit_list[i].unstake_start_time ?? 0
-              closestUnstakingDeposit = parseInt(res.deposit_list[i].amount)
-            }
-            unstakingTotal += parseInt(res.deposit_list[i].amount)
-          }
-        }
-        //Set stake
-        setUserStake(prevState => {
-          return {
-            staked: stakingTotal,
-            unstaking_total: unstakingTotal,
-            unstaking: {
-              amount: closestUnstakingDeposit,
-              timeLeft: unstakingPeriod,
-            },
-          }
-        })
-        //Calc time left to unstake
-        var currentTime = 0;
-        stakingClient?.client.getBlock().then( (block) => {
-          currentTime = Date.parse(block.header.time) / 1000;
-          var secondsLeft = Math.max(closestUnstakingDepositTime - currentTime, 0);
-          var daysLeft = secondsLeft / SECONDS_PER_DAY;
-          //Set user stake
-          setUserStake(prevState => {
-            return {              
-              staked: stakingTotal,
-              unstaking_total: unstakingTotal,
-              unstaking: {
-                amount: closestUnstakingDeposit,
-                timeLeft: daysLeft,
-              },
-            }
-          })
-        })
-
-        //Set user VP
-        setuserVP(parseInt(res.total_staked))
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const handlestakeClick = async () => {
     //Check if wallet is connected & connect if not
@@ -524,6 +256,7 @@ const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQ
         setPopupMsg(<div>Staked</div>)
         setPopupStatus("Success")
         //Update user stake
+            //@ts-ignore
         setUserStake(prevState => {
           return {
             ...prevState,
@@ -558,6 +291,7 @@ const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQ
         setPopupStatus("Success")
         //Update user stake
         if (userStake.unstaking.amount === 0) {
+          //@ts-ignore
           setUserStake(prevState => {
             return {              
               staked: +prevState.staked - +((unstakeAmount ?? 0)* 1_000_000),
@@ -570,6 +304,7 @@ const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQ
           })
         } else {
           //If there is already an unstaking deposit, don't change it
+            //@ts-ignore
           setUserStake(prevState => {
             return {
               ...prevState,
@@ -612,37 +347,6 @@ const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQ
       setPopupTrigger(true)
       setPopupMsg(<div>{e.message}</div>)
       setPopupStatus("Error")
-    }
-  }
-  const getuserClaims = async () => {
-    try {
-      await stakingQueryClient?.userRewards({
-        user: address ?? "",
-      }).then((res) => {
-        console.log(res)
-        //Set user claims
-        for (let i = 0; i < res.claimables.length; i++) {
-          if("denom" in res.claimables[i].info) {
-            if ((res.claimables[i].info as unknown as NativeToken).denom === denoms.cdt) {
-              setuserClaims(prevState => {
-                return {
-                  ...prevState,
-                  cdtClaims: parseInt(res.claimables[i].amount) / 1_000_000,
-                }
-              })
-            }
-          }
-        }
-        //Set MBRN claims
-        setuserClaims(prevState => {
-          return {
-            ...prevState,
-            mbrnClaims: parseInt(res.accrued_interest) / 1_000_000,
-          }
-        })
-      })
-    } catch (error) {
-      console.log(error)
     }
   }
   const handledelegateForm = (var_governator?: string) => {
@@ -934,6 +638,7 @@ const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQ
             delegationVP += parseInt(res[i].delegation_info.delegated_to[i].amount)
           }          
           //Add to user total VP
+            //@ts-ignore
           setuserVP(prevState => {
             return prevState + delegationVP
           })
@@ -950,32 +655,7 @@ const Governance = ({connect, govClient, govQueryClient, stakingClient, stakingQ
   }
 
   useEffect(() => {
-    if (quorum === 0){
-      //Query & set proposals
-      getProposals()
-    }
-    if (emissionsSchedule.rate === 0){
-      //Query & set emissions schedule
-      getEmissionsSchedule()
-    }
-    if (userStake.staked === 0){
-      //Get user staked & unstaking MBRN
-      getUserStake()
-    }
-    if (userClaims.mbrnClaims === 0 && userClaims.cdtClaims === 0){
-      //Get user claims
-      getuserClaims()
-    }
-    if (delegations[0].amount === 0 && delegators[0].amount === 0){
-      //Get delegation info
-      getDelegations()
-    }
-    if (walletMBRN === 0 && address !== undefined){
-      //Get account's balance of MBRN
-      govQueryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
-        setwalletMBRN(parseInt(res.amount) / 1_000_000);
-    })
-    }
+    
   });
       
   return (

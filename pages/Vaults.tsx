@@ -15,6 +15,7 @@ import { relative } from "path";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 import { SquidWidget } from "@0xsquid/widget";
+import { get } from "http";
 
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
@@ -75,8 +76,7 @@ interface Props {
 
 const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez, 
     popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
-    rateRes, creditRateRes, basketRes,
-    setrateRes, setcreditRateRes, setbasketRes,
+    rateRes, setrateRes, creditRateRes, basketRes, setcreditRateRes, setbasketRes,
     osmoQTY, setosmoQTY,
     atomQTY, setatomQTY,
     axlusdcQTY, setaxlusdcQTY,
@@ -91,6 +91,22 @@ const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice
 }: Props) => {
+    //Rates
+    const [rates, setRates] = useState({
+        osmo: 0,
+        atom: 0,
+        axlUSDC: 0,
+        atomosmo_pool: 0,
+        osmousdc_pool: 0,
+    });
+    //Debt Caps
+    const [debtCaps, setdebtCaps] = useState({
+        osmo: 0,
+        atom: 0,
+        axlUSDC: 0,
+        atomosmo_pool: 0,
+        osmousdc_pool: 0,
+    });
     
     //Redemptions
     const [posClick, setposClick] = useState("mint-button-icon3");
@@ -117,6 +133,9 @@ const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez
 
     //Squid Widget
     const [swapScreen, setswapScreen] = useState(false);    
+    //Menu
+    const [open, setOpen] = useState(false);
+    const [menuLabel, setMenuLabel] = useState("Value" as string);
     
     //This is used to keep track of what asses the user has in the contract
     //bc the input/output asset quantities are updated in responsive to the user's actions
@@ -138,6 +157,21 @@ const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez
       osmousdc_pool: 0,
     });
 
+    const handleOpen = () => {
+        setOpen(!open);
+      };
+      const handleMenuOne = () => {
+        setOpen(false);
+        setMenuLabel("Rate");
+      };
+      const handleMenuTwo = () => {
+        setOpen(false);
+        setMenuLabel("Util");
+      };
+      const handleMenuThree = () => {
+        setOpen(false);
+        setMenuLabel("Value");
+      };
 
     const handleOSMOqtyClick = async (currentFunction: string) => {
         //Reset Amount
@@ -1427,6 +1461,114 @@ const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez
 
         return(cost)
     }
+    function getRates() {
+        var rates = {
+            osmo: 0,
+            atom: 0,
+            axlUSDC: 0,
+            atomosmo_pool: 0,
+            osmousdc_pool: 0,
+        };
+        console.log(rateRes);
+        //find OSMO's index in the basket                
+        var rate_index = basketRes?.collateral_types.findIndex((info) => {
+            // @ts-ignore
+            return info.asset.info.native_token.denom === denoms.osmo
+        })
+
+        if (rate_index !== undefined){
+            //use the index to get its interest rate
+            rates.osmo = parseFloat(rateRes?.rates[rate_index] ?? "0");
+        }
+
+        //find ATOM's index in the basket                
+        var rate_index = basketRes?.collateral_types.findIndex((info) => {
+            // @ts-ignore
+            return info.asset.info.native_token.denom === denoms.atom
+        })
+        if (rate_index !== undefined){
+        //use the index to get its interest rate
+            rates.atom = parseFloat(rateRes?.rates[rate_index] ?? "0");
+        }
+
+        //find AXLUSDC's index in the basket
+        var rate_index = basketRes?.collateral_types.findIndex((info) => {
+            // @ts-ignore
+            return info.asset.info.native_token.denom === denoms.axlUSDC
+        })
+        if (rate_index !== undefined){
+            //use the index to get its interest rate
+            rates.axlUSDC = parseFloat(rateRes?.rates[rate_index] ?? "0");
+        }
+
+        //find ATOMOSMO's index in the basket
+        var rate_index = basketRes?.collateral_types.findIndex((info) => {
+            // @ts-ignore
+            return info.asset.info.native_token.denom === denoms.atomosmo_pool
+        })
+        if (rate_index !== undefined){
+            //use the index to get its interest rate
+            rates.atomosmo_pool = parseFloat(rateRes?.rates[rate_index] ?? "0");
+        }
+
+        //find OSMOUSDC's index in the basket
+        var rate_index = basketRes?.collateral_types.findIndex((info) => {
+            // @ts-ignore
+            return info.asset.info.native_token.denom === denoms.osmousdc_pool
+        })
+        if (rate_index !== undefined){
+            //use the index to get its interest rate
+            rates.osmousdc_pool = parseFloat(rateRes?.rates[rate_index] ?? "0");
+        }
+        
+        setRates(rates)
+    }
+    async function getassetdebtUtil() {
+        try {
+            var debtcaps = {
+                osmo: 0,
+                atom: 0,
+                axlUSDC: 0,
+                atomosmo_pool: 0,
+                osmousdc_pool: 0,
+            };
+            await queryClient?.getBasketDebtCaps().then((res) => {
+                ///Find the debt cap util for each collateral denom
+                res.forEach((debtCap) => {
+                    //@ts-ignore
+                    if (debtCap.collateral.native_token.denom === denoms.osmo){
+                        debtcaps.osmo = parseInt(debtCap.debt_total) / parseInt(debtCap.cap);
+                        console.log(debtCap)
+                        console.log(debtcaps.osmo)
+                        //@ts-ignore
+                    } else if (debtCap.collateral.native_token.denom === denoms.atom){
+                        debtcaps.atom = parseInt(debtCap.debt_total) / parseInt(debtCap.cap);
+                        console.log(debtCap)
+                        console.log(debtcaps.atom)
+                        //@ts-ignore
+                    } else if (debtCap.collateral.native_token.denom === denoms.axlUSDC){
+                        debtcaps.axlUSDC = parseInt(debtCap.debt_total) / parseInt(debtCap.cap);
+                        console.log(debtCap)
+                        console.log(debtcaps.axlUSDC)
+                        //@ts-ignore
+                    } else if (debtCap.collateral.native_token.denom === denoms.atomosmo_pool){
+                        debtcaps.atomosmo_pool = parseInt(debtCap.debt_total) / parseInt(debtCap.cap);
+                        //@ts-ignore
+                    } else if (debtCap.collateral.native_token.denom === denoms.osmousdc_pool){
+                        debtcaps.osmousdc_pool = parseInt(debtCap.debt_total) / parseInt(debtCap.cap);
+                    }
+
+                })
+                // console.log(debtcaps)
+                setdebtCaps(debtcaps);
+            })
+
+        } catch (error) {
+            ////Error message
+            const e = error as { message: string }
+            console.log(e.message)
+        }
+    }
 
     //getuserPosition info && set State
     useEffect(() => {    
@@ -1435,9 +1577,11 @@ const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez
             setAddress(address as string)
         }
         if (prices.osmo === 0 ){ setPrices(pricez) }
-        setrateRes(rateRes as CollateralInterestResponse)
+        setrateRes(rateRes as CollateralInterestResponse);
+        getRates();
         setcreditRateRes(creditRateRes as InterestResponse)
         setbasketRes(basketRes as Basket)
+        getassetdebtUtil();
 
     }, [pricez, address, rateRes, creditRateRes, basketRes])
 
@@ -1495,7 +1639,7 @@ const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez
                 + (395)}}>
                 { getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? "Minimum:" : (sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
               </label>
-              <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
+              <div className="cost-4">{cost > 0 ? "+" : null}{((cost ?? 0) * 100 ).toFixed(2)}%/yr</div>              
               <div className="position-stats">
               <div className="infobox-icon2" />
               <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
@@ -1532,21 +1676,45 @@ const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez
               <div className="asset-info-child3" />
               <div className="asset">Asset</div>
               <div className="qty">Quantity</div>
-              <div className="value">Value</div>
+              <div className="value value-menu-dropdown" onClick={handleOpen}>
+              <button onClick={handleOpen} style={{outline: "none"}}>{menuLabel}</button>
+                {open ? (
+                    <ul className="value-menu">
+                    {menuLabel !== "Rate" ? (<li className="value-menu-item" onClick={handleMenuOne}>
+                        <button onClick={handleMenuOne} style={{outline: "none"}}>Rate</button>
+                    </li>) : null}
+                    {menuLabel !== "Util" ? (<li className="value-menu-item" onClick={handleMenuTwo}>
+                        <button onClick={handleMenuTwo} style={{outline: "none"}}>Util</button>
+                    </li>) : null}
+                    {menuLabel !== "Value" ? (<li className="value-menu-item" onClick={handleMenuThree}>
+                        <button onClick={handleMenuThree} style={{outline: "none"}}>Value</button>
+                    </li>) : null}
+                    </ul>
+                ) : null}
+              </div>
               <div>
                 <Image className={osmoQTY > 0 ? "osmo-logo-icon" : "low-opacity osmo-logo-icon" } width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
                 <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? ((osmoQTY/1000) ?? 0).toFixed(2)+"k" : osmoQTY}</div>
-                <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? (((osmoQTY * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((osmoQTY * +prices.osmo) ?? 0).toFixed(2)}</div>
+                {menuLabel === "Value" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? (((osmoQTY * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((osmoQTY * +prices.osmo) ?? 0).toFixed(2)}</div> 
+                : menuLabel === "Rate" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{(rates.osmo * 100).toFixed(2)}%</div>
+                : menuLabel === "Util" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{(debtCaps.osmo * 100).toFixed(2)}%</div>                
+                : null}
               </div>              
               <div>
                 <Image className={atomQTY > 0 ? "atom-logo-icon" : "low-opacity atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
                 <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? ((atomQTY/1000) ?? 0).toFixed(2)+"k" : atomQTY}</div>
-                <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${(atomQTY * +prices.atom) > 1000 ? (((atomQTY * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((atomQTY * +prices.atom) ?? 0).toFixed(2)}</div>
+                {menuLabel === "Value" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${ (atomQTY * +prices.atom) > 1000 ? (((atomQTY * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((atomQTY * +prices.atom) ?? 0).toFixed(2)}</div> 
+                : menuLabel === "Rate" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(rates.atom * 100).toFixed(2)}%</div>
+                : menuLabel === "Util" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(debtCaps.atom * 100).toFixed(2)}%</div>                
+                : null}
               </div>
               <div>
                 <Image className={axlusdcQTY > 0 ? "axlusdc-logo-icon" : "low-opacity axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
                 <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? ((axlusdcQTY/1000) ?? 0).toFixed(2)+"k" : axlusdcQTY}</div>
-                <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${(axlusdcQTY * +prices.axlUSDC) > 1000 ? (((axlusdcQTY * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((axlusdcQTY * +prices.axlUSDC) ?? 0).toFixed(2)}</div>
+                {menuLabel === "Value" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${ (axlusdcQTY * +prices.axlUSDC) > 1000 ? (((axlusdcQTY * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((axlusdcQTY * +prices.axlUSDC) ?? 0).toFixed(2)}</div> 
+                : menuLabel === "Rate" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(rates.axlUSDC * 100).toFixed(2)}%</div>
+                : menuLabel === "Util" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div>                
+                : null}
               </div>
               <div style={{opacity:0}}>
                 <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-atom-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
