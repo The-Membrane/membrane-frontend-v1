@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import React from "react";
 
-import { Coin, coin, coins, parseCoins } from "@cosmjs/amino";
+import { Coin, coin, coins } from "@cosmjs/amino";
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
-import { Asset, Basket, BasketPositionsResponse, CollateralInterestResponse, InterestResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
+import { Asset, Basket, CollateralInterestResponse, InterestResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";

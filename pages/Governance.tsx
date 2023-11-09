@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ProgressBar from "../components/progress_bar";
-import { GovernanceClient, GovernanceQueryClient } from "../codegen/governance/Governance.client";
+import { GovernanceClient } from "../codegen/governance/Governance.client";
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { ProposalResponse, ProposalMessage } from "../codegen/governance/Governance.types";
 import Popup from "../components/Popup";
@@ -9,7 +9,6 @@ import { coins } from "@cosmjs/stargate";
 import { denoms } from ".";
 import React from "react";
 import Image from "next/image";
-
 
 const unstakingPeriod = 4; //days
 
@@ -52,28 +51,22 @@ interface Props {
   stakingClient: StakingClient | null;
   stakingQueryClient: StakingQueryClient | null;
   address: string | undefined;
-  delegations: Delegation[];
-  setDelegations: (delegations: Delegation[]) => void;
-  delegators: Delegator[];
-  setDelegators: (delegators: Delegator[]) => void;
+  Delegations: Delegation[];
+  Delegators: Delegator[];
   quorum: number;
   setQuorum: (quorum: number) => void;
-  proposals: ProposalList;
-  setProposals: (proposals: ProposalList) => void;
+  Proposals: ProposalList;
   userVP: number;
   setuserVP: (userVP: number) => void;
-  emissionsSchedule: EmissionsSchedule;
-  setemissionsSchedule: (emissionsSchedule: EmissionsSchedule) => void;
-  userStake: UserStake;
-  setUserStake: (userStake: UserStake) => void;
-  userClaims: UserClaims;
-  setUserClaims: (userClaims: UserClaims) => void;
+  EmissionsSchedule: EmissionsSchedule;
+  UserStake: UserStake;
+  UserClaims: UserClaims;
   walletMBRN: number;
   setwalletMBRN: (walletMBRN: number) => void;
 }
 
 const Governance = ({connect, govClient, stakingClient, stakingQueryClient, address,
-  delegations, setDelegations, delegators, setDelegators, quorum, setQuorum, proposals, setProposals, userVP, setuserVP, emissionsSchedule, setemissionsSchedule, userStake, setUserStake, userClaims, setUserClaims, walletMBRN, setwalletMBRN
+  Delegations, Delegators, quorum, setQuorum, Proposals, userVP, setuserVP, EmissionsSchedule, UserStake, UserClaims, walletMBRN, setwalletMBRN
 }: Props) => {
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
@@ -88,6 +81,124 @@ const Governance = ({connect, govClient, stakingClient, stakingQueryClient, addr
 
   const [commission, setCommission] = useState(0);
   const [maxCommission, setmaxCommission] = useState(0);
+  
+  const [delegations, setDelegations] = useState<Delegation[]>([
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+      commission: undefined,
+    }
+  ]);
+  const [delegators, setDelegators] = useState<Delegator[]>([
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }, 
+    {
+      delegator: "",
+      fluid: undefined,
+      amount: undefined,
+    }
+  ]);
+  //Proposal, Days left, Current Status, Quorum 
+  const [proposals, setProposals] = useState<ProposalList>({
+    active: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
+    pending: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
+    completed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
+    executed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
+});
+  //Staking//
+  //Emissions Schedule
+  const [emissionsSchedule, setEmissionsSchedule] = useState<EmissionsSchedule>({
+    rate: 0,
+    monthsLeft: 0,
+  })
+  const [userStake, setUserStake] = useState<UserStake>({
+    staked: 0,
+    unstaking_total: 0,
+    unstaking: {
+      amount: 0,
+      timeLeft: 0,
+    },
+  });
+  const [userClaims, setuserClaims] = useState<UserClaims>({
+    mbrnClaims: 0,
+    cdtClaims: 0,
+  });
 
   const handlesetstakeAmount = (event: any) => {
     event.preventDefault();
@@ -655,7 +766,13 @@ const Governance = ({connect, govClient, stakingClient, stakingQueryClient, addr
   }
 
   useEffect(() => {
-    
+    //Set incoming state form index.tsx
+    setProposals(Proposals)
+    setEmissionsSchedule(EmissionsSchedule)
+    setUserStake(UserStake)
+    setuserClaims(UserClaims)
+    setDelegations(Delegations)
+    setDelegators(Delegators)
   });
       
   return (
