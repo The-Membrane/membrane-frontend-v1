@@ -946,8 +946,8 @@ export default function Home() {
       />;
     } else if (activeComponent === 'staking') {
       return <Governance connect={connect} govClient={governance_client} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined} 
-        delegations={delegations} delegators={delegators} quorum={quorum} proposals={proposals} userVP={userVP} emissionsSchedule={emissionsSchedule} userStake={userStake} userClaims={userClaims} walletMBRN={walletMBRN}
-        setDelegations={setDelegations} setDelegators={setDelegators} setQuorum={setQuorum} setProposals={setProposals} setuserVP={setuserVP} setemissionsSchedule={setEmissionsSchedule} setUserStake={setUserStake} setUserClaims={setuserClaims} setwalletMBRN={setwalletMBRN}
+        Delegations={delegations} Delegators={delegators} quorum={quorum} Proposals={proposals} userVP={userVP} EmissionsSchedule={emissionsSchedule} UserStake={userStake} UserClaims={userClaims} walletMBRN={walletMBRN}
+        setQuorum={setQuorum} setuserVP={setuserVP} setwalletMBRN={setwalletMBRN}
       />;
     } else if (activeComponent === 'launch') {
       return <Lockdrop connect={connect} launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={address as string | undefined} prices={prices} />;
