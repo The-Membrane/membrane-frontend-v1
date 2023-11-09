@@ -46,7 +46,7 @@ export interface UserClaims {
   cdtClaims: number;
 }
 interface Props {
-  connect: () => void;
+  // connect: () => void;
   govClient: GovernanceClient | null;
   stakingClient: StakingClient | null;
   stakingQueryClient: StakingQueryClient | null;
@@ -65,7 +65,7 @@ interface Props {
   setwalletMBRN: (walletMBRN: number) => void;
 }
 
-const Governance = ({connect, govClient, stakingClient, stakingQueryClient, address,
+const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   Delegations, Delegators, quorum, setQuorum, Proposals, userVP, setuserVP, EmissionsSchedule, UserStake, UserClaims, walletMBRN, setwalletMBRN
 }: Props) => {
   //Popup

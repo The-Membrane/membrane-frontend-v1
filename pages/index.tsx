@@ -55,7 +55,7 @@ export default function Home() {
   const [popupStatus, setPopupStatus] = useState("User Agreement");
   
   //Get Clients
-  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, base_client, address, connect } = useClients();
+  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, base_client, address } = useClients();
   const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, governancequeryClient, stakingqueryClient, oraclequeryClient } = useQueryClients();
   
   //Set Prices
@@ -933,7 +933,7 @@ export default function Home() {
     if (activeComponent === 'dashboard') {
       return <Dashboard setActiveComponent={setActiveComponent}/>;
     } else if (activeComponent === 'vault') {
-      return <Positions connect={connect} cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
+      return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
           rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
           popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
           osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
@@ -941,16 +941,16 @@ export default function Home() {
 
       />;
     } else if (activeComponent === 'liquidation') {
-      return <LiquidationPools connect={connect} queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} index_lqClaimables={lqClaimables}
+      return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} index_lqClaimables={lqClaimables}
         capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL} setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead}
       />;
     } else if (activeComponent === 'staking') {
-      return <Governance connect={connect} govClient={governance_client} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined} 
+      return <Governance govClient={governance_client} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined} 
         Delegations={delegations} Delegators={delegators} quorum={quorum} Proposals={proposals} userVP={userVP} EmissionsSchedule={emissionsSchedule} UserStake={userStake} UserClaims={userClaims} walletMBRN={walletMBRN}
         setQuorum={setQuorum} setuserVP={setuserVP} setwalletMBRN={setwalletMBRN}
       />;
     } else if (activeComponent === 'launch') {
-      return <Lockdrop connect={connect} launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={address as string | undefined} prices={prices} />;
+      return <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={address as string | undefined} prices={prices} />;
     }
   };
 

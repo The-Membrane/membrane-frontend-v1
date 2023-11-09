@@ -12,7 +12,7 @@ import Image from "next/image";
 import { testnetAddrs } from "../config";
 
 interface Props {
-  connect: () => void;
+  // connect: () => void;
   launch_client: LaunchClient | null;
   queryClient: LaunchQueryClient | null;
   baseClient: SigningCosmWasmClient | null;
@@ -20,7 +20,7 @@ interface Props {
   prices: Prices;
 }
 
-const Lockdrop = ({connect, launch_client, queryClient, baseClient, address, prices}: Props) => {
+const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Props) => {
 
   interface LockDisplay {
     deposit: number | undefined;

@@ -18,7 +18,7 @@ declare module 'react' {
   }
 
 interface Props {
-    connect: () => void;
+    // connect: () => void;
     cdp_client: PositionsClient | null;
     queryClient: PositionsQueryClient | null;
     address: string | undefined;
@@ -68,7 +68,7 @@ interface Props {
     setcreditPrice: (creditPrice: number) => void;          
 }
 
-const Positions = ({connect, cdp_client, queryClient, address, walletCDT, pricez, 
+const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
     popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
     rateRes, setrateRes, creditRateRes, basketRes, setcreditRateRes, setbasketRes,
     osmoQTY, setosmoQTY,

@@ -24,7 +24,7 @@ interface LQClaims {
 }
 
 interface Props {
-  connect: () => void;
+  // connect: () => void;
   queryClient: LiquidationQueueQueryClient | null;
   liq_queueClient: LiquidationQueueClient | null;
   sp_queryClient: StabilityPoolQueryClient | null;
@@ -48,7 +48,7 @@ interface Props {
   setunstakingMsg: (unstakingMsg: string) => void;
 }
 
-const LiquidationPools = ({connect, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, pricez, index_lqClaimables,
+const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, pricez, index_lqClaimables,
   capitalAhead, setcapitalAhead, userclosestDeposit, setuserclosestDeposit, userTVL, setuserTVL, TVL, setTVL, SPclaimables, setSPclaimables, unstakingMsg, setunstakingMsg
 }: Props) => {
   const [prices, setPrices] = useState<Prices>({
