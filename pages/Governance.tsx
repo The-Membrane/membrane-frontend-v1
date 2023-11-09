@@ -9,6 +9,8 @@ import { coins } from "@cosmjs/stargate";
 import { denoms } from ".";
 import React from "react";
 import Image from "next/image";
+import { useChain } from "@cosmos-kit/react";
+import { chainName } from "../config";
 
 const unstakingPeriod = 4; //days
 
@@ -46,7 +48,6 @@ export interface UserClaims {
   cdtClaims: number;
 }
 interface Props {
-  // connect: () => void;
   govClient: GovernanceClient | null;
   stakingClient: StakingClient | null;
   stakingQueryClient: StakingQueryClient | null;
@@ -66,6 +67,7 @@ interface Props {
 const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   Delegations, Delegators, quorum, setQuorum, Proposals, UserVP, EmissionsSchedule, UserStake, UserClaims, WalletMBRN
 }: Props) => {
+  const { connect } = useChain(chainName);
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState<ReactJSXElement>();
@@ -356,7 +358,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   const handlestakeClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     try {
       await stakingClient?.stake({}
@@ -389,7 +391,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   const handleunstakeClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     try {      
       await stakingClient?.unstake({
@@ -439,7 +441,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   const handleclaimClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     try {
       await stakingClient?.claimRewards({

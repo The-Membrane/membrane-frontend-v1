@@ -6,14 +6,15 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { LiquidationQueueClient, LiquidationQueueQueryClient } from "../codegen/liquidation_queue/LiquidationQueue.client";
-import { ClaimsResponse, QueueResponse, SlotResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
+import { QueueResponse, SlotResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { denoms, Prices } from ".";
 import { coins } from "@cosmjs/stargate";
 import Popup from "../components/Popup";
 import { StabilityPoolClient, StabilityPoolQueryClient } from "../codegen/stability_pool/StabilityPool.client";
 import { PositionsQueryClient } from "../codegen/positions/Positions.client";
-import { NativeToken } from "../codegen/positions/Positions.types";
 import Image from "next/image";
+import { useChain } from "@cosmos-kit/react";
+import { chainName } from "../config";
 
 //Bar graph scale
 const CDTperPIXEL = 100_000_000; //100
@@ -24,7 +25,6 @@ interface LQClaims {
 }
 
 interface Props {
-  // connect: () => void;
   queryClient: LiquidationQueueQueryClient | null;
   liq_queueClient: LiquidationQueueClient | null;
   sp_queryClient: StabilityPoolQueryClient | null;
@@ -51,6 +51,8 @@ interface Props {
 const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, pricez, index_lqClaimables,
   capitalAhead, setcapitalAhead, userclosestDeposit, setuserclosestDeposit, userTVL, setuserTVL, TVL, setTVL, SPclaimables, setSPclaimables, unstakingMsg, setunstakingMsg
 }: Props) => {
+  const { connect } = useChain(chainName);
+  
   const [prices, setPrices] = useState<Prices>({
     osmo: 0,
     atom: 0,
@@ -316,7 +318,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     var depositAmount = bidAmount;
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     //Get denom from menu asset
     let workingDenom: string = "";
@@ -374,7 +376,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     var withdrawAmount = bidAmount;
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     //Get denom from menu asset
     let workingDenom: string = "";
@@ -464,7 +466,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleclaimClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     try {
       //Claim for each bidFor asset
@@ -503,7 +505,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleStabilityDeposit = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     try {
       await sp_client?.deposit({}
@@ -557,7 +559,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleStabilityWithdraw = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     try {
       await sp_client?.withdraw({
@@ -621,7 +623,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleStabilityClaim = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     try { 
       await sp_client?.claimRewards("auto", undefined).then((res) => {

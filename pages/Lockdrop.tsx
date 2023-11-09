@@ -9,30 +9,30 @@ import { coin } from "@cosmjs/stargate";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
 import Image from "next/image";
-import { testnetAddrs } from "../config";
+import { chainName, testnetAddrs } from "../config";
+import { useChain } from "@cosmos-kit/react";
 
 interface Props {
-  // connect: () => void;
   launch_client: LaunchClient | null;
   queryClient: LaunchQueryClient | null;
   baseClient: SigningCosmWasmClient | null;
   address: string | undefined;
   prices: Prices;
 }
+interface LockDisplay {
+  deposit: number | undefined;
+  new_lock_up_duration: number;
+  old_lock_up_duration: number | undefined;
+  label: string;
+}
+interface LaunchRankings {
+  user: number;
+  total: number;
+  color: string;
+}
 
 const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Props) => {
-
-  interface LockDisplay {
-    deposit: number | undefined;
-    new_lock_up_duration: number;
-    old_lock_up_duration: number | undefined;
-    label: string;
-  }
-  interface LaunchRankings {
-    user: number;
-    total: number;
-    color: string;
-  }
+  const { connect } = useChain(chainName);
 
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
@@ -1225,7 +1225,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
   const handleclaimClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      // connect();
+      connect();
     }
     try {
       await launch_client?.claim().then((res) => {        
