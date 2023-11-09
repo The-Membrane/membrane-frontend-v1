@@ -1225,7 +1225,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
   const handleclaimClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      connect();
+      // connect();
     }
     try {
       await launch_client?.claim().then((res) => {        

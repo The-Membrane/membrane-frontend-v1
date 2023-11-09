@@ -56,17 +56,15 @@ interface Props {
   quorum: number;
   setQuorum: (quorum: number) => void;
   Proposals: ProposalList;
-  userVP: number;
-  setuserVP: (userVP: number) => void;
+  UserVP: number;
   EmissionsSchedule: EmissionsSchedule;
   UserStake: UserStake;
   UserClaims: UserClaims;
-  walletMBRN: number;
-  setwalletMBRN: (walletMBRN: number) => void;
+  WalletMBRN: number;
 }
 
 const Governance = ({govClient, stakingClient, stakingQueryClient, address,
-  Delegations, Delegators, quorum, setQuorum, Proposals, userVP, setuserVP, EmissionsSchedule, UserStake, UserClaims, walletMBRN, setwalletMBRN
+  Delegations, Delegators, quorum, setQuorum, Proposals, UserVP, EmissionsSchedule, UserStake, UserClaims, WalletMBRN
 }: Props) => {
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
@@ -199,6 +197,9 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
     mbrnClaims: 0,
     cdtClaims: 0,
   });
+  const [userVP, setuserVP] = useState(0);
+  const [walletMBRN, setwalletMBRN] = useState(0);
+
 
   const handlesetstakeAmount = (event: any) => {
     event.preventDefault();
@@ -355,7 +356,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   const handlestakeClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      connect();
+      // connect();
     }
     try {
       await stakingClient?.stake({}
@@ -388,7 +389,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   const handleunstakeClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      connect();
+      // connect();
     }
     try {      
       await stakingClient?.unstake({
@@ -438,7 +439,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   const handleclaimClick = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
-      connect();
+      // connect();
     }
     try {
       await stakingClient?.claimRewards({
@@ -773,6 +774,8 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
     setuserClaims(UserClaims)
     setDelegations(Delegations)
     setDelegators(Delegators)
+    setwalletMBRN(WalletMBRN)
+    setuserVP(UserVP)
   });
       
   return (
