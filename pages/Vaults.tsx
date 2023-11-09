@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import React from "react";
+import { useChain } from '@cosmos-kit/react';
+import { chainName } from '../config';
 
 import { Coin, coin, coins } from "@cosmjs/amino";
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
@@ -946,7 +948,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         }
         //Check if wallet is connected & connect if not
         if (address === undefined) {
-            // connect();
+            const { connect } = useChain(chainName);
+            connect();
         }
         //create a variable for asset_intents so we can mutate it within the function
         //duplicate intents dont work
