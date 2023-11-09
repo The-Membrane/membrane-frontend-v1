@@ -87,6 +87,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice
 }: Props) => {
+    
+    const { connect } = useChain(chainName);
     //Rates
     const [rates, setRates] = useState({
         osmo: 0,
@@ -948,7 +950,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         }
         //Check if wallet is connected & connect if not
         if (address === undefined) {
-            const { connect } = useChain(chainName);
             connect();
         }
         //create a variable for asset_intents so we can mutate it within the function
