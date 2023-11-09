@@ -26,8 +26,8 @@ export function useClients(): {
   address: String | undefined;
   // connect: () => void;
 } {
-  const { getSigningCosmWasmClient, address, status, getOfflineSigner, connect } = useChain(chainName);
-  connect();
+  const { getSigningCosmWasmClient, address, status, getOfflineSigner } = useChain(chainName);
+  
   const [launchClient, setlaunchClient] = useState<LaunchClient | null>(  null  );
   const [cdpClient, setcdpClient] = useState<PositionsClient | null>(  null  );
   const [liqqueueClient, setliqqueueClient] = useState<LiquidationQueueClient | null>(  null  );
