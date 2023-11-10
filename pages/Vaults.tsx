@@ -951,6 +951,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Check if wallet is connected & connect if not
         if (address === undefined) {
             connect();
+            return;
         }
         //create a variable for asset_intents so we can mutate it within the function
         //duplicate intents dont work

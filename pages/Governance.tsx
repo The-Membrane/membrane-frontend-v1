@@ -359,6 +359,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     try {
       await stakingClient?.stake({}
@@ -392,6 +393,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     try {      
       await stakingClient?.unstake({
@@ -442,6 +444,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     try {
       await stakingClient?.claimRewards({
@@ -777,8 +780,9 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
     setDelegations(Delegations)
     setDelegators(Delegators)
     setwalletMBRN(WalletMBRN)
+    console.log(WalletMBRN)
     setuserVP(UserVP)
-  });
+  }, [Proposals, EmissionsSchedule, UserStake, UserClaims, Delegations, Delegators, WalletMBRN, UserVP]);
       
   return (
     <div className="governance">
@@ -911,7 +915,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
         <div className="delegate">Delegate</div>
       </div>
       <div className="total-vp-label">Total VP: </div>
-      {/* <div className="total-vp-amount">{Math.sqrt(parseInt((userVP/1_000_000).toFixed(0))).toFixed(2)}</div> */}
+      <div className="total-vp-amount">{Math.sqrt(parseInt((userVP/1_000_000).toFixed(0))).toFixed(2)}</div>
       <div className="delegated-to">Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fluid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comm.&nbsp;&nbsp;&nbsp;&nbsp;Undele.</div>
       <div className="claim-button-frame">        
         <div className="cdt-claims">{userClaims.cdtClaims}</div>
@@ -1046,7 +1050,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
       <div className="delegators-y1" />
       <div className="delegators-y2" />
       <div className="staked-mbrn1">Staked: {parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
-      {/* <div className="staked-mbrn2">in Wallet: {walletMBRN.toFixed(2)}</div> */}
+      <div className="staked-mbrn2">in Wallet: {walletMBRN.toFixed(2)}</div>
       <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
       <div className="unstaking-mbrn-total">{"/" + parseFloat((userStake.unstaking_total/1_000_000).toFixed(2))}</div>
       {/* <div className="mbrn-stake-logo">

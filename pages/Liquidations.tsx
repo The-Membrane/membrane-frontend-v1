@@ -319,6 +319,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     //Get denom from menu asset
     let workingDenom: string = "";
@@ -377,6 +378,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     //Get denom from menu asset
     let workingDenom: string = "";
@@ -467,6 +469,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     try {
       //Claim for each bidFor asset
@@ -506,6 +509,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     try {
       await sp_client?.deposit({}
@@ -560,6 +564,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     try {
       await sp_client?.withdraw({
@@ -624,6 +629,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Check if wallet is connected & connect if not
     if (address === undefined) {
       connect();
+      return;
     }
     try { 
       await sp_client?.claimRewards("auto", undefined).then((res) => {
