@@ -29,20 +29,20 @@
 }
 .neonSign b span, .neonSign2 b span, .neonSign3 b span, .neonSign4 b span{
   display: inline-block;
-  font-size: 2.24vw;
+  font-size: 4.9vh;
 }
 .neonSignon b span, .neonSign2on b span, .neonSign3on b span, .neonSign4on b span{
   display: inline-block;
-  font-size: 2.24vw;
+  font-size: 4.9vh;
   animation: blink linear infinite 5s;
 }
 .neonSign b a, .neonSign2 b a, .neonSign3 b a, .neonSign4 b a {
   display: inline-block;
-  font-size: 2.24vw;
+  font-size: 4.9vh;
 }
 .neonSignon b a, .neonSign2on b a, .neonSign3on b a, .neonSign4on b a {
   display: inline-block;
-  font-size: 2.24vw;
+  font-size: 4.9vh;
 }
 .neonSignon b span:nth-of-type(2) {
   animation: blink reverse infinite 8s;
