@@ -1638,7 +1638,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 + (395)}}>
                 { getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? "Minimum:" : (sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
               </label>
-              <div className="cost-4">{cost > 0 ? "+" : null}{((cost ?? 0) * 100 ).toFixed(2)}%/yr</div>              
+              <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
               <div className="position-stats">
               <div className="infobox-icon2" />
               <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
@@ -1695,7 +1695,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 <Image className={osmoQTY > 0 ? "osmo-logo-icon" : "low-opacity osmo-logo-icon" } width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
                 <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? ((osmoQTY/1000) ?? 0).toFixed(2)+"k" : osmoQTY}</div>
                 {menuLabel === "Value" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? (((osmoQTY * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((osmoQTY * +prices.osmo) ?? 0).toFixed(2)}</div> 
-                : menuLabel === "Rate" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{(rates.osmo * 100).toFixed(2)}%</div>
+                : menuLabel === "Rate" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{rates.osmo.toFixed(4)}%</div>
                 : menuLabel === "Util" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{(debtCaps.osmo * 100).toFixed(2)}%</div>                
                 : null}
               </div>              
@@ -1703,7 +1703,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 <Image className={atomQTY > 0 ? "atom-logo-icon" : "low-opacity atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
                 <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? ((atomQTY/1000) ?? 0).toFixed(2)+"k" : atomQTY}</div>
                 {menuLabel === "Value" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${ (atomQTY * +prices.atom) > 1000 ? (((atomQTY * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((atomQTY * +prices.atom) ?? 0).toFixed(2)}</div> 
-                : menuLabel === "Rate" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(rates.atom * 100).toFixed(2)}%</div>
+                : menuLabel === "Rate" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(rates.atom).toFixed(4)}%</div>
                 : menuLabel === "Util" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(debtCaps.atom * 100).toFixed(2)}%</div>                
                 : null}
               </div>
@@ -1711,7 +1711,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 <Image className={axlusdcQTY > 0 ? "axlusdc-logo-icon" : "low-opacity axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
                 <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? ((axlusdcQTY/1000) ?? 0).toFixed(2)+"k" : axlusdcQTY}</div>
                 {menuLabel === "Value" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${ (axlusdcQTY * +prices.axlUSDC) > 1000 ? (((axlusdcQTY * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((axlusdcQTY * +prices.axlUSDC) ?? 0).toFixed(2)}</div> 
-                : menuLabel === "Rate" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(rates.axlUSDC * 100).toFixed(2)}%</div>
+                : menuLabel === "Rate" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(rates.axlUSDC).toFixed(4)}%</div>
                 : menuLabel === "Util" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div>                
                 : null}
               </div>
