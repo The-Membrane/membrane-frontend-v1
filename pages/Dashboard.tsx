@@ -8,7 +8,7 @@ type DashboardProps = {
 
 const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
 
-    const [sign, setSign] = React.useState("");
+    const [sign, setSign] = React.useState("on");
     const [sign2, setSign2] = React.useState("");
     const [sign3, setSign3] = React.useState("");
     const [sign4, setSign4] = React.useState("");
