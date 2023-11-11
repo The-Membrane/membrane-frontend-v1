@@ -1927,7 +1927,7 @@ span[data-descr]:hover::after {
   box-sizing: border-box;
   width: 402px;
   height: 499px;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
@@ -2063,7 +2063,7 @@ span[data-descr]:hover::after {
 }
 .status-dropdown {
   
-  display: flex;
+  display: none;
   align-items: flex-start;
   justify-content: center;
 }
@@ -2309,6 +2309,7 @@ span[data-descr]:hover::after {
   z-index: 1;
 }
 .proposal-axis-labels {
+  display: none;
   position: absolute;
   top: 330px;
   left: 247px;
@@ -2316,6 +2317,17 @@ span[data-descr]:hover::after {
   font-size: small;
   z-index: 1;
 }
+
+.tables {
+  display: flex;
+  flex-direction: row;
+}
+
+.table-responsive {
+  margin-right: 2vw;
+  margin-top: 2vw;
+}
+
 /*
 .proposal-label-frame {
   position: absolute;
