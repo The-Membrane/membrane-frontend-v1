@@ -3204,18 +3204,18 @@ span[data-descr]:hover::after {
 .asset,
 .qty,
 .value {
-  position: absolute;
-  top: 20px;
-  left: 29px;
-  font-size: 24px;
+  position: relative;
+  top: 3vh;
+  left: 1.8vw;
+  font-size: 1.8vw;
 }
 .qty {
-  left: 117px;
-  top: 19px;
+  left: 8.6vw;
+  top: -3vh;
 }
 .value {
   left: 16.5vw;
-  top: 3vh;
+  top: -9vh;
 }
 .value-menu-dropdown {  
   border: 2px solid #798eff;
@@ -3242,9 +3242,8 @@ span[data-descr]:hover::after {
 }
 .atom-logo-icon,
 .osmo-qty {
-  position: absolute;
-  top: 79px;
-  left: 150px;
+  position: relative;
+  top: -5vh;
 }
 .cdp-div5,
 .cdp-div7,
@@ -3260,10 +3259,10 @@ span[data-descr]:hover::after {
 .osmousdcpool-qty {
   cursor: pointer;
   min-width: 5%;
-  height: 37px;
+  height: 6vh;
   max-width: 32%;
   position: relative;
-  left: 103px;
+  left: 8vw;
   text-align: center;
   z-index: 50;
   border: #7990FE 2px solid;
@@ -3280,17 +3279,14 @@ span[data-descr]:hover::after {
 }
 
 .atom-logo-icon {
-  left: 228px;
-}
-.atom-logo-icon {
-  top: 134px;
-  left: 30px;
-  width: 45px;
-  height: 45px;
+  top: -7.5vh;
+  left: 2vw;
+  width: 3.4vw;
+  height: 3.4vw;
   z-index: 51;
 }
 .atom-qty {
-  top: 66px;
+  top: -14.5vh;
 }
 .axlusdc-logo-icon {
   position: absolute;
@@ -3298,7 +3294,7 @@ span[data-descr]:hover::after {
   left: 228px;
 }
 .cdp-div7 {
-  top: 32px;
+  top: -20.2vh;
 }
 .axlusdc-logo-icon {
   top: 194px;
@@ -3308,10 +3304,10 @@ span[data-descr]:hover::after {
   z-index: 51;
 }
 .axlUSDC-qty {
-  top: 55px;
+  top: -16.5vh;
 }
 .cdp-div9 {
-  top: 19px;
+  top: -22.4vh;
 }
 .atomosmopool-atom-icon {
   position: absolute;
@@ -3360,7 +3356,7 @@ span[data-descr]:hover::after {
   width: 8vw;
 }
 .cdp-div5 {
-  top: 45px;
+  top: -10.7vh;
 }
 .cdt-logo-icon4 {
   top: 254px;
