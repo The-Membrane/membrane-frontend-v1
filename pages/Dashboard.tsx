@@ -8,6 +8,11 @@ type DashboardProps = {
 
 const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
 
+    const [sign, setSign] = React.useState("");
+    const [sign2, setSign2] = React.useState("");
+    const [sign3, setSign3] = React.useState("");
+    const [sign4, setSign4] = React.useState("");
+
     const onDocsTextClick = () => {
         window.open(
           "https://membrane-finance.gitbook.io/membrane-docs-1/"
@@ -35,8 +40,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <div className="">
             <div className="card-1">
                 <div className="card" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design shadow">
-                    <h5 className="neonSign">
+                <div className="card-body card-design shadow" onMouseEnter={()=>{setSign("on")}} onMouseLeave={()=>{setSign("")}}>
+                    <h5 className={`neonSign${sign}`}>
                     <b><a>V</a><span>A</span><a>U</a><span>L</span><a>T</a><span>S</span></b>
                     </h5>
                     <p className="card-text dim">
@@ -55,8 +60,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             </div>
             <div className="card-2">
                 <div className="card" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design shadow">
-                    <h5 className="neonSign2">
+                <div className="card-body card-design shadow" onMouseEnter={()=>{setSign2("on")}} onMouseLeave={()=>{setSign2("")}}>
+                    <h5 className={`neonSign2${sign2}`}>
                         <b><a>L</a><span>i</span><a>q</a><span>u</span><a>i</a><span>d</span><a>a</a><span>t</span><a>i</a><span>o</span><a>n</a><span>s</span></b>
                     </h5>
                     <p className="card-text">
@@ -76,8 +81,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             </div>
             <div className="card-3">
                 <div className="card" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design shadow">
-                    <h5 className="neonSign3">
+                <div className="card-body card-design shadow"  onMouseEnter={()=>{setSign3("on")}} onMouseLeave={()=>{setSign3("")}}>
+                    <h5 className={`neonSign3${sign3}`}>
                         <b><a>S</a><span>t</span><a>a</a><span>k</span><a>i</a><span>n</span><a>g</a></b>
                     </h5>
                     <p className="card-text">
@@ -96,8 +101,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
             </div>
             <div className="card-4">
                 <div className="card" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design shadow">
-                    <h5 className="neonSign4">
+                <div className="card-body card-design shadow"  onMouseEnter={()=>{setSign4("on")}} onMouseLeave={()=>{setSign4("")}}>
+                    <h5 className={`neonSign4${sign4}`}>
                         <b><a>L</a><span>o</span><a>c</a><span>k</span><a>d</a><span>r</span><a>o</a><span>p</span></b>
                     </h5>
                     <p className="card-text">

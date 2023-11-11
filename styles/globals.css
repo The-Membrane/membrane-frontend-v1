@@ -3,7 +3,16 @@
 .neonSign, .neonSign2, .neonSign3, .neonSign4 {
   user-select: none;
   text-align: center;
-  height: 40px;
+  height: 6vh;
+  background-blend-mode: hard-light;
+  background-position-y:top;
+  background-position-x: center;
+  background-size: 100%;
+}
+.neonSignon, .neonSign2on, .neonSign3on, .neonSign4on {
+  user-select: none;
+  text-align: center;
+  height: 6vh;
   background-blend-mode: hard-light;
   background-position-y:top;
   background-position-x: center;
@@ -12,27 +21,39 @@
 .neonSign, .neonSign2, .neonSign3, .neonSign4 {
   font: 400 4vh "Vibur";
   color: #fee;
-  text-shadow: 0 -40px 100px, 0 0 0.2px, 0 0 1em #50C9BD, 0 0 0.5em #50C9BD, 0 0 0.1em #50C9BD, 0 10px 3px #000;}
+  text-shadow: 0 -40px 100px, 0 0 0.2px, 0 0 0.01em #50C9BD, 0 0 0.01em #50C9BD, 0 0 0.01em #50C9BD, 0 10px 3px #000;}
+.neonSignon, .neonSign2on, .neonSign3on, .neonSign4on {
+  font: 400 4vh "Vibur";
+  color: #fee;
+  text-shadow: 0 -40px 100px, 0 0 0.2px, 0 0 1em #50C9BD, 0 0 0.5em #50C9BD, 0 0 0.1em #50C9BD, 0 10px 3px #000;
+}
 .neonSign b span, .neonSign2 b span, .neonSign3 b span, .neonSign4 b span{
   display: inline-block;
-  font-size: 30px;
+  font-size: 2.24vw;
+}
+.neonSignon b span, .neonSign2on b span, .neonSign3on b span, .neonSign4on b span{
+  display: inline-block;
+  font-size: 2.24vw;
   animation: blink linear infinite 5s;
 }
-
 .neonSign b a, .neonSign2 b a, .neonSign3 b a, .neonSign4 b a {
   display: inline-block;
-  font-size: 30px;
+  font-size: 2.24vw;
 }
-.neonSign b span:nth-of-type(2) {
+.neonSignon b a, .neonSign2on b a, .neonSign3on b a, .neonSign4on b a {
+  display: inline-block;
+  font-size: 2.24vw;
+}
+.neonSignon b span:nth-of-type(2) {
   animation: blink reverse infinite 8s;
 }
-.neonSign2 b span:nth-of-type(2) {
+.neonSign2on b span:nth-of-type(2) {
   animation: blink reverse infinite 6s;
 }
-.neonSign3 b span:nth-of-type(2) {
+.neonSign3on b span:nth-of-type(2) {
   animation: blink reverse infinite 4s;
 }
-.neonSign4 b span:nth-of-type(2) {
+.neonSign4on b span:nth-of-type(2) {
   animation: blink reverse infinite 2s;
 }
 @keyframes blink {
@@ -76,7 +97,7 @@ input:focus {
   outline: none;
   box-sizing: none;
 }
-.shadow {
+.shadow:hover {
   box-shadow: 0px 0px 7px white;
 }
 .dash-subtitle {  
