@@ -14,12 +14,11 @@ export const ConnectWalletButton = ({
 }: ConnectWalletType) => {
   return (
     <Button
-      w="10vw"
-      maxWidth="72.8px"
-      minWidth="63px"
+      w="80px"
+      maxWidth="fit-content"
+      minWidth="71px"
       outline={"none"}
-      minW="fit-content"
-      size="md"
+      size="sm"
       isLoading={isLoading}
       isDisabled={isDisabled}
       bgImage="linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)"

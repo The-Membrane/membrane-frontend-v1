@@ -225,6 +225,11 @@ p{
   gap: 4%;
   z-index: 1;
 }
+@media screen and (max-width:666px) {
+  .cards {
+    left: 11.5%;
+    top: 20vh;
+  }}
 .card-text{
   color: white;
   font-size: 12px;
@@ -269,7 +274,7 @@ ul{
   z-index: 2;
   width: 13vw;
   max-width: 80px;
-  min-width: 65px;
+  min-width: 73px;
   filter: brightness(70%);
 }
 .hoverColor:hover {
