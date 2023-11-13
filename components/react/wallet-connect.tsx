@@ -14,7 +14,9 @@ export const ConnectWalletButton = ({
 }: ConnectWalletType) => {
   return (
     <Button
-      w="5vw"
+      w="10vw"
+      maxWidth="72.8px"
+      minWidth="63px"
       outline={"none"}
       minW="fit-content"
       size="md"

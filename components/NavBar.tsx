@@ -22,8 +22,7 @@ export const launchPosition = 3270;
 const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {   
 
     return (
-        <div>
-        <div className="col-0 gradient sticky ">
+        <div className="gradient sticky ">
             {/* We are gonna start with the Nav*/}
             {/* this is your logo*/}
             <a className="navbar-brand" href="#">
@@ -163,7 +162,6 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 ...
             </div>
             </div>
-        </div>
         </div>
     );
 }

@@ -29,20 +29,20 @@
 }
 .neonSign b span, .neonSign2 b span, .neonSign3 b span, .neonSign4 b span{
   display: inline-block;
-  font-size: clamp(30px, 4.9vh, 4.9vh);
+  font-size: clamp(20px, 4.9vh, 4.9vh);
 }
 .neonSignon b span, .neonSign2on b span, .neonSign3on b span, .neonSign4on b span{
   display: inline-block;
-  font-size: clamp(30px, 4.9vh, 4.9vh);
+  font-size: clamp(20px, 4.9vh, 4.9vh);
   animation: blink linear infinite 5s;
 }
 .neonSign b a, .neonSign2 b a, .neonSign3 b a, .neonSign4 b a {
   display: inline-block;
-  font-size: clamp(30px, 4.9vh, 4.9vh);
+  font-size: clamp(20px, 4.9vh, 4.9vh);
 }
 .neonSignon b a, .neonSign2on b a, .neonSign3on b a, .neonSign4on b a {
   display: inline-block;
-  font-size: clamp(30px, 4.9vh, 4.9vh);
+  font-size: clamp(20px, 4.9vh, 4.9vh);
 }
 .neonSignon b span:nth-of-type(2) {
   animation: blink reverse infinite 8s;
@@ -112,41 +112,42 @@ input:focus {
 .mint-symbol {
   position: relative;  
   top: 53px;
-  left: 10px;
 }
 .liq-symbol {
   position: relative;  
   top: 32px;
-  left: 10px;
 }
 .vote-symbol {
   position: relative;  
   top: 53px;
-  left: 59px;
 }
 .launch-symbol {
   position: relative;  
   top: 25px;
-  left: 10px;
 }
 .dash-logo {
   position: absolute;
   z-index: 1;
-  left: 50.3vw;
+  left: 49%;
   top: 1.5vh;
   width: 4.5vw;
+  min-width: 45px;
+}
+.page-frame {  
+  position: relative;
+  margin-left: 5vw;  
+  overflow-y: scroll;
+  height: 100vh;
 }
 .pageTitle {  
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  margin-top: 0%;
   filter: brightness(80%);
-  margin-left: 6.8vw;
-  z-index: 1;
+  top: 0%;
+  z-index: 0;
   width: 100vw;
-  overflow: hidden;
-  position: absolute;
+  position: relative;
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
 }
 .card {
@@ -167,8 +168,11 @@ input {
   max-width: 100vw;
   background-color: #212121;
   font-family: 'Abel', sans-serif;
+  display: grid;
   position: relative;
   overflow: hidden;
+  align-content: space-between;
+  justify-content: space-between;
 }
 h5{
   color:#ffffff;
@@ -184,8 +188,11 @@ p{
   text-decoration: underline;
   color: white
 }
-.card-body{  
-  padding-left: 50%;
+.card-body{    
+  display: flex;
+  justify-items: center;
+  flex-direction: column;
+  align-items: center;
 }
 .card-design {  
   background-color: #383838;
@@ -194,10 +201,11 @@ p{
   width: 16.2vw;
   min-width: 180px;
 }
-.walletsection{  
-  position: absolute;
-  left: 88vw;
-  top: 1.5vh;
+.walletsection {  
+  position: fixed;
+  right: 1vw;
+  min-width: 120px;
+  top: 2vh;
   z-index: 2;
 }
 .nav-walletsection { 
@@ -205,22 +213,17 @@ p{
   margin-top: 5vh;
   margin-left: 0.3vw;
 }
-.card-1, .card-2, .card-3, .card-4{
-  position: absolute;  
-  top: 220px;
-  z-index: 2;
-}
-.card-1 {
-  left: 19vw;
-}
-.card-2 {
-  left: 36vw;
-}
-.card-3 {
-  left: 53vw;
-}
-.card-4 {
-  left: 70vw;
+.cards {
+  position: absolute;
+  width: 89vw;
+  top: 32vh;
+  left: 4.5%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4%;
+  z-index: 1;
 }
 .card-text{
   color: white;
@@ -264,6 +267,9 @@ ul{
   position: fixed;
   bottom: 0%;
   z-index: 2;
+  width: 13vw;
+  max-width: 80px;
+  min-width: 65px;
   filter: brightness(70%);
 }
 .hoverColor:hover {
@@ -1073,11 +1079,11 @@ span[data-descr]:hover::after {
   cursor: pointer;
 }
 .footer {
-  position: absolute;
-  height: 18px;
-  top: 575px;
-  left: 1140px;
-  width: 175px;
+  position: fixed;
+  height: 4vh;
+  bottom: 1vh;
+  right: 1%;
+  width: 190px;
   color: #ffffff;
   z-index: 1;
 }
@@ -3996,6 +4002,10 @@ input[type=range][orient=vertical] {
   border: 3px solid #4fcabb;
   z-index: 9999; 
 }
+@media screen and (max-width:666px) {
+.popup-inner {
+  height: 283px; 
+}}
 .popup-button {
   position: absolute;
   height: 20px;

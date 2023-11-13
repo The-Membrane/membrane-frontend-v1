@@ -1779,6 +1779,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 </form>
             </div>
           </div>
+          <div>
+            <h3>Bundle Fortune teller</h3>
+          </div>
         </div>
 
         <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          

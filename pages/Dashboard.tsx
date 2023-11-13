@@ -32,12 +32,11 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
       };
 
     return (
-        <div className="fullHeight" style={{height: "100vh"}}>
-        <div className="row ">
-        <div className="">
+        <div className="page-frame">
+        <WalletSection nav={false}/>
         <Image className="pageTitle" src="/images/Background_Header 1.svg" height={0} width={0} alt="Membrane background header"/>
         <Image className="dash-logo" src="/images/MBRN-logo-template.svg" width={0} height={0} alt="" />
-        <div className="">
+        <div className="cards">
             <div className="card-1">
                 <div className="card" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design shadow" onMouseEnter={()=>{setSign("on")}} onMouseLeave={()=>{setSign("")}}>
@@ -50,8 +49,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/overview" target="popup">
                         What is a Vault?
                     </a>
-                    <Image className="mint-symbol" src="/images/Mint_Symbol 1.svg" width={155} height={155} alt="" />
                     </p>
+                    <Image className="mint-symbol" src="/images/Mint_Symbol 1.svg" width={155} height={155} alt="" />
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('vault')}>
                     Mint
                     </a>
@@ -71,8 +70,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/liquidation-mechanism" target="popup">
                         How do liquidations work?
                     </a>
-                    <Image className="liq-symbol" src="/images/Lever_Symbol 1.svg" width={155} height={155} alt="" />
                     </p>
+                    <Image className="liq-symbol" src="/images/Lever_Symbol 1.svg" width={155} height={155} alt="" />
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('liquidation')}>
                     Bid
                     </a>
@@ -91,8 +90,8 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/mbrn-tokenomics#value-flows" target="popup">
                         How value flows to MBRN?
                     </a>
-                    <Image className="vote-symbol" src="/images/Vote Symbol.svg" width={55} height={55} alt="" />
                     </p>
+                    <Image className="vote-symbol" src="/images/Vote Symbol.svg" width={55} height={55} alt="" />
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('staking')}>
                     Stake
                     </a>
@@ -111,30 +110,27 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
                     <a href="https://membrane-finance.gitbook.io/membrane-docs-1/protocol/lockdrop-launch" target="popup">
                         How much is up for grabs at launch?{" "}
                     </a>
-                    <Image className="launch-symbol" src="/images/Farm_Symbol 1.svg" width={155} height={155} alt="" />
                     </p>
+                    <Image className="launch-symbol" src="/images/Farm_Symbol 1.svg" width={155} height={155} alt="" />
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}} onClick={() => setActiveComponent('launch')}>
                     Claim
                     </a>
                 </div>
                 </div>                 
             </div>
-            <div className="footer">
-                <div className="docs1" onClick={onDocsTextClick}>{`Docs `}</div>
-                <div className="github1" onClick={onGithubTextClick}>
-                    Github
-                </div>
-                <div className="twitter1" onClick={onTwitterTextClick}>
-                    Twitter
-                </div>
-                <div className="discord1" onClick={onDiscordTextClick}>
-                    Discord
-                </div>
+        </div>  
+        <div className="footer">
+            <div className="docs1" onClick={onDocsTextClick}>{`Docs `}</div>
+            <div className="github1" onClick={onGithubTextClick}>
+                Github
             </div>
-        </div>            
-        </div>
-        <WalletSection nav={false}/>
-        </div>
+            <div className="twitter1" onClick={onTwitterTextClick}>
+                Twitter
+            </div>
+            <div className="discord1" onClick={onDiscordTextClick}>
+                Discord
+            </div>
+        </div>          
         </div>
     );
 };
