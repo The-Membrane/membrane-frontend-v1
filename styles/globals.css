@@ -29,20 +29,20 @@
 }
 .neonSign b span, .neonSign2 b span, .neonSign3 b span, .neonSign4 b span{
   display: inline-block;
-  font-size: clamp(20px, 4.9vh, 4.9vh);
+  font-size: clamp(20px, 3.2vh, 4.9vh);
 }
 .neonSignon b span, .neonSign2on b span, .neonSign3on b span, .neonSign4on b span{
   display: inline-block;
-  font-size: clamp(20px, 4.9vh, 4.9vh);
+  font-size: clamp(20px, 3.2vh, 4.9vh);
   animation: blink linear infinite 5s;
 }
 .neonSign b a, .neonSign2 b a, .neonSign3 b a, .neonSign4 b a {
   display: inline-block;
-  font-size: clamp(20px, 4.9vh, 4.9vh);
+  font-size: clamp(20px, 3.2vh, 4.9vh);
 }
 .neonSignon b a, .neonSign2on b a, .neonSign3on b a, .neonSign4on b a {
   display: inline-block;
-  font-size: clamp(20px, 4.9vh, 4.9vh);
+  font-size: clamp(20px, 3.2vh, 4.9vh);
 }
 .neonSignon b span:nth-of-type(2) {
   animation: blink reverse infinite 8s;
@@ -128,14 +128,17 @@ input:focus {
 .dash-logo {
   position: absolute;
   z-index: 1;
-  left: 49%;
+  left: 47.2%;
   top: 1.5vh;
   width: 4.5vw;
-  min-width: 45px;
+  min-width: 65px;
 }
+@media screen and (max-width:666px) {
+  .dash-logo  {
+    left: 36.5%;
+  }}
 .page-frame {  
-  position: relative;
-  margin-left: 5vw;  
+  position: relative; 
   overflow-y: scroll;
   height: 100vh;
 }
@@ -149,9 +152,6 @@ input:focus {
   width: 100vw;
   position: relative;
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-}
-.card {
-  opacity: .8;
 }
 input {
   background-color:#454444;
@@ -168,11 +168,9 @@ input {
   max-width: 100vw;
   background-color: #212121;
   font-family: 'Abel', sans-serif;
-  display: grid;
+  display: flex;
   position: relative;
   overflow: hidden;
-  align-content: space-between;
-  justify-content: space-between;
 }
 h5{
   color:#ffffff;
@@ -183,6 +181,8 @@ p{
 }
 .card {
   width: auto;
+  margin-bottom: 9%;
+  opacity: .8;
 }
 .card-body a{
   text-decoration: underline;
@@ -217,7 +217,7 @@ p{
   position: absolute;
   width: 89vw;
   top: 32vh;
-  left: 4.5%;
+  left: 2.5%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -227,7 +227,7 @@ p{
 }
 @media screen and (max-width:666px) {
   .cards {
-    left: 11.5%;
+    left: -7%;
     top: 20vh;
   }}
 .card-text{
@@ -269,7 +269,7 @@ ul{
 }
 .sticky {
   height: 100vh;
-  position: fixed;
+  position: relative;
   bottom: 0%;
   z-index: 2;
   width: 13vw;
@@ -3152,11 +3152,9 @@ span[data-descr]:hover::after {
 }
 .tvl-500 {    
   font-size: large;
-  position: relative;
-  top: -24vh;
-  text-align: center;
-  left: 17.8vw;
-  z-index: 51;
+  position: absolute;
+  bottom: 2%;
+  right: 5%;
 }
 .position-stats {
   position: absolute;
@@ -3170,17 +3168,64 @@ span[data-descr]:hover::after {
 }
 .infobox-icon3 {
   position: absolute;
-  top: 0;
-  left: 0;
   border-radius: 1rem;
   background-color: #454444;
-  width: 321px;
-  height: 484px;
+  width: 100%;
+  height: 100%;
 }
-.osmo-logo-icon {
-  position: absolute;
-  top: 74px;
-  left: 30px;
+.assetinfo-data {  
+  display: flex;
+  flex-direction: row;
+  height: 80%;
+  position: relative;
+  top: 2%;
+}
+.assetinfo-assets,
+.assetinfo-qty,
+.assetinfo-menuitem {
+  display: flex;
+  flex-direction: column;
+  width: 33%;
+  height: 80%;
+  position: relative;
+  align-items: center;
+}
+.assetinfo-menuitem {
+  top: 2%;
+  gap: 8%;
+  left: 2%;
+}
+.assetinfo-assets {
+  top: 2%;
+  gap: 5%;
+  left: -1%;
+}
+.assetinfo-qty {
+  top: 2%;
+  gap: 7%;
+}
+@media screen and (min-width:1444px) {
+  .assetinfo-menuitem {
+    gap: 9%;
+  }
+  .assetinfo-qty {
+    gap: 8%;
+  }
+  .assetinfo-assets {
+    gap: 6%;
+  }
+  .tvl-500 {
+    bottom: 0%;
+  }
+}
+.osmo-logo-icon,
+.atom-logo-icon,
+.axlusdc-logo-icon,
+.atomosmopool-osmo-icon,
+.atomosmopool-atom-icon,
+.osmousdcpool-osmo-icon,
+.osmousdcpool-usdc-icon {
+  position: relative;
   width: 45px;
   height: 45px;
   z-index: 51;
@@ -3199,6 +3244,17 @@ span[data-descr]:hover::after {
   box-sizing: border-box;
   width: 320px;
   height: 3px;
+}
+@media screen and (max-width:320px) {
+  .asset-info-child,
+  .asset-info-child1,
+  .asset-info-child2,
+  .asset-info-child3,
+  .asset-info-inner,
+  .asset-info-item,
+  .line-div {
+    width: 247px;
+  }
 }
 .asset-info-child1,
 .asset-info-child2,
@@ -3233,25 +3289,23 @@ span[data-descr]:hover::after {
 .asset-info-child3 {
   top: 427.5px;
 }
+.assetinfo-titles {
+  display: inline-flex;
+  gap: 13%;
+  position: relative;
+  top: 3%;
+  left: 6%;
+}
 .asset,
 .qty,
 .value {
   position: relative;
-  top: 3vh;
-  left: 1.8vw;
-  font-size: 1.8vw;
-}
-.qty {
-  left: 8.6vw;
-  top: -3vh;
-}
-.value {
-  left: 16.5vw;
-  top: -9vh;
+  font-size: min(max(1.8vw, 25px), 25px);
 }
 .value-menu-dropdown {  
   border: 2px solid #798eff;
   width: 5.5vw;
+  min-width: 51px;
   height: 6vh;
   display: flex;
   flex-direction: column;
@@ -3263,7 +3317,7 @@ span[data-descr]:hover::after {
 }
 .value-menu {  
   position: absolute;
-  margin-top: 181%;
+  margin-top: 133px;
   width: 5.5vw;
 }
 .value-menu-item {
@@ -3272,29 +3326,15 @@ span[data-descr]:hover::after {
   position: relative;
   text-align: center;
 }
-.atom-logo-icon,
-.osmo-qty {
-  position: relative;
-  top: -5vh;
-}
-.cdp-div5,
-.cdp-div7,
-.cdp-div9,
-.cdp-div11,
-.cdp-div13 {  
-  z-index: 0;
-}
 .osmo-qty,
 .atom-qty,
 .axlUSDC-qty,
 .atomosmopool-qty,
 .osmousdcpool-qty {
   cursor: pointer;
-  min-width: 5%;
-  height: 6vh;
-  max-width: 32%;
+  width: 100%;
+  height: 12.7%;
   position: relative;
-  left: 8vw;
   text-align: center;
   z-index: 50;
   border: #7990FE 2px solid;
@@ -3308,87 +3348,6 @@ span[data-descr]:hover::after {
 .atomosmopool-qty:hover,
 .osmousdcpool-qty:hover {
   box-shadow: inset 0px 0px 5px #c1c1c1;
-}
-
-.atom-logo-icon {
-  top: -7.5vh;
-  left: 2vw;
-  width: 3.4vw;
-  height: 3.4vw;
-  z-index: 51;
-}
-.atom-qty {
-  top: -14.5vh;
-}
-.axlusdc-logo-icon {
-  position: absolute;
-  top: 139px;
-  left: 228px;
-}
-.cdp-div7 {
-  top: -20.2vh;
-}
-.axlusdc-logo-icon {
-  top: 194px;
-  left: 30px;
-  width: 45px;
-  height: 45px;
-  z-index: 51;
-}
-.axlUSDC-qty {
-  top: -16.5vh;
-}
-.cdp-div9 {
-  top: -22.4vh;
-}
-.atomosmopool-atom-icon {
-  position: absolute;
-  top: 254px;
-  left: 15px;
-  width: 45px;
-  height: 45px;
-  z-index: 52;
-}
-.atomosmopool-qty {
-  top: 127px;
-}
-.atomosmopool-osmo-icon {
-  position: absolute;
-  top: 254px;
-  left: 45px;
-  width: 45px;
-  height: 45px;
-  z-index: 51;
-}
-.osmousdcpool-osmo-icon {
-  position: absolute;
-  top: 314px;
-  left: 15px;
-  width: 45px;
-  height: 45px;
-  z-index: 52;
-}
-.osmousdcpool-qty {
-  top: 142px;
-}
-.osmousdcpool-usdc-icon {
-  position: absolute;
-  top: 314px;
-  left: 45px;
-  width: 45px;
-  height: 45px;
-  z-index: 51;
-}
-.cdp-div5,
-.cdp-div7,
-.cdp-div9 {
-  position: relative;
-  left: 15.3vw;
-  text-align: center;
-  width: 8vw;
-}
-.cdp-div5 {
-  top: -10.7vh;
 }
 .cdt-logo-icon4 {
   top: 254px;
@@ -3446,13 +3405,14 @@ span[data-descr]:hover::after {
 }
 .asset-info {
   margin: 0 !important;
-  top: 86px;
-  left: 27px;
-  width: 321px;
-  height: 484px;
+  position: relative;
+  top: 16%;
+  left: 2%;
+  width: 320px;
+  height: 75%;
   z-index: 2;
 }
-.vault-subframe {
+/* .vault-subframe {
   position: absolute;
   top: 104px;
   left: -27px;
@@ -3465,30 +3425,27 @@ span[data-descr]:hover::after {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-}
+} */
 .controller-item {
-  position: absolute;
-  left: -535px;
-  top: 69px;
+  position: relative;
+  top: 16%;
 }
-.controller-border,
 .controller-frame {
-  position: absolute;
-  top: 220.5px;
-  left: 900px;
+  position: relative;
   border-radius: 1rem;
+  border: 1px solid #7990FE;
   background-color: #585858;
   width: 279px;
   height: 284px;
   z-index: 1;
 }
-.controller-border {
+/* .controller-border {
   background-image: linear-gradient(#50C9BD, #7990FE);
   top: 219px;
   left: 898.5px;
   width: 282px;
   height: 287px;
-}
+} */
 .controller-label {
   position: absolute;
   background-color: #2F2F2F;
@@ -3640,27 +3597,17 @@ span[data-descr]:hover::after {
   z-index: 1;
 }
 .vault-page {
-  position: absolute;
-  top: -111px;
-  left: 0px;
   background-color: #212121;
-  width: 100vw;
-  height: 100vh;
-}
-.pie-chart-icon1, .vaults1 {  
-  top: 20px;
 }
 .pie-chart-icon1 {
-  position: absolute;
-  left: 94px;
-  width: 48px;
-  height: 48px;
-  overflow: hidden;
-  flex-shrink: 0;
+  position: relative;
 }
 .vaults1 {
+  display: flex;
   position: absolute;
-  left: 4px;
+  height: 7%;
+  left: 3%;
+  top: 6%;
   font-size: xx-large;
 }
 .vault-frame {
@@ -3879,12 +3826,13 @@ input[type=range][orient=vertical] {
 .positions {
   position: relative;
   width: 100vw;
-  height: 111vh;
-  margin-left: 9vw;
-  text-align: left;
   font-size: x-large;
   color: white;
-  font-family: 'Abel';
+  background-color: #212121;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4%;
 }
 .liquidations {
   position: relative;

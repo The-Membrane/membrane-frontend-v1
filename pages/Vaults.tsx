@@ -20,7 +20,6 @@ declare module 'react' {
   }
 
 interface Props {
-    // connect: () => void;
     cdp_client: PositionsClient | null;
     queryClient: PositionsQueryClient | null;
     address: string | undefined;
@@ -1585,153 +1584,87 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     }, [pricez, address, rateRes, creditRateRes, basketRes])
 
   return (
-    <div className="positions">
-      <div>
-        <div className="vault-page">
-          <div className="vault-subframe">
-            <div className="debt-visual">
-              <div className="infobox-icon" />
-              <div className="max-ltv">
-                <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
-                <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
-                <div className="max-ltv-child" />
-              </div>
-              <div className="max-borrow-ltv" style={{top: 75 + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
-                <div className="cdp-div3" >{(brwLTV ?? 0).toFixed(2)}%</div>
-                <div className="max-borrow-ltv-child" />
-              </div>
-              <div className="debt-visual-child" />
-              <div className="debt-visual-item" style={{top: 465 - (363 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))), height: (340 * (((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))}}/>
-              <div className="debt-visual-label" style={{top: 445 - (359 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
-              <input className="cdt-amount" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
-                id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} defaultValue={1} orient="vertical" onChange={({ target: { value: radius } }) => {                
-                if (getTVL() !== 0 && debtAmount === 0 && parseInt(radius) < 100){
-                    setsliderValue(100);
-                } else if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
-                    setsliderValue((debtAmount - walletCDT)/1000000);
-
-                    //Bc we know this is a repay (less than current debt), set amount to Wallet CDT
-                    setAmount((walletCDT/1000000));
-                    setcurrentfunctionLabel("repay");
-                } else {
-                    setsliderValue(parseInt(radius));
-
-                    if (parseInt(radius) > (debtAmount/1000000)){
-                        //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
-                        setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
-                        setcurrentfunctionLabel("mint");
-                    } else if (parseInt(radius) === 0){
-                        //Repay it all
-                        setAmount((debtAmount/1000000));
-                        setcurrentfunctionLabel("repay");
-                    } else {
-                        //Bc we know this is a repay (less than current debt), set amount to radius
-                        setAmount(parseFloat(((debtAmount/1000000) - parseInt(radius)).toFixed(6)));
-                        setcurrentfunctionLabel("repay");
-                    }
-                }
-              }}/>
-              <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-                //-(ratio of slidervalue to max value * (label starting point - the borrow_LTVs top position) + 395
-                style={getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? {left: "8.5vw", top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (395 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
-                + (395)} : {top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (395 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
-                + (395)}}>
-                { getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? "Minimum:" : (sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
-              </label>
-              <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
-              <div className="position-stats">
-              <div className="infobox-icon2" />
-              <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
-                  <div className="repay" onClick={handleExecution}>REPAY</div>
-              </div>
-              <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} onClick={handleExecution}>
-                  <div className="mint" onClick={handleExecution}>MINT</div>                
-              </div>
-              <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
-              <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using the value of your collateralized Bundle</div>
-              <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay your debt using the CDT in your wallet</div>
-              </div>
+    <div className="page-frame positions">
+        <div className="vaults1">
+            VAULTS
+            <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
+        </div>
+        <div className="asset-info">
+            <div className="infobox-icon3"/>
+            <div className="asset-info-child" />
+            <div className="asset-info-item" />
+            <div className="asset-info-inner" />
+            <div className="line-div" />
+            <div className="asset-info-child1" />
+            <div className="asset-info-child2" />
+            <div className="asset-info-child3" />
+            <div className="assetinfo-data">
+                <div className="assetinfo-assets">
+                <div className="asset">Asset</div>
+                    <Image className={osmoQTY > 0 ? "osmo-logo-icon" : "low-opacity osmo-logo-icon" } width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
+                    <Image className={atomQTY > 0 ? "atom-logo-icon" : "low-opacity atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
+                    <Image className={axlusdcQTY > 0 ? "axlusdc-logo-icon" : "low-opacity axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
+                </div >
+                <div className="assetinfo-qty">
+                <div className="qty">Quantity</div>
+                    <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? ((osmoQTY/1000) ?? 0).toFixed(2)+"k" : osmoQTY}</div>
+                    <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? ((atomQTY/1000) ?? 0).toFixed(2)+"k" : atomQTY}</div>
+                    <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? ((axlusdcQTY/1000) ?? 0).toFixed(2)+"k" : axlusdcQTY}</div>
+                </div>
+                <div className="assetinfo-menuitem">
+                    <div className="value value-menu-dropdown" onClick={handleOpen}>
+                        <button onClick={handleOpen} style={{outline: "none"}}>{menuLabel}</button>
+                        {open ? (
+                            <ul className="value-menu">
+                            {menuLabel !== "Rate" ? (<li className="value-menu-item" onClick={handleMenuOne}>
+                                <button onClick={handleMenuOne} style={{outline: "none"}}>Rate</button>
+                            </li>) : null}
+                            {menuLabel !== "Util" ? (<li className="value-menu-item" onClick={handleMenuTwo}>
+                                <button onClick={handleMenuTwo} style={{outline: "none"}}>Util</button>
+                            </li>) : null}
+                            {menuLabel !== "Value" ? (<li className="value-menu-item" onClick={handleMenuThree}>
+                                <button onClick={handleMenuThree} style={{outline: "none"}}>Value</button>
+                            </li>) : null}
+                            </ul>
+                        ) : null}
+                    </div>
+                    {menuLabel === "Value" ? 
+                        <>
+                        <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? (((osmoQTY * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((osmoQTY * +prices.osmo) ?? 0).toFixed(2)}</div>
+                        <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${ (atomQTY * +prices.atom) > 1000 ? (((atomQTY * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((atomQTY * +prices.atom) ?? 0).toFixed(2)}</div> 
+                        <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${ (axlusdcQTY * +prices.axlUSDC) > 1000 ? (((axlusdcQTY * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((axlusdcQTY * +prices.axlUSDC) ?? 0).toFixed(2)}</div> 
+                        </>
+                    : menuLabel === "Rate" ? 
+                        <>
+                        <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{rates.osmo.toFixed(4)}%</div>
+                        <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(rates.atom).toFixed(4)}%</div>
+                        <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(rates.axlUSDC).toFixed(4)}%</div>
+                        </>
+                    : menuLabel === "Util" ? 
+                        <>
+                        <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{(debtCaps.osmo * 100).toFixed(2)}%</div>
+                        <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(debtCaps.atom * 100).toFixed(2)}%</div>
+                        <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div>
+                        </>
+                    : null}
+                </div>
             </div>
-            <div className="squid-router" style={swapScreen === true ? {opacity: 1, zIndex: 2} : {opacity: 0, zIndex: 0}}>
-                <SquidWidget config={
-                    {integratorId: "membrane-swap-widget",
-                    companyName:"Membrane",
-                    slippage:3,
-                    hideAnimations: true,
-                    showOnRampLink: true,
-                    initialToChainId: "osmosis-1",
-                    initialFromChainId: "cosmoshub-4",
-                }}
-                />
-            </div>
-            <div className="asset-info">
-              <div className="infobox-icon3"/>
-              <div className="asset-info-child" />
-              <div className="asset-info-item" />
-              <div className="asset-info-inner" />
-              <div className="line-div" />
-              <div className="asset-info-child1" />
-              <div className="asset-info-child2" />
-              <div className="asset-info-child3" />
-              <div className="asset">Asset</div>
-              <div className="qty">Quantity</div>
-              <div className="value value-menu-dropdown" onClick={handleOpen}>
-              <button onClick={handleOpen} style={{outline: "none"}}>{menuLabel}</button>
-                {open ? (
-                    <ul className="value-menu">
-                    {menuLabel !== "Rate" ? (<li className="value-menu-item" onClick={handleMenuOne}>
-                        <button onClick={handleMenuOne} style={{outline: "none"}}>Rate</button>
-                    </li>) : null}
-                    {menuLabel !== "Util" ? (<li className="value-menu-item" onClick={handleMenuTwo}>
-                        <button onClick={handleMenuTwo} style={{outline: "none"}}>Util</button>
-                    </li>) : null}
-                    {menuLabel !== "Value" ? (<li className="value-menu-item" onClick={handleMenuThree}>
-                        <button onClick={handleMenuThree} style={{outline: "none"}}>Value</button>
-                    </li>) : null}
-                    </ul>
-                ) : null}
-              </div>
-              <div>
-                <Image className={osmoQTY > 0 ? "osmo-logo-icon" : "low-opacity osmo-logo-icon" } width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
-                <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? ((osmoQTY/1000) ?? 0).toFixed(2)+"k" : osmoQTY}</div>
-                {menuLabel === "Value" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? (((osmoQTY * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((osmoQTY * +prices.osmo) ?? 0).toFixed(2)}</div> 
-                : menuLabel === "Rate" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{rates.osmo.toFixed(4)}%</div>
-                : menuLabel === "Util" ? <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{(debtCaps.osmo * 100).toFixed(2)}%</div>                
-                : null}
-              </div>              
-              <div>
-                <Image className={atomQTY > 0 ? "atom-logo-icon" : "low-opacity atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
-                <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? ((atomQTY/1000) ?? 0).toFixed(2)+"k" : atomQTY}</div>
-                {menuLabel === "Value" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${ (atomQTY * +prices.atom) > 1000 ? (((atomQTY * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((atomQTY * +prices.atom) ?? 0).toFixed(2)}</div> 
-                : menuLabel === "Rate" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(rates.atom).toFixed(4)}%</div>
-                : menuLabel === "Util" ? <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(debtCaps.atom * 100).toFixed(2)}%</div>                
-                : null}
-              </div>
-              <div>
-                <Image className={axlusdcQTY > 0 ? "axlusdc-logo-icon" : "low-opacity axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
-                <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? ((axlusdcQTY/1000) ?? 0).toFixed(2)+"k" : axlusdcQTY}</div>
-                {menuLabel === "Value" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${ (axlusdcQTY * +prices.axlUSDC) > 1000 ? (((axlusdcQTY * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((axlusdcQTY * +prices.axlUSDC) ?? 0).toFixed(2)}</div> 
-                : menuLabel === "Rate" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(rates.axlUSDC).toFixed(4)}%</div>
-                : menuLabel === "Util" ? <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div>                
-                : null}
-              </div>
-              <div style={{opacity:0}}>
+            <div className="tvl-500">TVL: ${(getTVL() ?? 0).toFixed(2)}</div>
+            
+            <div style={{opacity:0}}>
                 <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-atom-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
                 <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-osmo-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
                 {/* <div className={"atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div> */}
                 <div className={atomosmo_poolQTY > 0 ?  "cdp-div11" : "low-opacity cdp-div11"}>${((atomosmo_poolQTY * +prices.atomosmo_pool) ?? 0).toFixed(2)}</div>
-              </div>
-              <div style={{opacity:0}}>
+            </div>
+            <div style={{opacity:0}}>
                 <Image className={osmousdc_poolQTY > 0 ? " osmousdcpool-osmo-icon": "low-opacity osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
                 <Image className={osmousdc_poolQTY > 0 ? " osmousdcpool-usdc-icon": "low-opacity osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
                 {/* <div className={"osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div> */}
                 <div className={osmousdc_poolQTY > 0 ?  "cdp-div13" : "low-opacity cdp-div13"}>${((osmousdc_poolQTY * +prices.osmousdc_pool) ?? 0).toFixed(2)}</div>
-              </div>
             </div>
-            <div className="tvl-500">TVL: ${(getTVL() ?? 0).toFixed(2)}</div>
-          </div>
-          <div className="controller-item">
-            <div className="controller-border"/>
+        </div>
+        <div className="controller-item">
             <div className="controller-frame"/>
             <div className="controller-label"/>
             <div className="controller-screen-blank">                 
@@ -1778,16 +1711,86 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmountInput}/>
                 </form>
             </div>
-          </div>
-          <div>
-            <h3>Bundle Fortune teller</h3>
-          </div>
+            {/* <div>
+                <h3>Bundle Fortune teller</h3>
+            </div> */}
         </div>
+        <div className="debt-visual">
+            <div className="infobox-icon" />
+            <div className="max-ltv">
+            <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
+            <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
+            <div className="max-ltv-child" />
+            </div>
+            <div className="max-borrow-ltv" style={{top: 75 + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
+            <div className="cdp-div3" >{(brwLTV ?? 0).toFixed(2)}%</div>
+            <div className="max-borrow-ltv-child" />
+            </div>
+            <div className="debt-visual-child" />
+            <div className="debt-visual-item" style={{top: 465 - (363 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))), height: (340 * (((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))}}/>
+            <div className="debt-visual-label" style={{top: 445 - (359 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
+            <input className="cdt-amount" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
+            id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} defaultValue={1} orient="vertical" onChange={({ target: { value: radius } }) => {                
+            if (getTVL() !== 0 && debtAmount === 0 && parseInt(radius) < 100){
+                setsliderValue(100);
+            } else if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
+                setsliderValue((debtAmount - walletCDT)/1000000);
 
-        <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
-        <div className="vaults1">VAULTS</div>
-      </div>
-      <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
+                //Bc we know this is a repay (less than current debt), set amount to Wallet CDT
+                setAmount((walletCDT/1000000));
+                setcurrentfunctionLabel("repay");
+            } else {
+                setsliderValue(parseInt(radius));
+
+                if (parseInt(radius) > (debtAmount/1000000)){
+                    //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
+                    setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
+                    setcurrentfunctionLabel("mint");
+                } else if (parseInt(radius) === 0){
+                    //Repay it all
+                    setAmount((debtAmount/1000000));
+                    setcurrentfunctionLabel("repay");
+                } else {
+                    //Bc we know this is a repay (less than current debt), set amount to radius
+                    setAmount(parseFloat(((debtAmount/1000000) - parseInt(radius)).toFixed(6)));
+                    setcurrentfunctionLabel("repay");
+                }
+            }
+            }}/>
+            <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
+            //-(ratio of slidervalue to max value * (label starting point - the borrow_LTVs top position) + 395
+            style={getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? {left: "8.5vw", top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (395 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
+            + (395)} : {top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (395 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
+            + (395)}}>
+            { getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? "Minimum:" : (sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
+            </label>
+            <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
+            <div className="position-stats">
+            <div className="infobox-icon2" />
+            <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
+                <div className="repay" onClick={handleExecution}>REPAY</div>
+            </div>
+            <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} onClick={handleExecution}>
+                <div className="mint" onClick={handleExecution}>MINT</div>                
+            </div>
+            <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
+            <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using the value of your collateralized Bundle</div>
+            <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay your debt using the CDT in your wallet</div>
+            </div>
+        </div>
+        <div className="squid-router" style={swapScreen === true ? {opacity: 1, zIndex: 2} : {opacity: 0, zIndex: 0}}>
+            <SquidWidget config={
+                {integratorId: "membrane-swap-widget",
+                companyName:"Membrane",
+                slippage:3,
+                hideAnimations: true,
+                showOnRampLink: true,
+                initialToChainId: "osmosis-1",
+                initialFromChainId: "cosmoshub-4",
+            }}
+            />
+        </div>
+        <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>
   );
 };
