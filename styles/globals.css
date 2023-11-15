@@ -3191,7 +3191,7 @@ span[data-descr]:hover::after {
   align-items: center;
 }
 .assetinfo-menuitem {
-  top: 2%;
+  top: 3%;
   gap: 8%;
   left: 2%;
 }
@@ -3202,7 +3202,7 @@ span[data-descr]:hover::after {
 }
 .assetinfo-qty {
   top: 2%;
-  gap: 7%;
+  gap: 5.8%;
 }
 @media screen and (min-width:1444px) {
   .assetinfo-menuitem {
@@ -3242,7 +3242,7 @@ span[data-descr]:hover::after {
   left: 0.5px;
   border-top: 3px dashed #585858;
   box-sizing: border-box;
-  width: 320px;
+  width: 319px;
   height: 3px;
 }
 @media screen and (max-width:320px) {
@@ -3285,6 +3285,8 @@ span[data-descr]:hover::after {
 .asset-info-child2,
 .asset-info-child3 {
   top: 367.5px;
+  width: 315px;
+  left: 1%;
 }
 .asset-info-child3 {
   top: 427.5px;
@@ -3333,7 +3335,7 @@ span[data-descr]:hover::after {
 .osmousdcpool-qty {
   cursor: pointer;
   width: 100%;
-  height: 12.7%;
+  height: 13%;
   position: relative;
   text-align: center;
   z-index: 50;
@@ -3409,7 +3411,7 @@ span[data-descr]:hover::after {
   top: 16%;
   left: 2%;
   width: 320px;
-  height: 75%;
+  height: 504.75px;
   z-index: 2;
 }
 /* .vault-subframe {

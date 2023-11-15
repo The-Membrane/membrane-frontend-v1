@@ -1600,13 +1600,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             <div className="asset-info-child3" />
             <div className="assetinfo-data">
                 <div className="assetinfo-assets">
-                <div className="asset">Asset</div>
+                    <div className="asset">Asset</div>
                     <Image className={osmoQTY > 0 ? "osmo-logo-icon" : "low-opacity osmo-logo-icon" } width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
                     <Image className={atomQTY > 0 ? "atom-logo-icon" : "low-opacity atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
                     <Image className={axlusdcQTY > 0 ? "axlusdc-logo-icon" : "low-opacity axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
                 </div >
                 <div className="assetinfo-qty">
-                <div className="qty">Quantity</div>
+                    <div className="qty">Quantity</div>
                     <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? ((osmoQTY/1000) ?? 0).toFixed(2)+"k" : osmoQTY}</div>
                     <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? ((atomQTY/1000) ?? 0).toFixed(2)+"k" : atomQTY}</div>
                     <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? ((axlusdcQTY/1000) ?? 0).toFixed(2)+"k" : axlusdcQTY}</div>
