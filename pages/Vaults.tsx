@@ -1665,51 +1665,54 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             </div>
         </div>
         <div className="controller-item">
-            <div className="controller-frame"/>
-            <div className="controller-label"/>
-            <div className="controller-screen-blank">                 
-                <div className="starting-screen">
-                    { currentfunctionLabel === "" ? 
-                    <div style={{fontSize: "medium", left: ".5vw", position: "relative"}}>Depositing requires assets on Osmosis. &nbsp;
-                    <div className="nowrap" style={{textDecoration: "underline", display: "inline"}} onClick={onTFMTextClick}>IBC Bridge</div> / <div className="btn swap-button" onClick={handleswapClick}>Swap</div>
-                    </div>
-                    : null}
+            <div className="controller-frame">
+                
+                <div className="controller-label">
+                    <div className="controller" onClick={currentfunctionLabel === "redemptions" ? handleredeeminfoClick : handleredeemScreen}>Collateral</div>
                 </div>
-            </div>
-            <div className="controller" onClick={currentfunctionLabel === "redemptions" ? handleredeeminfoClick : handleredeemScreen}>Collateral</div>
-            <div className={getTVL()*(maxLTV/100) < (debtAmount/1000000)*creditPrice ? "user-redemption-button red-border" : redeemButton} onClick={handleExecution}>
-                <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : swapScreen === true ? "Back to Minting" : getTVL() > 0 ? "Mint ---->" : "<---- Deposit" }</div>
-            </div>    
-            <div className={redeemScreen}>
-                <form>            
-                    <input className="mint-button-icon2" style={{backgroundColor:"#454444"}} name="premium" value={premium} type="number" onChange={handlesetPremium}/>
-                    <div className={posClick} onClick={handleposClick}/>
-                    <div className={negClick} onClick={handlenegClick}/>
-                    <div className="premium-label">Premium</div>
-                    <input className="mint-button-icon5" style={{backgroundColor:"#454444"}} name="loan-usage" defaultValue={0.01} value={loanUsage} type="number" onChange={handlesetloanUsage}/>
-                    <div className="loan-usage">% Loan Usage</div>
-                </form>
-                <div className="edit-redeemability">Redeemability Status</div>
-                <div className="click-assets-on">
-                {restrictedAssets.sentence}
-                </div>
-            </div>
-            <div className={redeemInfoScreen}>
-                    <div className="user-redemptions">
-                        <div>Premium: {redemptionRes?.premium_infos[0].premium }</div>
-                        { redemptionRes !== undefined ? <div>Left to Redeem: {parseInt(redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].remaining_loan_repayment)/ 1_000_000}</div> : null}
-                        <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>
+                <div className="controller-screen-blank">                 
+                    <div className="starting-screen">
+                        { currentfunctionLabel === "" ? 
+                        <div style={{fontSize: "medium", left: ".5vw", position: "relative"}}>Depositing requires assets on Osmosis. &nbsp;
+                        <div className="nowrap" style={{textDecoration: "underline", display: "inline"}} onClick={onTFMTextClick}>IBC Bridge</div> / <div className="btn swap-button" onClick={handleswapClick}>Swap</div>
+                        </div>
+                        : null}
                     </div>
-            </div>
-            <div className={depositwithdrawScreen}>
-                <div className={currentfunctionLabel === "deposit" ? "cdp-deposit-label bold" : "cdp-deposit-label low-opacity"} onClick={handledepositClick}>Deposit</div>
-                <div className="slash">/</div>
-                <div className={currentfunctionLabel === "withdraw" ? "cdp-withdraw-label bold" : "cdp-withdraw-label low-opacity"} onClick={handlewithdrawClick}>Withdraw</div>
-                <form>
-                    { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={handlesetAmount}>max: {maxLPamount.toString()}</div></>) : null}            
-                    <label className="amount-label">{currentAsset} amount:</label>     
-                    <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmountInput}/>
-                </form>
+                </div>            
+                <div className={getTVL()*(maxLTV/100) < (debtAmount/1000000)*creditPrice ? "user-redemption-button red-border" : redeemButton} onClick={handleExecution}>
+                    <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : swapScreen === true ? "Back to Minting" : getTVL() > 0 ? "Mint ---->" : "<---- Deposit" }</div>
+                </div>    
+                <div className={redeemScreen}>
+                    <form>            
+                        <input className="mint-button-icon2" style={{backgroundColor:"#454444"}} name="premium" value={premium} type="number" onChange={handlesetPremium}/>
+                        <div className={posClick} onClick={handleposClick}/>
+                        <div className={negClick} onClick={handlenegClick}/>
+                        <div className="premium-label">Premium</div>
+                        <input className="mint-button-icon5" style={{backgroundColor:"#454444"}} name="loan-usage" defaultValue={0.01} value={loanUsage} type="number" onChange={handlesetloanUsage}/>
+                        <div className="loan-usage">% Loan Usage</div>
+                    </form>
+                    <div className="edit-redeemability">Redeemability Status</div>
+                    <div className="click-assets-on">
+                    {restrictedAssets.sentence}
+                    </div>
+                </div>
+                <div className={redeemInfoScreen}>
+                        <div className="user-redemptions">
+                            <div>Premium: {redemptionRes?.premium_infos[0].premium }</div>
+                            { redemptionRes !== undefined ? <div>Left to Redeem: {parseInt(redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].remaining_loan_repayment)/ 1_000_000}</div> : null}
+                            <div>Restricted Assets: {redemptionRes?.premium_infos[0].users_of_premium[0].position_infos[0].restricted_collateral_assets}</div>
+                        </div>
+                </div>
+                <div className={depositwithdrawScreen}>
+                    <div className={currentfunctionLabel === "deposit" ? "cdp-deposit-label bold" : "cdp-deposit-label low-opacity"} onClick={handledepositClick}>Deposit</div>
+                    <div className="slash">/</div>
+                    <div className={currentfunctionLabel === "withdraw" ? "cdp-withdraw-label bold" : "cdp-withdraw-label low-opacity"} onClick={handlewithdrawClick}>Withdraw</div>
+                    <form>
+                        { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={handlesetAmount}>max: {maxLPamount.toString()}</div></>) : null}            
+                        <label className="amount-label">{currentAsset} amount:</label>     
+                        <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmountInput}/>
+                    </form>
+                </div>
             </div>
             {/* <div>
                 <h3>Bundle Fortune teller</h3>

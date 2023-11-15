@@ -133,7 +133,7 @@ input:focus {
   width: 4.5vw;
   min-width: 65px;
 }
-@media screen and (max-width:666px) {
+@media screen and (max-width:425px) {
   .dash-logo  {
     left: 36.5%;
   }}
@@ -225,7 +225,7 @@ p{
   gap: 4%;
   z-index: 1;
 }
-@media screen and (max-width:666px) {
+@media screen and (max-width:425px) {
   .cards {
     left: -7%;
     top: 20vh;
@@ -1214,7 +1214,7 @@ span[data-descr]:hover::after {
   left: 23px;
   background-color: #383838;
   width: 915px;
-  height: 666px;
+  height: 425px;
   border: 3px solid black;
 }
 .deposit,
@@ -3245,6 +3245,12 @@ span[data-descr]:hover::after {
   width: 319px;
   height: 3px;
 }
+.asset-info-child2,
+.asset-info-child3 {
+  top: 367.5px;
+  width: 315px;
+  left: 1%;
+}
 @media screen and (max-width:320px) {
   .asset-info-child,
   .asset-info-child1,
@@ -3253,40 +3259,22 @@ span[data-descr]:hover::after {
   .asset-info-inner,
   .asset-info-item,
   .line-div {
-    width: 247px;
+    width: 243px;
   }
 }
-.asset-info-child1,
-.asset-info-child2,
-.asset-info-child3,
-.asset-info-inner,
-.asset-info-item,
-.line-div {
+
+.asset-info-item {
   top: 127.5px;
 }
-.asset-info-child1,
-.asset-info-child2,
-.asset-info-child3,
-.asset-info-inner,
-.line-div {
+.asset-info-inner {
   top: 187.5px;
 }
-.asset-info-child1,
-.asset-info-child2,
-.asset-info-child3,
+
 .line-div {
   top: 247.5px;
 }
-.asset-info-child1,
-.asset-info-child2,
-.asset-info-child3 {
+.asset-info-child1 {
   top: 307.5px;
-}
-.asset-info-child2,
-.asset-info-child3 {
-  top: 367.5px;
-  width: 315px;
-  left: 1%;
 }
 .asset-info-child3 {
   top: 427.5px;
@@ -3431,6 +3419,7 @@ span[data-descr]:hover::after {
 .controller-item {
   position: relative;
   top: 16%;
+  left: 3%;
 }
 .controller-frame {
   position: relative;
@@ -3452,11 +3441,12 @@ span[data-descr]:hover::after {
   position: absolute;
   background-color: #2F2F2F;
   border: 2px solid #7990FE;
-  top: 179px;
-  left: 968.5px;
+  top: -15%;
+  left: 25%;
   border-radius: 1rem;
   width: 142px;
   height: 63px;
+  text-align: center;
   z-index: 1;
 }
 .mint-button,
@@ -3495,8 +3485,8 @@ span[data-descr]:hover::after {
   background-color: #2F2F2F;
   border: 2px solid #50C9BD;
   position: absolute;
-  top: 230px;
-  left: 908.5px;
+  top: 3.5%;
+  left: 2.5%;
   border-radius: 1rem;
   width: 264px;
   height: 263px;
@@ -3513,11 +3503,9 @@ span[data-descr]:hover::after {
 .close-button {
   left: 908.5px;
 }
-.change-vault,
 .controller {
-  position: absolute;
-  top: 191px;
-  left: 996px;
+  position: relative;
+  top: 12px;
   font-size: x-large;
   z-index: 1;
 }
@@ -3712,18 +3700,11 @@ input[type=range][orient=vertical] {
   font-size: large;
 }
 .mintrepay-screen,
-.redemption-screen {
-  position: absolute;
-  top: 230px;
-  left: 908.5px;
-  width: 264px;
-  height: 263px;
-  z-index: 0;
-}
+.redemption-screen,
 .deposit-withdraw-screen {
   position: absolute;
-  top: 230px;
-  left: 908.5px;
+  top: 3.5%;
+  left: 2.5%;
   width: 264px;
   height: 263px;
   z-index: 0;
@@ -3836,6 +3817,60 @@ input[type=range][orient=vertical] {
   flex-wrap: wrap;
   gap: 4%;
 }
+@media screen and (max-width: 425px) {
+  .positions {
+    gap: 11%;
+  }
+  .controller-item {
+    left: 8%;
+  }
+  .asset-info {    
+    left: 4.5%;
+  }
+  .vaults1 {
+    left: 7%;
+  }
+  .positions {
+    overflow-x: hidden;
+  }
+}
+@media screen and (max-width: 320px) {
+  .controller-item {
+    left: -6%;
+  }
+  .asset-info {    
+    left: 0%;
+  }
+  .vaults1 {
+    left: 3%;
+  }
+  .pie-chart-icon1 {
+    top: 14%;
+  }
+}
+@media screen and (max-width: 375px) {
+  .controller-item {
+    left: -6.5%;
+  }
+  .asset-info {    
+    left: 0%;
+  }
+  .vaults1 {
+    left: 3%;
+  }
+  .pie-chart-icon1 {
+    top: 14%;
+  }  
+  .asset-info-child,
+  .asset-info-child1,
+  .asset-info-child2,
+  .asset-info-child3,
+  .asset-info-inner,
+  .asset-info-item,
+  .line-div {
+    width: 299px;
+  }
+}
 .liquidations {
   position: relative;
   width: 100vw;
@@ -3913,9 +3948,9 @@ input[type=range][orient=vertical] {
   z-index: 0;
 }
 .user-redemption-button {
-  top: 479px;
+  top: 92.5%;
   z-index: 51;
-  left: 981px;
+  left: 28%;
   font-size: large;
 }
 .red-border {
@@ -3957,7 +3992,7 @@ input[type=range][orient=vertical] {
   border: 3px solid #4fcabb;
   z-index: 9999; 
 }
-@media screen and (max-width:666px) {
+@media screen and (max-width:425px) {
 .popup-inner {
   height: 283px; 
 }}
