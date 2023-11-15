@@ -7,7 +7,7 @@ import NavBar from '../components/NavBar';
 import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
 import Governance, { Delegation, Delegator, EmissionsSchedule, ProposalList, UserClaims, UserStake } from './Governance';
-import Positions from './Vaults';
+import Positions, { ContractInfo } from './Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import Popup from "../components/Popup";
@@ -71,7 +71,20 @@ export default function Home() {
   const [basketRes, setbasketRes] = useState<Basket>();
   const [walletCDT, setwalletCDT] = useState(0);
 
-  ////Positions////  
+  ////Positions////
+  //This is used to keep track of what asses the user has in the contract
+  //bc the input/output asset quantities are updated in responsive to the user's actions    
+  const [contractQTYs, setcontractQTYs] = useState<ContractInfo>({
+    osmo: 0,
+    atom: 0,
+    axlusdc: 0,
+    atomosmo_pool: 0,
+    osmousdc_pool: 0,
+    brw_LTV: 0,
+    max_LTV: 0,
+    cost: 0,
+    sliderValue: 0,
+  });
   //Asset specific
   //qty
   const [osmoQTY, setosmoQTY] = useState(0);
@@ -137,6 +150,18 @@ export default function Home() {
   }
 
   const fetch_update_positionData = async () => {
+    //blank ContractInfo
+    var contract_info = {
+      osmo: 0,
+      atom: 0,
+      axlusdc: 0,
+      atomosmo_pool: 0,
+      osmousdc_pool: 0,
+      brw_LTV: 0,
+      max_LTV: 0,
+      cost: 0,
+      sliderValue: 0,
+    };
     //Query for position data
     try {
         
@@ -165,12 +190,14 @@ export default function Home() {
             var debt_amount = parseInt(userRes[0].positions[0].credit_amount);
             setdebtAmount(debt_amount);
             setsliderValue(debt_amount/1000000);
+            contract_info.sliderValue = debt_amount/1000000;
             //setLTVs
             //@ts-ignore
             setmaxLTV(parseFloat(userRes[0].positions[0].avg_max_LTV) * +100)
+            contract_info.max_LTV = (parseFloat(userRes[0].positions[0].avg_max_LTV) * +100);
             //@ts-ignore
             setbrwLTV(parseFloat(userRes[0].positions[0].avg_borrow_LTV) * +100)
-            
+            contract_info.brw_LTV = (parseFloat(userRes[0].positions[0].avg_borrow_LTV) * +100);            
             
             //setAssetQTYs
             //@ts-ignore
@@ -181,16 +208,22 @@ export default function Home() {
                 console.log("actual_asset: ", actual_asset)
                 if (actual_asset === denoms.osmo) {
                     setosmoQTY(parseInt(asset.asset.amount) / 1_000_000)      
+                    contract_info.osmo = parseInt(asset.asset.amount) / 1_000_000;
                 } else if (actual_asset === denoms.atom) {
                     setatomQTY(parseInt(asset.asset.amount) / 1_000_000)
+                    contract_info.atom = parseInt(asset.asset.amount) / 1_000_000;
                 } else if (actual_asset === denoms.axlUSDC) {
                     setaxlusdcQTY(parseInt(asset.asset.amount) / 1_000_000)
+                    contract_info.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
                 } else if (actual_asset === denoms.atomosmo_pool) {
                     setatomosmo_poolQTY(Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n))
+                    contract_info.atomosmo_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
                 } else if (actual_asset === denoms.osmousdc_pool) {
                     setosmousdc_poolQTY(Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n))
+                    contract_info.osmousdc_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
                 }                    
             })
+
 
             if (basketRes != undefined){
                 
@@ -229,11 +262,12 @@ export default function Home() {
                     }
                     //setCost 
                     setCost(total_rate);
+                    contract_info.cost = total_rate;
                 }
                 
             }
         }
-        
+        setcontractQTYs(contract_info);
     } catch (error) {
         console.log(error)
     }
@@ -938,6 +972,7 @@ export default function Home() {
           popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
           osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
           debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
+          contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs}
 
       />;
     } else if (activeComponent === 'liquidation') {

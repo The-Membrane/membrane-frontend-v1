@@ -18,6 +18,17 @@ declare module 'react' {
       orient?: string;
     }
   }
+export interface ContractInfo {
+    osmo: number,
+    atom: number,
+    axlusdc: number,
+    atomosmo_pool: number,
+    osmousdc_pool: number,
+    max_LTV: number,
+    brw_LTV: number,
+    cost: number,
+    sliderValue: number,
+}
 
 interface Props {
     cdp_client: PositionsClient | null;
@@ -66,7 +77,9 @@ interface Props {
     sliderValue: number;
     setsliderValue: (sliderValue: number) => void;
     creditPrice: number;
-    setcreditPrice: (creditPrice: number) => void;          
+    setcreditPrice: (creditPrice: number) => void;
+    contractQTYs: ContractInfo;
+    setcontractQTYs: (contractQTYs: ContractInfo) => void;
 }
 
 const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
@@ -84,7 +97,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     positionID, setpositionID,
     user_address, setAddress,
     sliderValue, setsliderValue,
-    creditPrice, setcreditPrice
+    creditPrice, setcreditPrice,
+    contractQTYs, setcontractQTYs
 }: Props) => {
     
     const { connect } = useChain(chainName);
@@ -133,19 +147,20 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     //Menu
     const [open, setOpen] = useState(false);
     const [menuLabel, setMenuLabel] = useState("Value" as string);
-    
+
     //This is used to keep track of what asses the user has in the contract
-    //bc the input/output asset quantities are updated in responsive to the user's actions
-    const [contractQTYs, setcontractQTYs] = useState({
-        osmo: osmoQTY,
-        atom: atomQTY,
-        axlusdc: axlusdcQTY,
-        atomosmo_pool: atomosmo_poolQTY,
-        osmousdc_pool: osmousdc_poolQTY,
-        max_LTV: maxLTV,
-        brw_LTV: brwLTV,
-        cost: cost
-    });
+    //bc the input/output asset quantities are updated in responsive to the user's actions    
+    // const [contractQTYs, setcontractQTYs] = useState<ContractInfo>({
+    //     osmo: 0,
+    //     atom: 0,
+    //     axlusdc: 0,
+    //     atomosmo_pool: 0,
+    //     osmousdc_pool: 0,
+    //     brw_LTV: 0,
+    //     max_LTV: 0,
+    //     cost: 0,
+    //   });
+
     const [prices, setPrices] = useState<Prices>({
       osmo: 0,
       atom: 0,
@@ -666,7 +681,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setmaxLTV(contractQTYs.max_LTV);
         setbrwLTV(contractQTYs.brw_LTV);
         setCost(contractQTYs.cost);
-        setsliderValue(0);
+        setsliderValue(contractQTYs.sliderValue);
     }
     //Deposit-Withdraw screen    
     const handledepositClick = async () => {
@@ -833,6 +848,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Set new LTVs & costs
         let LTVs = getRataLTV();
         let cost = getRataCost();
+        //@ts-ignore
         setcontractQTYs(prevState => {
             return { 
                 ...prevState,
@@ -845,6 +861,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         switch (currentAsset) {
             case "OSMO": {
                 if (currentfunctionLabel === "deposit"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -853,6 +870,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     })
                 }
                 else if (currentfunctionLabel === "withdraw"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -864,6 +882,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
             case "ATOM": {
                 if (currentfunctionLabel === "deposit"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -872,6 +891,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     })
                 }
                 else if (currentfunctionLabel === "withdraw"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -884,6 +904,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
             case "axlUSDC": {
                 if (currentfunctionLabel === "deposit"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -892,6 +913,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     })
                 }
                 else if (currentfunctionLabel === "withdraw"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -903,6 +925,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
             case "ATOM-OSMO LP": {
                 if (currentfunctionLabel === "deposit"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -911,6 +934,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     })
                 }
                 else if (currentfunctionLabel === "withdraw"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -922,6 +946,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
             case "OSMO-axlUSDC LP": {
                 if (currentfunctionLabel === "deposit"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -930,6 +955,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     })
                 }
                 else if (currentfunctionLabel === "withdraw"){
+                    //@ts-ignore
                     setcontractQTYs(prevState => {
                         return { 
                             ...prevState,
@@ -1580,8 +1606,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setcreditRateRes(creditRateRes as InterestResponse)
         setbasketRes(basketRes as Basket)
         getassetdebtUtil();
+        resettoContractPosition();
 
     }, [pricez, address, rateRes, creditRateRes, basketRes])
+    
 
   return (
     <div className="page-frame positions">
@@ -1719,66 +1747,69 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             </div> */}
         </div>
         <div className="debt-visual">
-            <div className="infobox-icon" />
-            <div className="max-ltv">
-            <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
-            <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
-            <div className="max-ltv-child" />
-            </div>
-            <div className="max-borrow-ltv" style={{top: 75 + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
-            <div className="cdp-div3" >{(brwLTV ?? 0).toFixed(2)}%</div>
-            <div className="max-borrow-ltv-child" />
-            </div>
-            <div className="debt-visual-child" />
-            <div className="debt-visual-item" style={{top: 465 - (363 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))), height: (340 * (((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))}}/>
-            <div className="debt-visual-label" style={{top: 445 - (359 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
-            <input className="cdt-amount" style={{top: 100 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
-            id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} defaultValue={1} orient="vertical" onChange={({ target: { value: radius } }) => {                
-            if (getTVL() !== 0 && debtAmount === 0 && parseInt(radius) < 100){
-                setsliderValue(100);
-            } else if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
-                setsliderValue((debtAmount - walletCDT)/1000000);
+            <div className="infobox-icon"/>
+            <div className="debtbar-visual">
+                <div className="max-ltv">
+                <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
+                <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
+                <div className="max-ltv-child" />
+                </div>
+                <div className="max-borrow-ltv" style={{top: 39 + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
+                <div className="cdp-div3" >{(brwLTV ?? 0).toFixed(0)}%</div>
+                <div className="max-borrow-ltv-child" />
+                </div>
+                <div className="debt-visual-child" />
+                <div className="debt-visual-item" style={{top: 427 - (363 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))), height: (340 * (((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))}}/>
+                <div className="debt-visual-label" style={{top: 407 - (359 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
+                <input className="cdt-amount" style={{top: 63 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
+                id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} defaultValue={1} orient="vertical" onChange={({ target: { value: radius } }) => {                
+                if (getTVL() !== 0 && debtAmount === 0 && parseInt(radius) < 100){
+                    setsliderValue(100);
+                } else if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
+                    setsliderValue((debtAmount - walletCDT)/1000000);
 
-                //Bc we know this is a repay (less than current debt), set amount to Wallet CDT
-                setAmount((walletCDT/1000000));
-                setcurrentfunctionLabel("repay");
-            } else {
-                setsliderValue(parseInt(radius));
-
-                if (parseInt(radius) > (debtAmount/1000000)){
-                    //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
-                    setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
-                    setcurrentfunctionLabel("mint");
-                } else if (parseInt(radius) === 0){
-                    //Repay it all
-                    setAmount((debtAmount/1000000));
+                    //Bc we know this is a repay (less than current debt), set amount to Wallet CDT
+                    setAmount((walletCDT/1000000));
                     setcurrentfunctionLabel("repay");
                 } else {
-                    //Bc we know this is a repay (less than current debt), set amount to radius
-                    setAmount(parseFloat(((debtAmount/1000000) - parseInt(radius)).toFixed(6)));
-                    setcurrentfunctionLabel("repay");
+                    setsliderValue(parseInt(radius));
+
+                    if (parseInt(radius) > (debtAmount/1000000)){
+                        //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
+                        setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
+                        setcurrentfunctionLabel("mint");
+                    } else if (parseInt(radius) === 0){
+                        //Repay it all
+                        setAmount((debtAmount/1000000));
+                        setcurrentfunctionLabel("repay");
+                    } else {
+                        //Bc we know this is a repay (less than current debt), set amount to radius
+                        setAmount(parseFloat(((debtAmount/1000000) - parseInt(radius)).toFixed(6)));
+                        setcurrentfunctionLabel("repay");
+                    }
                 }
-            }
-            }}/>
-            <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-            //-(ratio of slidervalue to max value * (label starting point - the borrow_LTVs top position) + 395
-            style={getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? {left: "8.5vw", top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (395 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
-            + (395)} : {top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (395 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
-            + (395)}}>
-            { getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? "Minimum:" : (sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
-            </label>
-            <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
+                }}/>
+                <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
+                //-(ratio of slidervalue to max value * (label starting point - the borrow_LTVs top position) + 395
+                style={getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? {left: "8.5vw", top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (408 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
+                + (395)} : {top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (408 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
+                + (395)}}>
+                { getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? "Minimum:" : (sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
+                </label>
+                <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
+            </div>
             <div className="position-stats">
-            <div className="infobox-icon2" />
-            <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
-                <div className="repay" onClick={handleExecution}>REPAY</div>
-            </div>
-            <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} onClick={handleExecution}>
-                <div className="mint" onClick={handleExecution}>MINT</div>                
-            </div>
-            <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
-            <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using the value of your collateralized Bundle</div>
-            <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay your debt using the CDT in your wallet</div>
+                <div className="infobox-icon2">            
+                    <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
+                        <div className="repay" onClick={handleExecution}>REPAY</div>
+                    </div>
+                    <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} onClick={handleExecution}>
+                        <div className="mint" onClick={handleExecution}>MINT</div>                
+                    </div>
+                    <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
+                    <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using the value of your collateralized Bundle</div>
+                    <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay your debt using the CDT in your wallet</div>
+                </div>
             </div>
         </div>
         <div className="squid-router" style={swapScreen === true ? {opacity: 1, zIndex: 2} : {opacity: 0, zIndex: 0}}>

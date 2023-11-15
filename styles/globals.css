@@ -2975,12 +2975,9 @@ span[data-descr]:hover::after {
 
 /*POSITIONS SPECIFIC*/
 .infobox-icon {
-  position: absolute;
-  top: 38px;
-  left: 54px;
-  width: 434px;
-  height: 578px;
-  /* background-color: #D9D9D9; */
+  position: relative;
+  width: 100%;
+  height: 100%;
   background-color: white;
   opacity: 0.5;
   border: 4px solid #585858;
@@ -3001,19 +2998,19 @@ span[data-descr]:hover::after {
 }
 .cdp-div2 {
   font-size: large;
-  left: 306px;
+  left: 233px;
   top: 11px;
 }
 .liq-value {
   position: absolute;
   font-size: medium;
-  left: 23px;
+  left: 32px;
   top: 11px;
 }
 .max-ltv-child {
   top: 34.5px;
   left: 26px;
-  width: 315px;
+  width: 252px;
   height: 5px;
   background-color: #931313;
 }
@@ -3023,29 +3020,29 @@ span[data-descr]:hover::after {
   position: absolute;
 }
 .max-ltv {
-  top: 66px;
-  left: 121px;
-  width: 264px;
+  top: 30px;
+  left: -22px;
+  width: 100%;
   height: 34px;
 }
 .cdp-div3 {
   font-size: large;
   top: 5px;
-  left: 330.5px;
+  left: 211.5px;
 }
 .max-borrow-ltv-child {
   position: absolute;
   top: 28px;
-  left: 121px;
-  width: 264px;
+  left: 58px;
+  width: 198px;
   height: 0px;
   border: 2.5px dashed #DCD988;
 }
 .max-borrow-ltv {
   position: absolute;
-  top: 410px;
-  left: 77px;
-  width: 368.5px;
+  top: 57px;
+  left: 0px;
+  width: 100%;
   height: 30.5px;
 }
 .squid-router{
@@ -3057,7 +3054,7 @@ span[data-descr]:hover::after {
 }
 .debt-visual-child {
   position: absolute;
-  top: 106px;
+  top: 70px;
   left: calc(50% - 74.5px);
   border-right: 3px solid black;
   border-bottom: 3px solid black;
@@ -3067,40 +3064,36 @@ span[data-descr]:hover::after {
   height: 339px;
 }
 .debt-visual-label {
-  position: relative;
-  left: 0px;
+  position: absolute;
+  left: 34.5%;
   text-align: center;
-  color: gray;
+  color: black;
   font-size: small;
 }
 .debt-visual-item {
   position: absolute;
-  top: 207px; /*106 is top of the bar, 442 is the bottom*/ 
-  left: 198px;
-  background: linear-gradient(
-    180deg,
-    rgba(121, 142, 255, 0.68),
-    rgba(79, 202, 187, 0.8)
-  );
+  left: 22%;
+  background: linear-gradient( 180deg, rgba(121, 142, 255, 0.68), rgba(79, 202, 187, 0.8) );
   width: 143.9px;
-  height: 0px; /*336 is full bar height*/
 }
 .debt-visual {
-  position: absolute;
-  margin: 0 !important;
-  top: 7px;
-  left: 655px;
-  width: 539px;
-  height: 652px;
+  position: relative;
+  width: 260px;
+  height: 578px;
   z-index: 1;
   color: black;
 }
-.infobox-icon2 {
+.debtbar-visual {
   position: absolute;
   top: 0;
   left: 0;
-  width: 428px;
-  height: 171px;
+  width: 100%;
+  height: 70.4%;
+}
+.infobox-icon2 {
+  position: relative;
+  width: 100%;
+  height: 170px;
   background-color: #454444;
   border-bottom-left-radius: 0.8rem;
   border-bottom-right-radius: 0.8rem;
@@ -3133,11 +3126,11 @@ span[data-descr]:hover::after {
   object-fit: cover;
 }
 .cost-4 {
-  position: relative;
-  top: 367px;
+  position: absolute;
+  top: 73.5%;
   text-align: center;
-  left: 205px;
-  width: 20vh;
+  left: 34%;
+  width: 33%;
   font-size: small;
 }
 .debt-225 {
@@ -3158,11 +3151,10 @@ span[data-descr]:hover::after {
 }
 .position-stats {
   position: absolute;
-  margin: 0 !important;
-  top: 442px;
-  left: 57px;
-  width: 428px;
-  height: 171px;
+  bottom: 0.2%;
+  right: 0.5%;
+  width: 100%;
+  height: 29.58%;
   color: whitesmoke;
   z-index: 1;
 }
@@ -3191,7 +3183,7 @@ span[data-descr]:hover::after {
   align-items: center;
 }
 .assetinfo-menuitem {
-  top: 3%;
+  top: 2.5%;
   gap: 8%;
   left: 2%;
 }
@@ -3451,20 +3443,20 @@ span[data-descr]:hover::after {
 }
 .mint-button,
 .repay-button {
-  position: relative;
+  position: absolute;
+  text-align: center;
   background-color: #2F2F2F;
   border: 2px solid #50C9BD;
   border-radius: 1rem;
-  top: 54px;
-  left: 255px;
-  width: 126px;
-  height: 63px;
+  top: 38%;
+  left: 65%;
+  width: 80px;
+  height: 43px;
   cursor: pointer;
   z-index: 1;
 }
 .mint-button {
-  left: 50px;
-  top: -7px;
+  left: 5%;
 }
 .controller-screen-blank{
   font-size: small;
@@ -3527,9 +3519,7 @@ span[data-descr]:hover::after {
 }
 .mint {    
   position: relative;
-  text-align: center;
-  top: 13px;
-  left: 0px;
+  top: 6%;
   cursor: pointer;
   z-index: 1;
 }
@@ -3555,11 +3545,9 @@ span[data-descr]:hover::after {
 }
 .repay {
   position: relative;
-  top: 14px;
-  left: 0px;
+  top: 6%;
   cursor: pointer;
   z-index: 1;
-  text-align: center;
 }
 .cdt-logo-icon7 {
   position: absolute;
@@ -3650,9 +3638,9 @@ span[data-descr]:hover::after {
   background-color: #798eff;
 } */
 .range-label {
-  position: relative;
+  position: absolute;
   font-size: small;
-  left: 11vw;
+  left: 14%;
   user-select: none;
 }
 .red {
@@ -3685,6 +3673,7 @@ span[data-descr]:hover::after {
 }
 input[type=range][orient=vertical] {
   appearance: slider-vertical;
+  left: 19.5%;
   width: 8px;
   height: 175px;
   padding: 0 5px;
