@@ -3966,3 +3966,16 @@ input[type=range][orient=vertical] {
 .popup-msg {  
   font-size: small;
 }
+.widget-popup {  
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: -3%;
+  z-index: 9999;
+  height: 100%;
+  overflow-y: scroll;
+}
+@media screen and (max-width:425px) {
+  .widget-popup {
+    height: 80%;
+}}

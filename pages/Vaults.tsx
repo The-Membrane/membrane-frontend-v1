@@ -8,6 +8,7 @@ import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Posi
 import { Asset, Basket, CollateralInterestResponse, InterestResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { denoms, Prices } from ".";
 import Popup from "../components/Popup";
+import WidgetPopup from "../components/widgetPopup";
 import Image from "next/image";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
@@ -100,7 +101,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     creditPrice, setcreditPrice,
     contractQTYs, setcontractQTYs
 }: Props) => {
-    
+    //WidgetPopup
+    const [widgetpopupTrigger, setWidgetPopupTrigger] = useState(false);
+    const [popupWidget, setPopupWidget] = useState<ReactJSXElement>();
+    const [widgetpopupStatus, setWidgetPopupStatus] = useState("");
+
     const { connect } = useChain(chainName);
     //Rates
     const [rates, setRates] = useState({
@@ -1309,34 +1314,22 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         );
    };  
    const handleswapClick = () => {
-        setswapScreen(true);
-        try {
-            cdp_client?.client.sendTokens(
-                address as string,
-                "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w",
-                [coin( 1000000,  denoms.cdt)],
-            "auto", undefined).then((res) => {
-                console.log(res?.events.toString())
-                //format pop up
-                setPopupTrigger(true);
-                setPopupMsg(<div>Swap successful</div>);
-                setPopupStatus("Success");
-            })
-        } catch (error) {
-            ////Error message
-            const e = error as { message: string }
-            console.log(e.message)
-            ///Format Pop up
-            setPopupTrigger(true);
-            setPopupMsg(<div>{e.message}</div>);
-            setPopupStatus("Swap Error");
-        }
+    //Set popup for squid widget
+    setWidgetPopupTrigger(true);
+    setPopupWidget(<div>
+        <SquidWidget config={
+        {integratorId: "membrane-swap-widget",
+        companyName:"Membrane",
+        slippage:3,
+        hideAnimations: true,
+        showOnRampLink: true,
+        initialToChainId: "osmosis-1",
+        initialFromChainId: "cosmoshub-4",
+        }}/>
+    </div>);
+    setWidgetPopupStatus("Swap to Osmosis");
+        // setswapScreen(true);
    };
-//    const onSquidTextClick = () => {
-//         window.open(
-//         "https://app.squidrouter.com/"
-//         );
-//    };
 
    function getTVL() {
     return(
@@ -1828,6 +1821,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             />
         </div>}
         <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
+        <WidgetPopup trigger={widgetpopupTrigger} setTrigger={setWidgetPopupTrigger} msgStatus={widgetpopupStatus} errorMsg={popupWidget}/>
     </div>
   );
 };
