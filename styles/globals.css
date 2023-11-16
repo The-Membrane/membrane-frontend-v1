@@ -29,20 +29,20 @@
 }
 .neonSign b span, .neonSign2 b span, .neonSign3 b span, .neonSign4 b span{
   display: inline-block;
-  font-size: clamp(20px, 3.2vh, 4.9vh);
+  font-size: clamp(20px, 4.6vh, 4.6vh);
 }
 .neonSignon b span, .neonSign2on b span, .neonSign3on b span, .neonSign4on b span{
   display: inline-block;
-  font-size: clamp(20px, 3.2vh, 4.9vh);
+  font-size: clamp(20px, 4.6vh, 4.6vh);
   animation: blink linear infinite 5s;
 }
 .neonSign b a, .neonSign2 b a, .neonSign3 b a, .neonSign4 b a {
   display: inline-block;
-  font-size: clamp(20px, 3.2vh, 4.9vh);
+  font-size: clamp(20px, 4.6vh, 4.6vh);
 }
 .neonSignon b a, .neonSign2on b a, .neonSign3on b a, .neonSign4on b a {
   display: inline-block;
-  font-size: clamp(20px, 3.2vh, 4.9vh);
+  font-size: clamp(20px, 4.6vh, 4.6vh);
 }
 .neonSignon b span:nth-of-type(2) {
   animation: blink reverse infinite 8s;
@@ -3004,7 +3004,7 @@ span[data-descr]:hover::after {
 .liq-value {
   position: absolute;
   font-size: medium;
-  left: 32px;
+  left: 45px;
   top: 11px;
 }
 .max-ltv-child {
@@ -3127,7 +3127,7 @@ span[data-descr]:hover::after {
 }
 .cost-4 {
   position: absolute;
-  top: 73.5%;
+  bottom: 0%;
   text-align: center;
   left: 34%;
   width: 33%;
