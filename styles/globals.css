@@ -140,6 +140,7 @@ input:focus {
 .page-frame {  
   position: relative; 
   overflow-y: scroll;
+  overflow-x: hidden;
   height: 100vh;
 }
 .pageTitle {  
@@ -3047,7 +3048,8 @@ span[data-descr]:hover::after {
 }
 .squid-router{
   position: relative;
-  left: 52vw;
+  width: 269px;
+  top: 9%;
 }
 .swap-button {
   background-color: #798EFF;
@@ -3065,6 +3067,7 @@ span[data-descr]:hover::after {
 }
 .debt-visual-label {
   position: absolute;
+  top: 407px;
   left: 34.5%;
   text-align: center;
   color: black;
@@ -3409,7 +3412,6 @@ span[data-descr]:hover::after {
 .controller-item {
   position: relative;
   top: 16%;
-  left: 1%;
 }
 .controller-frame {
   position: relative;
@@ -3653,10 +3655,10 @@ span[data-descr]:hover::after {
 }
 .cdt-amount {
   position: absolute;
-  top: 192px;
+  top: 398px;
+  height: 10px;
   left: 190px;
   width: 55px;
-  height: 28px;
   border-radius: 0.25rem;
 }
 .amount {
@@ -3810,46 +3812,11 @@ input[type=range][orient=vertical] {
   .positions {
     gap: 11%;
   }
-  .controller-item {
-    left: 8%;
-  }
-  .asset-info {    
-    left: 4.5%;
-  }
-  .vaults1 {
-    left: 7%;
-  }
   .positions {
     overflow-x: hidden;
   }
 }
-@media screen and (max-width: 320px) {
-  .controller-item {
-    left: -6%;
-  }
-  .asset-info {    
-    left: 0%;
-  }
-  .vaults1 {
-    left: 3%;
-  }
-  .pie-chart-icon1 {
-    top: 14%;
-  }
-}
 @media screen and (max-width: 375px) {
-  .controller-item {
-    left: -6.5%;
-  }
-  .asset-info {    
-    left: 0%;
-  }
-  .vaults1 {
-    left: 3%;
-  }
-  .pie-chart-icon1 {
-    top: 14%;
-  }  
   .asset-info-child,
   .asset-info-child1,
   .asset-info-child2,

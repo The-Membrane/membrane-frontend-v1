@@ -37,7 +37,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
             aria-orientation="vertical"
             >
             <div
-                className="nav-link nav-home-logo hoverColor"
+                className="nav-home-logo hoverColor"
                 style={{zIndex: 2, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center"}}
                 id="dashboard"
                 data-toggle="pill"
@@ -55,7 +55,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 <div className='nav-label'>Home</div>
             </div>
             <div
-                className="nav-link hoverColor"
+                className="hoverColor"
                 style={{zIndex: 2, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center"}}
                 id="vaults"
                 data-toggle="pill"
@@ -73,7 +73,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 <div className='nav-label'>Mint</div>
             </div>
             <div
-                className="nav-link hoverColor"
+                className="hoverColor"
                 style={{zIndex: 2, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center"}}
                 id="liquidations"
                 data-toggle="pill"
@@ -91,7 +91,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 <div className='nav-label' style={{top: "-1.2vh"}}>Bid</div>
             </div>
             <div
-                className="nav-link hoverColor"
+                className="hoverColor"
                 style={{zIndex: 2, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center"}}
                 id="governance"
                 data-toggle="pill"
@@ -109,7 +109,7 @@ const NavBar: React.FC<NavBarProps> = ({setActiveComponent}) => {
                 <div className='nav-label'>Stake</div>
             </div>
             <div
-                className="nav-link hoverColor"
+                className="hoverColor"
                 style={{zIndex: 2, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center"}}
                 id="lockdrop"
                 data-toggle="pill"

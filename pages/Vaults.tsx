@@ -1748,6 +1748,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 <h3>Bundle Fortune teller</h3>
             </div> */}
         </div>
+        {swapScreen === false ? 
         <div className="debt-visual">
             <div className="infobox-icon"/>
             <div className="debtbar-visual">
@@ -1813,7 +1814,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay debt using CDT</div>
                 </div>
             </div>
-        </div>
+        </div> : 
         <div className="squid-router" style={swapScreen === true ? {opacity: 1, zIndex: 2} : {opacity: 0, zIndex: 0}}>
             <SquidWidget config={
                 {integratorId: "membrane-swap-widget",
@@ -1825,7 +1826,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 initialFromChainId: "cosmoshub-4",
             }}
             />
-        </div>
+        </div>}
         <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>
   );
