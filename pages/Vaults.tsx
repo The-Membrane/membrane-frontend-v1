@@ -1613,83 +1613,85 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
 
   return (
     <div className="page-frame positions">
-        <div className="vaults1">
-            VAULTS
-            <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
-        </div>
-        <div className="asset-info">
-            <div className="infobox-icon3"/>
-            <div className="asset-info-child" />
-            <div className="asset-info-item" />
-            <div className="asset-info-inner" />
-            <div className="line-div" />
-            <div className="asset-info-child1" />
-            <div className="asset-info-child2" />
-            <div className="asset-info-child3" />
-            <div className="assetinfo-data">
-                <div className="assetinfo-assets">
-                    <div className="asset">Asset</div>
-                    <Image className={osmoQTY > 0 ? "osmo-logo-icon" : "low-opacity osmo-logo-icon" } width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
-                    <Image className={atomQTY > 0 ? "atom-logo-icon" : "low-opacity atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
-                    <Image className={axlusdcQTY > 0 ? "axlusdc-logo-icon" : "low-opacity axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
-                </div >
-                <div className="assetinfo-qty">
-                    <div className="qty">Quantity</div>
-                    <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? ((osmoQTY/1000) ?? 0).toFixed(2)+"k" : osmoQTY}</div>
-                    <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? ((atomQTY/1000) ?? 0).toFixed(2)+"k" : atomQTY}</div>
-                    <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? ((axlusdcQTY/1000) ?? 0).toFixed(2)+"k" : axlusdcQTY}</div>
-                </div>
-                <div className="assetinfo-menuitem">
-                    <div className="value value-menu-dropdown" onClick={handleOpen}>
-                        <button onClick={handleOpen} style={{outline: "none"}}>{menuLabel}</button>
-                        {open ? (
-                            <ul className="value-menu">
-                            {menuLabel !== "Rate" ? (<li className="value-menu-item" onClick={handleMenuOne}>
-                                <button onClick={handleMenuOne} style={{outline: "none"}}>Rate</button>
-                            </li>) : null}
-                            {menuLabel !== "Util" ? (<li className="value-menu-item" onClick={handleMenuTwo}>
-                                <button onClick={handleMenuTwo} style={{outline: "none"}}>Util</button>
-                            </li>) : null}
-                            {menuLabel !== "Value" ? (<li className="value-menu-item" onClick={handleMenuThree}>
-                                <button onClick={handleMenuThree} style={{outline: "none"}}>Value</button>
-                            </li>) : null}
-                            </ul>
-                        ) : null}
+        <div className="first-vault-component">
+            <div className="vaults1">
+                VAULTS
+                <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
+            </div>
+            <div className="asset-info">
+                <div className="infobox-icon3"/>
+                <div className="asset-info-child" />
+                <div className="asset-info-item" />
+                <div className="asset-info-inner" />
+                <div className="line-div" />
+                <div className="asset-info-child1" />
+                <div className="asset-info-child2" />
+                <div className="asset-info-child3" />
+                <div className="assetinfo-data">
+                    <div className="assetinfo-assets">
+                        <div className="asset">Asset</div>
+                        <Image className={osmoQTY > 0 ? "osmo-logo-icon" : "low-opacity osmo-logo-icon" } width={45} height={45} alt="" src="images/osmo.svg" onClick={handleOSMOClick}/>
+                        <Image className={atomQTY > 0 ? "atom-logo-icon" : "low-opacity atom-logo-icon"} width={45} height={45} alt="" src="images/atom.svg" onClick={handleATOMClick} />
+                        <Image className={axlusdcQTY > 0 ? "axlusdc-logo-icon" : "low-opacity axlusdc-logo-icon"} width={45} height={45} alt="" src="images/usdc.svg" onClick={handleaxlUSDCClick} />
+                    </div >
+                    <div className="assetinfo-qty">
+                        <div className="qty">Quantity</div>
+                        <div className={"osmo-qty"} onClick={()=>handleOSMOqtyClick(currentfunctionLabel)}>{osmoQTY === 0 ? "Add" : osmoQTY > 1000 ? ((osmoQTY/1000) ?? 0).toFixed(2)+"k" : osmoQTY}</div>
+                        <div className={"atom-qty"} onClick={()=>handleATOMqtyClick(currentfunctionLabel)}>{atomQTY === 0 ? "Add" : atomQTY > 1000 ? ((atomQTY/1000) ?? 0).toFixed(2)+"k" : atomQTY}</div>
+                        <div className={"axlUSDC-qty"} onClick={()=>handleaxlUSDCqtyClick(currentfunctionLabel)}>{axlusdcQTY === 0 ? "Add" : axlusdcQTY > 1000 ? ((axlusdcQTY/1000) ?? 0).toFixed(2)+"k" : axlusdcQTY}</div>
                     </div>
-                    {menuLabel === "Value" ? 
-                        <>
-                        <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? (((osmoQTY * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((osmoQTY * +prices.osmo) ?? 0).toFixed(2)}</div>
-                        <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${ (atomQTY * +prices.atom) > 1000 ? (((atomQTY * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((atomQTY * +prices.atom) ?? 0).toFixed(2)}</div> 
-                        <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${ (axlusdcQTY * +prices.axlUSDC) > 1000 ? (((axlusdcQTY * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((axlusdcQTY * +prices.axlUSDC) ?? 0).toFixed(2)}</div> 
-                        </>
-                    : menuLabel === "Rate" ? 
-                        <>
-                        <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{rates.osmo.toFixed(4)}%</div>
-                        <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(rates.atom).toFixed(4)}%</div>
-                        <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(rates.axlUSDC).toFixed(4)}%</div>
-                        </>
-                    : menuLabel === "Util" ? 
-                        <>
-                        <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{(debtCaps.osmo * 100).toFixed(2)}%</div>
-                        <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(debtCaps.atom * 100).toFixed(2)}%</div>
-                        <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div>
-                        </>
-                    : null}
+                    <div className="assetinfo-menuitem">
+                        <div className="value value-menu-dropdown" onClick={handleOpen}>
+                            <button onClick={handleOpen} style={{outline: "none"}}>{menuLabel}</button>
+                            {open ? (
+                                <ul className="value-menu">
+                                {menuLabel !== "Rate" ? (<li className="value-menu-item" onClick={handleMenuOne}>
+                                    <button onClick={handleMenuOne} style={{outline: "none"}}>Rate</button>
+                                </li>) : null}
+                                {menuLabel !== "Util" ? (<li className="value-menu-item" onClick={handleMenuTwo}>
+                                    <button onClick={handleMenuTwo} style={{outline: "none"}}>Util</button>
+                                </li>) : null}
+                                {menuLabel !== "Value" ? (<li className="value-menu-item" onClick={handleMenuThree}>
+                                    <button onClick={handleMenuThree} style={{outline: "none"}}>Value</button>
+                                </li>) : null}
+                                </ul>
+                            ) : null}
+                        </div>
+                        {menuLabel === "Value" ? 
+                            <>
+                            <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>${ (osmoQTY * +prices.osmo) > 1000 ? (((osmoQTY * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((osmoQTY * +prices.osmo) ?? 0).toFixed(2)}</div>
+                            <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>${ (atomQTY * +prices.atom) > 1000 ? (((atomQTY * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((atomQTY * +prices.atom) ?? 0).toFixed(2)}</div> 
+                            <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>${ (axlusdcQTY * +prices.axlUSDC) > 1000 ? (((axlusdcQTY * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((axlusdcQTY * +prices.axlUSDC) ?? 0).toFixed(2)}</div> 
+                            </>
+                        : menuLabel === "Rate" ? 
+                            <>
+                            <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{rates.osmo.toFixed(4)}%</div>
+                            <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(rates.atom).toFixed(4)}%</div>
+                            <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(rates.axlUSDC).toFixed(4)}%</div>
+                            </>
+                        : menuLabel === "Util" ? 
+                            <>
+                            <div className={osmoQTY > 0 ?  "cdp-div5" : "low-opacity cdp-div5"}>{(debtCaps.osmo * 100).toFixed(2)}%</div>
+                            <div className={atomQTY > 0 ?  "cdp-div7" : "low-opacity cdp-div7"}>{(debtCaps.atom * 100).toFixed(2)}%</div>
+                            <div className={axlusdcQTY > 0 ?  "cdp-div9" : "low-opacity cdp-div9"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div>
+                            </>
+                        : null}
+                    </div>
                 </div>
-            </div>
-            <div className="tvl-500">TVL: ${(getTVL() ?? 0).toFixed(2)}</div>
-            
-            <div style={{opacity:0}}>
-                <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-atom-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
-                <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-osmo-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
-                {/* <div className={"atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div> */}
-                <div className={atomosmo_poolQTY > 0 ?  "cdp-div11" : "low-opacity cdp-div11"}>${((atomosmo_poolQTY * +prices.atomosmo_pool) ?? 0).toFixed(2)}</div>
-            </div>
-            <div style={{opacity:0}}>
-                <Image className={osmousdc_poolQTY > 0 ? " osmousdcpool-osmo-icon": "low-opacity osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
-                <Image className={osmousdc_poolQTY > 0 ? " osmousdcpool-usdc-icon": "low-opacity osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
-                {/* <div className={"osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div> */}
-                <div className={osmousdc_poolQTY > 0 ?  "cdp-div13" : "low-opacity cdp-div13"}>${((osmousdc_poolQTY * +prices.osmousdc_pool) ?? 0).toFixed(2)}</div>
+                <div className="tvl-500">TVL: ${(getTVL() ?? 0).toFixed(2)}</div>
+                
+                <div style={{opacity:0}}>
+                    <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-atom-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/atom.svg"  onClick={(handleatomosmo_poolClick)}/>
+                    <Image className={atomosmo_poolQTY > 0 ?" atomosmopool-osmo-icon" : "low-opacity atomosmopool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleatomosmo_poolClick)}/>
+                    {/* <div className={"atomosmopool-qty"} onClick={()=>handleatomosmo_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(atomosmo_poolQTY)}</div> */}
+                    <div className={atomosmo_poolQTY > 0 ?  "cdp-div11" : "low-opacity cdp-div11"}>${((atomosmo_poolQTY * +prices.atomosmo_pool) ?? 0).toFixed(2)}</div>
+                </div>
+                <div style={{opacity:0}}>
+                    <Image className={osmousdc_poolQTY > 0 ? " osmousdcpool-osmo-icon": "low-opacity osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/osmo.svg"  onClick={(handleosmousdc_poolClick)}/>
+                    <Image className={osmousdc_poolQTY > 0 ? " osmousdcpool-usdc-icon": "low-opacity osmousdcpool-osmo-icon"} width={45} height={45} alt="" src="images/usdc.svg"  onClick={(handleosmousdc_poolClick)}/>
+                    {/* <div className={"osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div> */}
+                    <div className={osmousdc_poolQTY > 0 ?  "cdp-div13" : "low-opacity cdp-div13"}>${((osmousdc_poolQTY * +prices.osmousdc_pool) ?? 0).toFixed(2)}</div>
+                </div>
             </div>
         </div>
         <div className="controller-item">
@@ -1807,8 +1809,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <div className="mint" onClick={handleExecution}>MINT</div>                
                     </div>
                     <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
-                    <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using the value of your collateralized Bundle</div>
-                    <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay your debt using the CDT in your wallet</div>
+                    <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using your Bundle</div>
+                    <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay debt using CDT</div>
                 </div>
             </div>
         </div>

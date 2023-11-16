@@ -3080,6 +3080,7 @@ span[data-descr]:hover::after {
   position: relative;
   width: 260px;
   height: 578px;
+  top: 9%;
   z-index: 1;
   color: black;
 }
@@ -3101,15 +3102,15 @@ span[data-descr]:hover::after {
 .position-visual-words {
   position: absolute;
   top: 22px;
-  left: 18px;
-  width: 29vw;
+  width: 100%;
+  text-align: center;
   font-size: medium;
 }
 .position-visual-words-btmright {
   position: absolute;
   top: 125px;
-  width: 27vw;
-  left: 38px;
+  width: 100%;
+  text-align: center;
   font-size: medium;
 }
 .slider-desc {  
@@ -3198,12 +3199,9 @@ span[data-descr]:hover::after {
 }
 @media screen and (min-width:1444px) {
   .assetinfo-menuitem {
-    gap: 9%;
-  }
-  .assetinfo-qty {
     gap: 8%;
   }
-  .assetinfo-assets {
+  .assetinfo-qty {
     gap: 6%;
   }
   .tvl-500 {
@@ -3388,7 +3386,7 @@ span[data-descr]:hover::after {
 .asset-info {
   margin: 0 !important;
   position: relative;
-  top: 16%;
+  top: 7%;
   left: 2%;
   width: 320px;
   height: 504.75px;
@@ -3411,7 +3409,7 @@ span[data-descr]:hover::after {
 .controller-item {
   position: relative;
   top: 16%;
-  left: 3%;
+  left: 1%;
 }
 .controller-frame {
   position: relative;
@@ -3582,8 +3580,9 @@ span[data-descr]:hover::after {
 }
 .vaults1 {
   display: flex;
-  position: absolute;
-  height: 7%;
+  flex-direction: row;
+  position: relative;
+  height: 8%;
   left: 3%;
   top: 6%;
   font-size: xx-large;
@@ -3805,6 +3804,7 @@ input[type=range][orient=vertical] {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 4%;
+  justify-content: center;
 }
 @media screen and (max-width: 425px) {
   .positions {
