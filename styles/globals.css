@@ -3383,6 +3383,17 @@ span[data-descr]:hover::after {
   height: 504.75px;
   z-index: 2;
 }
+@media screen and (max-width: 375px) {
+  .asset-info-child,
+  .asset-info-child1,
+  .asset-info-child2,
+  .asset-info-child3,
+  .asset-info-inner,
+  .asset-info-item,
+  .line-div {
+    width: 299px;
+  }
+}
 @media screen and (max-width:320px) {
   .asset-info {    
     left: 0%;
@@ -3786,17 +3797,6 @@ input[type=range][orient=vertical] {
 @media screen and (min-width: 1440px) {
   .positions {
     gap: 8%;
-  }
-}
-@media screen and (max-width: 375px) {
-  .asset-info-child,
-  .asset-info-child1,
-  .asset-info-child2,
-  .asset-info-child3,
-  .asset-info-inner,
-  .asset-info-item,
-  .line-div {
-    width: 299px;
   }
 }
 .liquidations {
