@@ -3816,6 +3816,11 @@ input[type=range][orient=vertical] {
     overflow-x: hidden;
   }
 }
+@media screen and (min-width: 1440px) {
+  .positions {
+    gap: 8%;
+  }
+}
 @media screen and (max-width: 375px) {
   .asset-info-child,
   .asset-info-child1,
