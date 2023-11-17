@@ -583,7 +583,6 @@ h3[data-descr]:hover::after {
 }
 .menu {
   position: absolute;
-  /* margin-top: 262%; */
   margin-top: 120%;
   width: 75px;
 }
@@ -2587,17 +2586,6 @@ span[data-descr]:hover::after {
   font-size: small;
   z-index: 1;
 }
-/*
-.proposal-label-frame {
-  position: absolute;
-  top: 250px;
-  left: 35px;
-  width: 401px;
-  height: 45px;
-  background-color: #ababab;
-  border-radius: 0.25rem;
-  z-index: 0;
-} */
 .proposal-menu {
   position: absolute;
   margin-top: 222%;
@@ -3395,20 +3383,21 @@ span[data-descr]:hover::after {
   height: 504.75px;
   z-index: 2;
 }
-/* .vault-subframe {
-  position: absolute;
-  top: 104px;
-  left: -27px;
-  background-color: #2F2F2F;
-  border: 3px solid black;
-  box-sizing: border-box;
-  width: 1225px;
-  height: 704px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-} */
+@media screen and (max-width:320px) {
+  .asset-info {    
+    left: 0%;
+    width: 240px;
+  }
+  .asset-info-child,
+  .asset-info-child1,
+  .asset-info-child2,
+  .asset-info-child3,
+  .asset-info-inner,
+  .asset-info-item,
+  .line-div {
+    width: 238px;
+  }
+}
 .controller-item {
   position: relative;
   top: 16%;
@@ -3422,13 +3411,6 @@ span[data-descr]:hover::after {
   height: 284px;
   z-index: 1;
 }
-/* .controller-border {
-  background-image: linear-gradient(#50C9BD, #7990FE);
-  top: 219px;
-  left: 898.5px;
-  width: 282px;
-  height: 287px;
-} */
 .controller-label {
   position: absolute;
   background-color: #2F2F2F;
@@ -3634,10 +3616,6 @@ span[data-descr]:hover::after {
   padding-right: 0.75rem;
   padding-bottom: 0.75rem;
 }
-/* .amount-label:hover,
-.mint-amount-label:hover {
-  background-color: #798eff;
-} */
 .range-label {
   position: absolute;
   font-size: small;
@@ -3785,17 +3763,6 @@ input[type=range][orient=vertical] {
   width: 189px;
   height: 60px;
 }
-/* .starting-screen {
-  position: absolute;
-  top: 100px;
-  left: 42px;
-  font-size: large;
-  text-align: center;
-  display: inline-block;
-  width: 189px;
-  height: 60px;
-  z-index: 0;
-} */
 .positions {
   position: relative;
   width: 100vw;
@@ -3928,7 +3895,6 @@ input[type=range][orient=vertical] {
   top: 190px;
   left: 22px;
 }
-
 /* Popup specifc */
 .popup {
   position: fixed;
