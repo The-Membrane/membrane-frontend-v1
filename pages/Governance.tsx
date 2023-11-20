@@ -1000,44 +1000,44 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
           <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>
           <div className="delegate-box" >
             <div className="delegate-frame">
-              <div className="delegate-1">{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator.slice(13)}...</>} ttttttttttttt...</div>
-              <div className="delegate-1">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator.slice(13)}...</>}ttttttttttttt...</div>
-              <div className="delegate-1">{delegations[2].delegator === "" ? ("") : <>{delegations[2].delegator.slice(13)}...</>}ttttttttttttt...</div>
-              <div className="delegate-1">{delegations[3].delegator === "" ? ("") : <>{delegations[3].delegator.slice(13)}...</>}ttttttttttttt...</div>
-              <div className="delegate-1">{delegations[4].delegator === "" ? ("") : <>{delegations[4].delegator.slice(13)}...</>}ttttttttttttt...</div>
-              <div className="delegate-1">{delegations[5].delegator === "" ? ("") : <>{delegations[5].delegator.slice(13)}...</>}ttttttttttttt...</div>
-              <div className="delegate-1">{delegations[6].delegator === "" ? ("") : <>{delegations[6].delegator.slice(13)}...</>}ttttttttttttt...</div>
-              <div className="delegate-1">{delegations[7].delegator === "" ? ("") : <>{delegations[7].delegator.slice(13)}...</>}ttttttttttttt...</div>
+              <div className="delegate-1">{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator.slice(13)}...</>}</div>
+              <div className="delegate-1">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator.slice(13)}...</>}</div>
+              <div className="delegate-1">{delegations[2].delegator === "" ? ("") : <>{delegations[2].delegator.slice(13)}...</>}</div>
+              <div className="delegate-1">{delegations[3].delegator === "" ? ("") : <>{delegations[3].delegator.slice(13)}...</>}</div>
+              <div className="delegate-1">{delegations[4].delegator === "" ? ("") : <>{delegations[4].delegator.slice(13)}...</>}</div>
+              <div className="delegate-1">{delegations[5].delegator === "" ? ("") : <>{delegations[5].delegator.slice(13)}...</>}</div>
+              <div className="delegate-1">{delegations[6].delegator === "" ? ("") : <>{delegations[6].delegator.slice(13)}...</>}</div>
+              <div className="delegate-1">{delegations[7].delegator === "" ? ("") : <>{delegations[7].delegator.slice(13)}...</>}</div>
             </div>
             <div className="fluidity-frame">
-              <div className="fluid-1">{delegations[0].fluid === true ? ("Yes") : delegations[0].fluid === false ? "No" : ""}No</div>
-              <div className="fluid-1">{delegations[1].fluid === true ? ("Yes") : delegations[1].fluid === false ? "No" : ""}No</div>
-              <div className="fluid-1">{delegations[2].fluid === true ? ("Yes") : delegations[2].fluid === false ? "No" : ""}No</div>
-              <div className="fluid-1">{delegations[3].fluid === true ? ("Yes") : delegations[3].fluid === false ? "No" : ""}No</div>
-              <div className="fluid-1">{delegations[4].fluid === true ? ("Yes") : delegations[4].fluid === false ? "No" : ""}No</div>
-              <div className="fluid-1">{delegations[5].fluid === true ? ("Yes") : delegations[5].fluid === false ? "No" : ""}No</div>
-              <div className="fluid-1">{delegations[6].fluid === true ? ("Yes") : delegations[6].fluid === false ? "No" : ""}No</div>
-              <div className="fluid-1">{delegations[7].fluid === true ? ("Yes") : delegations[7].fluid === false ? "No" : ""}No</div>
+              <div className="fluid-1">{delegations[0].fluid === true ? ("Yes") : delegations[0].fluid === false ? "No" : ""}</div>
+              <div className="fluid-1">{delegations[1].fluid === true ? ("Yes") : delegations[1].fluid === false ? "No" : ""}</div>
+              <div className="fluid-1">{delegations[2].fluid === true ? ("Yes") : delegations[2].fluid === false ? "No" : ""}</div>
+              <div className="fluid-1">{delegations[3].fluid === true ? ("Yes") : delegations[3].fluid === false ? "No" : ""}</div>
+              <div className="fluid-1">{delegations[4].fluid === true ? ("Yes") : delegations[4].fluid === false ? "No" : ""}</div>
+              <div className="fluid-1">{delegations[5].fluid === true ? ("Yes") : delegations[5].fluid === false ? "No" : ""}</div>
+              <div className="fluid-1">{delegations[6].fluid === true ? ("Yes") : delegations[6].fluid === false ? "No" : ""}</div>
+              <div className="fluid-1">{delegations[7].fluid === true ? ("Yes") : delegations[7].fluid === false ? "No" : ""}</div>
             </div>
             <div className="voting-power-frame">
-              <div className="vp-1">{delegations[0].amount !== undefined ? <>{delegations[0].amount}</> : ""}99</div>
-              <div className="vp-1">{delegations[1].amount !== undefined ? <>{delegations[1].amount}</> : ""}99</div>
-              <div className="vp-1">{delegations[2].amount !== undefined ? <>{delegations[2].amount}</> : ""}99</div>
-              <div className="vp-1">{delegations[3].amount !== undefined ? <>{delegations[3].amount}</> : ""}99</div>
-              <div className="vp-1">{delegations[4].amount !== undefined ? <>{delegations[4].amount}</> : ""}99</div>
-              <div className="vp-1">{delegations[5].amount !== undefined ? <>{delegations[5].amount}</> : ""}99</div>
-              <div className="vp-1">{delegations[6].amount !== undefined ? <>{delegations[6].amount}</> : ""}99</div>
-              <div className="vp-1">{delegations[7].amount !== undefined ? <>{delegations[7].amount}</> : ""}99</div>
+              <div className="vp-1">{delegations[0].amount !== undefined ? <>{Math.sqrt(delegations[0].amount)}</> : ""}</div>
+              <div className="vp-1">{delegations[1].amount !== undefined ? <>{Math.sqrt(delegations[1].amount)}</> : ""}</div>
+              <div className="vp-1">{delegations[2].amount !== undefined ? <>{Math.sqrt(delegations[2].amount)}</> : ""}</div>
+              <div className="vp-1">{delegations[3].amount !== undefined ? <>{Math.sqrt(delegations[3].amount)}</> : ""}</div>
+              <div className="vp-1">{delegations[4].amount !== undefined ? <>{Math.sqrt(delegations[4].amount)}</> : ""}</div>
+              <div className="vp-1">{delegations[5].amount !== undefined ? <>{Math.sqrt(delegations[5].amount)}</> : ""}</div>
+              <div className="vp-1">{delegations[6].amount !== undefined ? <>{Math.sqrt(delegations[6].amount)}</> : ""}</div>
+              <div className="vp-1">{delegations[7].amount !== undefined ? <>{Math.sqrt(delegations[7].amount)}</> : ""}</div>
             </div>
             <div className="commission-frame">
-              <div className="commission-1">{delegations[0].commission !== undefined ? <>{delegations[0].commission}%</> : ""}10%</div>
-              <div className="commission-1">{delegations[1].commission !== undefined ? <>{delegations[1].commission}%</> : ""}10%</div>
-              <div className="commission-1">{delegations[2].commission !== undefined ? <>{delegations[2].commission}%</> : ""}10%</div>
-              <div className="commission-1">{delegations[3].commission !== undefined ? <>{delegations[3].commission}%</> : ""}10%</div>
-              <div className="commission-1">{delegations[4].commission !== undefined ? <>{delegations[4].commission}%</> : ""}10%</div>
-              <div className="commission-1">{delegations[5].commission !== undefined ? <>{delegations[5].commission}%</> : ""}10%</div>
-              <div className="commission-1">{delegations[6].commission !== undefined ? <>{delegations[6].commission}%</> : ""}10%</div>
-              <div className="commission-1">{delegations[7].commission !== undefined ? <>{delegations[7].commission}%</> : ""}10%</div>
+              <div className="commission-1">{delegations[0].commission !== undefined ? <>{delegations[0].commission}%</> : ""}</div>
+              <div className="commission-1">{delegations[1].commission !== undefined ? <>{delegations[1].commission}%</> : ""}</div>
+              <div className="commission-1">{delegations[2].commission !== undefined ? <>{delegations[2].commission}%</> : ""}</div>
+              <div className="commission-1">{delegations[3].commission !== undefined ? <>{delegations[3].commission}%</> : ""}</div>
+              <div className="commission-1">{delegations[4].commission !== undefined ? <>{delegations[4].commission}%</> : ""}</div>
+              <div className="commission-1">{delegations[5].commission !== undefined ? <>{delegations[5].commission}%</> : ""}</div>
+              <div className="commission-1">{delegations[6].commission !== undefined ? <>{delegations[6].commission}%</> : ""}</div>
+              <div className="commission-1">{delegations[7].commission !== undefined ? <>{delegations[7].commission}%</> : ""}</div>
             </div>
             <div className="delegate-xaxis-frame">
               <div className="delegate-x" />
