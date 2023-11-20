@@ -620,7 +620,7 @@ export default function Home() {
     mbrnClaims: 0,
     cdtClaims: 0,
   });
-  
+  const [maxCommission, setmaxCommission] = useState(0);
   const [walletMBRN, setwalletMBRN] = useState(0);
   //Delegations
   
@@ -772,8 +772,7 @@ export default function Home() {
     } catch (error) {
       console.log(error)
     }
-  }
-  
+  }  
   //Get emissions schedule
   const getEmissionsSchedule = async () => {
     try {
@@ -801,6 +800,18 @@ export default function Home() {
       console.log(error)
     }
   }
+  //Get staking max commission
+  const getStakingCommission = async () => {
+    try {
+      await stakingqueryClient?.config()
+      .then((res) => {
+        setmaxCommission(parseInt(res.max_commission_rate))
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   const getProposals = async () => {
     try {
@@ -958,7 +969,11 @@ export default function Home() {
       //Get account's balance of MBRN
       governancequeryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
         setwalletMBRN(parseInt(res.amount) / 1_000_000);
-    })
+      })
+    }
+    if (maxCommission === 0){
+      //Get staking max commission
+      getStakingCommission()
     }
     
   }, [oraclequeryClient, cdpqueryClient, prices, address])
@@ -982,7 +997,7 @@ export default function Home() {
     } else if (activeComponent === 'staking') {
       return <Governance govClient={governance_client} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} address={address as string | undefined} 
         Delegations={delegations} Delegators={delegators} quorum={quorum} Proposals={proposals} UserVP={userVP} EmissionsSchedule={emissionsSchedule} UserStake={userStake} UserClaims={userClaims} WalletMBRN={walletMBRN}
-        setQuorum={setQuorum}
+        setQuorum={setQuorum} maxCommission={maxCommission} setmaxCommission={setmaxCommission}
       />;
     } else if (activeComponent === 'launch') {
       return <Lockdrop launch_client={launch_client} queryClient={launchqueryClient} baseClient={base_client} address={address as string | undefined} prices={prices} />;

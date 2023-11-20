@@ -56,6 +56,8 @@ interface Props {
   Delegators: Delegator[];
   quorum: number;
   setQuorum: (quorum: number) => void;
+  maxCommission: number;
+  setmaxCommission: (maxCommission: number) => void;
   Proposals: ProposalList;
   UserVP: number;
   EmissionsSchedule: EmissionsSchedule;
@@ -65,7 +67,7 @@ interface Props {
 }
 
 const Governance = ({govClient, stakingClient, stakingQueryClient, address,
-  Delegations, Delegators, quorum, setQuorum, Proposals, UserVP, EmissionsSchedule, UserStake, UserClaims, WalletMBRN
+  Delegations, Delegators, quorum, setQuorum, maxCommission, setmaxCommission, Proposals, UserVP, EmissionsSchedule, UserStake, UserClaims, WalletMBRN
 }: Props) => {
   const { connect } = useChain(chainName);
   //Popup
@@ -80,7 +82,6 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   const [unstakeAmount, setunstakeAmount] = useState();
 
   const [commission, setCommission] = useState(0);
-  const [maxCommission, setmaxCommission] = useState(0);
   
   const [delegations, setDelegations] = useState<Delegation[]>([
     {
@@ -785,290 +786,327 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
   }, [Proposals, EmissionsSchedule, UserStake, UserClaims, Delegations, Delegators, WalletMBRN, UserVP]);
       
   return (
-    <div className="governance">
-    <h1 className="pagetitle-gov">Governance</h1>
-    <Image className="gov-icon" width={43} height={48} alt="" src="/images/staking.svg" />
-      <div className="proposals-frame">
-        <div className="proposal-axis" />
-        <div className="proposal-axis1" />
-        <div className="proposal-axis2" />
-        <div className="proposal-axis3" />
-        <div className="proposal-axis4" />
-        <div className="proposal-axis5" />
-        <div className="proposal-axis6" />
-        <div className="proposal-axis7" />
-        <div className="proposal1-button" style={{backgroundColor:proposalColor}}/>
-        <div className="proposal2-button" style={{backgroundColor:proposalColor}}/>
-        <div className="proposal3-button" style={{backgroundColor:proposalColor}}/>
-        <div className="proposal4-button" style={{backgroundColor:proposalColor}}/>
-        <div className="proposal5-button" style={{backgroundColor:proposalColor}}/>
-        <div className="proposal6-button" style={{backgroundColor:proposalColor}}/>
-        <div className="proposal7-button" style={{backgroundColor:proposalColor}}/>
-        <div className="proposal8-button" style={{backgroundColor:proposalColor}}/>
-        {proposalType === "Active" ? (
-        <><div className="proposal-1" onClick={() => handleproposalClick(proposals.active[0][0])}>{proposals.active[0][0]?.title ?? ""}</div>
-        <div className="proposal-2" onClick={() => handleproposalClick(proposals.active[1][0])}>{proposals.active[1][0]?.title  ?? ""}</div>
-        <div className="proposal-3" onClick={() => handleproposalClick(proposals.active[2][0])}>{proposals.active[2][0]?.title  ?? ""}</div>
-        <div className="proposal-4" onClick={() => handleproposalClick(proposals.active[3][0])}>{proposals.active[3][0]?.title  ?? ""}</div>
-        <div className="proposal-5" onClick={() => handleproposalClick(proposals.active[4][0])}>{proposals.active[4][0]?.title  ?? ""}</div>
-        <div className="proposal-6" onClick={() => handleproposalClick(proposals.active[5][0])}>{proposals.active[5][0]?.title  ?? ""}</div>
-        <div className="proposal-7" onClick={() => handleproposalClick(proposals.active[6][0])}>{proposals.active[6][0]?.title  ?? ""}</div>
-        <div className="proposal-8" onClick={() => handleproposalClick(proposals.active[7][0])}>{proposals.active[7][0]?.title  ?? ""}</div>
-        <div className="proposal-days" style={(proposals.active[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[0][1] ?? 0} days</div>
-        <div className="proposal-days1" style={(proposals.active[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[1][1] ?? 0} days</div>
-        <div className="proposal-days2" style={(proposals.active[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[2][1] ?? 0} days</div>
-        <div className="proposal-days3" style={(proposals.active[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[3][1] ?? 0} days</div>
-        <div className="proposal-days4" style={(proposals.active[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[4][1] ?? 0} days</div>
-        <div className="proposal-days5" style={(proposals.active[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[5][1] ?? 0} days</div>
-        <div className="proposal-days6" style={(proposals.active[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[6][1] ?? 0} days</div>
-        <div className="proposal-days7" style={(proposals.active[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[7][1] ?? 0} days</div>
-        <div className="proposal-result" style={((proposals.active[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[0][2] ?? ""}</div>
-        <div className="proposal-result1" style={((proposals.active[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[1][2] ?? ""}</div>
-        <div className="proposal-result2" style={((proposals.active[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[2][2] ?? ""}</div>
-        <div className="proposal-result3" style={((proposals.active[3][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[3][2] ?? ""}</div>
-        <div className="proposal-result4" style={((proposals.active[4][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[4][2] ?? ""}</div>
-        <div className="proposal-result5" style={((proposals.active[5][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[5][2] ?? ""}</div>
-        <div className="proposal-result6" style={((proposals.active[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[6][2] ?? ""}</div>
-        <div className="proposal-result7" style={((proposals.active[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[7][2] ?? ""}</div></>) 
-        : proposalType === "Pending" ? (
-          <><div className="proposal-1" onClick={() => handleproposalClick(proposals.pending[0][0])}>{proposals.pending[0][0]?.title  ?? ""}</div>
-          <div className="proposal-2" onClick={() => handleproposalClick(proposals.pending[1][0])}>{proposals.pending[1][0]?.title  ?? ""}</div>
-          <div className="proposal-3" onClick={() => handleproposalClick(proposals.pending[2][0])}>{proposals.pending[2][0]?.title  ?? ""}</div>
-          <div className="proposal-4" onClick={() => handleproposalClick(proposals.pending[3][0])}>{proposals.pending[3][0]?.title  ?? ""}</div>
-          <div className="proposal-5" onClick={() => handleproposalClick(proposals.pending[4][0])}>{proposals.pending[4][0]?.title  ?? ""}</div>
-          <div className="proposal-6" onClick={() => handleproposalClick(proposals.pending[5][0])}>{proposals.pending[5][0]?.title  ?? ""}</div>
-          <div className="proposal-7" onClick={() => handleproposalClick(proposals.pending[6][0])}>{proposals.pending[6][0]?.title  ?? ""}</div>
-          <div className="proposal-8" onClick={() => handleproposalClick(proposals.pending[7][0])}>{proposals.pending[7][0]?.title  ?? ""}</div>
-          <div className="proposal-days" style={(proposals.pending[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[0][1] ?? 0} days</div>
-          <div className="proposal-days1" style={(proposals.pending[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[1][1] ?? 0} days</div>
-          <div className="proposal-days2" style={(proposals.pending[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[2][1] ?? 0} days</div>
-          <div className="proposal-days3" style={(proposals.pending[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[3][1] ?? 0} days</div>
-          <div className="proposal-days4" style={(proposals.pending[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[4][1] ?? 0} days</div>
-          <div className="proposal-days5" style={(proposals.pending[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[5][1] ?? 0} days</div>
-          <div className="proposal-days6" style={(proposals.pending[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[6][1] ?? 0} days</div>
-          <div className="proposal-days7" style={(proposals.pending[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[7][1] ?? 0} days</div>
-          <div className="proposal-result" style={((proposals.pending[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[0][2] ?? ""}</div>
-          <div className="proposal-result1" style={((proposals.pending[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[1][2] ?? ""}</div>
-          <div className="proposal-result2" style={((proposals.pending[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[2][2] ?? ""}</div>
-          <div className="proposal-result3" style={((proposals.pending[3][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[3][2] ?? ""}</div>
-          <div className="proposal-result4" style={((proposals.pending[4][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[4][2] ?? ""}</div>
-          <div className="proposal-result5" style={((proposals.pending[5][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[5][2] ?? ""}</div>
-          <div className="proposal-result6" style={((proposals.pending[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[6][2] ?? ""}</div>
-          <div className="proposal-result7" style={((proposals.pending[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[7][2] ?? ""}</div></>) 
-        : proposalType === "Completed" ? (
-          <><div className="proposal-1" onClick={() => handleproposalClick(proposals.completed[0][0])}>{proposals.completed[0][0]?.title  ?? ""}</div>
-          <div className="proposal-2" onClick={() => handleproposalClick(proposals.completed[1][0])}>{proposals.completed[1][0]?.title  ?? ""}</div>
-          <div className="proposal-3" onClick={() => handleproposalClick(proposals.completed[2][0])}>{proposals.completed[2][0]?.title  ?? ""}</div>
-          <div className="proposal-4" onClick={() => handleproposalClick(proposals.completed[3][0])}>{proposals.completed[3][0]?.title  ?? ""}</div>
-          <div className="proposal-5" onClick={() => handleproposalClick(proposals.completed[4][0])}>{proposals.completed[4][0]?.title  ?? ""}</div>
-          <div className="proposal-6" onClick={() => handleproposalClick(proposals.completed[5][0])}>{proposals.completed[5][0]?.title  ?? ""}</div>
-          <div className="proposal-7" onClick={() => handleproposalClick(proposals.completed[6][0])}>{proposals.completed[6][0]?.title  ?? ""}</div>
-          <div className="proposal-8" onClick={() => handleproposalClick(proposals.completed[7][0])}>{proposals.completed[7][0]?.title  ?? ""}</div>
-          <div className="proposal-days" style={(proposals.completed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[0][1] ?? 0} days</div>
-          <div className="proposal-days1" style={(proposals.completed[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[1][1] ?? 0} days</div>
-          <div className="proposal-days2" style={(proposals.completed[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[2][1] ?? 0} days</div>
-          <div className="proposal-days3" style={(proposals.completed[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[3][1] ?? 0} days</div>
-          <div className="proposal-days4" style={(proposals.completed[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[4][1] ?? 0} days</div>
-          <div className="proposal-days5" style={(proposals.completed[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[5][1] ?? 0} days</div>
-          <div className="proposal-days6" style={(proposals.completed[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[6][1] ?? 0} days</div>
-          <div className="proposal-days7" style={(proposals.completed[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[7][1] ?? 0} days</div>
-          <div className="proposal-result" style={((proposals.completed[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[0][2] ?? ""}</div>
-          <div className="proposal-result1" style={((proposals.completed[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[1][2] ?? ""}</div>
-          <div className="proposal-result2" style={((proposals.completed[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[2][2] ?? ""}</div>
-          <div className="proposal-result3" style={((proposals.completed[3][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[3][2] ?? ""}</div>
-          <div className="proposal-result4" style={((proposals.completed[4][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[4][2] ?? ""}</div>
-          <div className="proposal-result5" style={((proposals.completed[5][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[5][2] ?? ""}</div>
-          <div className="proposal-result6" style={((proposals.completed[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[6][2] ?? ""}</div>
-          <div className="proposal-result7" style={((proposals.completed[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[7][2] ?? ""}</div></>
-        ) 
-        : proposalType === "Executed" ? (
-          <><div className="proposal-1" onClick={() => handleproposalClick(proposals.executed[0][0])}>{proposals.executed[0][0]?.title  ?? ""}</div>
-          <div className="proposal-2" onClick={() => handleproposalClick(proposals.executed[1][0])}>{proposals.executed[1][0]?.title  ?? ""}</div>
-          <div className="proposal-3" onClick={() => handleproposalClick(proposals.executed[2][0])}>{proposals.executed[2][0]?.title  ?? ""}</div>
-          <div className="proposal-4" onClick={() => handleproposalClick(proposals.executed[3][0])}>{proposals.executed[3][0]?.title  ?? ""}</div>
-          <div className="proposal-5" onClick={() => handleproposalClick(proposals.executed[4][0])}>{proposals.executed[4][0]?.title  ?? ""}</div>
-          <div className="proposal-6" onClick={() => handleproposalClick(proposals.executed[5][0])}>{proposals.executed[5][0]?.title  ?? ""}</div>
-          <div className="proposal-7" onClick={() => handleproposalClick(proposals.executed[6][0])}>{proposals.executed[6][0]?.title  ?? ""}</div>
-          <div className="proposal-8" onClick={() => handleproposalClick(proposals.executed[7][0])}>{proposals.executed[7][0]?.title  ?? ""}</div>
-          <div className="proposal-days" style={(proposals.executed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[0][1] ?? 0} days</div>
-          <div className="proposal-days1" style={(proposals.executed[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[1][1] ?? 0} days</div>
-          <div className="proposal-days2" style={(proposals.executed[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[2][1] ?? 0} days</div>
-          <div className="proposal-days3" style={(proposals.executed[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[3][1] ?? 0} days</div>
-          <div className="proposal-days4" style={(proposals.executed[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[4][1] ?? 0} days</div>
-          <div className="proposal-days5" style={(proposals.executed[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[5][1] ?? 0} days</div>
-          <div className="proposal-days6" style={(proposals.executed[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[6][1] ?? 0} days</div>
-          <div className="proposal-days7" style={(proposals.executed[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[7][1] ?? 0} days</div>
-          <div className="proposal-result" style={((proposals.executed[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[0][2] ?? ""}</div>
-          <div className="proposal-result1" style={((proposals.executed[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[1][2] ?? ""}</div>
-          <div className="proposal-result2" style={((proposals.executed[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[2][2] ?? ""}</div>
-          <div className="proposal-result3" style={((proposals.executed[3][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[3][2] ?? ""}</div>
-          <div className="proposal-result4" style={((proposals.executed[4][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[4][2] ?? ""}</div>
-          <div className="proposal-result5" style={((proposals.executed[5][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[5][2] ?? ""}</div>
-          <div className="proposal-result6" style={((proposals.executed[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[6][2] ?? ""}</div>
-          <div className="proposal-result7" style={((proposals.executed[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[7][2] ?? ""}</div></>
-        ) : null}
-        <div className="submit-proposal-button" onClick={handlesubmitproposalForm}>
-          <div className="submit-proposal" onClick={handlesubmitproposalForm}>Submit Proposal</div>
+    <div className="page-frame governance">
+      <div className="pagetitle-gov">
+        Governance
+        <Image className="gov-icon" width={43} height={48} alt="" src="/images/staking.svg" />  
+        <div className="total-vp-frame">
+          <div className="total-vp-label">Total VP: </div>
+          <div className="total-vp-amount">{Math.sqrt(parseInt((userVP/1_000_000).toFixed(0))).toFixed(2)}</div>
+        </div>
+      </div>  
+      <div className="button-frames">
+        <div className="stake-button-frame">
+          <div className="staked-mbrn-frame">
+            <div className="staked-mbrn1">Staked: {parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
+            <div className="emissions-schedule">{emissionsSchedule.rate}%/{emissionsSchedule.monthsLeft} months</div>            
+            <div className="staked-mbrn2">in Wallet: {walletMBRN.toFixed(2)}</div>
+          </div>
+          <form style={{position: "relative", bottom: "10%"}}>
+            <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
+            <button className="btn stake-button1" type="button" onClick={handlestakeClick}>
+              <div className="stake">Stake:</div>
+            </button>
+          </form>
+        </div>  
+        <div className="unstake-button-frame">
+          <form style={{top: "5%", position: "relative"}}>
+            <input className="unstake-input" name="amount" value={unstakeAmount} type="number" onChange={handlesetunstakeAmount}/>
+            <button className="btn unstake-button" type="button" onClick={handleunstakeClick}>
+              <div className="unstake">Unstake:</div>
+            </button>
+          </form>
+          <div className="unstaked-mbrn-frame">
+            <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
+            <div className="unstaking-mbrn-total">{"/" + parseFloat((userStake.unstaking_total/1_000_000).toFixed(2))}</div> 
+            <div className="unstaking-progress-bar" >
+              <ProgressBar bgcolor="#50C9BD" noMargin={true} progress={userStake.unstaking.amount !== 0 ? parseFloat((((unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod) * 100).toFixed(2)) : 0}  height={20} />
+            </div>
+          </div>                   
+          <Image className="mbrn-unstake-logo" width={43} height={43} alt="" src="/images/Logo.svg" />
+        </div>
+        <div className="claim-button-frame">        
+          <div className="btn gov-claim-button" onClick={handleclaimClick}>
+            <div className="claim">Claim</div>
+          </div>
+          <div className="claims-frame">
+            <div style={{display: "flex", flexDirection: "row", position: "relative", justifyContent: "center"}}>
+              <div className="cdt-claims">{userClaims.cdtClaims}</div>
+              <Image width={43} height={48} alt="" src="/images/CDT.svg" />
+            </div>
+            <div style={{display: "flex", flexDirection: "row", position: "relative", justifyContent: "center"}}>
+              <div className="mbrn-claims">{userClaims.mbrnClaims}</div>
+              <Image width={43} height={48} alt="" src="/images/Logo.svg" />
+            </div>
+          </div>
         </div>
       </div>
-      <div className="btn delegate-button" onClick={() => handledelegateForm()}>
-        <div className="delegate">Delegate</div>
-      </div>
-      <div className="total-vp-label">Total VP: </div>
-      <div className="total-vp-amount">{Math.sqrt(parseInt((userVP/1_000_000).toFixed(0))).toFixed(2)}</div>
-      <div className="delegated-to">Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fluid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comm.&nbsp;&nbsp;&nbsp;&nbsp;Undele.</div>
-      <div className="claim-button-frame">        
-        <div className="cdt-claims">{userClaims.cdtClaims}</div>
-        <div className="mbrn-claims">{userClaims.mbrnClaims}</div>
-      </div>
-      <div className="btn gov-claim-button" onClick={handleclaimClick}>
-        <div className="claim">Claim</div>
-      </div>
-      <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>
-      <div className="unstake-button-frame"/>
-      <form>
-        <input className="unstake-input" name="amount" value={unstakeAmount} type="number" onChange={handlesetunstakeAmount}/>
-        <button className="btn unstake-button" type="button" onClick={handleunstakeClick}>
-          <div className="unstake">Unstake:</div>
-        </button>
-      </form>
-      <div className="stake-button-frame"/>
-      <form>
-        <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
-        <button className="btn stake-button1" type="button" onClick={handlestakeClick}>
-          <div className="stake">Stake:</div>
-        </button>
-      </form>
-      <div className="status-dropdown">
-        <Image className="button-icon" width={11.26} height={13.5} alt="" src="images/button.svg" />
-        <div className="dropdown proposal-dropdown">
-            <button onClick={handleOpen}>Proposal Status</button>
-            {open ? (
-                <ul className="proposal-menu">
-                <li className="proposal-menu-item-active">
-                    <button onClick={handleActive}>Active</button>
-                </li>
-                <li className="proposal-menu-item-pending">
-                    <button onClick={handlePending}>Pending</button>
-                </li>
-                <li className="proposal-menu-item-completed">
-                    <button onClick={handleCompleted}>Completed</button>
-                </li>
-                <li className="proposal-menu-item-executed">
-                    <button onClick={handleExecuted}>Executed</button>
-                </li>
-                </ul>
-            ) : null}
+      <div className="proposals-delegations">
+        <div className="proposals-frame">
+        <div className="status-dropdown">
+          <div className="dropdown proposal-dropdown">
+              <button onClick={handleOpen} style={{outline: "none"}}>Proposal Status</button>
+              {open ? (
+                  <ul className="proposal-menu">
+                  <li className="proposal-menu-item-active">
+                      <button onClick={handleActive} style={{outline: "none"}}>Active</button>
+                  </li>
+                  <li className="proposal-menu-item-pending">
+                      <button onClick={handlePending} style={{outline: "none"}}>Pending</button>
+                  </li>
+                  <li className="proposal-menu-item-completed">
+                      <button onClick={handleCompleted} style={{outline: "none"}}>Completed</button>
+                  </li>
+                  <li className="proposal-menu-item-executed">
+                      <button onClick={handleExecuted} style={{outline: "none"}}>Executed</button>
+                  </li>
+                  </ul>
+              ) : null}
+            </div>
+        </div>
+        <div className="proposal-axis-labels">Days Left&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current Result</div>
+          <div className="proposal-axis" />
+          <div className="proposal-axis1" />
+          <div className="proposal-axis2" />
+          <div className="proposal-axis3" />
+          <div className="proposal-axis4" />
+          <div className="proposal-axis5" />
+          <div className="proposal-axis6" />
+          <div className="proposal-axis7" />
+          <div className="proposal1-button" style={{backgroundColor:proposalColor}}/>
+          <div className="proposal2-button" style={{backgroundColor:proposalColor}}/>
+          <div className="proposal3-button" style={{backgroundColor:proposalColor}}/>
+          <div className="proposal4-button" style={{backgroundColor:proposalColor}}/>
+          <div className="proposal5-button" style={{backgroundColor:proposalColor}}/>
+          <div className="proposal6-button" style={{backgroundColor:proposalColor}}/>
+          <div className="proposal7-button" style={{backgroundColor:proposalColor}}/>
+          <div className="proposal8-button" style={{backgroundColor:proposalColor}}/>
+          {proposalType === "Active" ? (
+          <><div className="proposal-1" onClick={() => handleproposalClick(proposals.active[0][0])}>{proposals.active[0][0]?.title ?? ""}</div>
+          <div className="proposal-2" onClick={() => handleproposalClick(proposals.active[1][0])}>{proposals.active[1][0]?.title  ?? ""}</div>
+          <div className="proposal-3" onClick={() => handleproposalClick(proposals.active[2][0])}>{proposals.active[2][0]?.title  ?? ""}</div>
+          <div className="proposal-4" onClick={() => handleproposalClick(proposals.active[3][0])}>{proposals.active[3][0]?.title  ?? ""}</div>
+          <div className="proposal-5" onClick={() => handleproposalClick(proposals.active[4][0])}>{proposals.active[4][0]?.title  ?? ""}</div>
+          <div className="proposal-6" onClick={() => handleproposalClick(proposals.active[5][0])}>{proposals.active[5][0]?.title  ?? ""}</div>
+          <div className="proposal-7" onClick={() => handleproposalClick(proposals.active[6][0])}>{proposals.active[6][0]?.title  ?? ""}</div>
+          <div className="proposal-8" onClick={() => handleproposalClick(proposals.active[7][0])}>{proposals.active[7][0]?.title  ?? ""}</div>
+          <div className="proposal-days" style={(proposals.active[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[0][1] ?? 0} days</div>
+          <div className="proposal-days1" style={(proposals.active[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[1][1] ?? 0} days</div>
+          <div className="proposal-days2" style={(proposals.active[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[2][1] ?? 0} days</div>
+          <div className="proposal-days3" style={(proposals.active[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[3][1] ?? 0} days</div>
+          <div className="proposal-days4" style={(proposals.active[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[4][1] ?? 0} days</div>
+          <div className="proposal-days5" style={(proposals.active[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[5][1] ?? 0} days</div>
+          <div className="proposal-days6" style={(proposals.active[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[6][1] ?? 0} days</div>
+          <div className="proposal-days7" style={(proposals.active[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[7][1] ?? 0} days</div>
+          <div className="proposal-result" style={((proposals.active[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[0][2] ?? ""}</div>
+          <div className="proposal-result1" style={((proposals.active[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[1][2] ?? ""}</div>
+          <div className="proposal-result2" style={((proposals.active[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[2][2] ?? ""}</div>
+          <div className="proposal-result3" style={((proposals.active[3][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[3][2] ?? ""}</div>
+          <div className="proposal-result4" style={((proposals.active[4][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[4][2] ?? ""}</div>
+          <div className="proposal-result5" style={((proposals.active[5][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[5][2] ?? ""}</div>
+          <div className="proposal-result6" style={((proposals.active[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[6][2] ?? ""}</div>
+          <div className="proposal-result7" style={((proposals.active[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[7][2] ?? ""}</div></>) 
+          : proposalType === "Pending" ? (
+            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.pending[0][0])}>{proposals.pending[0][0]?.title  ?? ""}</div>
+            <div className="proposal-2" onClick={() => handleproposalClick(proposals.pending[1][0])}>{proposals.pending[1][0]?.title  ?? ""}</div>
+            <div className="proposal-3" onClick={() => handleproposalClick(proposals.pending[2][0])}>{proposals.pending[2][0]?.title  ?? ""}</div>
+            <div className="proposal-4" onClick={() => handleproposalClick(proposals.pending[3][0])}>{proposals.pending[3][0]?.title  ?? ""}</div>
+            <div className="proposal-5" onClick={() => handleproposalClick(proposals.pending[4][0])}>{proposals.pending[4][0]?.title  ?? ""}</div>
+            <div className="proposal-6" onClick={() => handleproposalClick(proposals.pending[5][0])}>{proposals.pending[5][0]?.title  ?? ""}</div>
+            <div className="proposal-7" onClick={() => handleproposalClick(proposals.pending[6][0])}>{proposals.pending[6][0]?.title  ?? ""}</div>
+            <div className="proposal-8" onClick={() => handleproposalClick(proposals.pending[7][0])}>{proposals.pending[7][0]?.title  ?? ""}</div>
+            <div className="proposal-days" style={(proposals.pending[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[0][1] ?? 0} days</div>
+            <div className="proposal-days1" style={(proposals.pending[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[1][1] ?? 0} days</div>
+            <div className="proposal-days2" style={(proposals.pending[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[2][1] ?? 0} days</div>
+            <div className="proposal-days3" style={(proposals.pending[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[3][1] ?? 0} days</div>
+            <div className="proposal-days4" style={(proposals.pending[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[4][1] ?? 0} days</div>
+            <div className="proposal-days5" style={(proposals.pending[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[5][1] ?? 0} days</div>
+            <div className="proposal-days6" style={(proposals.pending[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[6][1] ?? 0} days</div>
+            <div className="proposal-days7" style={(proposals.pending[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[7][1] ?? 0} days</div>
+            <div className="proposal-result" style={((proposals.pending[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[0][2] ?? ""}</div>
+            <div className="proposal-result1" style={((proposals.pending[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[1][2] ?? ""}</div>
+            <div className="proposal-result2" style={((proposals.pending[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[2][2] ?? ""}</div>
+            <div className="proposal-result3" style={((proposals.pending[3][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[3][2] ?? ""}</div>
+            <div className="proposal-result4" style={((proposals.pending[4][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[4][2] ?? ""}</div>
+            <div className="proposal-result5" style={((proposals.pending[5][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[5][2] ?? ""}</div>
+            <div className="proposal-result6" style={((proposals.pending[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[6][2] ?? ""}</div>
+            <div className="proposal-result7" style={((proposals.pending[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[7][2] ?? ""}</div></>) 
+          : proposalType === "Completed" ? (
+            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.completed[0][0])}>{proposals.completed[0][0]?.title  ?? ""}</div>
+            <div className="proposal-2" onClick={() => handleproposalClick(proposals.completed[1][0])}>{proposals.completed[1][0]?.title  ?? ""}</div>
+            <div className="proposal-3" onClick={() => handleproposalClick(proposals.completed[2][0])}>{proposals.completed[2][0]?.title  ?? ""}</div>
+            <div className="proposal-4" onClick={() => handleproposalClick(proposals.completed[3][0])}>{proposals.completed[3][0]?.title  ?? ""}</div>
+            <div className="proposal-5" onClick={() => handleproposalClick(proposals.completed[4][0])}>{proposals.completed[4][0]?.title  ?? ""}</div>
+            <div className="proposal-6" onClick={() => handleproposalClick(proposals.completed[5][0])}>{proposals.completed[5][0]?.title  ?? ""}</div>
+            <div className="proposal-7" onClick={() => handleproposalClick(proposals.completed[6][0])}>{proposals.completed[6][0]?.title  ?? ""}</div>
+            <div className="proposal-8" onClick={() => handleproposalClick(proposals.completed[7][0])}>{proposals.completed[7][0]?.title  ?? ""}</div>
+            <div className="proposal-days" style={(proposals.completed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[0][1] ?? 0} days</div>
+            <div className="proposal-days1" style={(proposals.completed[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[1][1] ?? 0} days</div>
+            <div className="proposal-days2" style={(proposals.completed[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[2][1] ?? 0} days</div>
+            <div className="proposal-days3" style={(proposals.completed[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[3][1] ?? 0} days</div>
+            <div className="proposal-days4" style={(proposals.completed[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[4][1] ?? 0} days</div>
+            <div className="proposal-days5" style={(proposals.completed[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[5][1] ?? 0} days</div>
+            <div className="proposal-days6" style={(proposals.completed[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[6][1] ?? 0} days</div>
+            <div className="proposal-days7" style={(proposals.completed[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[7][1] ?? 0} days</div>
+            <div className="proposal-result" style={((proposals.completed[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[0][2] ?? ""}</div>
+            <div className="proposal-result1" style={((proposals.completed[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[1][2] ?? ""}</div>
+            <div className="proposal-result2" style={((proposals.completed[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[2][2] ?? ""}</div>
+            <div className="proposal-result3" style={((proposals.completed[3][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[3][2] ?? ""}</div>
+            <div className="proposal-result4" style={((proposals.completed[4][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[4][2] ?? ""}</div>
+            <div className="proposal-result5" style={((proposals.completed[5][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[5][2] ?? ""}</div>
+            <div className="proposal-result6" style={((proposals.completed[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[6][2] ?? ""}</div>
+            <div className="proposal-result7" style={((proposals.completed[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[7][2] ?? ""}</div></>
+          ) 
+          : proposalType === "Executed" ? (
+            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.executed[0][0])}>{proposals.executed[0][0]?.title  ?? ""}</div>
+            <div className="proposal-2" onClick={() => handleproposalClick(proposals.executed[1][0])}>{proposals.executed[1][0]?.title  ?? ""}</div>
+            <div className="proposal-3" onClick={() => handleproposalClick(proposals.executed[2][0])}>{proposals.executed[2][0]?.title  ?? ""}</div>
+            <div className="proposal-4" onClick={() => handleproposalClick(proposals.executed[3][0])}>{proposals.executed[3][0]?.title  ?? ""}</div>
+            <div className="proposal-5" onClick={() => handleproposalClick(proposals.executed[4][0])}>{proposals.executed[4][0]?.title  ?? ""}</div>
+            <div className="proposal-6" onClick={() => handleproposalClick(proposals.executed[5][0])}>{proposals.executed[5][0]?.title  ?? ""}</div>
+            <div className="proposal-7" onClick={() => handleproposalClick(proposals.executed[6][0])}>{proposals.executed[6][0]?.title  ?? ""}</div>
+            <div className="proposal-8" onClick={() => handleproposalClick(proposals.executed[7][0])}>{proposals.executed[7][0]?.title  ?? ""}</div>
+            <div className="proposal-days" style={(proposals.executed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[0][1] ?? 0} days</div>
+            <div className="proposal-days1" style={(proposals.executed[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[1][1] ?? 0} days</div>
+            <div className="proposal-days2" style={(proposals.executed[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[2][1] ?? 0} days</div>
+            <div className="proposal-days3" style={(proposals.executed[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[3][1] ?? 0} days</div>
+            <div className="proposal-days4" style={(proposals.executed[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[4][1] ?? 0} days</div>
+            <div className="proposal-days5" style={(proposals.executed[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[5][1] ?? 0} days</div>
+            <div className="proposal-days6" style={(proposals.executed[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[6][1] ?? 0} days</div>
+            <div className="proposal-days7" style={(proposals.executed[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[7][1] ?? 0} days</div>
+            <div className="proposal-result" style={((proposals.executed[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[0][2] ?? ""}</div>
+            <div className="proposal-result1" style={((proposals.executed[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[1][2] ?? ""}</div>
+            <div className="proposal-result2" style={((proposals.executed[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[2][2] ?? ""}</div>
+            <div className="proposal-result3" style={((proposals.executed[3][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[3][2] ?? ""}</div>
+            <div className="proposal-result4" style={((proposals.executed[4][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[4][2] ?? ""}</div>
+            <div className="proposal-result5" style={((proposals.executed[5][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[5][2] ?? ""}</div>
+            <div className="proposal-result6" style={((proposals.executed[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[6][2] ?? ""}</div>
+            <div className="proposal-result7" style={((proposals.executed[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[7][2] ?? ""}</div></>
+          ) : null}
+          <div className="submit-proposal-button" onClick={handlesubmitproposalForm}>
+            <div className="submit-proposal" onClick={handlesubmitproposalForm}>Submit Proposal</div>
           </div>
+        </div>
+        <div className="delegation-frame">
+          <div className="btn set-delegate-button" onClick={() => handledelegateForm()}>
+            <div className="delegate">Delegate</div>
+          </div>
+          <div className="delegate-box-labels">
+            Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div>Fluid&nbsp;&nbsp;</div>
+            <div>VP&nbsp;</div>
+            <div>Comm.&nbsp;Undele.</div>
+          </div>
+          <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>
+          <div className="delegate-box" >
+            <div className="delegate-frame">
+              <div className="delegate-1">{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator.slice(13)}...</>} ttttttttttttt...</div>
+              <div className="delegate-1">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator.slice(13)}...</>}ttttttttttttt...</div>
+              <div className="delegate-1">{delegations[2].delegator === "" ? ("") : <>{delegations[2].delegator.slice(13)}...</>}ttttttttttttt...</div>
+              <div className="delegate-1">{delegations[3].delegator === "" ? ("") : <>{delegations[3].delegator.slice(13)}...</>}ttttttttttttt...</div>
+              <div className="delegate-1">{delegations[4].delegator === "" ? ("") : <>{delegations[4].delegator.slice(13)}...</>}ttttttttttttt...</div>
+              <div className="delegate-1">{delegations[5].delegator === "" ? ("") : <>{delegations[5].delegator.slice(13)}...</>}ttttttttttttt...</div>
+              <div className="delegate-1">{delegations[6].delegator === "" ? ("") : <>{delegations[6].delegator.slice(13)}...</>}ttttttttttttt...</div>
+              <div className="delegate-1">{delegations[7].delegator === "" ? ("") : <>{delegations[7].delegator.slice(13)}...</>}ttttttttttttt...</div>
+            </div>
+            <div className="fluidity-frame">
+              <div className="fluid-1">{delegations[0].fluid === true ? ("Yes") : delegations[0].fluid === false ? "No" : ""}No</div>
+              <div className="fluid-1">{delegations[1].fluid === true ? ("Yes") : delegations[1].fluid === false ? "No" : ""}No</div>
+              <div className="fluid-1">{delegations[2].fluid === true ? ("Yes") : delegations[2].fluid === false ? "No" : ""}No</div>
+              <div className="fluid-1">{delegations[3].fluid === true ? ("Yes") : delegations[3].fluid === false ? "No" : ""}No</div>
+              <div className="fluid-1">{delegations[4].fluid === true ? ("Yes") : delegations[4].fluid === false ? "No" : ""}No</div>
+              <div className="fluid-1">{delegations[5].fluid === true ? ("Yes") : delegations[5].fluid === false ? "No" : ""}No</div>
+              <div className="fluid-1">{delegations[6].fluid === true ? ("Yes") : delegations[6].fluid === false ? "No" : ""}No</div>
+              <div className="fluid-1">{delegations[7].fluid === true ? ("Yes") : delegations[7].fluid === false ? "No" : ""}No</div>
+            </div>
+            <div className="voting-power-frame">
+              <div className="vp-1">{delegations[0].amount !== undefined ? <>{delegations[0].amount}</> : ""}99</div>
+              <div className="vp-1">{delegations[1].amount !== undefined ? <>{delegations[1].amount}</> : ""}99</div>
+              <div className="vp-1">{delegations[2].amount !== undefined ? <>{delegations[2].amount}</> : ""}99</div>
+              <div className="vp-1">{delegations[3].amount !== undefined ? <>{delegations[3].amount}</> : ""}99</div>
+              <div className="vp-1">{delegations[4].amount !== undefined ? <>{delegations[4].amount}</> : ""}99</div>
+              <div className="vp-1">{delegations[5].amount !== undefined ? <>{delegations[5].amount}</> : ""}99</div>
+              <div className="vp-1">{delegations[6].amount !== undefined ? <>{delegations[6].amount}</> : ""}99</div>
+              <div className="vp-1">{delegations[7].amount !== undefined ? <>{delegations[7].amount}</> : ""}99</div>
+            </div>
+            <div className="commission-frame">
+              <div className="commission-1">{delegations[0].commission !== undefined ? <>{delegations[0].commission}%</> : ""}10%</div>
+              <div className="commission-1">{delegations[1].commission !== undefined ? <>{delegations[1].commission}%</> : ""}10%</div>
+              <div className="commission-1">{delegations[2].commission !== undefined ? <>{delegations[2].commission}%</> : ""}10%</div>
+              <div className="commission-1">{delegations[3].commission !== undefined ? <>{delegations[3].commission}%</> : ""}10%</div>
+              <div className="commission-1">{delegations[4].commission !== undefined ? <>{delegations[4].commission}%</> : ""}10%</div>
+              <div className="commission-1">{delegations[5].commission !== undefined ? <>{delegations[5].commission}%</> : ""}10%</div>
+              <div className="commission-1">{delegations[6].commission !== undefined ? <>{delegations[6].commission}%</> : ""}10%</div>
+              <div className="commission-1">{delegations[7].commission !== undefined ? <>{delegations[7].commission}%</> : ""}10%</div>
+            </div>
+            <div className="delegate-xaxis-frame">
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+            </div>
+            <div className="delegate-yaxis-frame">
+              <div className="delegation-y" />
+              <div className="delegation-y" />
+              <div className="delegation-y" />
+              <div className="delegation-y" />
+            </div>
+            <div className="delegate-button-frame">
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[0].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[1].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[2].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[3].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[4].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[5].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[6].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[7].delegator)}/>
+            </div>
+          </div>
+            <div className="your-delegators">Your Delegators</div>
+            <div className="delegators-box" />
+            <div className="delegator-1">{delegators[0].delegator === "" ? ("") : <>{delegators[0].delegator.slice(13)}...</>}</div>
+            <div className="delegator-2">{delegators[1].delegator === "" ? ("") : <>{delegators[1].delegator.slice(13)}...</>}</div>
+            <div className="delegator-3">{delegators[2].delegator === "" ? ("") : <>{delegators[2].delegator.slice(13)}...</>}</div>
+            <div className="delegator-4">{delegators[3].delegator === "" ? ("") : <>{delegators[3].delegator.slice(13)}...</>}</div>
+            <div className="delegator-5">{delegators[4].delegator === "" ? ("") : <>{delegators[4].delegator.slice(13)}...</>}</div>
+            <div className="delegator-6">{delegators[5].delegator === "" ? ("") : <>{delegators[5].delegator.slice(13)}...</>}</div>
+            <div className="delegator-7">{delegators[6].delegator === "" ? ("") : <>{delegators[6].delegator.slice(13)}...</>}</div>
+            <div className="delegator-8">{delegators[7].delegator === "" ? ("") : <>{delegators[7].delegator.slice(13)}...</>}</div>
+            <div className="delegator-fluid-1">{delegators[0].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+            <div className="delegator-fluid-2">{delegators[1].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+            <div className="delegator-fluid-3">{delegators[2].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+            <div className="delegator-fluid-4">{delegators[3].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+            <div className="delegator-fluid-5">{delegators[4].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+            <div className="delegator-fluid-6">{delegators[5].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+            <div className="delegator-fluid-7">{delegators[6].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+            <div className="delegator-fluid-8">{delegators[7].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+            <div className="delegator-vp-1">{delegators[0].amount !== undefined ? <>{delegators[0].amount}</> : ""}</div>
+            <div className="delegator-vp-2">{delegators[1].amount !== undefined ? <>{delegators[1].amount}</> : ""}</div>
+            <div className="delegator-vp-3">{delegators[2].amount !== undefined ? <>{delegators[2].amount}</> : ""}</div>
+            <div className="delegator-vp-4">{delegators[3].amount !== undefined ? <>{delegators[3].amount}</> : ""}</div>
+            <div className="delegator-vp-5">{delegators[4].amount !== undefined ? <>{delegators[4].amount}</> : ""}</div>
+            <div className="delegator-vp-6">{delegators[5].amount !== undefined ? <>{delegators[5].amount}</> : ""}</div>
+            <div className="delegator-vp-7">{delegators[6].amount !== undefined ? <>{delegators[6].amount}</> : ""}</div>
+            <div className="delegator-vp-8">{delegators[7].amount !== undefined ? <>{delegators[7].amount}</> : ""}</div>
+          <div className="delegator-x" />
+          <div className="delegator-x1" />
+          <div className="delegator-x2" />
+          <div className="delegator-x3" />
+          <div className="delegator-x4" />
+          <div className="delegator-x5" />
+          <div className="delegator-x6" />
+          <div className="delegates-y" />
+          <div className="delegators-y1" />
+          <div className="delegators-y2" />
+        </div>
+        {/* <div className="mbrn-stake-logo">
+          <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
+        </div> */}
+        {/* <Image className="cdt-logo-icon" width={45} height={45} alt="" src="/images/CDT.svg" />       */}
       </div>
-      <div className="proposal-axis-labels">Days Left&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current Result</div>
-      <div className="delegate-box" />
-        <div className="delegate-1">{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator.slice(13)}...</>}</div>
-        <div className="delegate-2">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator.slice(13)}...</>}</div>
-        <div className="delegate-3">{delegations[2].delegator === "" ? ("") : <>{delegations[2].delegator.slice(13)}...</>}</div>
-        <div className="delegate-4">{delegations[3].delegator === "" ? ("") : <>{delegations[3].delegator.slice(13)}...</>}</div>
-        <div className="delegate-5">{delegations[4].delegator === "" ? ("") : <>{delegations[4].delegator.slice(13)}...</>}</div>
-        <div className="delegate-6">{delegations[5].delegator === "" ? ("") : <>{delegations[5].delegator.slice(13)}...</>}</div>
-        <div className="delegate-7">{delegations[6].delegator === "" ? ("") : <>{delegations[6].delegator.slice(13)}...</>}</div>
-        <div className="delegate-8">{delegations[7].delegator === "" ? ("") : <>{delegations[7].delegator.slice(13)}...</>}</div>
-        <div className="fluid-1">{delegations[0].fluid === true ? ("Yes") : delegations[0].fluid === false ? "No" : ""}</div>
-        <div className="fluid-2">{delegations[1].fluid === true ? ("Yes") : delegations[1].fluid === false ? "No" : ""}</div>
-        <div className="fluid-3">{delegations[2].fluid === true ? ("Yes") : delegations[2].fluid === false ? "No" : ""}</div>
-        <div className="fluid-4">{delegations[3].fluid === true ? ("Yes") : delegations[3].fluid === false ? "No" : ""}</div>
-        <div className="fluid-5">{delegations[4].fluid === true ? ("Yes") : delegations[4].fluid === false ? "No" : ""}</div>
-        <div className="fluid-6">{delegations[5].fluid === true ? ("Yes") : delegations[5].fluid === false ? "No" : ""}</div>
-        <div className="fluid-7">{delegations[6].fluid === true ? ("Yes") : delegations[6].fluid === false ? "No" : ""}</div>
-        <div className="fluid-8">{delegations[7].fluid === true ? ("Yes") : delegations[7].fluid === false ? "No" : ""}</div>
-        <div className="vp-1">{delegations[0].amount !== undefined ? <>{delegations[0].amount}</> : ""}</div>
-        <div className="vp-2">{delegations[1].amount !== undefined ? <>{delegations[1].amount}</> : ""}</div>
-        <div className="vp-3">{delegations[2].amount !== undefined ? <>{delegations[2].amount}</> : ""}</div>
-        <div className="vp-4">{delegations[3].amount !== undefined ? <>{delegations[3].amount}</> : ""}</div>
-        <div className="vp-5">{delegations[4].amount !== undefined ? <>{delegations[4].amount}</> : ""}</div>
-        <div className="vp-6">{delegations[5].amount !== undefined ? <>{delegations[5].amount}</> : ""}</div>
-        <div className="vp-7">{delegations[6].amount !== undefined ? <>{delegations[6].amount}</> : ""}</div>
-        <div className="vp-8">{delegations[7].amount !== undefined ? <>{delegations[7].amount}</> : ""}</div>
-        <div className="commission-1">{delegations[0].commission !== undefined ? <>{delegations[0].commission}%</> : ""}</div>
-        <div className="commission-2">{delegations[1].commission !== undefined ? <>{delegations[1].commission}%</> : ""}</div>
-        <div className="commission-3">{delegations[2].commission !== undefined ? <>{delegations[2].commission}%</> : ""}</div>
-        <div className="commission-4">{delegations[3].commission !== undefined ? <>{delegations[3].commission}%</> : ""}</div>
-        <div className="commission-5">{delegations[4].commission !== undefined ? <>{delegations[4].commission}%</> : ""}</div>
-        <div className="commission-6">{delegations[5].commission !== undefined ? <>{delegations[5].commission}%</> : ""}</div>
-        <div className="commission-7">{delegations[6].commission !== undefined ? <>{delegations[6].commission}%</> : ""}</div>
-        <div className="commission-8">{delegations[7].commission !== undefined ? <>{delegations[7].commission}%</> : ""}</div>
-      <div className="delegate-x" />
-      <div className="delegate-x1" />
-      <div className="delegate-x2" />
-      <div className="delegate-x3" />
-      <div className="delegate-x4" />
-      <div className="delegate-x5" />
-      <div className="delegate-x6" />
-      <div className="delegates-y1" />
-      <div className="delegates-y2" />
-      <div className="delegates-y3" />
-      <div className="btn delegate-button-1" onClick={() => handledelegateForm(delegations[0].delegator)}/>
-      <div className="btn delegate-button-2" onClick={() => handledelegateForm(delegations[1].delegator)}/>
-      <div className="btn delegate-button-3" onClick={() => handledelegateForm(delegations[2].delegator)}/>
-      <div className="btn delegate-button-4" onClick={() => handledelegateForm(delegations[3].delegator)}/>
-      <div className="btn delegate-button-5" onClick={() => handledelegateForm(delegations[4].delegator)}/>
-      <div className="btn delegate-button-6" onClick={() => handledelegateForm(delegations[5].delegator)}/>
-      <div className="btn delegate-button-7" onClick={() => handledelegateForm(delegations[6].delegator)}/>
-      <div className="btn delegate-button-8" onClick={() => handledelegateForm(delegations[7].delegator)}/>
-      <div className="your-delegators">Your Delegators</div>
-      <div className="delegators-box" />
-        <div className="delegator-1">{delegators[0].delegator === "" ? ("") : <>{delegators[0].delegator.slice(13)}...</>}</div>
-        <div className="delegator-2">{delegators[1].delegator === "" ? ("") : <>{delegators[1].delegator.slice(13)}...</>}</div>
-        <div className="delegator-3">{delegators[2].delegator === "" ? ("") : <>{delegators[2].delegator.slice(13)}...</>}</div>
-        <div className="delegator-4">{delegators[3].delegator === "" ? ("") : <>{delegators[3].delegator.slice(13)}...</>}</div>
-        <div className="delegator-5">{delegators[4].delegator === "" ? ("") : <>{delegators[4].delegator.slice(13)}...</>}</div>
-        <div className="delegator-6">{delegators[5].delegator === "" ? ("") : <>{delegators[5].delegator.slice(13)}...</>}</div>
-        <div className="delegator-7">{delegators[6].delegator === "" ? ("") : <>{delegators[6].delegator.slice(13)}...</>}</div>
-        <div className="delegator-8">{delegators[7].delegator === "" ? ("") : <>{delegators[7].delegator.slice(13)}...</>}</div>
-        <div className="delegator-fluid-1">{delegators[0].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-        <div className="delegator-fluid-2">{delegators[1].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-        <div className="delegator-fluid-3">{delegators[2].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-        <div className="delegator-fluid-4">{delegators[3].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-        <div className="delegator-fluid-5">{delegators[4].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-        <div className="delegator-fluid-6">{delegators[5].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-        <div className="delegator-fluid-7">{delegators[6].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-        <div className="delegator-fluid-8">{delegators[7].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-        <div className="delegator-vp-1">{delegators[0].amount !== undefined ? <>{delegators[0].amount}</> : ""}</div>
-        <div className="delegator-vp-2">{delegators[1].amount !== undefined ? <>{delegators[1].amount}</> : ""}</div>
-        <div className="delegator-vp-3">{delegators[2].amount !== undefined ? <>{delegators[2].amount}</> : ""}</div>
-        <div className="delegator-vp-4">{delegators[3].amount !== undefined ? <>{delegators[3].amount}</> : ""}</div>
-        <div className="delegator-vp-5">{delegators[4].amount !== undefined ? <>{delegators[4].amount}</> : ""}</div>
-        <div className="delegator-vp-6">{delegators[5].amount !== undefined ? <>{delegators[5].amount}</> : ""}</div>
-        <div className="delegator-vp-7">{delegators[6].amount !== undefined ? <>{delegators[6].amount}</> : ""}</div>
-        <div className="delegator-vp-8">{delegators[7].amount !== undefined ? <>{delegators[7].amount}</> : ""}</div>
-      <div className="delegator-x" />
-      <div className="delegator-x1" />
-      <div className="delegator-x2" />
-      <div className="delegator-x3" />
-      <div className="delegator-x4" />
-      <div className="delegator-x5" />
-      <div className="delegator-x6" />
-      <div className="delegates-y" />
-      <div className="delegators-y1" />
-      <div className="delegators-y2" />
-      <div className="staked-mbrn1">Staked: {parseFloat((userStake.staked/1_000_000).toFixed(2))}</div>
-      <div className="staked-mbrn2">in Wallet: {walletMBRN.toFixed(2)}</div>
-      <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
-      <div className="unstaking-mbrn-total">{"/" + parseFloat((userStake.unstaking_total/1_000_000).toFixed(2))}</div>
-      {/* <div className="mbrn-stake-logo">
-        <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
-      </div> */}
-      <div className="mbrn-unstake-logo">
-      <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
-      </div>
-      <div className="mbrn-claim-logo">
-      <Image className="logo-icon1" width={43} height={48} alt="" src="/images/Logo.svg" />
-      </div>
-      {userStake.unstaking.amount !== 0 ? (<div className="unstaking-progress-bar" >
-        <ProgressBar bgcolor="#50C9BD" progress={parseFloat((((unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod) * 100).toFixed(2))}  height={20} />
-      </div>) : null}
-      {(emissionsSchedule.rate !== 0 && emissionsSchedule.monthsLeft !== 0) ? 
-      (<div className="emissions-schedule">{emissionsSchedule.rate}%/{emissionsSchedule.monthsLeft} months</div>)
-      : null}
-      <Image className="cdt-logo-icon" width={45} height={45} alt="" src="/images/CDT.svg" />      
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
     </div>    
   );

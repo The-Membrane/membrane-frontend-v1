@@ -1773,10 +1773,14 @@ span[data-descr]:hover::after {
 }
 /*Governance Specific*/
 .pagetitle-gov {
-  top: 29px;
-  left: 150px;
-  margin-bottom: 30%;
-  color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: 8%;
+  left: 3%;
+  top: 6%;
+  font-size: xx-large;
+  color: white;
 }
 .proposal-axis,
 .proposal-axis1,
@@ -1841,7 +1845,7 @@ span[data-descr]:hover::after {
   background-color: #71BD36;
   width: 22px;
   height: 22px;
-  z-index: 8;
+  z-index: 0;
 }
 .proposal2-button,
 .proposal3-button,
@@ -1851,7 +1855,6 @@ span[data-descr]:hover::after {
 .proposal7-button,
 .proposal8-button {
   top: 67px;
-  z-index: 9;
 }
 .proposal3-button,
 .proposal4-button,
@@ -1860,7 +1863,6 @@ span[data-descr]:hover::after {
 .proposal7-button,
 .proposal8-button {
   top: 117px;
-  z-index: 10;
 }
 .proposal4-button,
 .proposal5-button,
@@ -1868,29 +1870,24 @@ span[data-descr]:hover::after {
 .proposal7-button,
 .proposal8-button {
   top: 167px;
-  z-index: 11;
 }
 .proposal5-button,
 .proposal6-button,
 .proposal7-button,
 .proposal8-button {
   top: 217px;
-  z-index: 12;
 }
 .proposal6-button,
 .proposal7-button,
 .proposal8-button {
   top: 267px;
-  z-index: 13;
 }
 .proposal7-button,
 .proposal8-button {
   top: 317px;
-  z-index: 14;
 }
 .proposal8-button {
   top: 367px;
-  z-index: 15;
 }
 .proposal-1,
 .proposal-2,
@@ -1952,16 +1949,13 @@ span[data-descr]:hover::after {
   left: 18%;
 }
 .submit-proposal-button {
-  position: absolute;
+  position: relative;
   cursor: pointer;
-  margin: 0 !important;
-  top: 445px;
-  left: 123px;
+  top: 84%;
+  left: 31%;
   width: 154px;
   height: 32px;
-  z-index: 24;
   background-color: #D9D9D9;
-  color: var(--color-black);
 }
 .proposal-days {
   position: absolute;
@@ -2067,20 +2061,100 @@ span[data-descr]:hover::after {
   top: 367px;
   z-index: 40;
 }
+.proposals-delegations{  
+  position: relative;
+  display: flex;
+  left: -121%;
+  top: 37.7%;
+  width: 100%;
+  height: 100%;
+}
 .proposals-frame {
-  position: absolute;
-  top: 295px;
-  left: 34px;
+  position: relative;
+  margin-top: 10%;
+  left: 10%;
   background-color: #2F2F2F;
   border: gray 2.5px solid;
-  box-sizing: border-box;
   width: 402px;
   height: 499px;
+}
+.delegation-frame {
+  position: relative;
+  left: 17%;
+  top: 20%;
+  width: 630px;
+  height: 500px;
+}
+.delegate-xaxis-frame {  
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  z-index: 1;
+  position: absolute;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin-top: 12%;
+  gap: 12%;
+}
+.delegate-yaxis-frame {  
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin-left: 44%;
+  gap: 13%;
+}
+.delegate-button-frame {  
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0%;
+  right: 2.5%;
+  width: 100%;
+  height: 100%;
+  margin-top: 3%;
+  gap: 5.5%;
+  align-items: end;
+}
+.delegate-frame {  
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2.5%;
+  width: 100%;
+  height: 100%;
+  gap: 5%;
+}
+.fluidity-frame {  
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2.5%;
+  width: 100%;
+  height: 100%;
+  margin-left: 49%;
+  gap: 5%;
+}
+.voting-power-frame {  
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2.5%;
+  width: 100%;
+  height: 100%;
+  margin-left: 63%;
+  gap: 5%;
+}
+.commission-frame {  
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2.5%;
+  width: 100%;
+  height: 100%;
+  margin-left: 75.5%;
+  gap: 5%;
 }
 .delegate {
   position: absolute;
@@ -2088,7 +2162,7 @@ span[data-descr]:hover::after {
   top: 9.38%;
   left: 31.5%;
 }
-.delegate-button {
+.set-delegate-button {
   position: absolute;
   top: 380px;
   left: 805px;
@@ -2104,27 +2178,30 @@ span[data-descr]:hover::after {
 .gov-claim-button:hover {
   background-color: #50C9BD;
 }
+.total-vp-frame{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  left: 22.5%;
+}
 .total-vp-label {
-  position: absolute;
+  position: relative;
   color: white;
-  top: 30px;
-  left: 635px;
   font-size: larger;
-  color: white;
 }
 .total-vp-amount {
-  position: absolute;
+  position: relative;
   color: white;
-  top: 17px;
-  left: 710px;
+  top: 10%;
+  left: 6.5%;
   font-size: xx-large;
   color: #50C9BD;
 }
-.delegated-to {
-  position: absolute;
+.delegate-box-labels {
+  position: relative;
   color: white;
-  top: 434px;
-  left: 550px;
+  display: flex;
+  gap: 2%;
 }
 .claim {
   position: absolute;
@@ -2134,11 +2211,10 @@ span[data-descr]:hover::after {
 }
 .gov-claim-button {
   position: absolute;
-  top: 131px;
-  left: 984px;
-  width: 154px;
+  top: 8%;
+  left: 4%;
+  width: 90%;
   height: 32px;
-  text-align: center;
   color: black;
   background-color: whitesmoke;
 }
@@ -2162,31 +2238,17 @@ span[data-descr]:hover::after {
   background-color: white;
   border: 1px solid aqua;
   width: 55px;
-  bottom: 4px;
-  left: 702px;
-  bottom: 4px;
-  z-index: 30;
-  top: 133px;
+  top: 5.5%;
+  left: 57%;
   height: 28px;
+  z-index: 30;
 }
 .unstake-button {
-  position: absolute;
-  top: 131px;
-  left: 611px;
+  position: relative;
   width: 154px;
   height: 32px;
-  text-align: center;
   color: black;
   background-color: whitesmoke;
-}
-.unstake-button-frame { 
-  position: absolute;
-  top: 120px;
-  left: 596px;
-  background-color: #585858;
-  width: 185px;
-  height: 135px;
-  border-radius: 1rem;
 }
 .stake {
   position: absolute;
@@ -2200,30 +2262,51 @@ span[data-descr]:hover::after {
   background-color: white;
   border: 1px solid aqua;
   width: 55px;
-  left: 345px;
-  bottom: 4px;
-  z-index: 30;
-  top: 208px;
   height: 28px;
+  bottom: 5.5%;
+  left: 54%;
+  z-index: 30;
 }
 .stake-button1 {
-  position: absolute;
-  top: 206px;
-  left: 258px;
+  position: relative;
   width: 154px;
   height: 32px;
   text-align: center;
   color: black;
   background-color: whitesmoke;
 }
-.stake-button-frame { 
-  position: absolute;
-  top: 120px;
-  left: 243px;
+.unstake-button-frame,
+.stake-button-frame,
+.claim-button-frame { 
+  position: relative;
   background-color: #585858;
   width: 185px;
-  height: 135px;
+  height: 100%;
   border-radius: 1rem;
+  text-align: center;
+}
+.claim-button-frame {
+  display: flex;
+  flex-direction: column;
+}
+.claims-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 67.5%;
+  /* gap: 28%; */
+  top: 31%;
+  justify-content: center;
+}
+.button-frames {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  height: 135px;
+  gap: 13%;
+  top: 4%;
+  margin-left: 17%;
+  width: 100%;
 }
 .button-icon {
   position: absolute;
@@ -2244,67 +2327,19 @@ span[data-descr]:hover::after {
   justify-content: center;
 }
 .delegate-box {
-  position: absolute;
-  top: 473px;
-  left: 545px;
+  position: relative;
   background-color: #2F2F2F;
   border: gray 2.5px solid;
   width: 323px;
   height: 319px;
 }
-.delegate-button-1,
-.delegate-button-2 {
-  position: absolute;
-  top: 484px;
-  left: 932px;
+.undelegate-button {
+  position: relative;
   border-radius: 50%;
   background-color: white;
   opacity: 26%;
   width: 22px;
   height: 22px;
-}
-.delegate-button-2 {
-  top: 529px;
-}
-.delegate-button-3,
-.delegate-button-4,
-.delegate-button-5,
-.delegate-button-6,
-.delegate-button-7,
-.delegate-button-8 {
-  position: absolute;
-  top: 569px;
-  left: 932px;
-  border-radius: 50%;
-  background-color: #060606;
-  opacity: 26%;
-  width: 22px;
-  height: 22px;
-}
-.delegate-button-4,
-.delegate-button-5,
-.delegate-button-6,
-.delegate-button-7,
-.delegate-button-8 {
-  top: 609px;
-}
-.delegate-button-5,
-.delegate-button-6,
-.delegate-button-7,
-.delegate-button-8 {
-  top: 649px;
-}
-.delegate-button-6,
-.delegate-button-7,
-.delegate-button-8 {
-  top: 688px;
-}
-.delegate-button-7,
-.delegate-button-8 {
-  top: 728px;
-}
-.delegate-button-8 {
-  top: 766px;
 }
 .delegators-box,
 .your-delegators {
@@ -2321,135 +2356,62 @@ span[data-descr]:hover::after {
   width: 315px;
   height: 319px;
 }
-.delegate-x,
-.delegate-x1,
-.delegate-x2,
-.delegate-x3,
-.delegate-x4,
-.delegate-x5,
-.delegate-x6 {
-  position: absolute;
-  top: 518px;
-  left: 548px;
+.delegate-x {
+  position: relative;
   border-top: 2px solid black;
-  box-sizing: border-box;
   width: 318px;
   height: 2px;
 }
-.delegate-x1 {
-  top: 558px;
-  height: 16px;
-}
-.delegate-x2 {
-  top: 598px;
-  height: 2px;
-}
-.delegate-x3 {
-  top: 638px;
-}
-.delegate-x4 {
-  top: 678px;
-}
-.delegate-x5 {
-  top: 718px;
-  height: 16px;
-}
-.delegate-x6 {  
-  top: 758px;
-}
-.delegator-x,
-.delegator-x1,
-.delegator-x2,
-.delegator-x3,
-.delegator-x4,
-.delegator-x5,
-.delegator-x6 {
-  position: absolute;
-  top: 758px;
-  left: 901px;
-  border-top: 2px solid black;
-  box-sizing: border-box;
-  width: 307px;
-  height: 2px;
-}
-.delegator-x {
-  top: 518px;
-}
-.delegator-x1 {
-  top: 558px;
-  height: 16px;
-}
-.delegator-x2 {
-  top: 598px;
-  height: 2px;
-}
-.delegator-x3 {
-  top: 638px;
-}
-.delegator-x4 {
-  top: 678px;
-}
-.delegator-x5 {
-  top: 718px;
-  height: 16px;
-}
-.delegator-x6 {
-  top: 758px;
-  height: 2px;
+.staked-mbrn-frame {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 66%;
+  gap: 13%;
+  text-align: left;
 }
 .staked-mbrn1,
 .staked-mbrn2 {
   position: relative;
   color: white;
-  width: 9vw;
+  width: 100%;
   font-size: large;
-  left: 19vw;
-  top: -58vh;
+  height: 20%;
+  left: 9%;
+  top: 12%;
+}
+.unstaked-mbrn-frame {
+  height: 66%;
+  position: relative;
+  top: 7%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .unstaking-mbrn {  
   position: relative;
   color: white;
-  top: -60.5vh;
-  left: 44.2vw;
-  width: 7.5vw;
+  width: 100%;
+  left: -9%;
+  height: 30%;
   font-size: x-large;
   text-align: center;
 }
 .unstaking-mbrn-total {
-  position: absolute;
-  top: 205px;
-  left: 652px;
+  position: relative;
   color: white;
+  left: -3.5%;
   font-size: small;
   opacity: 0.5;
 }
 .cdt-claims,
 .mbrn-claims {
   position: relative;
-  width: 60%;
-  height: auto;
-  padding: 10px;
+  width: 47%;
   color: white;
   font-size: x-large;
-}
-.cdt-claims {
-  top: 89px;
-  margin-right: auto;
-}
-.mbrn-claims {
-  top: 33px;
-  margin-left: auto;
-}
-.claim-button-frame { 
-  position: absolute;
-  top: 120px;
-  left: 969px;
-  background-color: #585858;
-  width: 185px;
-  height: 135px;
-  display: inline-block;
   text-align: center;
-  border-radius: 1rem;
+  top: 10%;
 }
 .logo-icon1 {
   position: relative;
@@ -2460,11 +2422,9 @@ span[data-descr]:hover::after {
 }
 .gov-icon {
   position: relative;
-  width: 43px;
-  height: 43px;
-  top: -452px;
-  overflow: hidden;
-  left: 171px;
+  width: 48px;
+  height: 48px;
+  top: 4%;
 }
 .logo-shiftDown {
   top: 13px;
@@ -2477,18 +2437,8 @@ span[data-descr]:hover::after {
 .mbrn-stake-logo,
 .mbrn-unstake-logo {
   position: absolute;
-  top: 163px;
-  left: 352px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-xs);
-}
-.mbrn-claim-logo,
-.mbrn-unstake-logo {
-  top: 164px;
-  left: 711px;
+  top: 34%;
+  left: 60%;
 }
 .mbrn-claim-logo {
   top: 170px;
@@ -2497,19 +2447,18 @@ span[data-descr]:hover::after {
   height: 49px;
 }
 .unstaking-progress-bar {
-  position: absolute;
-  top: 175px;
-  left: 560px;
+  position: relative;
+  top: 19%;
+  left: 8%;
   border-radius: 50%;
   width: 157px;
   height: 14px;
 }
-.cdt-logo-icon,
 .emissions-schedule {
   position: absolute;
-  color: white;
-  top: 222px;
-  left: 290px;
+  color: #50C9BD;
+  bottom: 2%;
+  left: 29%;
 }
 .cdt-logo-icon {
   top: 170px;
@@ -2518,42 +2467,19 @@ span[data-descr]:hover::after {
   height: 45px;
   object-fit: cover;
 }
-.delegates-y,
-.delegates-y1,
-.delegates-y2,
-.delegates-y3,
-.delegators-y1,
-.delegators-y2 {
-  position: absolute;
-  top: 475px;
-  left: 668.5px;
+.delegation-y{
+  position: relative;
   border-right: 3px solid #50C9BD;
-  box-sizing: border-box;
   width: 3px;
   height: 315px;
 }
-.delegates-y1 {
-  left: 718.5px;
-}
-.delegates-y2 {
-  left: 768.5px;
-}
-.delegates-y3 {
-  left: 818.5px;
-}
-.delegators-y1 {
-  left: 1118.5px;
-}
-.delegators-y2 {
-  left: 1168.5px;
-}
 .governance {
   position: relative;
-  width: 1366px;
-  height: 912px;
-  margin-left: 10%;
-  text-align: left;
-  font-family: 'Abel';
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 4%;
 }
 .proposal-dropdown {
   position: absolute;
@@ -2570,26 +2496,25 @@ span[data-descr]:hover::after {
   color: white;
 }
 .status-dropdown {
-  top: 255px;
-  left: 35px;
+  top: -8.5%;
+  left: -0.5%;
   width: 83px;
   height: 27px;
   flex-direction: column;
-  box-sizing: border-box;
-  z-index: 1;
 }
 .proposal-axis-labels {
-  position: absolute;
-  top: 270px;
-  left: 247px;
+  position: relative;
+  top: -5%;
+  left: 53%;
+  width: 189px;
   color: white;
   font-size: small;
-  z-index: 1;
 }
 .proposal-menu {
   position: absolute;
   margin-top: 222%;
   width: 75px;
+  z-index: 1;
 }
 .proposal-menu > li:hover {
   background-color: lightgray;
@@ -2624,217 +2549,14 @@ span[data-descr]:hover::after {
   background-color: rgb(160, 102, 102);
 }
 .delegate-1,
-.delegate-2,
-.delegate-3,
-.delegate-4,
-.delegate-5,
-.delegate-6,
-.delegate-7,
-.delegate-8,
 .fluid-1,
-.fluid-2,
-.fluid-3,
-.fluid-4,
-.fluid-5,
-.fluid-6,
-.fluid-7,
-.fluid-8,
 .vp-1,
-.vp-2,
-.vp-3,
-.vp-4,
-.vp-5,
-.vp-6,
-.vp-7,
-.vp-8,
-.commission-1,
-.commission-2,
-.commission-3,
-.commission-4,
-.commission-5,
-.commission-6,
-.commission-7,
-.commission-8,
-.delegate-button-1,
-.delegate-button-2,
-.delegate-button-3,
-.delegate-button-4,
-.delegate-button-5,
-.delegate-button-6,
-.delegate-button-7,
-.delegate-button-8 {
-  position: absolute;
-  margin: 0 !important;
-  top: 487px;
-  left: 550px;
+.commission-1 {
+  position: relative;
   color: white;
 }
-.delegate-button-1:hover,
-.delegate-button-2:hover,
-.delegate-button-3:hover,
-.delegate-button-4:hover,
-.delegate-button-5:hover,
-.delegate-button-6:hover,
-.delegate-button-7:hover,
-.delegate-button-8:hover {
+.undelegate-button:hover {
   opacity: 0.5;
-}
-.delegate-2 {
-  top: 530px;
-  z-index: 17;
-}
-.delegate-3 {
-  top: 573px;
-  z-index: 18;
-}
-.delegate-4 {
-  top: 613px;
-  z-index: 19;
-}
-.delegate-5,
-.delegate-6,
-.delegate-7,
-.delegate-8 {
-  position: absolute;
-  margin: 0 !important;
-  top: 654px;
-  left: 550px;
-  z-index: 20;
-}
-.delegate-6{
-  top: 696px;
-}
-.delegate-7 {
-  top: 735px;
-}
-.delegate-8 {
-  top: 770px;
-}
-.fluid-1,
-.fluid-2,
-.fluid-3,
-.fluid-4,
-.fluid-5,
-.fluid-6,
-.fluid-7,
-.fluid-8 {
-  left: 683px;
-}
-.fluid-2 {
-  top: 530px;
-}
-.fluid-3 {
-  top: 573px;
-}
-.fluid-4 {
-  top: 613px;
-}
-.fluid-5 {
-  top: 654px;
-}
-.fluid-6 {
-  top: 696px;
-}
-.fluid-7 {
-  top: 735px;
-}
-.fluid-8 {
-  top: 770px;
-}
-.vp-1,
-.vp-2,
-.vp-3,
-.vp-4,
-.vp-5,
-.vp-6,
-.vp-7,
-.vp-8 {
-  left: 732px;
-}
-.vp-2 {
-  top: 530px;
-}
-.vp-3 {
-  top: 573px;
-}
-.vp-4 {
-  top: 613px;
-}
-.vp-5 {
-  top: 654px;
-}
-.vp-6 {
-  top: 696px;
-}
-.vp-7 {
-  top: 735px;
-}
-.vp-8 {
-  top: 770px;
-}
-.commission-1,
-.commission-2,
-.commission-3,
-.commission-4,
-.commission-5,
-.commission-6,
-.commission-7,
-.commission-8 {
-  left: 780px;
-}
-.commission-2 {
-  top: 530px;
-}
-.commission-3 {
-  top: 573px;
-}
-.commission-4 {
-  top: 613px;
-}
-.commission-5 {
-  top: 654px;
-}
-.commission-6 {
-  top: 696px;
-}
-.commission-7 {
-  top: 735px;
-}
-.commission-8 {
-  top: 770px;
-}
-.delegate-button-1,
-.delegate-button-2,
-.delegate-button-3,
-.delegate-button-4,
-.delegate-button-5,
-.delegate-button-6,
-.delegate-button-7,
-.delegate-button-8 {
-  top: 483px;
-  left: 833px;
-  background-color: #ababab;
-}
-.delegate-button-2 {
-  top: 528px;
-}
-.delegate-button-3 {
-  top: 570px;
-}
-.delegate-button-4 {
-  top: 609px;
-}
-.delegate-button-5 {
-  top: 649px;
-}
-.delegate-button-6 {
-  top: 691px;
-}
-.delegate-button-7 {
-  top: 730px;
-}
-.delegate-button-8 {
-  top: 765px;
 }
 .delegator-1,
 .delegator-2,

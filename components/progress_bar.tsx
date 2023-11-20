@@ -4,9 +4,10 @@ interface Props {
 	bgcolor: string;
 	progress: number;
 	height: number;
+	noMargin: boolean;
 }
 
-const ProgressBar = ({bgcolor,progress,height}: Props) => {
+const ProgressBar = ({bgcolor,progress,height, noMargin}: Props) => {
 	
 	const Parentdiv = {
 		height: height,
@@ -14,6 +15,12 @@ const ProgressBar = ({bgcolor,progress,height}: Props) => {
 		backgroundColor: 'whitesmoke',
 		borderRadius: 40,
 		margin: 50
+	}
+	const noMarginParentdiv = {
+		height: height,
+		width: '100%',
+		backgroundColor: 'whitesmoke',
+		borderRadius: 40,
 	}
 	
 	const Childdiv = {
@@ -33,7 +40,7 @@ const ProgressBar = ({bgcolor,progress,height}: Props) => {
 	}
 		
 	return (
-	<div style={Parentdiv}>
+	<div style={noMargin === true ? noMarginParentdiv : Parentdiv}>
 	<div style={Childdiv}>
 		<span style={progresstext}>{`${progress}%`}</span>
 	</div>
