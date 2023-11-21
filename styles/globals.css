@@ -1620,6 +1620,10 @@ span[data-descr]:hover::after {
   z-index: 31;
 }
 /*Governance Specific*/
+.hide {
+ display: none;
+}
+
 .title {
   display: flex;
   flex-direction: row;
@@ -1993,7 +1997,7 @@ span[data-descr]:hover::after {
   flex-direction: row;
   justify-content:space-evenly;
   width: 100%;
-  height: 12vw;
+  height: 10vw;
 }
 .stake-text {
   color: white;
@@ -2005,15 +2009,15 @@ span[data-descr]:hover::after {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  margin-top: 1vw;
+  margin-top: 0.3vw;
 }
 .claim-amount {
   color: white;
   font-size: 1.9vw;
 }
 .coin-icon {
-  height: 3vw;
-  width: 3vw;
+  height: 2vw;
+  width: 2vw;
 }
 .button-frame {
   height: 100%;
@@ -2056,6 +2060,16 @@ span[data-descr]:hover::after {
   align-self: center;
   display: flex;
   flex-direction: row;
+}
+.submitProp {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.delegateB {
+  display: grid;
+  justify-content: center;
+  padding: 2vw;
 }
 
 .status-label {
@@ -2324,7 +2338,7 @@ span[data-descr]:hover::after {
 }
 
 .table-responsive {
-  margin-right: 2vw;
+  padding: 1vw;
   margin-top: 2vw;
 }
 

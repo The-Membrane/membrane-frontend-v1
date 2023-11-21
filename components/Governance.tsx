@@ -12,6 +12,7 @@ import React from "react";
 import Image from "next/image";
 import Table from 'react-bootstrap/Table';
 import Spinner from 'react-bootstrap/Spinner';
+import Button from 'react-bootstrap/Button';
 
 
 const SECONDS_PER_DAY = 86400;
@@ -1054,6 +1055,8 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         </div>
       </div>
       <div className="tables">
+        <div className="col-5">
+        <div className="row">
         <Table
           bordered
           variant="dark"
@@ -1064,7 +1067,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           <thead>
             <tr>
               <th>
-                Proposal Status
+                Status
               </th>
               <th>
                 Days Left
@@ -1082,7 +1085,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
                   key={index}
                   onClick={() => handleproposalClick(proposal)}
                 >
-                  <td>
+                  <td className="col-2">
                     {proposal.status}
                   </td>
                   <td>
@@ -1094,22 +1097,64 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
                 </tr>
               ))
             ) : (
-              <tr>
+              
                 <td>
                   <Spinner animation="border" />
                 </td>
-              </tr>
+              
             )
           }
           </tbody>
         </Table>
-        <Table>
-          <thead>
-            <tr>
-              <th>placeholder</th>
-            </tr>
-          </thead>
-        </Table>
+        <div className="submitProp">
+          <Button variant="outline-light" onClick={handlesubmitproposalForm}>Submit Proposal</Button>
+        </div>
+        </div>
+        </div>
+        <div className="col-7">
+            <div className="row">
+              <div className="col-12 delegateB" >
+                <Button variant="outline-light" onClick={() => handledelegateForm()}>Delegate</Button>
+              </div>
+              <div className="col-6">
+                <Table
+                  bordered
+                  variant="dark"
+                  hover
+                  striped
+                  responsive
+                >
+                  <thead>
+                    <tr>
+                      <th>Del. to</th>
+                      <th>Fluid</th>
+                      <th>VP</th>
+                      <th>Comm.</th>
+                      <th>Undele.</th>
+                    </tr>
+                  </thead>
+                </Table>
+              </div>
+              <div className="col-6">
+                <Table
+                  bordered
+                  variant="dark"
+                  hover
+                  striped
+                  responsive
+                >
+                  <thead>
+                    <tr>
+                      <th> YourDelegators</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                </Table>
+              </div>
+            </div>
+          </div>
+      
+        <div className="hide">
         <div className="delegate-box" />
         <div className="delegate-1">{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator.slice(13)}...</>}</div>
         <div className="delegate-2">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator.slice(13)}...</>}</div>
@@ -1321,6 +1366,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
           <div className="submit-proposal" onClick={handlesubmitproposalForm}>Submit Proposal</div>
         </div>
       </div>
+      <div className="hide">
       <div className="btn delegate-button" onClick={() => handledelegateForm()}>
         <div className="delegate">Delegate</div>
       </div>
@@ -1348,6 +1394,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
             ) : null}
           </div>
       </div>
+      </div>
       <div className="proposal-axis-labels">Days Left&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current Result</div>
       <div className="unstaking-mbrn">{parseFloat((userStake.unstaking.amount/1_000_000).toFixed(2))}</div>
       <div className="unstaking-mbrn-total">{"/" + parseFloat((userStake.unstaking_total/1_000_000).toFixed(2))}</div>
@@ -1359,6 +1406,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       : null}
             
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
+      </div>
     </div>    
   );
 };
