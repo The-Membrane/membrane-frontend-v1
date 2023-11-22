@@ -24,7 +24,6 @@ export function useClients(): {
   staking_client: StakingClient | null;
   base_client: SigningCosmWasmClient | null;
   address: String | undefined;
-  // connect: () => void;
 } {
   const { getSigningCosmWasmClient, address, status, getOfflineSigner } = useChain(chainName);
   
@@ -47,19 +46,19 @@ export function useClients(): {
       //https://rpc.osmotest5.osmosis.zone/
       //https://rpc.osmosis.zone
       //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
-      const signer = getOfflineSigner();
-      var client = SigningCosmWasmClient.connectWithSigner(
-        'https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573', 
-        signer,
-        { gasPrice: GasPrice.fromString("0.025uosmo") }
-      ).catch((e) => {
-        console.log(e);
-        signed_errored = true;
-      });
+      // const signer = getOfflineSigner();
+      // var client = SigningCosmWasmClient.connectWithSigner(
+      //   'https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573', 
+      //   signer,
+      //   { gasPrice: GasPrice.fromString("0.025uosmo") }
+      // ).catch((e) => {
+      //   console.log(e);
+      //   signed_errored = true;
+      // });
 
-      if (signed_errored) {
-       client = getSigningCosmWasmClient();
-      }
+      // if (signed_errored) {
+       var client = getSigningCosmWasmClient();
+      // }
 
       client.then((cosmwasmClient) => {
         if (!cosmwasmClient || !address) {

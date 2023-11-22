@@ -2080,6 +2080,8 @@ span[data-descr]:hover::after {
 }
 .delegation-frame {
   position: relative;
+  display: flex;
+  gap: 3%;
   left: 17%;
   top: 20%;
   width: 630px;
@@ -2163,9 +2165,9 @@ span[data-descr]:hover::after {
   left: 31.5%;
 }
 .set-delegate-button {
-  position: absolute;
-  top: 380px;
-  left: 805px;
+  position: relative;
+  top: -4%;
+  left: 14%;
   width: 154px;
   height: 32px;
   text-align: center;

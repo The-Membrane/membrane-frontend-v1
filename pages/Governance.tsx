@@ -988,17 +988,16 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
           </div>
         </div>
         <div className="delegation-frame">
-          <div className="btn set-delegate-button" onClick={() => handledelegateForm()}>
-            <div className="delegate">Delegate</div>
-          </div>
-          <div className="delegate-box-labels">
-            Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <div>Fluid&nbsp;&nbsp;</div>
-            <div>VP&nbsp;</div>
-            <div>Comm.&nbsp;Undele.</div>
-          </div>
-          <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>
           <div className="delegate-box" >
+            <div className="btn set-delegate-button" onClick={() => handledelegateForm()}>
+              <div className="delegate">Delegate</div>
+            </div>
+            <div className="delegate-box-labels">
+              Delegated To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <div>Fluid&nbsp;&nbsp;</div>
+              <div>VP&nbsp;</div>
+              <div>Comm.&nbsp;Undele.</div>
+            </div>
             <div className="delegate-frame">
               <div className="delegate-1">{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator.slice(13)}...</>}</div>
               <div className="delegate-1">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator.slice(13)}...</>}</div>
@@ -1065,42 +1064,54 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, address,
               <div className="btn undelegate-button" onClick={() => handledelegateForm(delegations[7].delegator)}/>
             </div>
           </div>
-            <div className="your-delegators">Your Delegators</div>
-            <div className="delegators-box" />
-            <div className="delegator-1">{delegators[0].delegator === "" ? ("") : <>{delegators[0].delegator.slice(13)}...</>}</div>
-            <div className="delegator-2">{delegators[1].delegator === "" ? ("") : <>{delegators[1].delegator.slice(13)}...</>}</div>
-            <div className="delegator-3">{delegators[2].delegator === "" ? ("") : <>{delegators[2].delegator.slice(13)}...</>}</div>
-            <div className="delegator-4">{delegators[3].delegator === "" ? ("") : <>{delegators[3].delegator.slice(13)}...</>}</div>
-            <div className="delegator-5">{delegators[4].delegator === "" ? ("") : <>{delegators[4].delegator.slice(13)}...</>}</div>
-            <div className="delegator-6">{delegators[5].delegator === "" ? ("") : <>{delegators[5].delegator.slice(13)}...</>}</div>
-            <div className="delegator-7">{delegators[6].delegator === "" ? ("") : <>{delegators[6].delegator.slice(13)}...</>}</div>
-            <div className="delegator-8">{delegators[7].delegator === "" ? ("") : <>{delegators[7].delegator.slice(13)}...</>}</div>
-            <div className="delegator-fluid-1">{delegators[0].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-            <div className="delegator-fluid-2">{delegators[1].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-            <div className="delegator-fluid-3">{delegators[2].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-            <div className="delegator-fluid-4">{delegators[3].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-            <div className="delegator-fluid-5">{delegators[4].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-            <div className="delegator-fluid-6">{delegators[5].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-            <div className="delegator-fluid-7">{delegators[6].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-            <div className="delegator-fluid-8">{delegators[7].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
-            <div className="delegator-vp-1">{delegators[0].amount !== undefined ? <>{delegators[0].amount}</> : ""}</div>
-            <div className="delegator-vp-2">{delegators[1].amount !== undefined ? <>{delegators[1].amount}</> : ""}</div>
-            <div className="delegator-vp-3">{delegators[2].amount !== undefined ? <>{delegators[2].amount}</> : ""}</div>
-            <div className="delegator-vp-4">{delegators[3].amount !== undefined ? <>{delegators[3].amount}</> : ""}</div>
-            <div className="delegator-vp-5">{delegators[4].amount !== undefined ? <>{delegators[4].amount}</> : ""}</div>
-            <div className="delegator-vp-6">{delegators[5].amount !== undefined ? <>{delegators[5].amount}</> : ""}</div>
-            <div className="delegator-vp-7">{delegators[6].amount !== undefined ? <>{delegators[6].amount}</> : ""}</div>
-            <div className="delegator-vp-8">{delegators[7].amount !== undefined ? <>{delegators[7].amount}</> : ""}</div>
-          <div className="delegator-x" />
-          <div className="delegator-x1" />
-          <div className="delegator-x2" />
-          <div className="delegator-x3" />
-          <div className="delegator-x4" />
-          <div className="delegator-x5" />
-          <div className="delegator-x6" />
-          <div className="delegates-y" />
-          <div className="delegators-y1" />
-          <div className="delegators-y2" />
+            <div className="delegators-box">
+              <div className="your-delegators">Your Delegators</div>
+              <div className="delegate-frame">
+                <div className="delegate-1">{delegators[0].delegator === "" ? ("") : <>{delegators[0].delegator.slice(13)}...</>}ttttttttttttt...</div>
+                <div className="delegate-1">{delegators[1].delegator === "" ? ("") : <>{delegators[1].delegator.slice(13)}...</>}ttttttttttttt...</div>
+                <div className="delegate-1">{delegators[2].delegator === "" ? ("") : <>{delegators[2].delegator.slice(13)}...</>}ttttttttttttt...</div>
+                <div className="delegate-1">{delegators[3].delegator === "" ? ("") : <>{delegators[3].delegator.slice(13)}...</>}ttttttttttttt...</div>
+                <div className="delegate-1">{delegators[4].delegator === "" ? ("") : <>{delegators[4].delegator.slice(13)}...</>}ttttttttttttt...</div>
+                <div className="delegate-1">{delegators[5].delegator === "" ? ("") : <>{delegators[5].delegator.slice(13)}...</>}ttttttttttttt...</div>
+                <div className="delegate-1">{delegators[6].delegator === "" ? ("") : <>{delegators[6].delegator.slice(13)}...</>}ttttttttttttt...</div>
+                <div className="delegate-1">{delegators[7].delegator === "" ? ("") : <>{delegators[7].delegator.slice(13)}...</>}ttttttttttttt...</div>
+              </div>
+              <div className="fluidity-frame">
+                <div className="delegator-fluid">{delegators[0].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+                <div className="delegator-fluid">{delegators[1].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+                <div className="delegator-fluid">{delegators[2].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+                <div className="delegator-fluid">{delegators[3].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+                <div className="delegator-fluid">{delegators[4].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+                <div className="delegator-fluid">{delegators[5].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+                <div className="delegator-fluid">{delegators[6].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+                <div className="delegator-fluid">{delegators[7].fluid === true ? ("Yes") : delegators[7].fluid === false ? "No" : ""}</div>
+              </div>
+              <div>
+                <div className="delegator-vp">{delegators[0].amount !== undefined ? <>{delegators[0].amount}</> : ""}</div>
+                <div className="delegator-vp">{delegators[1].amount !== undefined ? <>{delegators[1].amount}</> : ""}</div>
+                <div className="delegator-vp">{delegators[2].amount !== undefined ? <>{delegators[2].amount}</> : ""}</div>
+                <div className="delegator-vp">{delegators[3].amount !== undefined ? <>{delegators[3].amount}</> : ""}</div>
+                <div className="delegator-vp">{delegators[4].amount !== undefined ? <>{delegators[4].amount}</> : ""}</div>
+                <div className="delegator-vp">{delegators[5].amount !== undefined ? <>{delegators[5].amount}</> : ""}</div>
+                <div className="delegator-vp">{delegators[6].amount !== undefined ? <>{delegators[6].amount}</> : ""}</div>
+                <div className="delegator-vp">{delegators[7].amount !== undefined ? <>{delegators[7].amount}</> : ""}</div>
+              </div>
+              <div>
+                <div className="delegator-x" />
+                <div className="delegator-x1" />
+                <div className="delegator-x2" />
+                <div className="delegator-x3" />
+                <div className="delegator-x4" />
+                <div className="delegator-x5" />
+                <div className="delegator-x6" />
+              </div>
+              <div>
+                <div className="delegates-y" />
+                <div className="delegators-y1" />
+                <div className="delegators-y2" />
+              </div>
+              <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>
+          </div>
         </div>
         {/* <div className="mbrn-stake-logo">
           <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
