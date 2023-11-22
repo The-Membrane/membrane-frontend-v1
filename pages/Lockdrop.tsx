@@ -1253,7 +1253,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
             <div className="lockdrop-frame"/>
             <div className="infobox" />
             <div className="durationbar">
-              <ProgressBar bgcolor="#50C9BD" progress={progress}  height={30} />
+              <ProgressBar bgcolor="#50C9BD" progress={progress} noMargin={false} height={30} />
               <div className='y-axis'/>
               <div className="deposit">DEPOSIT</div>
               <div className="withdraw">WITHDRAW</div>
