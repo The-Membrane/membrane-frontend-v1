@@ -2117,7 +2117,7 @@ span[data-descr]:hover::after {
   height: 100%;
   margin-top: 3%;
   gap: 5.5%;
-  align-items: end;
+  align-items: flex-end;
 }
 .delegate-frame {  
   display: flex;
@@ -2166,8 +2166,8 @@ span[data-descr]:hover::after {
 }
 .set-delegate-button {
   position: relative;
-  top: -4%;
-  left: 14%;
+  top: -23%;
+  left: 25%;
   width: 154px;
   height: 32px;
   text-align: center;
@@ -2203,7 +2203,9 @@ span[data-descr]:hover::after {
   position: relative;
   color: white;
   display: flex;
-  gap: 2%;
+  top: -19%;
+  gap: 3.6%;
+  width: 102%;
 }
 .claim {
   position: absolute;

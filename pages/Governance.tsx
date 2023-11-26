@@ -11,6 +11,7 @@ import React from "react";
 import Image from "next/image";
 import { useChain } from "@cosmos-kit/react";
 import { chainName } from "../config";
+import { VestingClient } from "../codegen/vesting/Vesting.client";
 
 const unstakingPeriod = 4; //days
 
@@ -51,6 +52,7 @@ interface Props {
   govClient: GovernanceClient | null;
   stakingClient: StakingClient | null;
   stakingQueryClient: StakingQueryClient | null;
+  vestingClient: VestingClient | null;
   address: string | undefined;
   Delegations: Delegation[];
   Delegators: Delegator[];
@@ -66,7 +68,7 @@ interface Props {
   WalletMBRN: number;
 }
 
-const Governance = ({govClient, stakingClient, stakingQueryClient, address,
+const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient, address,
   Delegations, Delegators, quorum, setQuorum, maxCommission, setmaxCommission, Proposals, UserVP, EmissionsSchedule, UserStake, UserClaims, WalletMBRN
 }: Props) => {
   const { connect } = useChain(chainName);

@@ -14,6 +14,7 @@ import { LiquidationQueueClient, LiquidationQueueQueryClient } from '../codegen/
 import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stability_pool/StabilityPool.client';
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
+import { VestingClient } from '../codegen/vesting/Vesting.client';
 
 export function useClients(): {
   cdp_client: PositionsClient | null;
@@ -22,6 +23,7 @@ export function useClients(): {
   stability_pool_client: StabilityPoolClient | null;
   governance_client: GovernanceClient | null;
   staking_client: StakingClient | null;
+  vesting_client: VestingClient | null;
   base_client: SigningCosmWasmClient | null;
   address: String | undefined;
 } {
@@ -33,6 +35,7 @@ export function useClients(): {
   const [stabilitypoolClient, setstabilitypoolClient] = useState<StabilityPoolClient | null>(  null  );
   const [governanceClient, setgovernanceClient] = useState<GovernanceClient | null>(  null  );
   const [stakingClient, setstakingClient] = useState<StakingClient | null>(  null  );
+  const [vestingClient, setvestingClient] = useState<VestingClient | null>(  null  );
   const [cosmwasmClient, setCosmwasmClient] = useState<SigningCosmWasmClient | null>(  null  );
 
   var signed_errored = false;
@@ -76,6 +79,7 @@ export function useClients(): {
         setstabilitypoolClient(new StabilityPoolClient(cosmwasmClient, address, testnetAddrs.stability_pool));  
         setgovernanceClient(new GovernanceClient(cosmwasmClient, address, testnetAddrs.governance));
         setstakingClient(new StakingClient(cosmwasmClient, address, testnetAddrs.staking));
+        setvestingClient(new VestingClient(cosmwasmClient, address, testnetAddrs.vesting));
 
       }).catch((e) => {
         console.log(e);
@@ -90,6 +94,7 @@ export function useClients(): {
     stability_pool_client: stabilitypoolClient ?? null,
     governance_client: governanceClient ?? null,
     staking_client: stakingClient ?? null,
+    vesting_client: vestingClient ?? null,
     base_client: cosmwasmClient ?? null,
     address: address, 
     // connect: connect,
