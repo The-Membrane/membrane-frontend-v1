@@ -16,6 +16,7 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
+import { delegateList, quadraticVoting } from "../config";
 
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
@@ -45,6 +46,7 @@ export default function Home() {
   const hotjarVersion = 6;
 
   const SECONDS_PER_DAY = 86400;
+  const BLOCK_TIME_IN_SECONDS = 6;
   const unstakingPeriod = 4; //days
 
   const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -601,7 +603,10 @@ export default function Home() {
     completed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
     executed: [[undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined]],
 });
-  const [userVP, setuserVP] = useState(0);
+  const [userVP, setuserVP] = useState({
+    userStake: 0,
+    userDelegations: 0,
+  });
   //Staking//
   //Emissions Schedule
   const [emissionsSchedule, setEmissionsSchedule] = useState<EmissionsSchedule>({
@@ -627,50 +632,76 @@ export default function Home() {
   const getDelegations = async () => {
     try {
       await stakingqueryClient?.delegations({
-        user: address as string ?? "",
+        user: address as string ?? undefined,
       }).then( async (res) => {
         var delegationVP = 0;
-        //Set max parse
-        var max_parse = Math.min(res[0].delegation_info.delegated_to.length, 8)
+        var delegatedStake = 0;
 
-        //Set delegations
-        for (let i = 0; i < max_parse; i++) {
-          delegations[i].amount = parseInt(res[i].delegation_info.delegated_to[i].amount)
-          delegations[i].delegator = res[i].delegation_info.delegated_to[i].delegate
-          delegations[i].fluid = res[i].delegation_info.delegated_to[i].fluidity
-          //Subtract from user VP
-          if (res[i].delegation_info.delegated_to[i].voting_power_delegation === true) {
-            delegationVP -= parseInt(res[i].delegation_info.delegated_to[i].amount)
+        if (res.length > 0) {
+          //Set delegation state for the listed delegates
+          delegateList.forEach((delegate, index) => {
+            let delegate_index = res[0].delegation_info.delegated_to.findIndex((delegate) => { delegate.delegate === delegateList[index].address});
+            if (delegate_index !== -1) {
+              delegations[index].amount = parseInt(res[0].delegation_info.delegated_to[delegate_index].amount)
+              delegations[index].fluid = res[0].delegation_info.delegated_to[delegate_index].fluidity
+            }
+            delegations[index].delegator = delegate.name;
+          })
+          console.log(delegations)
+
+          //Set delegations
+          //We add the delegateList length bc we are going to remove them from the list
+          for (let i = 0; i < res[0].delegation_info.delegated_to.length; i++) {
+            //Set delegations if within the list length of 8
+            let index = i + delegateList.length;
+            if (index < 8) {
+              delegations[index].amount = parseInt(res[index].delegation_info.delegated_to[index].amount)
+              delegations[index].delegator = res[index].delegation_info.delegated_to[index].delegate.slice(13) + '...';
+              delegations[index].fluid = res[index].delegation_info.delegated_to[index].fluidity
+              
+              //Query and set commission
+              await stakingqueryClient?.delegations({
+                user: res[index].delegation_info.delegated_to[index].delegate,
+              }).then((res) => {
+                delegations[index].commission = parseInt(res[0].delegation_info.commission) * 100 //Commission is a % so multiply by 100
+              })
+              //////Move this to query when clicking on a delegate//////
+            }
+            //Subtract from user VP
+            if (res[index].delegation_info.delegated_to[index].voting_power_delegation === true) {
+              delegatedStake += parseInt(res[index].delegation_info.delegated_to[index].amount)
+            }
           }
-          //Query and set commission
-          await stakingqueryClient?.delegations({
-            user: res[i].delegation_info.delegated_to[i].delegate,
-          }).then((res) => {
-            delegations[i].commission = parseInt(res[0].delegation_info.commission) * 100 //Commission is a % so multiply by 100
-          })
-        }
-        
-        //Set max parse
-        var max_parse = Math.min(res[0].delegation_info.delegated.length, 8)
-        //Set Delegators
-        for (let i = 0; i < max_parse; i++) {
-          delegators[i].amount = parseInt(res[i].delegation_info.delegated[i].amount)
-          delegators[i].delegator = res[i].delegation_info.delegated[i].delegate
-          delegators[i].fluid = res[i].delegation_info.delegated[i].fluidity
           
-          //Add to user total VP
-          if (res[i].delegation_info.delegated[i].voting_power_delegation === true) {
-            delegationVP += parseInt(res[i].delegation_info.delegated_to[i].amount)
-          }          
-          //Add to user total VP
-          setuserVP(prevState => {
-            return prevState + delegationVP
+          //Set Delegators
+          for (let i = 0; i < res[0].delegation_info.delegated.length; i++) {          
+            //Add to user total VP
+            if (res[i].delegation_info.delegated[i].voting_power_delegation === true) {
+              if (quadraticVoting === true){
+                delegationVP += Math.sqrt(parseInt(res[i].delegation_info.delegated[i].amount))            
+              } else {              
+                delegationVP += parseInt(res[i].delegation_info.delegated_to[i].amount)
+              }
+            }          
+            //Add to user VP
+            setuserVP(prevState => {
+              return {
+                userStake: prevState.userStake - delegatedStake,
+                userDelegations: delegationVP,
+              }
+            })
+          }
+        } else {          
+          //Set delegation state for the listed delegates
+          delegateList.forEach((delegate, index) => {
+            delegations[index].amount = 0;
+            delegations[index].fluid = true;            
+            delegations[index].delegator = delegate.name;
           })
+          console.log(delegations)
         }
         //Set delegations
         setDelegations(delegations)
-        //Set delegators
-        setDelegators(delegators)
       })
 
     } catch (error) {
@@ -767,7 +798,12 @@ export default function Home() {
         })
 
         //Set user VP
-        setuserVP(parseInt(res.total_staked))
+        setuserVP(prevState => {
+          return {
+            userStake: prevState.userStake + stakingTotal,
+            userDelegations: prevState.userDelegations,
+          }
+        })
       })
     } catch (error) {
       console.log(error)
@@ -812,60 +848,74 @@ export default function Home() {
     }
   }
 
-
+  //This won't work with muliple proposals of separate types since it sets based on the length of the array
+  //WE'd need to sort the proposal list by status beforehand
   const getProposals = async () => {
     try {
       //Get current time in seconds
-      var currentTime = 0;
-      governance_client?.client.getBlock().then( (block) => {
-        currentTime = Date.parse(block.header.time) / 1000;;
+      var currentBlockHeight = 0;
+      
+      await governance_client?.client?.getHeight().then( async (height) => {
+          currentBlockHeight = height;
+          console.log(currentBlockHeight)
       })
+
       //Get active
       await governancequeryClient?.activeProposals({})
       .then(async (res) => {
         //Set active, completed & executed
         for (let i = 0; i < res.proposal_list.length; i++) {
           if (res.proposal_list[i].status == "active") {
-            if (proposals.active.length < 8){
-              //Get days left
-              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;            
-              //Get total voting power
-              var totalVotingPower = 0;
+            if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
+              //Calc days left
+              var daysLeft = (res.proposal_list[i].end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
+              //If height isn't queried set to 0
+              //Once the query work's we'll have to change the logic anyway
+              if (currentBlockHeight == 0) {
+                daysLeft = 0;
+              } 
+              
+              //Query total voting power
               await governancequeryClient?.totalVotingPower({
                 proposalId: parseInt(res.proposal_list[i].proposal_id)
-              }).then((res) => {
-                totalVotingPower = parseInt(res);
+              }).then( async (vp_res) => {
+                //Set total voting power
+                var totalVotingPower = parseInt(vp_res);
+                //Query Gov config
+                await governancequeryClient?.config().then((config_res) => {
+                  //Calc aligned power
+                  //Sqrt_Root it if necessary
+                  var aligned_power = parseInt(res.proposal_list[i].aligned_power);
+                  if (config_res.quadratic_voting === true){
+                    aligned_power = Math.sqrt(aligned_power);
+                  }
+                  //Calc quorum
+                  var quorum = (parseInt(res.proposal_list[i].against_power) + parseInt(res.proposal_list[i].for_power) + aligned_power + parseInt(res.proposal_list[i].amendment_power) + parseInt(res.proposal_list[i].removal_power)) / totalVotingPower;
+                  //Query config
+                  //Set quorum from config
+                  setQuorum(parseInt(config_res.proposal_required_quorum))
+                  //Get current result
+                  let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config_res)
+                  //Update active
+                  proposals.active[i] = [res.proposal_list[i], daysLeft, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+                })
               })
-              //Calc quorum
-              var quorum = (parseInt(res.proposal_list[i].against_power) + parseInt(res.proposal_list[i].for_power) + parseInt(res.proposal_list[i].aligned_power) + parseInt(res.proposal_list[i].amendment_power) + parseInt(res.proposal_list[i].removal_power)) / totalVotingPower;
-              //Query config
-              var config = await governancequeryClient?.config()
-              //Set quorum from config
-              setQuorum(parseInt(config.proposal_required_quorum))
-              //Get current result
-              let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config)
-              //Push to front of active
-              proposals.active = ([[res.proposal_list[i], daysLeft, current_result, quorum]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.active)
-              //pop end of active
-              proposals.active.pop()
             }
           } else if (res.proposal_list[i].status == "executed") {
-            if (proposals.executed.length < 8){
-              //Get days left
-              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;
-              //Push to front of executed
-              proposals.executed = ([[res.proposal_list[i], daysLeft, "Executed", 100]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.executed)
-              //pop end of executed
-              proposals.executed.pop()
+            if (proposals.executed[7][0] === undefined && proposals.executed[i][0] === undefined){
+              //Get days left to execute
+              //implementation todo
+              var daysLeft = (res.proposal_list[i].end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
+              //Update executed
+              proposals.executed[i] = [res.proposal_list[i], daysLeft, "Executed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
             }
           } else { //Completed
-            if (proposals.completed.length < 8){
-              //Get days left
-              var daysLeft = (res.proposal_list[i].end_block - currentTime) / SECONDS_PER_DAY;
-              //Push to front of completed
-              proposals.completed = ([[res.proposal_list[i], daysLeft, "Completed", 100]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.completed)
-              //pop end of completed
-              proposals.completed.pop()
+            if (proposals.completed[7][0] === undefined && proposals.completed[i][0] === undefined){
+              //Get days left until expiration
+              //implementation todo
+              var daysLeft = (res.proposal_list[i].end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
+              //Update completed
+              proposals.completed[i] = [res.proposal_list[i], daysLeft, "Completed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
             }
           }
         }
@@ -878,10 +928,12 @@ export default function Home() {
       .then((res) => {
         //Set pending
         for (let i = 0; i < res.proposal_list.length; i++) {
-          //Push to front
-          proposals.pending = ([[res.proposal_list[i], 1, "Pending", 0]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.pending)
-          //pop end
-          proposals.pending.pop()
+          if (proposals.pending[i][0] === undefined){
+            //Push to front
+            proposals.pending = ([[res.proposal_list[i], 1, "Pending", 0]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.pending)
+            //pop end
+            proposals.pending.pop()
+        }
         }
       })
 
@@ -961,7 +1013,8 @@ export default function Home() {
       //Get user claims
       getuserClaims()
     }
-    if (delegations[0].amount === 0 && delegators[0].amount === 0){
+    if (delegations[0].amount === 0 || delegations[0].amount === undefined){
+      console.log("attempt")
       //Get delegation info
       getDelegations()
     }

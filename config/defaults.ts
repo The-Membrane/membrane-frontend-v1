@@ -26,12 +26,12 @@ export const feeDenom = 'uosmo';
 // export const cw20ContractAddress = 'wasm1p7vmrhl3s0fyl0m9hk2hlm7uuxq84hztur63n8ryh85chh30vt6q89shcv'
 // export const cw20ContractAddress = 'osmo1y0ywcujptlmnx4fgstlqfp7nftc8w5qndsfds9wxwtm0ltjpzp4qdj09j8'
 
-//Mainnet addrs but for code sake we r leaving the name
+/// Mainnet addrs but for code sake we are leaving the name
 export const testnetAddrs = {
     launch: "osmo1g6hgj3eu9ju4vuaprjxdzj97ecnuczytve3junulgnwlamnndl5q6k73w6",
     
     discount_vault: "osmo1v8wckds5lvsdd0xrragvleu8srxprjpwdl7mga5uygnwmz5e7qzsl5zexw",
-    governance: "osmo19h8huy2hz4q7detxzv2r2erlsvlq8hzlsquu6n5x83775va4qgkskf20kq",
+    governance: "osmo1wk0zlag50ufu5wrsfyelrylykfe3cw68fgv9s8xqj20qznhfm44qgdnq86", //old gov: osmo19h8huy2hz4q7detxzv2r2erlsvlq8hzlsquu6n5x83775va4qgkskf20kq
     liq_queue: "osmo1ycmtfa7h0efexjxuaw7yh3h3qayy5lspt9q4n4e3stn06cdcgm8s50zmjl",
     liquidity_check: "osmo1xxx0yuqhmwekt44q00jrf3rwvfa70rpeu622q0x56yaf423vq93q3qpzux",
     mbrn_auction: "osmo1qwdlg9le9kdrvgyp35jxz53m8zhdssyvxvyevmdxcn852h6dq9gqknf2aa",
@@ -43,7 +43,35 @@ export const testnetAddrs = {
     system_discounts: "osmo1p0hvtat69dash8f0w340n2kjdkdfq0ggyp77mr426wpnfwp3tjyqq6a8vr",
     vesting: "osmo1flwr85scpcsdqa8uyh0acgxeqlg2ln8tlklzwzdn4u68n3p5wegsgspjf6"
 };
-
+export const quadraticVoting = true;
+interface Delegate {
+    name: string;
+    address: string;
+    socials: [string, string]; // [twitter, discord]
+};
+/// Delegates List (non-exhaustive but makes it better UX for stakers to choose from a list)
+export const delegateList = [
+    {
+        name: "RoboMcGobo",
+        address: "osmo1nktatq53eah8efefsry33yg3zkhrrzwq3k6wg7",
+        socials: ["@RoboMcGobo", "robomcgobo"]
+    },
+    {
+        name: "Johnny Wyles",
+        address: "osmo1dplx2zw3mjk5lam6fnv5q2yxldcshs3wl3s8ph",
+        socials: ["@JohnnyWyles87", "johnnywyles"]
+    },
+    {
+        name: "Macks Wolfard",
+        address: "osmo1ckgwfferpjy6usm3nvyjknat5d6frrhypl6kku",
+        socials: ["@MacksWolf", "mackswolf"]
+    },
+    {
+        name: "Trix",
+        address: "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w",
+        socials: ["@brane_trix", "tri.xxx"]
+    },
+] as Delegate[];
 export const chainassets: AssetList = assets.find(
     (chain) => chain.chain_name === chainName
 ) as AssetList;
