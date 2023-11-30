@@ -44,7 +44,7 @@ export const testnetAddrs = {
     vesting: "osmo1flwr85scpcsdqa8uyh0acgxeqlg2ln8tlklzwzdn4u68n3p5wegsgspjf6"
 };
 export const quadraticVoting = true;
-interface Delegate {
+export interface Delegate {
     name: string;
     address: string;
     socials: [string, string]; // [twitter, discord]

@@ -2187,6 +2187,9 @@ span[data-descr]:hover::after {
   background-color:whitesmoke;
   border-radius: 50%;
 }
+.set-delegate-button:hover {
+  opacity: 0.5;
+}
 .delegate-button:hover,
 .unstake-button:hover,
 .stake-button1:hover,
@@ -2577,6 +2580,10 @@ span[data-descr]:hover::after {
   color: white;
   display: flex;
   justify-content: center;
+}
+.delegate-1:hover {
+  color:rgba(79, 202, 187, 0.85);
+  cursor: pointer;
 }
 .undelegate-button:hover {
   opacity: 0.5;

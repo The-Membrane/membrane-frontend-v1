@@ -10,7 +10,7 @@ import { denoms } from ".";
 import React from "react";
 import Image from "next/image";
 import { useChain } from "@cosmos-kit/react";
-import { chainName, delegateList, quadraticVoting } from "../config";
+import { chainName, Delegate, delegateList, quadraticVoting } from "../config";
 import { VestingClient } from "../codegen/vesting/Vesting.client";
 
 const unstakingPeriod = 4; //days
@@ -477,30 +477,38 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
   }
   const handledelegateForm = (fluid: boolean, vp: boolean, delegate: boolean, var_governator?: string) => {
     //Initialize variables
-    var governator: string;
+    var stored_governator: Delegate;
     if (var_governator === undefined) {
       var_governator = "";
-      governator = "";
+      stored_governator = {
+        address: "",
+        name: "",
+        socials: ["", ""],
+      };
     } else {
-      governator = findDelegateAddress(var_governator);
+      stored_governator = findDelegate(var_governator);
     }
-    console.log(governator)
     var amount: string;
     //format popup message
     setPopupTrigger(true)
-    setPopupStatus("Update Delegations")
+    //Customize based on delegate or not
+    if (delegate === true) {      
+      setPopupStatus("Delegate")
+    } else {  
+      setPopupStatus("Undelegate")
+    }
     setPopupMsg(<p>        
       <form onSubmit={(event) => {
         console.log("delegate attempt")
           event.preventDefault();
-          handledelegateSubmission(delegate, fluid, governator, amount, vp)
+          handledelegateSubmission(delegate, fluid, stored_governator.address, amount, vp)
         }}>  
         {/*Governator*/}
         <div>
           <label style={{color: "aqua"}}>Delegate:</label>     
           <input name="governator" defaultValue={var_governator} type="string" onChange={(event)=>{
             event.preventDefault();
-            governator = event.target.value;
+            stored_governator.address = event.target.value;
           }}/>
         </div>
         {/*Amount*/}
@@ -511,7 +519,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             amount = (event.target.value).toString();
           }}/>
         </div>
-        <p>The delegate can redelegate your delegations but you always retain final control</p>
+        <p>The delegate can redelegate your delegations but you always retain final control. You also can't supersede your delegate's vote during a proposal so choose wisely.</p>
         {/*Delegate*/}
         {/* <label style={{color: "aqua"}}>Delegate?</label>     
         <input name="delegate" type="checkbox" onChange={(event)=>{
@@ -570,18 +578,19 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
               Submit
             </div>
           </button>
-          <button className="btn" style={{position: "absolute", opacity:0.7, top: 20, right: 100, backgroundColor:"gray"}} type="button" onClick={()=>{
+          {/* Don't show fluid options if user has no delegations */}
+          {userVP.userDelegations > 0 ? <button className="btn" style={{position: "absolute", opacity:0.7, top: 20, right: 100, backgroundColor:"gray"}} type="button" onClick={()=>{
             setPopupMsg(<p>        
               <form onSubmit={(event) => {
                   event.preventDefault();
-                  handlefluiddelegationSubmission(governator, amount)
+                  handlefluiddelegationSubmission(stored_governator.address, amount)
                 }}>  
                 {/*Governator*/}
                 <div>
                   <label style={{color: "aqua"}}>Delegate:</label>     
-                  <input name="governator" defaultValue={governator} type="string" onChange={(event)=>{
+                  <input name="governator" defaultValue={var_governator} type="string" onChange={(event)=>{
                     event.preventDefault();
-                    governator = event.target.value;
+                    stored_governator.address = event.target.value;
                   }}/>
                 </div>
                 {/*Amount*/}
@@ -609,7 +618,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             <div >
               Switch to your Fluid delegations
             </div>
-          </button>
+          </button> : null}
       </form>
     </p>
     )
@@ -792,19 +801,59 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     }
   }
 
-  function findDelegateAddress(delegate: string) {
-    var found = "";
+  function findDelegate(delegate: string) {
+    var found: Delegate = {
+      address: "",
+      name: "",
+      socials: ["", ""],
+    };
+
     delegateList.forEach((element) => {
       if (element.name === delegate) {
-        found = element.address;
+        found = element;
       }
     })
-    if (found === "") {
-      found = delegate;
+    if (found.address === "") {
+      found.address = delegate;
     }
 
     //This returns the delegate's address if not found in the delegateList
     return found;
+  }
+  function showDelegateInfo(delegate: string) {
+    let stored_delegate = findDelegate(delegate);
+    //Set cursor to progress
+    document.body.style.cursor = "progress";
+    //Set twitter link    
+    var link = "https://twitter.com/" + stored_delegate.socials[0];
+    //Query delegate commission
+    stakingQueryClient?.delegations({
+      user: stored_delegate.address,
+    }).then((res) => {
+      //Set cursor to default
+      document.body.style.cursor = "default";
+      //format popup message
+      setPopupTrigger(true)
+      setPopupMsg(<>
+      <div onClick={()=>window.open(link)} style={{textDecoration:"underline", cursor:"pointer"}}>Twitter: {stored_delegate.socials[0]}</div>
+      <div>Discord: {stored_delegate.socials[1]}</div>
+      <div>Commission: {parseInt(res[0].delegation_info.commission) * 100}%</div>
+      </>)
+      setPopupStatus("Delegate Info")
+    }).catch((error) => {
+      console.log(error)
+      //Set cursor to default
+      document.body.style.cursor = "default";
+      //format popup message
+      setPopupTrigger(true)
+      setPopupMsg(<>
+      <div onClick={()=>window.open(link)} style={{textDecoration:"underline", cursor:"pointer"}}>Twitter: {stored_delegate.socials[0]}</div>
+      <div>Discord: {stored_delegate.socials[1]}</div>
+      <div>Commission: 0%</div>
+      </>)
+      setPopupStatus("Delegate Info")
+    })
+
   }
 
   useEffect(() => {
@@ -1029,8 +1078,17 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
               <div>&nbsp;Delegate&nbsp;&nbsp;&nbsp;</div>
               <div>&nbsp;Undele.</div>
             </div>
+            <div className="delegate-xaxis-frame">
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+              <div className="delegate-x" />
+            </div>
             <div className="delegate-frame">
-              <div className="delegate-1">{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator}</>}</div>
+              <div className="delegate-1" onClick={() => showDelegateInfo(delegations[0].delegator)}>{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator}</>}</div>
               <div className="delegate-1">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator}</>}</div>
               <div className="delegate-1">{delegations[2].delegator === "" ? ("") : <>{delegations[2].delegator}</>}</div>
               <div className="delegate-1">{delegations[3].delegator === "" ? ("") : <>{delegations[3].delegator}</>}</div>
@@ -1048,15 +1106,6 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
               <div className="vp-1">{delegations[5].amount !== undefined ? <>{Math.sqrt(delegations[5].amount)}</> : ""}</div>
               <div className="vp-1">{delegations[6].amount !== undefined ? <>{Math.sqrt(delegations[6].amount)}</> : ""}</div>
               <div className="vp-1">{delegations[7].amount !== undefined ? <>{Math.sqrt(delegations[7].amount)}</> : ""}</div>
-            </div>
-            <div className="delegate-xaxis-frame">
-              <div className="delegate-x" />
-              <div className="delegate-x" />
-              <div className="delegate-x" />
-              <div className="delegate-x" />
-              <div className="delegate-x" />
-              <div className="delegate-x" />
-              <div className="delegate-x" />
             </div>
             <div className="delegate-yaxis-frame">
               <div className="delegation-y" />
