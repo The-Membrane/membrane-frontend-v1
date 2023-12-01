@@ -519,7 +519,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             amount = (event.target.value).toString();
           }}/>
         </div>
-        <p>The delegate can redelegate your delegations but you always retain final control. You also can't supersede your delegate's vote during a proposal so choose wisely.</p>
+        <p>The delegate can redelegate your delegations but you always retain final control. You also cannot supersede your delegates vote during a proposal so choose wisely.</p>
         {/*Delegate*/}
         {/* <label style={{color: "aqua"}}>Delegate?</label>     
         <input name="delegate" type="checkbox" onChange={(event)=>{
