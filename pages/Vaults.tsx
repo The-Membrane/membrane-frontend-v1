@@ -1116,13 +1116,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                                 {
                                     user: address as string,
                                 }
-                            ).then((res) => {
+                            ).then(async (res) => {
                                 //Set amount to new debt amount
                                 var repay_amount = parseInt(res[0].positions[0].credit_amount);
                                 //Execute the Repay
                                 try {
                                     ///Execute the Repay
-                                    cdp_client?.repay({
+                                    await cdp_client?.repay({
                                         positionId: positionID,
                                     }, "auto", undefined, coins(repay_amount, denoms.cdt)).then((res) => {           
                                         console.log(res?.events.toString())
