@@ -67,6 +67,11 @@ export const delegateList = [
         socials: ["@MacksWolf", "mackswolf"]
     },
     {
+        name: "Nostradamus",
+        address: "osmo1xp0qs6pkay2jssu58p8eap0epdhwx5mqlhs4v7",
+        socials: ["@nostradamus411", "nostradamus.nosnode"]
+    },
+    {
         name: "Trix",
         address: "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w",
         socials: ["@brane_trix", "tri.xxx"]
