@@ -116,7 +116,8 @@ export function useQueryClients(): {
     ///I can change the RPC node here
     //https://rpc.osmotest5.osmosis.zone/
     //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
-    var client = CosmWasmClient.connect("https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573")
+    //Reece's: osmosis-rpc.reece.sh
+    var client = CosmWasmClient.connect("osmosis-rpc.reece.sh")
     .catch((e) => {
       console.log(e);
       query_errored = true;
