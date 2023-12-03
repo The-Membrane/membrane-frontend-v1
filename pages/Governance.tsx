@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ProgressBar from "../components/progress_bar";
 import { GovernanceClient } from "../codegen/governance/Governance.client";
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
-import { ProposalResponse, ProposalMessage } from "../codegen/governance/Governance.types";
+import { ProposalResponse, ProposalMessage, VoteOption, ProposalVoteOption } from "../codegen/governance/Governance.types";
 import Popup from "../components/Popup";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { coins } from "@cosmjs/stargate";
@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useChain } from "@cosmos-kit/react";
 import { chainName, Delegate, delegateList, quadraticVoting } from "../config";
 import { VestingClient } from "../codegen/vesting/Vesting.client";
+import { IoTrophyOutline } from "react-icons/io5";
 
 const unstakingPeriod = 4; //days
 
@@ -252,6 +253,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       //Calc ratios
       var for_ratio = (parseInt(proposal.for_power) / total_votes+1 * 100).toString() + "%";
       var against_ratio = (parseInt(proposal.against_power) / total_votes+1 * 100).toString() + "%";
+      var aligned_ratio = (parseInt(proposal.aligned_power) / total_votes+1 * 100).toString() + "%";
       var amend_ratio = (parseInt(proposal.amendment_power) / total_votes+1 * 100).toString() + "%";
       var removal_ratio = (parseInt(proposal.removal_power) / total_votes+1 * 100).toString() + "%";
       //format popup message
@@ -266,12 +268,46 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
         <div>
           Msgs: {proposal.messages?.toString() ?? "None"}
         </div>
-        <div>
-          For: {for_ratio} Against: {against_ratio} Amend: {amend_ratio} Remove: {removal_ratio} Total: {total_votes}
+        <div className="vote-options">
+          <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "for")}>For: {for_ratio}</button> 
+          <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "against")}>Against: {against_ratio} </button>
+          <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "amend")}>Amend: {amend_ratio} </button>
+          <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "align")}>Align: {aligned_ratio} </button>
+          <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "remove")}>Remove: {removal_ratio} </button>
         </div>
+        <div className="vote-total">Total: {total_votes}</div>      
       </p>
       )
       setPopupStatus(proposal.title)
+    }
+  }
+  const handleVote = async (proposalId: number, vote: ProposalVoteOption) => {
+    //Check if wallet is connected & connect if not
+    if (address === undefined) {
+      connect();
+      setPopupTrigger(false);
+      return;
+    }
+    try {
+      await govClient?.castVote({
+        proposalId,
+        vote,
+      },"auto", undefined
+      ).then((res) => {
+        console.log(res)
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Voted</div>)
+        setPopupStatus("Success")
+      })
+    
+    } catch (error) {
+      console.log(error)
+      let e = error as {message: string};
+      //format popup message
+      setPopupTrigger(true)
+      setPopupMsg(<div>{e.message}</div>)
+      setPopupStatus("Error")
     }
   }
   const handleproposalSubmission = async (title: string, description: string, link: string, msgs: ProposalMessage[]) => {
@@ -826,10 +862,16 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     document.body.style.cursor = "progress";
     //Set twitter link    
     var link = "https://twitter.com/" + stored_delegate.socials[0];
-    //Query delegate commission
+    //Query delegate commission & total delegations
     stakingQueryClient?.delegations({
       user: stored_delegate.address,
     }).then((res) => {
+      //Calc total delegations
+      var total_delegations = 0;
+      res[0].delegation_info.delegated.forEach((element) => {
+        total_delegations += parseInt(element.amount);
+      })
+
       //Set cursor to default
       document.body.style.cursor = "default";
       //format popup message
@@ -837,7 +879,9 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       setPopupMsg(<>
       <div onClick={()=>window.open(link)} style={{textDecoration:"underline", cursor:"pointer"}}>Twitter: {stored_delegate.socials[0]}</div>
       <div>Discord: {stored_delegate.socials[1]}</div>
+      <div>Total Delegated: {total_delegations/1_000000} MBRN</div>
       <div>Commission: {parseInt(res[0].delegation_info.commission) * 100}%</div>
+      
       </>)
       setPopupStatus("Delegate Info")
     }).catch((error) => {
@@ -849,6 +893,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       setPopupMsg(<>
       <div onClick={()=>window.open(link)} style={{textDecoration:"underline", cursor:"pointer"}}>Twitter: {stored_delegate.socials[0]}</div>
       <div>Discord: {stored_delegate.socials[1]}</div>
+      <div>Total Delegated: N/A</div>
       <div>Commission: 0%</div>
       </>)
       setPopupStatus("Delegate Info")
@@ -1089,13 +1134,13 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             </div>
             <div className="delegate-frame">
               <div className="delegate-1" onClick={() => showDelegateInfo(delegations[0].delegator)}>{delegations[0].delegator === "" ? ("") : <>{delegations[0].delegator}</>}</div>
-              <div className="delegate-1">{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator}</>}</div>
-              <div className="delegate-1">{delegations[2].delegator === "" ? ("") : <>{delegations[2].delegator}</>}</div>
-              <div className="delegate-1">{delegations[3].delegator === "" ? ("") : <>{delegations[3].delegator}</>}</div>
-              <div className="delegate-1">{delegations[4].delegator === "" ? ("") : <>{delegations[4].delegator}</>}</div>
-              <div className="delegate-1">{delegations[5].delegator === "" ? ("") : <>{delegations[5].delegator}</>}</div>
-              <div className="delegate-1">{delegations[6].delegator === "" ? ("") : <>{delegations[6].delegator}</>}</div>
-              <div className="delegate-1">{delegations[7].delegator === "" ? ("") : <>{delegations[7].delegator}</>}</div>
+              <div className="delegate-1" onClick={() => showDelegateInfo(delegations[1].delegator)}>{delegations[1].delegator === "" ? ("") : <>{delegations[1].delegator}</>}</div>
+              <div className="delegate-1" onClick={() => showDelegateInfo(delegations[2].delegator)}>{delegations[2].delegator === "" ? ("") : <>{delegations[2].delegator}</>}</div>
+              <div className="delegate-1" onClick={() => showDelegateInfo(delegations[3].delegator)}>{delegations[3].delegator === "" ? ("") : <>{delegations[3].delegator}</>}</div>
+              <div className="delegate-1" onClick={() => showDelegateInfo(delegations[4].delegator)}>{delegations[4].delegator === "" ? ("") : <>{delegations[4].delegator}</>}</div>
+              <div className="delegate-1" onClick={() => showDelegateInfo(delegations[5].delegator)}>{delegations[5].delegator === "" ? ("") : <>{delegations[5].delegator}</>}</div>
+              <div className="delegate-1" onClick={() => showDelegateInfo(delegations[6].delegator)}>{delegations[6].delegator === "" ? ("") : <>{delegations[6].delegator}</>}</div>
+              <div className="delegate-1" onClick={() => showDelegateInfo(delegations[7].delegator)}>{delegations[7].delegator === "" ? ("") : <>{delegations[7].delegator}</>}</div>
             </div>
             <div className="voting-power-frame">
               <div className="vp-1">{delegations[0].amount !== undefined ? <>{Math.sqrt(delegations[0].amount)}</> : ""}</div>
