@@ -895,15 +895,19 @@ export default function Home() {
                   //Sqrt_Root it if necessary
                   var aligned_power = parseInt(res.proposal_list[i].aligned_power);
                   if (config_res.quadratic_voting === true){
-                    aligned_power = Math.sqrt(aligned_power);
+                    if (aligned_power > 1000000000){
+                      aligned_power -= 1000000000;
+                      aligned_power += Math.sqrt(1000000000);
+                    }
                   }
                   //Calc quorum
                   var quorum = (parseInt(res.proposal_list[i].against_power) + parseInt(res.proposal_list[i].for_power) + aligned_power + parseInt(res.proposal_list[i].amendment_power) + parseInt(res.proposal_list[i].removal_power)) / totalVotingPower;
+                  console.log(aligned_power, quorum)
                   //Query config
                   //Set quorum from config
                   setQuorum(parseInt(config_res.proposal_required_quorum))
                   //Get current result
-                  let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config_res)
+                  let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config_res, quorum)
                   //Update active
                   proposals.active[i] = [res.proposal_list[i], daysLeft, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
                 })
@@ -952,12 +956,13 @@ export default function Home() {
     }
   }
   
-  const getProposalResult = (totalVotes: number, forVotes: number, amend: number, remove: number, config: Config) => {
-    if (forVotes / totalVotes > parseInt(config.proposal_required_threshold)) {
+  const getProposalResult = (totalVotes: number, forVotes: number, amend: number, remove: number, config: Config, quorum: number) => {
+    console.log(quorum, parseFloat(config.proposal_required_quorum))
+    if ((forVotes / totalVotes > parseFloat(config.proposal_required_threshold)) && (quorum > parseFloat(config.proposal_required_quorum))) {
       return "For";
-    } else if (amend / totalVotes > parseInt(config.proposal_required_threshold)) {
+    } else if ((amend / totalVotes > parseFloat(config.proposal_required_threshold)) && (quorum > parseFloat(config.proposal_required_quorum))){
       return "Amend";
-    } else if (remove / totalVotes > parseInt(config.proposal_required_quorum)) {
+    } else if (remove / totalVotes > parseFloat(config.proposal_required_quorum)) {
       return "Remove";
     } else {
       return "Against";
