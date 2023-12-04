@@ -16,7 +16,7 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
-import { delegateList, quadraticVoting } from "../config";
+import { delegateList, quadraticVoting, skipProposals } from "../config";
 
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
@@ -872,6 +872,7 @@ export default function Home() {
       .then(async (res) => {
         //Set active, completed & executed
         for (let i = 0; i < res.proposal_list.length; i++) {
+          if (skipProposals.includes(res.proposal_list[i].proposal_id)) {continue}
           if (res.proposal_list[i].status == "active") {
             if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
               //Calc days left
