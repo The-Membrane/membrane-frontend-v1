@@ -250,12 +250,15 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     if (proposal !== undefined) {
       //Calc total votes
       var total_votes = parseInt(proposal.for_power) + parseInt(proposal.against_power) + parseInt(proposal.amendment_power) + parseInt(proposal.removal_power);
+      if (total_votes === 0) {
+        total_votes = 1;
+      }
       //Calc ratios
-      var for_ratio = ((parseInt(proposal.for_power) / total_votes+1) * 100).toString() + "%";
-      var against_ratio = ((parseInt(proposal.against_power) / total_votes+1) * 100).toString() + "%";
-      var aligned_ratio = ((parseInt(proposal.aligned_power) / total_votes+1) * 100).toString() + "%";
-      var amend_ratio = ((parseInt(proposal.amendment_power) / total_votes+1) * 100).toString() + "%";
-      var removal_ratio = ((parseInt(proposal.removal_power) / total_votes+1) * 100).toString() + "%";
+      var for_ratio = ((parseInt(proposal.for_power) / total_votes) * 100).toFixed(2) + "%";
+      var against_ratio = ((parseInt(proposal.against_power) / total_votes) * 100).toFixed(2) + "%";
+      // var aligned_ratio = ((parseInt(proposal.aligned_power) / total_votes+1) * 100).toString() + "%";
+      var amend_ratio = ((parseInt(proposal.amendment_power) / total_votes) * 100).toFixed(2) + "%";
+      var removal_ratio = ((parseInt(proposal.removal_power) / total_votes) * 100).toFixed(2) + "%";
       //Format links
       var label = "";
       if (proposal.link?.includes("commonwealth")) {
@@ -288,7 +291,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
           <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "for")}>For: {for_ratio}</button> 
           <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "against")}>Against: {against_ratio} </button>
           <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "amend")}>Amend: {amend_ratio} </button>
-          <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "align")}>Align: {aligned_ratio} </button>
+          <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "align")}>Align</button>
           <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "remove")}>Remove: {removal_ratio} </button>
         </div>
         <div className="vote-total">Days Left: {daysLeft?.toFixed(2) ?? ""}</div>      
