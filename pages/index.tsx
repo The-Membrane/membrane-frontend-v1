@@ -905,7 +905,7 @@ export default function Home() {
                   console.log(aligned_power, quorum)
                   //Query config
                   //Set quorum from config
-                  setQuorum(parseInt(config_res.proposal_required_quorum))
+                  setQuorum(parseFloat(config_res.proposal_required_quorum))
                   //Get current result
                   let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config_res, quorum)
                   //Update active
