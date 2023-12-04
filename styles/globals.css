@@ -2568,7 +2568,7 @@ span[data-descr]:hover::after {
 .proposal-axis-labels {
   position: relative;
   top: -5%;
-  left: 67%;
+  left: 81%;
   width: 189px;
   color: white;
   font-size: small;
