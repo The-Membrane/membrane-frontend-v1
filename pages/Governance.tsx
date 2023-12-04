@@ -256,14 +256,24 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       var aligned_ratio = (parseInt(proposal.aligned_power) / total_votes+1 * 100).toString() + "%";
       var amend_ratio = (parseInt(proposal.amendment_power) / total_votes+1 * 100).toString() + "%";
       var removal_ratio = (parseInt(proposal.removal_power) / total_votes+1 * 100).toString() + "%";
+      //Format links
+      var label = "";
+      if (proposal.link?.includes("commonwealth")) {
+        label = "CommonWealth"
+      } else if (proposal.link?.includes("discord")){
+        label = "Discord"
+      }
       //format popup message
       setPopupTrigger(true)
       setPopupMsg(<p>
         <div>
           Description: {proposal.description}
         </div>
-        <div>
-          Links: {proposal.link}
+        <div onClick={()=>
+          {if (proposal.link !== undefined) {
+            window.open(proposal.link as string)
+          }}} style={{cursor:"pointer"}}>
+          Links: {label}
         </div>
         <div>
           Msgs: {proposal.messages?.toString() ?? "None"}
@@ -1018,13 +1028,13 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
           <div className="proposal-7" onClick={() => handleproposalClick(proposals.active[6][0])}>{proposals.active[6][0]?.title  ?? ""}</div>
           <div className="proposal-8" onClick={() => handleproposalClick(proposals.active[7][0])}>{proposals.active[7][0]?.title  ?? ""}</div>
           <div className="proposal-days" style={(proposals.active[0][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[0][1] ?? 0) === 0 ? "" : (proposals.active[0][1]??0).toFixed(2)}</div>
-          <div className="proposal-days1" style={(proposals.active[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[1][1] ?? 0} days</div>
-          <div className="proposal-days2" style={(proposals.active[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[2][1] ?? 0} days</div>
-          <div className="proposal-days3" style={(proposals.active[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[3][1] ?? 0} days</div>
-          <div className="proposal-days4" style={(proposals.active[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[4][1] ?? 0} days</div>
-          <div className="proposal-days5" style={(proposals.active[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[5][1] ?? 0} days</div>
-          <div className="proposal-days6" style={(proposals.active[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[6][1] ?? 0} days</div>
-          <div className="proposal-days7" style={(proposals.active[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.active[7][1] ?? 0} days</div>
+          <div className="proposal-days1" style={(proposals.active[1][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[1][1] ?? 0) === 0 ? "" : (proposals.active[1][1]??0).toFixed(2)}</div>
+          <div className="proposal-days2" style={(proposals.active[2][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[2][1] ?? 0) === 0 ? "" : (proposals.active[2][1]??0).toFixed(2)}</div>
+          <div className="proposal-days3" style={(proposals.active[3][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[3][1] ?? 0) === 0 ? "" : (proposals.active[3][1]??0).toFixed(2)}</div>
+          <div className="proposal-days4" style={(proposals.active[4][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[4][1] ?? 0) === 0 ? "" : (proposals.active[4][1]??0).toFixed(2)}</div>
+          <div className="proposal-days5" style={(proposals.active[5][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[5][1] ?? 0) === 0 ? "" : (proposals.active[5][1]??0).toFixed(2)}</div>
+          <div className="proposal-days6" style={(proposals.active[6][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[6][1] ?? 0) === 0 ? "" : (proposals.active[6][1]??0).toFixed(2)}</div>
+          <div className="proposal-days7" style={(proposals.active[7][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[7][1] ?? 0) === 0 ? "" : (proposals.active[7][1]??0).toFixed(2)}</div>
           <div className="proposal-result" style={((proposals.active[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[0][2] ?? ""}</div>
           <div className="proposal-result1" style={((proposals.active[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[1][2] ?? ""}</div>
           <div className="proposal-result2" style={((proposals.active[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[2][2] ?? ""}</div>
