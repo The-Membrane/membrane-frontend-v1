@@ -291,7 +291,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
           <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "align")}>Align: {aligned_ratio} </button>
           <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "remove")}>Remove: {removal_ratio} </button>
         </div>
-        <div className="vote-total">Days Left: {daysLeft ?? ""}</div>      
+        <div className="vote-total">Days Left: {daysLeft?.toFixed(2) ?? ""}</div>      
       </p>
       )
       setPopupStatus(proposal.title)
