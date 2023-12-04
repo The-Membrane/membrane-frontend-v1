@@ -698,7 +698,6 @@ export default function Home() {
             delegations[index].fluid = true;            
             delegations[index].delegator = delegate.name;
           })
-          console.log(delegations)
         }
         //Set delegations
         setDelegations(delegations)
@@ -706,6 +705,14 @@ export default function Home() {
 
     } catch (error) {
       console.log(error)
+      //Set delegateList even though the VP amounts are not set
+      delegateList.forEach((delegate, index) => {
+        delegations[index].amount = 0;
+        delegations[index].fluid = true;
+        delegations[index].delegator = delegate.name;
+      })
+      //Set delegations
+      setDelegations(delegations)
     }
   }
   
