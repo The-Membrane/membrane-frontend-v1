@@ -872,11 +872,12 @@ export default function Home() {
       .then(async (res) => {
         //Set active, completed & executed
         for (let i = 0; i < res.proposal_list.length; i++) {
-          if (skipProposals.includes(res.proposal_list[i].proposal_id)) {continue}
-          if (res.proposal_list[i].status == "active") {
+          let proposal = res.proposal_list[i];
+          if (skipProposals.includes(proposal.proposal_id)) {continue}
+          if (proposal.status == "active") {
             if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
               //Calc days left
-              var daysLeft = (res.proposal_list[i].end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
+              var daysLeft = (proposal.end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
               //If height isn't queried set to 0
               //Once the query work's we'll have to change the logic anyway
               if (currentBlockHeight == 0) {
@@ -885,7 +886,7 @@ export default function Home() {
               
               //Query total voting power
               await governancequeryClient?.totalVotingPower({
-                proposalId: parseInt(res.proposal_list[i].proposal_id)
+                proposalId: parseInt(proposal.proposal_id)
               }).then( async (vp_res) => {
                 //Set total voting power
                 var totalVotingPower = parseInt(vp_res);
@@ -893,7 +894,7 @@ export default function Home() {
                 await governancequeryClient?.config().then((config_res) => {
                   //Calc aligned power
                   //Sqrt_Root it if necessary
-                  var aligned_power = parseInt(res.proposal_list[i].aligned_power);
+                  var aligned_power = parseInt(proposal.aligned_power);
                   if (config_res.quadratic_voting === true){
                     if (aligned_power > 1000000000){
                       aligned_power -= 1000000000;
@@ -901,33 +902,33 @@ export default function Home() {
                     }
                   }
                   //Calc quorum
-                  var quorum = (parseInt(res.proposal_list[i].against_power) + parseInt(res.proposal_list[i].for_power) + aligned_power + parseInt(res.proposal_list[i].amendment_power) + parseInt(res.proposal_list[i].removal_power)) / totalVotingPower;
-                  console.log(aligned_power, quorum)
+                  var quorum = (parseInt(proposal.against_power) + parseInt(proposal.for_power) + aligned_power + parseInt(proposal.amendment_power) + parseInt(proposal.removal_power)) / totalVotingPower;
+                  // console.log(aligned_power, totalVotingPower)
                   //Query config
                   //Set quorum from config
                   setQuorum(parseFloat(config_res.proposal_required_quorum))
                   //Get current result
-                  let current_result = getProposalResult(totalVotingPower, parseInt(res.proposal_list[i].for_power), parseInt(res.proposal_list[i].amendment_power), parseInt(res.proposal_list[i].removal_power), config_res, quorum)
+                  let current_result = getProposalResult(parseInt(proposal.for_power), parseInt(proposal.amendment_power), parseInt(proposal.removal_power), parseInt(proposal.against_power), config_res, (proposal.messages !== undefined))
                   //Update active
-                  proposals.active[i] = [res.proposal_list[i], daysLeft, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+                  proposals.active[i] = [proposal, daysLeft, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
                 })
               })
             }
-          } else if (res.proposal_list[i].status == "executed") {
+          } else if (proposal.status == "executed") {
             if (proposals.executed[7][0] === undefined && proposals.executed[i][0] === undefined){
               //Get days left to execute
               //implementation todo
-              var daysLeft = (res.proposal_list[i].end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
+              var daysLeft = (proposal.end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
               //Update executed
-              proposals.executed[i] = [res.proposal_list[i], daysLeft, "Executed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+              proposals.executed[i] = [proposal, daysLeft, "Executed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
             }
           } else { //Completed
             if (proposals.completed[7][0] === undefined && proposals.completed[i][0] === undefined){
               //Get days left until expiration
               //implementation todo
-              var daysLeft = (res.proposal_list[i].end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
+              var daysLeft = (proposal.end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
               //Update completed
-              proposals.completed[i] = [res.proposal_list[i], daysLeft, "Completed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+              proposals.completed[i] = [proposal, daysLeft, "Completed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
             }
           }
         }
@@ -940,9 +941,10 @@ export default function Home() {
       .then((res) => {
         //Set pending
         for (let i = 0; i < res.proposal_list.length; i++) {
+          let proposal = res.proposal_list[i];
           if (proposals.pending[i][0] === undefined){
             //Push to front
-            proposals.pending = ([[res.proposal_list[i], 1, "Pending", 0]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.pending)
+            proposals.pending = ([[proposal, 1, "Pending", 0]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.pending)
             //pop end
             proposals.pending.pop()
         }
@@ -956,13 +958,20 @@ export default function Home() {
     }
   }
   
-  const getProposalResult = (totalVotes: number, forVotes: number, amend: number, remove: number, config: Config, quorum: number) => {
-    console.log(quorum, parseFloat(config.proposal_required_quorum))
-    if (forVotes / totalVotes > parseFloat(config.proposal_required_threshold)){
+  const getProposalResult = (forVotes: number, amend: number, remove: number, against: number, config: Config, msgs: boolean) => {
+    //Calc total votes
+    var totalVotes = forVotes + amend + remove + against;
+    //Set threshold
+    var threshold = parseFloat(config.proposal_required_threshold);
+    if (msgs) {
+      threshold = 0.50;
+    } 
+    console.log(forVotes, totalVotes)
+    if (forVotes / totalVotes > threshold){
       return "For";
-    } else if (amend / totalVotes > parseFloat(config.proposal_required_threshold)){
+    } else if (amend / totalVotes > threshold){
       return "Amend";
-    } else if (remove / totalVotes > parseFloat(config.proposal_required_quorum)) {
+    } else if (remove / totalVotes > threshold) {
       return "Remove";
     } else {
       return "Against";
