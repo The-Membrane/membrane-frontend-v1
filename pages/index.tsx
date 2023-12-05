@@ -958,9 +958,9 @@ export default function Home() {
   
   const getProposalResult = (totalVotes: number, forVotes: number, amend: number, remove: number, config: Config, quorum: number) => {
     console.log(quorum, parseFloat(config.proposal_required_quorum))
-    if ((forVotes / totalVotes > parseFloat(config.proposal_required_threshold)) && (quorum > parseFloat(config.proposal_required_quorum))) {
+    if (forVotes / totalVotes > parseFloat(config.proposal_required_threshold)){
       return "For";
-    } else if ((amend / totalVotes > parseFloat(config.proposal_required_threshold)) && (quorum > parseFloat(config.proposal_required_quorum))){
+    } else if (amend / totalVotes > parseFloat(config.proposal_required_threshold)){
       return "Amend";
     } else if (remove / totalVotes > parseFloat(config.proposal_required_quorum)) {
       return "Remove";
