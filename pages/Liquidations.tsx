@@ -763,7 +763,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   function handleOmniExecution() {    
     switch (oaFunctionLabel) {
       case "Join": {
-        handleStabilityDeposit();
+        // handleStabilityDeposit();
         break;
       }
       case "Exit": {
