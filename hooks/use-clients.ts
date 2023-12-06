@@ -117,6 +117,7 @@ export function useQueryClients(): {
     //https://rpc.osmotest5.osmosis.zone/
     //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
     //Reece's: osmosis-rpc.reece.sh
+    //Polkachu's: https://osmosis-rpc.polkachu.com/
     var client = CosmWasmClient.connect("osmosis-rpc.reece.sh")
     .catch((e) => {
       console.log(e);

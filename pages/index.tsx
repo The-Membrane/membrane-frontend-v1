@@ -644,6 +644,8 @@ export default function Home() {
             if (delegate_index !== -1) {
               delegations[index].amount = parseInt(res[0].delegation_info.delegated_to[delegate_index].amount)
               delegations[index].fluid = res[0].delegation_info.delegated_to[delegate_index].fluidity
+              //Remove delegate from list
+              delegateList.splice(index, 1);
             }
             delegations[index].delegator = delegate.name;
           })
