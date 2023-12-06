@@ -530,7 +530,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       setPopupStatus("Error")
     }
   }
-  const handledelegateForm = (fluid: boolean, vp: boolean, delegate: boolean, var_governator?: string) => {
+  const handledelegateForm = (fluid: boolean, vp: boolean, delegate: boolean, delegate_index?: number, var_governator?: string) => {
     //Initialize variables
     var stored_governator: Delegate;
     if (var_governator === undefined) {
@@ -568,7 +568,13 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
         </div>
         {/*Amount*/}
         <div>
-          <label style={{color: "aqua"}}>Delegation amount ({((userStake.staked ?? 0)/1_000000).toFixed(0)} staked):</label>     
+          { delegate === true ? 
+            <label style={{color: "aqua"}}>Delegation amount ({((userStake.staked ?? 0)/1_000000).toFixed(0)} staked):</label> : 
+            delegate_index === undefined ?
+            <label style={{color: "aqua"}}>Undelegation amount:</label>
+            : <label style={{color: "aqua"}}>Undelegation amount ({((delegations[delegate_index].amount ))} delegated):</label>
+            }
+        
           <input name="amount" type="number" onChange={(event)=>{
             event.preventDefault();
             amount = (event.target.value).toString();
@@ -863,7 +869,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       socials: ["", ""],
     };
 
-    delegateList.forEach((element) => {
+    delegateList.forEach((element, index) => {
       if (element.name === delegate) {
         found = element;
       }
@@ -875,6 +881,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     //This returns the delegate's address if not found in the delegateList
     return found;
   }
+
   function showDelegateInfo(delegate: string) {
     let stored_delegate = findDelegate(delegate);
     //Set cursor to progress
@@ -1177,40 +1184,40 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
               <div className="delegation-y" />
             </div>
             <div className="delegate-button-frame">
-              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, delegations[0].delegator)}>
+              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, 0, delegations[0].delegator)}>
                 <div className="delegate">Delegate</div>
               </div>
-              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, delegations[1].delegator)}>
+              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, 1, delegations[1].delegator)}>
                 <div className="delegate">Delegate</div>
               </div>
-              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, delegations[2].delegator)}>
+              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, 2, delegations[2].delegator)}>
                 <div className="delegate">Delegate</div>
               </div>
-              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, delegations[3].delegator)}>
+              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, 3, delegations[3].delegator)}>
                 <div className="delegate">Delegate</div>
               </div>
-              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, delegations[4].delegator)}>
+              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, 4, delegations[4].delegator)}>
                 <div className="delegate">Delegate</div>
               </div>
-              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, delegations[5].delegator)}>
+              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, 5, delegations[5].delegator)}>
                 <div className="delegate">Delegate</div>
               </div>
-              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, delegations[6].delegator)}>
+              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, 6, delegations[6].delegator)}>
                 <div className="delegate">Delegate</div>
               </div>
-              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, delegations[7].delegator)}>
+              <div className="btn set-delegate-button" onClick={() => handledelegateForm(true, true, true, 7, delegations[7].delegator)}>
                 <div className="delegate">Delegate</div>
               </div>
             </div>
             <div className="undelegate-button-frame">
-              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, delegations[0].delegator)}/>
-              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, delegations[1].delegator)}/>
-              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, delegations[2].delegator)}/>
-              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, delegations[3].delegator)}/>
-              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, delegations[4].delegator)}/>
-              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, delegations[5].delegator)}/>
-              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, delegations[6].delegator)}/>
-              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, delegations[7].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, 0, delegations[0].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, 1, delegations[1].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, 2, delegations[2].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, 3, delegations[3].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, 4, delegations[4].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, 5, delegations[5].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, 6, delegations[6].delegator)}/>
+              <div className="btn undelegate-button" onClick={() => handledelegateForm(true, true, false, 7, delegations[7].delegator)}/>
             </div>
           </div>
           <div className="btn commission" onClick={handlecommissionChange}>{commission}% Commission</div>

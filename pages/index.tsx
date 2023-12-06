@@ -903,7 +903,7 @@ export default function Home() {
                   }
                   //Calc quorum
                   var quorum = (parseInt(proposal.against_power) + parseInt(proposal.for_power) + aligned_power + parseInt(proposal.amendment_power) + parseInt(proposal.removal_power)) / totalVotingPower;
-                  // console.log(aligned_power, totalVotingPower)
+                  console.log(aligned_power, totalVotingPower)
                   //Query config
                   //Set quorum from config
                   setQuorum(parseFloat(config_res.proposal_required_quorum))
