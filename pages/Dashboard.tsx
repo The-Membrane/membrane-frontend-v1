@@ -34,7 +34,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
     return (
         <div className="page-frame">
         <WalletSection nav={false}/>
-        <Image className="pageTitle" src="/images/Background_Header 1.svg" height={0} width={0} alt="Membrane background header"/>
+        <Image className="pageTitle" priority={true} src="/images/Background_Header 1.svg" height={0} width={0} alt="Membrane background header"/>
         <Image className="dash-logo" src="/images/MBRN-logo-template.svg" width={0} height={0} alt="" />
         <div className="cards">
             <div className="card-1">
