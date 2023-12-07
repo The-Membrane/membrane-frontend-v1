@@ -9,8 +9,10 @@ interface Props {
 }
 
 const Popup = ({trigger, setTrigger, msgStatus, errorMsg}: Props) => {
+
     return (trigger) ? (
         <div className="popup">
+        <div className='popup'onClick={() => {setTrigger(false)}}/>
             <div className="popup-inner">
                 <button className="popup-button" onClick={() => setTrigger(false)}>Close</button>
                 <h3>{msgStatus}</h3>

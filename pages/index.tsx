@@ -18,6 +18,11 @@ import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.ty
 import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
 import { delegateList, quadraticVoting, skipProposals } from "../config";
 
+
+export const SECONDS_PER_DAY = 86400;
+export const BLOCK_TIME_IN_SECONDS = 6;
+export const unstakingPeriod = 4; //days
+
 export const denoms = {
   mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
   cdt: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/ucdt",
@@ -45,15 +50,11 @@ export default function Home() {
   const siteId = 3709543;
   const hotjarVersion = 6;
 
-  const SECONDS_PER_DAY = 86400;
-  const BLOCK_TIME_IN_SECONDS = 6;
-  const unstakingPeriod = 4; //days
-
   const [activeComponent, setActiveComponent] = useState('dashboard');
   
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(true);
-  const [popupMsg, setPopupMsg] = useState<ReactJSXElement>(<div>HITTING THE CLOSE BUTTON OF THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.</div>);
+  const [popupMsg, setPopupMsg] = useState<ReactJSXElement>(<div>EXITING THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.</div>);
   const [popupStatus, setPopupStatus] = useState("User Agreement");
   
   //Get Clients
@@ -824,7 +825,11 @@ export default function Home() {
       //Get emissions schedule
       await stakingqueryClient?.incentiveSchedule()
       .then(async (res) => {
-        console.log(res)
+        //Set emissions schedule
+        setEmissionsSchedule({
+          rate: parseFloat(res.ownership_distribution.rate) * 100,
+          monthsLeft: ((Date.parse("6/2/2024")/1000) - (Date.now() / 1000)) / (SECONDS_PER_DAY * 30),
+        })
         //Get block time
         staking_client?.client.getBlock().then((block) => {
           let start_in_seconds = res.start_time;
@@ -858,17 +863,9 @@ export default function Home() {
   }
 
   //This won't work with muliple proposals of separate types since it sets based on the length of the array
-  //WE'd need to sort the proposal list by status beforehand
+  //We'd need to sort the proposal list by status beforehand
   const getProposals = async () => {
     try {
-      //Get current time in seconds
-      var currentBlockHeight = 0;
-      
-      await governance_client?.client?.getHeight().then( async (height) => {
-          currentBlockHeight = height;
-          console.log(currentBlockHeight)
-      })
-
       //Get active
       await governancequeryClient?.activeProposals({})
       .then(async (res) => {
@@ -878,14 +875,7 @@ export default function Home() {
           if (skipProposals.includes(proposal.proposal_id)) {continue}
           if (proposal.status == "active") {
             if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
-              //Calc days left
-              var daysLeft = (proposal.end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
-              //If height isn't queried set to 0
-              //Once the query work's we'll have to change the logic anyway
-              if (currentBlockHeight == 0) {
-                daysLeft = 0;
-              } 
-              
+                            
               //Query total voting power
               await governancequeryClient?.totalVotingPower({
                 proposalId: parseInt(proposal.proposal_id)
@@ -905,32 +895,25 @@ export default function Home() {
                   }
                   //Calc quorum
                   var quorum = (parseInt(proposal.against_power) + parseInt(proposal.for_power) + aligned_power + parseInt(proposal.amendment_power) + parseInt(proposal.removal_power)) / totalVotingPower;
-                  console.log(aligned_power, totalVotingPower, quorum)
                   //Query config
                   //Set quorum from config
                   setQuorum(parseFloat(config_res.proposal_required_quorum))
                   //Get current result
                   let current_result = getProposalResult(parseInt(proposal.for_power), parseInt(proposal.amendment_power), parseInt(proposal.removal_power), parseInt(proposal.against_power), config_res, (proposal.messages !== undefined))
                   //Update active
-                  proposals.active[i] = [proposal, daysLeft, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+                  proposals.active[i] = [proposal, 0, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
                 })
               })
             }
           } else if (proposal.status == "executed") {
             if (proposals.executed[7][0] === undefined && proposals.executed[i][0] === undefined){
-              //Get days left to execute
-              //implementation todo
-              var daysLeft = (proposal.end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
               //Update executed
-              proposals.executed[i] = [proposal, daysLeft, "Executed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+              proposals.executed[i] = [proposal, 0, "Executed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
             }
           } else { //Completed
             if (proposals.completed[7][0] === undefined && proposals.completed[i][0] === undefined){
-              //Get days left until expiration
-              //implementation todo
-              var daysLeft = (proposal.end_block - currentBlockHeight) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;            
               //Update completed
-              proposals.completed[i] = [proposal, daysLeft, "Completed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+              proposals.completed[i] = [proposal, 0, "Completed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
             }
           }
         }

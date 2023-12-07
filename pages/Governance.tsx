@@ -4,9 +4,10 @@ import { GovernanceClient } from "../codegen/governance/Governance.client";
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { ProposalResponse, ProposalMessage, VoteOption, ProposalVoteOption } from "../codegen/governance/Governance.types";
 import Popup from "../components/Popup";
+import WidgetPopup from "../components/widgetPopup";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { coins } from "@cosmjs/stargate";
-import { denoms } from ".";
+import { BLOCK_TIME_IN_SECONDS, denoms, SECONDS_PER_DAY, unstakingPeriod } from ".";
 import React from "react";
 import Image from "next/image";
 import { useChain } from "@cosmos-kit/react";
@@ -14,7 +15,7 @@ import { chainName, Delegate, delegateList, quadraticVoting } from "../config";
 import { VestingClient } from "../codegen/vesting/Vesting.client";
 import { IoTrophyOutline } from "react-icons/io5";
 
-const unstakingPeriod = 4; //days
+const VOTING_PERIOD_IN_SECONDS = 7 * SECONDS_PER_DAY;
 
 export interface Delegation {
   delegator: string;
@@ -246,7 +247,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     setproposalColor("rgb(160, 102, 102)")
     setOpen(false);
   };
-  const handleproposalClick = (proposal: ProposalResponse | undefined, daysLeft: number | undefined, quorum: number | undefined) => {
+  const handleproposalClick = async (proposal: ProposalResponse | undefined, quorum: number | undefined) => {
     if (proposal !== undefined) {
       //Calc total votes
       var total_votes = parseInt(proposal.for_power) + parseInt(proposal.against_power) + parseInt(proposal.amendment_power) + parseInt(proposal.removal_power);
@@ -266,11 +267,17 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       } else if (proposal.link?.includes("discord")){
         label = "Discord"
       }
-      //Format daysLeft
-      //@ts-ignore
-      if (daysLeft <= 0) {
-        daysLeft = undefined;
+      //Get daysLeft
+      var daysPast = (Date.now() / 1000) - proposal.start_time;
+      var daysLeft = (VOTING_PERIOD_IN_SECONDS - daysPast) / SECONDS_PER_DAY;
+      if (daysLeft < 0) {
+        daysLeft = 0;
       }
+      // await govClient?.client?.getHeight().then( async (height) => {
+      //   daysLeft = (proposal.end_block - height) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;
+      //   //todo: Create a different implementation for executed & completed proposals 
+      //   //This query currently doesn't work either way
+      // })          
       
       //format popup message
       setPopupTrigger(true)
@@ -713,8 +720,18 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
         setPopupMsg(<div>Delegation to {governator} updated</div>)
         setPopupStatus("Success")
         
-        //Get delegation info
-        getDelegations()
+        //Update delegation info
+        delegations.forEach((element, index) => {
+          if (element.delegator === governator) {
+            if (delegations[index].amount !== undefined){
+              //@ts-ignore
+              delegations[index].amount += parseInt(amount ?? "0") * 1_000_000;
+            } else {
+              delegations[index].amount = parseInt(amount ?? "0") * 1_000_000;
+            }             
+            delegations[index].fluid = fluid;
+          }
+        })
       })
     } catch (error) {
       console.log(error)
@@ -1035,14 +1052,14 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
           <div className="proposal7-button" style={{backgroundColor:proposalColor}}/>
           <div className="proposal8-button" style={{backgroundColor:proposalColor}}/>
           {proposalType === "Active" ? (
-          <><div className="proposal-1" onClick={() => handleproposalClick(proposals.active[0][0], proposals.active[0][1], proposals.active[0][3])}>{proposals.active[0][0]?.title ?? ""}</div>
-          <div className="proposal-2" onClick={() => handleproposalClick(proposals.active[1][0], proposals.active[1][1], proposals.active[1][3])}>{proposals.active[1][0]?.title  ?? ""}</div>
-          <div className="proposal-3" onClick={() => handleproposalClick(proposals.active[2][0], proposals.active[2][1], proposals.active[2][3])}>{proposals.active[2][0]?.title  ?? ""}</div>
-          <div className="proposal-4" onClick={() => handleproposalClick(proposals.active[3][0], proposals.active[3][1], proposals.active[3][3])}>{proposals.active[3][0]?.title  ?? ""}</div>
-          <div className="proposal-5" onClick={() => handleproposalClick(proposals.active[4][0], proposals.active[4][1], proposals.active[4][3])}>{proposals.active[4][0]?.title  ?? ""}</div>
-          <div className="proposal-6" onClick={() => handleproposalClick(proposals.active[5][0], proposals.active[5][1], proposals.active[5][3])}>{proposals.active[5][0]?.title  ?? ""}</div>
-          <div className="proposal-7" onClick={() => handleproposalClick(proposals.active[6][0], proposals.active[6][1], proposals.active[6][3])}>{proposals.active[6][0]?.title  ?? ""}</div>
-          <div className="proposal-8" onClick={() => handleproposalClick(proposals.active[7][0], proposals.active[7][1], proposals.active[7][3])}>{proposals.active[7][0]?.title  ?? ""}</div>
+          <><div className="proposal-1" onClick={() => handleproposalClick(proposals.active[0][0], proposals.active[0][3])}>{proposals.active[0][0]?.title ?? ""}</div>
+          <div className="proposal-2" onClick={() => handleproposalClick(proposals.active[1][0], proposals.active[1][3])}>{proposals.active[1][0]?.title  ?? ""}</div>
+          <div className="proposal-3" onClick={() => handleproposalClick(proposals.active[2][0], proposals.active[2][3])}>{proposals.active[2][0]?.title  ?? ""}</div>
+          <div className="proposal-4" onClick={() => handleproposalClick(proposals.active[3][0], proposals.active[3][3])}>{proposals.active[3][0]?.title  ?? ""}</div>
+          <div className="proposal-5" onClick={() => handleproposalClick(proposals.active[4][0], proposals.active[4][3])}>{proposals.active[4][0]?.title  ?? ""}</div>
+          <div className="proposal-6" onClick={() => handleproposalClick(proposals.active[5][0], proposals.active[5][3])}>{proposals.active[5][0]?.title  ?? ""}</div>
+          <div className="proposal-7" onClick={() => handleproposalClick(proposals.active[6][0], proposals.active[6][3])}>{proposals.active[6][0]?.title  ?? ""}</div>
+          <div className="proposal-8" onClick={() => handleproposalClick(proposals.active[7][0],  proposals.active[7][3])}>{proposals.active[7][0]?.title  ?? ""}</div>
           {/* <div className="proposal-days" style={(proposals.active[0][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[0][1] ?? 0) <= 0 ? "" : (proposals.active[0][1]??0).toFixed(2)}</div>
           <div className="proposal-days1" style={(proposals.active[1][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[1][1] ?? 0) <= 0 ? "" : (proposals.active[1][1]??0).toFixed(2)}</div>
           <div className="proposal-days2" style={(proposals.active[2][3] === undefined ) ? {opacity:0} : undefined}>{(proposals.active[2][1] ?? 0) <= 0 ? "" : (proposals.active[2][1]??0).toFixed(2)}</div>
@@ -1060,14 +1077,14 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
           <div className="proposal-result6" style={((proposals.active[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[6][2] ?? ""}</div>
           <div className="proposal-result7" style={((proposals.active[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.active[7][2] ?? ""}</div></>) 
           : proposalType === "Pending" ? (
-            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.pending[0][0], proposals.pending[0][1], proposals.pending[0][3])}>{proposals.pending[0][0]?.title  ?? ""}</div>
-            <div className="proposal-2" onClick={() => handleproposalClick(proposals.pending[1][0], proposals.pending[1][1], proposals.pending[1][3])}>{proposals.pending[1][0]?.title  ?? ""}</div>
-            <div className="proposal-3" onClick={() => handleproposalClick(proposals.pending[2][0], proposals.pending[2][1], proposals.pending[2][3])}>{proposals.pending[2][0]?.title  ?? ""}</div>
-            <div className="proposal-4" onClick={() => handleproposalClick(proposals.pending[3][0], proposals.pending[3][1], proposals.pending[3][3])}>{proposals.pending[3][0]?.title  ?? ""}</div>
-            <div className="proposal-5" onClick={() => handleproposalClick(proposals.pending[4][0], proposals.pending[4][1], proposals.pending[4][3])}>{proposals.pending[4][0]?.title  ?? ""}</div>
-            <div className="proposal-6" onClick={() => handleproposalClick(proposals.pending[5][0], proposals.pending[5][1], proposals.pending[5][3])}>{proposals.pending[5][0]?.title  ?? ""}</div>
-            <div className="proposal-7" onClick={() => handleproposalClick(proposals.pending[6][0], proposals.pending[6][1], proposals.pending[6][3])}>{proposals.pending[6][0]?.title  ?? ""}</div>
-            <div className="proposal-8" onClick={() => handleproposalClick(proposals.pending[7][0], proposals.pending[7][1], proposals.pending[7][3])}>{proposals.pending[7][0]?.title  ?? ""}</div>
+            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.pending[0][0], proposals.pending[0][3])}>{proposals.pending[0][0]?.title  ?? ""}</div>
+            <div className="proposal-2" onClick={() => handleproposalClick(proposals.pending[1][0], proposals.pending[1][3])}>{proposals.pending[1][0]?.title  ?? ""}</div>
+            <div className="proposal-3" onClick={() => handleproposalClick(proposals.pending[2][0], proposals.pending[2][3])}>{proposals.pending[2][0]?.title  ?? ""}</div>
+            <div className="proposal-4" onClick={() => handleproposalClick(proposals.pending[3][0], proposals.pending[3][3])}>{proposals.pending[3][0]?.title  ?? ""}</div>
+            <div className="proposal-5" onClick={() => handleproposalClick(proposals.pending[4][0], proposals.pending[4][3])}>{proposals.pending[4][0]?.title  ?? ""}</div>
+            <div className="proposal-6" onClick={() => handleproposalClick(proposals.pending[5][0], proposals.pending[5][3])}>{proposals.pending[5][0]?.title  ?? ""}</div>
+            <div className="proposal-7" onClick={() => handleproposalClick(proposals.pending[6][0], proposals.pending[6][3])}>{proposals.pending[6][0]?.title  ?? ""}</div>
+            <div className="proposal-8" onClick={() => handleproposalClick(proposals.pending[7][0], proposals.pending[7][3])}>{proposals.pending[7][0]?.title  ?? ""}</div>
             <div className="proposal-days" style={(proposals.pending[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[0][1] ?? 0} days</div>
             <div className="proposal-days1" style={(proposals.pending[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[1][1] ?? 0} days</div>
             <div className="proposal-days2" style={(proposals.pending[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[2][1] ?? 0} days</div>
@@ -1085,14 +1102,14 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             <div className="proposal-result6" style={((proposals.pending[6][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[6][2] ?? ""}</div>
             <div className="proposal-result7" style={((proposals.pending[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[7][2] ?? ""}</div></>) 
           : proposalType === "Completed" ? (
-            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.completed[0][0], proposals.completed[0][1], proposals.completed[0][3])}>{proposals.completed[0][0]?.title  ?? ""}</div>
-            <div className="proposal-2" onClick={() => handleproposalClick(proposals.completed[1][0], proposals.completed[1][1], proposals.completed[1][3])}>{proposals.completed[1][0]?.title  ?? ""}</div>
-            <div className="proposal-3" onClick={() => handleproposalClick(proposals.completed[2][0], proposals.completed[2][1], proposals.completed[2][3])}>{proposals.completed[2][0]?.title  ?? ""}</div>
-            <div className="proposal-4" onClick={() => handleproposalClick(proposals.completed[3][0], proposals.completed[3][1], proposals.completed[3][3])}>{proposals.completed[3][0]?.title  ?? ""}</div>
-            <div className="proposal-5" onClick={() => handleproposalClick(proposals.completed[4][0], proposals.completed[4][1], proposals.completed[4][3])}>{proposals.completed[4][0]?.title  ?? ""}</div>
-            <div className="proposal-6" onClick={() => handleproposalClick(proposals.completed[5][0], proposals.completed[5][1], proposals.completed[5][3])}>{proposals.completed[5][0]?.title  ?? ""}</div>
-            <div className="proposal-7" onClick={() => handleproposalClick(proposals.completed[6][0], proposals.completed[6][1], proposals.completed[6][3])}>{proposals.completed[6][0]?.title  ?? ""}</div>
-            <div className="proposal-8" onClick={() => handleproposalClick(proposals.completed[7][0], proposals.completed[7][1], proposals.completed[7][3])}>{proposals.completed[7][0]?.title  ?? ""}</div>
+            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.completed[0][0], proposals.completed[0][3])}>{proposals.completed[0][0]?.title  ?? ""}</div>
+            <div className="proposal-2" onClick={() => handleproposalClick(proposals.completed[1][0], proposals.completed[1][3])}>{proposals.completed[1][0]?.title  ?? ""}</div>
+            <div className="proposal-3" onClick={() => handleproposalClick(proposals.completed[2][0], proposals.completed[2][3])}>{proposals.completed[2][0]?.title  ?? ""}</div>
+            <div className="proposal-4" onClick={() => handleproposalClick(proposals.completed[3][0], proposals.completed[3][3])}>{proposals.completed[3][0]?.title  ?? ""}</div>
+            <div className="proposal-5" onClick={() => handleproposalClick(proposals.completed[4][0], proposals.completed[4][3])}>{proposals.completed[4][0]?.title  ?? ""}</div>
+            <div className="proposal-6" onClick={() => handleproposalClick(proposals.completed[5][0], proposals.completed[5][3])}>{proposals.completed[5][0]?.title  ?? ""}</div>
+            <div className="proposal-7" onClick={() => handleproposalClick(proposals.completed[6][0], proposals.completed[6][3])}>{proposals.completed[6][0]?.title  ?? ""}</div>
+            <div className="proposal-8" onClick={() => handleproposalClick(proposals.completed[7][0], proposals.completed[7][3])}>{proposals.completed[7][0]?.title  ?? ""}</div>
             <div className="proposal-days" style={(proposals.completed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[0][1] ?? 0} days</div>
             <div className="proposal-days1" style={(proposals.completed[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[1][1] ?? 0} days</div>
             <div className="proposal-days2" style={(proposals.completed[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[2][1] ?? 0} days</div>
@@ -1111,14 +1128,14 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             <div className="proposal-result7" style={((proposals.completed[7][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[7][2] ?? ""}</div></>
           ) 
           : proposalType === "Executed" ? (
-            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.executed[0][0], proposals.executed[0][1], proposals.executed[0][3])}>{proposals.executed[0][0]?.title  ?? ""}</div>
-            <div className="proposal-2" onClick={() => handleproposalClick(proposals.executed[1][0], proposals.executed[1][1], proposals.executed[1][3])}>{proposals.executed[1][0]?.title  ?? ""}</div>
-            <div className="proposal-3" onClick={() => handleproposalClick(proposals.executed[2][0], proposals.executed[2][1], proposals.executed[2][3])}>{proposals.executed[2][0]?.title  ?? ""}</div>
-            <div className="proposal-4" onClick={() => handleproposalClick(proposals.executed[3][0], proposals.executed[3][1], proposals.executed[3][3])}>{proposals.executed[3][0]?.title  ?? ""}</div>
-            <div className="proposal-5" onClick={() => handleproposalClick(proposals.executed[4][0], proposals.executed[4][1], proposals.executed[4][3])}>{proposals.executed[4][0]?.title  ?? ""}</div>
-            <div className="proposal-6" onClick={() => handleproposalClick(proposals.executed[5][0], proposals.executed[5][1], proposals.executed[5][3])}>{proposals.executed[5][0]?.title  ?? ""}</div>
-            <div className="proposal-7" onClick={() => handleproposalClick(proposals.executed[6][0], proposals.executed[6][1], proposals.executed[6][3])}>{proposals.executed[6][0]?.title  ?? ""}</div>
-            <div className="proposal-8" onClick={() => handleproposalClick(proposals.executed[7][0], proposals.executed[7][1], proposals.executed[7][3])}>{proposals.executed[7][0]?.title  ?? ""}</div>
+            <><div className="proposal-1" onClick={() => handleproposalClick(proposals.executed[0][0], proposals.executed[0][3])}>{proposals.executed[0][0]?.title  ?? ""}</div>
+            <div className="proposal-2" onClick={() => handleproposalClick(proposals.executed[1][0], proposals.executed[1][3])}>{proposals.executed[1][0]?.title  ?? ""}</div>
+            <div className="proposal-3" onClick={() => handleproposalClick(proposals.executed[2][0], proposals.executed[2][3])}>{proposals.executed[2][0]?.title  ?? ""}</div>
+            <div className="proposal-4" onClick={() => handleproposalClick(proposals.executed[3][0], proposals.executed[3][3])}>{proposals.executed[3][0]?.title  ?? ""}</div>
+            <div className="proposal-5" onClick={() => handleproposalClick(proposals.executed[4][0], proposals.executed[4][3])}>{proposals.executed[4][0]?.title  ?? ""}</div>
+            <div className="proposal-6" onClick={() => handleproposalClick(proposals.executed[5][0], proposals.executed[5][3])}>{proposals.executed[5][0]?.title  ?? ""}</div>
+            <div className="proposal-7" onClick={() => handleproposalClick(proposals.executed[6][0], proposals.executed[6][3])}>{proposals.executed[6][0]?.title  ?? ""}</div>
+            <div className="proposal-8" onClick={() => handleproposalClick(proposals.executed[7][0], proposals.executed[7][3])}>{proposals.executed[7][0]?.title  ?? ""}</div>
             <div className="proposal-days" style={(proposals.executed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[0][1] ?? 0} days</div>
             <div className="proposal-days1" style={(proposals.executed[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[1][1] ?? 0} days</div>
             <div className="proposal-days2" style={(proposals.executed[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[2][1] ?? 0} days</div>
