@@ -15,7 +15,7 @@ import { chainName, Delegate, delegateList, quadraticVoting } from "../config";
 import { VestingClient } from "../codegen/vesting/Vesting.client";
 import { IoTrophyOutline } from "react-icons/io5";
 
-const VOTING_PERIOD_IN_SECONDS = 7 * SECONDS_PER_DAY;
+const VOTING_PERIOD_IN_SECONDS = 7 * 86400;//
 
 export interface Delegation {
   delegator: string;
