@@ -2115,6 +2115,7 @@ span[data-descr]:hover::after {
 @media screen and (max-width: 725px) {  
   .proposals-delegations{  
     gap: 0%;
+    top: 100%;
   }
 }
 .delegate-xaxis-frame {  
@@ -3701,7 +3702,10 @@ input[type=range][orient=vertical] {
 }
 .popup-inner {
   position: absolute;
-  padding: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-right: 32px;
+  padding-left: 32px;
   height: 200px;
   width: 100%;
   max-width: 600px;

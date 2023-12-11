@@ -273,11 +273,45 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       if (daysLeft < 0) {
         daysLeft = 0;
       }
-      // await govClient?.client?.getHeight().then( async (height) => {
-      //   daysLeft = (proposal.end_block - height) * BLOCK_TIME_IN_SECONDS / SECONDS_PER_DAY;
-      //   //todo: Create a different implementation for executed & completed proposals 
-      //   //This query currently doesn't work either way
-      // })          
+      //Get user vote
+      var userVote = "N/A";
+      console.log(userVote)
+      await govClient?.proposal({proposalId: parseInt(proposal.proposal_id)}).then( (voters) => {
+        voters.for_voters.forEach((vote) => {
+          if (vote === address) {
+            userVote = "For";
+            console.log(vote)
+          }
+        })
+        if (userVote === "N/A") {
+          voters.aligned_voters.forEach((vote) => {
+            if (vote === address) {
+              userVote = "Align";
+            }
+          })
+        }
+        if (userVote === "N/A") {
+          voters.amendment_voters.forEach((vote) => {
+            if (vote === address) {
+              userVote = "Amend";
+            }
+          })
+        }
+        if (userVote === "N/A") {
+          voters.against_voters.forEach((vote) => {
+            if (vote === address) {
+              userVote = "Against";
+            }
+          })
+        }
+        if (userVote === "N/A") {
+          voters.removal_voters.forEach((vote) => {
+            if (vote === address) {
+              userVote = "Remove";
+            }
+          })
+        }
+      })          
       
       //format popup message
       setPopupTrigger(true)
@@ -301,7 +335,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
           <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "align")}>Align</button>
           <button className="vote-buttons" style={{outline: "none"}} onClick={()=> handleVote(parseInt(proposal.proposal_id), "remove")}>Remove: {removal_ratio} </button>
         </div>
-        <div className="vote-total">Quorum: {(parseFloat((quorum??0).toFixed(2)) * 100).toFixed(0)}% &nbsp;&nbsp;&nbsp; Days Left: {daysLeft?.toFixed(2) ?? ""}</div>      
+        <div className="vote-total">Your Vote: {userVote} - {quadraticVoting === true ? (Math.sqrt(userVP.userStake) + userVP.userDelegations).toFixed(0) : (userVP.userDelegations + userVP.userStake).toFixed(0)} VP &nbsp;&nbsp; Quorum: {(parseFloat((quorum??0).toFixed(2)) * 100).toFixed(0)}% &nbsp;&nbsp;&nbsp; Days Left: {daysLeft?.toFixed(2) ?? ""}</div>      
       </p>
       )
       setPopupStatus(proposal.title)
@@ -385,8 +419,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
                 console.log(JSON.parse(reader.result as string));
               }
             }
-          }
-          
+          }          
         }}>
           <label style={{color: "aqua"}}>Title:</label>     
           <input className="title-input" name="title" defaultValue={title} type="string" onChange={(event)=>{
@@ -960,10 +993,10 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       <div className="pagetitle-gov">
         Governance
         <Image className="gov-icon" width={43} height={48} alt="" src="/images/staking.svg" />  
-        <div className="total-vp-frame">
+        {/* <div className="total-vp-frame">
           <div className="total-vp-label">Total VP: </div>
           <div className="total-vp-amount">{quadraticVoting === true ? Math.sqrt(userVP.userStake) + userVP.userDelegations : userVP.userDelegations + userVP.userStake}</div>
-        </div>
+        </div> */}
       </div>  
       <div className="button-frames">
         <div className="stake-button-frame">
