@@ -275,7 +275,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       }
       //Get user vote
       var userVote = "N/A";
-      console.log(userVote)
+      
       await govClient?.proposal({proposalId: parseInt(proposal.proposal_id)}).then( (voters) => {
         voters.for_voters.forEach((vote) => {
           if (vote === address) {
@@ -1118,14 +1118,14 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             <div className="proposal-6" onClick={() => handleproposalClick(proposals.pending[5][0], proposals.pending[5][3])}>{proposals.pending[5][0]?.title  ?? ""}</div>
             <div className="proposal-7" onClick={() => handleproposalClick(proposals.pending[6][0], proposals.pending[6][3])}>{proposals.pending[6][0]?.title  ?? ""}</div>
             <div className="proposal-8" onClick={() => handleproposalClick(proposals.pending[7][0], proposals.pending[7][3])}>{proposals.pending[7][0]?.title  ?? ""}</div>
-            <div className="proposal-days" style={(proposals.pending[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[0][1] ?? 0} days</div>
+            {/* <div className="proposal-days" style={(proposals.pending[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[0][1] ?? 0} days</div>
             <div className="proposal-days1" style={(proposals.pending[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[1][1] ?? 0} days</div>
             <div className="proposal-days2" style={(proposals.pending[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[2][1] ?? 0} days</div>
             <div className="proposal-days3" style={(proposals.pending[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[3][1] ?? 0} days</div>
             <div className="proposal-days4" style={(proposals.pending[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[4][1] ?? 0} days</div>
             <div className="proposal-days5" style={(proposals.pending[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[5][1] ?? 0} days</div>
             <div className="proposal-days6" style={(proposals.pending[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[6][1] ?? 0} days</div>
-            <div className="proposal-days7" style={(proposals.pending[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[7][1] ?? 0} days</div>
+            <div className="proposal-days7" style={(proposals.pending[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.pending[7][1] ?? 0} days</div> */}
             <div className="proposal-result" style={((proposals.pending[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[0][2] ?? ""}</div>
             <div className="proposal-result1" style={((proposals.pending[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[1][2] ?? ""}</div>
             <div className="proposal-result2" style={((proposals.pending[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.pending[2][2] ?? ""}</div>
@@ -1143,14 +1143,14 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             <div className="proposal-6" onClick={() => handleproposalClick(proposals.completed[5][0], proposals.completed[5][3])}>{proposals.completed[5][0]?.title  ?? ""}</div>
             <div className="proposal-7" onClick={() => handleproposalClick(proposals.completed[6][0], proposals.completed[6][3])}>{proposals.completed[6][0]?.title  ?? ""}</div>
             <div className="proposal-8" onClick={() => handleproposalClick(proposals.completed[7][0], proposals.completed[7][3])}>{proposals.completed[7][0]?.title  ?? ""}</div>
-            <div className="proposal-days" style={(proposals.completed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[0][1] ?? 0} days</div>
+            {/* <div className="proposal-days" style={(proposals.completed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[0][1] ?? 0} days</div>
             <div className="proposal-days1" style={(proposals.completed[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[1][1] ?? 0} days</div>
             <div className="proposal-days2" style={(proposals.completed[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[2][1] ?? 0} days</div>
             <div className="proposal-days3" style={(proposals.completed[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[3][1] ?? 0} days</div>
             <div className="proposal-days4" style={(proposals.completed[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[4][1] ?? 0} days</div>
             <div className="proposal-days5" style={(proposals.completed[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[5][1] ?? 0} days</div>
             <div className="proposal-days6" style={(proposals.completed[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[6][1] ?? 0} days</div>
-            <div className="proposal-days7" style={(proposals.completed[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[7][1] ?? 0} days</div>
+            <div className="proposal-days7" style={(proposals.completed[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.completed[7][1] ?? 0} days</div> */}
             <div className="proposal-result" style={((proposals.completed[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[0][2] ?? ""}</div>
             <div className="proposal-result1" style={((proposals.completed[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[1][2] ?? ""}</div>
             <div className="proposal-result2" style={((proposals.completed[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.completed[2][2] ?? ""}</div>
@@ -1169,14 +1169,14 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
             <div className="proposal-6" onClick={() => handleproposalClick(proposals.executed[5][0], proposals.executed[5][3])}>{proposals.executed[5][0]?.title  ?? ""}</div>
             <div className="proposal-7" onClick={() => handleproposalClick(proposals.executed[6][0], proposals.executed[6][3])}>{proposals.executed[6][0]?.title  ?? ""}</div>
             <div className="proposal-8" onClick={() => handleproposalClick(proposals.executed[7][0], proposals.executed[7][3])}>{proposals.executed[7][0]?.title  ?? ""}</div>
-            <div className="proposal-days" style={(proposals.executed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[0][1] ?? 0} days</div>
+            {/* <div className="proposal-days" style={(proposals.executed[0][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[0][1] ?? 0} days</div>
             <div className="proposal-days1" style={(proposals.executed[1][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[1][1] ?? 0} days</div>
             <div className="proposal-days2" style={(proposals.executed[2][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[2][1] ?? 0} days</div>
             <div className="proposal-days3" style={(proposals.executed[3][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[3][1] ?? 0} days</div>
             <div className="proposal-days4" style={(proposals.executed[4][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[4][1] ?? 0} days</div>
             <div className="proposal-days5" style={(proposals.executed[5][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[5][1] ?? 0} days</div>
             <div className="proposal-days6" style={(proposals.executed[6][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[6][1] ?? 0} days</div>
-            <div className="proposal-days7" style={(proposals.executed[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[7][1] ?? 0} days</div>
+            <div className="proposal-days7" style={(proposals.executed[7][3] === undefined ) ? {opacity:0} : undefined}>{proposals.executed[7][1] ?? 0} days</div> */}
             <div className="proposal-result" style={((proposals.executed[0][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[0][2] ?? ""}</div>
             <div className="proposal-result1" style={((proposals.executed[1][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[1][2] ?? ""}</div>
             <div className="proposal-result2" style={((proposals.executed[2][3] ?? 0) < quorum) ? {opacity:0.3} : undefined}>{proposals.executed[2][2] ?? ""}</div>

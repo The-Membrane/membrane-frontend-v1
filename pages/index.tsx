@@ -866,24 +866,31 @@ export default function Home() {
   //We'd need to sort the proposal list by status beforehand
   const getProposals = async () => {
     try {
-      //Get active
-      await governancequeryClient?.activeProposals({})
-      .then(async (res) => {
-        //Set active, completed & executed
-        for (let i = 0; i < res.proposal_list.length; i++) {
-          let proposal = res.proposal_list[i];
-          if (skipProposals.includes(proposal.proposal_id)) {continue}
-          if (proposal.status == "active") {
-            if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
-                            
-              //Query total voting power
-              await governancequeryClient?.totalVotingPower({
-                proposalId: parseInt(proposal.proposal_id)
-              }).then( async (vp_res) => {
-                //Set total voting power
-                var totalVotingPower = parseInt(vp_res);
-                //Query Gov config
-                await governancequeryClient?.config().then((config_res) => {
+      //Query Gov config
+      await governancequeryClient?.config().then(async (config_res) => {
+        //Get active
+        await governancequeryClient?.activeProposals({})
+        .then(async (res) => {
+          //Sort then Set active, completed & executed
+          var active_proposals = res.proposal_list.filter(proposal => proposal.status === "active");
+          var completed_proposals = res.proposal_list.filter(proposal => proposal.status === "passed" || proposal.status === "rejected" || proposal.status === "amendment_desired" || proposal.status === "expired");
+          var executed_proposals = res.proposal_list.filter(proposal => proposal.status === "executed");
+
+          console.log(active_proposals)
+          console.log(completed_proposals)
+          console.log(executed_proposals)
+          //Active
+          for (let i = 0; i < active_proposals.length; i++) {
+            let proposal = active_proposals[i];
+            if (skipProposals.includes(proposal.proposal_id)) {continue}
+              if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
+                              
+                //Query total voting power
+                await governancequeryClient?.totalVotingPower({
+                  proposalId: parseInt(proposal.proposal_id)
+                }).then( async (vp_res) => {
+                  //Set total voting power
+                  var totalVotingPower = parseInt(vp_res);
                   //Calc aligned power
                   //Sqrt_Root it if necessary
                   var aligned_power = parseInt(proposal.aligned_power);
@@ -901,22 +908,31 @@ export default function Home() {
                   //Get current result
                   let current_result = getProposalResult(parseInt(proposal.for_power), parseInt(proposal.amendment_power), parseInt(proposal.removal_power), parseInt(proposal.against_power), config_res, (proposal.messages !== undefined))
                   //Update active
-                  proposals.active[i] = [proposal, 0, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
-                })
-              })
+                  proposals.active[i] = [proposal, 0, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];                })
+              }                
+            } 
+            
+            //Executed
+            for (let i = 0; i < executed_proposals.length; i++) {
+              let proposal = executed_proposals[i];
+              if (skipProposals.includes(proposal.proposal_id)) {continue}
+              if (proposals.executed[7][0] === undefined && proposals.executed[i][0] === undefined){
+                //Update executed
+                proposals.executed[i] = [proposal, 0, "Executed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+              }
+            } 
+            
+            //Completed
+            for (let i = 0; i < completed_proposals.length; i++) {
+              let proposal = completed_proposals[i];
+              if (skipProposals.includes(proposal.proposal_id)) {continue}
+              if (proposals.completed[7][0] === undefined && proposals.completed[i][0] === undefined){
+                //Update completed
+                proposals.completed[i] = [proposal, 0, "Completed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
+              }
             }
-          } else if (proposal.status == "executed") {
-            if (proposals.executed[7][0] === undefined && proposals.executed[i][0] === undefined){
-              //Update executed
-              proposals.executed[i] = [proposal, 0, "Executed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
-            }
-          } else { //Completed
-            if (proposals.completed[7][0] === undefined && proposals.completed[i][0] === undefined){
-              //Update completed
-              proposals.completed[i] = [proposal, 0, "Completed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
-            }
-          }
-        }
+          
+        })
       })
 
       //Get pending
