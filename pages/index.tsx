@@ -35,6 +35,8 @@ export const denoms = {
   atomosmo_pool: "gamm/pool/1",
   //mainnet "gamm/pool/678"
   osmousdc_pool: "gamm/pool/678",
+  //Noble USDC
+  usdc: "ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4",
 };
 
 export interface Prices {
@@ -43,6 +45,7 @@ export interface Prices {
   axlUSDC: number,
   atomosmo_pool: number,
   osmousdc_pool: number,
+  usdc: number,
 }
 
 export default function Home() {
@@ -68,6 +71,7 @@ export default function Home() {
     axlUSDC: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
+    usdc: 0,
   });
   const [rateRes, setrateRes] = useState<CollateralInterestResponse>();
   const [creditRateRes, setcreditRateRes] = useState<InterestResponse>();
@@ -95,6 +99,7 @@ export default function Home() {
   const [axlusdcQTY, setaxlusdcQTY] = useState(0);
   const [atomosmo_poolQTY, setatomosmo_poolQTY] = useState(0);
   const [osmousdc_poolQTY, setosmousdc_poolQTY] = useState(0);
+  const [usdcQTY, setusdcQTY] = useState(0);
   //Positions Visual
   const [debtAmount, setdebtAmount] = useState(0);
   const [maxLTV, setmaxLTV] = useState(100);
@@ -134,6 +139,11 @@ export default function Home() {
                     native_token: {
                         denom: denoms.osmousdc_pool
                     }
+                },
+                {
+                    native_token: {
+                        denom: denoms.usdc
+                    }
                 }
             ],
             oracleTimeLimit: 10,
@@ -145,6 +155,7 @@ export default function Home() {
                 axlUSDC: parseFloat(res[2].price),
                 atomosmo_pool: parseFloat(res[3].price),
                 osmousdc_pool: parseFloat(res[4].price),
+                usdc: parseFloat(res[5].price),
             })
         })
     } catch (error) {
@@ -160,6 +171,7 @@ export default function Home() {
       axlusdc: 0,
       atomosmo_pool: 0,
       osmousdc_pool: 0,
+      usdc: 0,
       brw_LTV: 0,
       max_LTV: 0,
       cost: 0,
@@ -224,7 +236,10 @@ export default function Home() {
                 } else if (actual_asset === denoms.osmousdc_pool) {
                     setosmousdc_poolQTY(Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n))
                     contract_info.osmousdc_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
-                }                    
+                } else if (actual_asset === denoms.usdc) {
+                    setusdcQTY(parseInt(asset.asset.amount) / 1_000_000)
+                    contract_info.usdc = parseInt(asset.asset.amount) / 1_000_000;
+                }                
             })
 
 
@@ -320,6 +335,10 @@ export default function Home() {
                 new_display += asset_claims + " axlUSDC, ";
                 break;
               }
+              case denoms.usdc: {
+                new_display += asset_claims + " USDC, ";
+                break;
+              }
               case denoms.atomosmo_pool: {
                 new_display += asset_claims + " ATOM-OSMO LP, ";
                 break;
@@ -380,12 +399,16 @@ export default function Home() {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " axlUSDC, "
               break;
             }
+            case denoms.usdc: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " USDC, "
+              break;
+            }
             case denoms.atomosmo_pool: {
-              claims += parseInt(res.claims[i].amount)/1_000_000 + " ATOM-OSMO LP, "
+              claims += parseInt(res.claims[i].amount)/1_000_000_000_000_000_000 + " ATOM-OSMO LP, "
               break;
             }
             case denoms.osmousdc_pool: {
-              claims += parseInt(res.claims[i].amount)/1_000_000 + " OSMO-axlUSDC LP, "
+              claims += parseInt(res.claims[i].amount)/1_000_000_000_000_000_000 + " OSMO-axlUSDC LP, "
               break;
             }
           }
@@ -1056,7 +1079,7 @@ export default function Home() {
 
   const renderComponent = () => {
     if (activeComponent === 'dashboard') {
-      return <Dashboard setActiveComponent={setActiveComponent}/>;
+      return <Dashboard setActiveComponent={setActiveComponent} basketRes={basketRes}/>;
     } else if (activeComponent === 'vault') {
       // return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
       //     rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}

@@ -125,6 +125,19 @@ input:focus {
   position: relative;  
   top: 25px;
 }
+.dash-stats {
+  position: relative;
+  top: -45%;
+  left: 0px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+  color: #50C9BD;
+  font-size: larger;
+  margin-bottom: 10px;
+}
 .dash-logo {
   position: absolute;
   z-index: 1;

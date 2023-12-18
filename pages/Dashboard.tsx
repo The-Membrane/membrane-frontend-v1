@@ -1,35 +1,47 @@
-import React from "react";
+import React, { use, useEffect } from "react";
 import { WalletSection } from "../components";
 import Image from "next/image";
+import { Basket } from "../codegen/positions/Positions.types";
+import { denoms, Prices } from ".";
 
 type DashboardProps = {
     setActiveComponent: (component: string) => void;
+    basketRes: Basket | undefined;
   };
 
-const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
+const Dashboard: React.FC<DashboardProps> = ({setActiveComponent, basketRes}) => {
 
     const [sign, setSign] = React.useState("on");
     const [sign2, setSign2] = React.useState("");
     const [sign3, setSign3] = React.useState("");
     const [sign4, setSign4] = React.useState("");
 
+    const [totalSupply, setTotalSupply] = React.useState<number>();
+    const [TVL, setTVL] = React.useState<number>();
+
     const onDocsTextClick = () => {
         window.open(
           "https://membrane-finance.gitbook.io/membrane-docs-1/"
         );
-      };
-    
-      const onGithubTextClick = () => {
-        window.open("https://github.com/MembraneFinance");
-      };
-    
-      const onTwitterTextClick = () => {
-        window.open("https://twitter.com/insaneinthembrn");
-      };
-    
-      const onDiscordTextClick = () => {
-        window.open("https://discord.gg/ksT6cdHpbV");
-      };
+    };
+
+    const onGithubTextClick = () => {
+    window.open("https://github.com/MembraneFinance");
+    };
+
+    const onTwitterTextClick = () => {
+    window.open("https://twitter.com/insaneinthembrn");
+    };
+
+    const onDiscordTextClick = () => {
+    window.open("https://discord.gg/ksT6cdHpbV");
+    };
+
+    useEffect(() => {
+        if(basketRes){
+            setTotalSupply(parseInt(basketRes.credit_asset.amount)/1_000000);
+        }
+    }, [basketRes]);
 
     return (
         <div className="page-frame">
@@ -37,6 +49,9 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent}) => {
         <Image className="pageTitle" priority={true} src="/images/Background_Header 1.svg" height={0} width={0} alt="Membrane background header"/>
         <Image className="dash-logo" src="/images/MBRN-logo-template.svg" width={0} height={0} alt="" />
         <div className="cards">
+            <div className="dash-stats">
+                CDT Minted: {totalSupply?.toFixed(0)}
+            </div>
             <div className="card-1">
                 <div className="card" style={{borderRadius: "1rem"}}>
                 <div className="card-body card-design shadow" onMouseEnter={()=>{setSign("on")}} onMouseLeave={()=>{setSign("")}}>
