@@ -178,8 +178,7 @@ export default function Home() {
       sliderValue: 0,
     };
     //Query for position data
-    try {
-        
+    try {        
         //getBasket
         const basketRes = await cdpqueryClient?.getBasket();
         setbasketRes(basketRes as Basket);        
@@ -1020,62 +1019,76 @@ export default function Home() {
       oraclequeryClient?.client.getBalance(address as string, denoms.cdt).then((res) => {
         setwalletCDT(parseInt(res.amount));
       })
-    }    
-    if (positionID === "0"){
-      //fetch & Update position data
-      fetch_update_positionData()
     }
-    /////Liquidation Page Queries
-    //Set LQ claimables
-    if (lqClaimables.display === "" || lqClaimables.display === "No Claims"){
-      setqueueClaimables()
-    }
-    if (SPclaimables === ""){
-      //Set SP claimables
-      getSPclaimables()
-    }    
-    if (spTVL === 0){
-      //Set SP TVL
-      getSPTVL()
-    }
-    if (unstakingMsg === "") {
-      //Check for unstaking positions
-      getunstakingSP()
-    }
-    ///Governance queries
-    if (quorum === 0){
-      //Query & set proposals
-      getProposals()
-    }
-    if (emissionsSchedule.rate === 0){
-      //Query & set emissions schedule
-      getEmissionsSchedule()
-    }
-    if (userStake.staked === 0){
-      //Get user staked & unstaking MBRN
-      getUserStake()
-    }
-    if (userClaims.mbrnClaims === 0 && userClaims.cdtClaims === 0){
-      //Get user claims
-      getuserClaims()
-    }
-    if (delegations[0].amount === 0 || delegations[0].amount === undefined){
-      console.log("attempt")
-      //Get delegation info
-      getDelegations()
-    }
-    if (walletMBRN === 0 && address !== undefined){
-      //Get account's balance of MBRN
-      governancequeryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
-        setwalletMBRN(parseInt(res.amount) / 1_000_000);
+    //Get basket for Dashboard total minted
+    if (basketRes === undefined){
+      cdpqueryClient?.getBasket().then((res) => {
+        setbasketRes(res);
       })
     }
-    if (maxCommission === 0){
-      //Get staking max commission
-      getStakingCommission()
+    //////Positions Page Queries
+    if (activeComponent === "vault"){
+      if (positionID === "0"){
+        //fetch & Update position data
+        fetch_update_positionData()
+      }
+    }
+
+    /////Liquidation Page Queries    
+    if (activeComponent === "liquidation"){
+      //Set LQ claimables
+      if (lqClaimables.display === "" || lqClaimables.display === "No Claims"){
+        setqueueClaimables()
+      }
+      if (SPclaimables === ""){
+        //Set SP claimables
+        getSPclaimables()
+      }    
+      if (spTVL === 0){
+        //Set SP TVL
+        getSPTVL()
+      }
+      if (unstakingMsg === "") {
+        //Check for unstaking positions
+        getunstakingSP()
+      }
+    }    
+    ///////Governance queries
+    if (activeComponent === "staking"){
+      if (quorum === 0){
+        //Query & set proposals
+        getProposals()
+      }
+      if (emissionsSchedule.rate === 0){
+        //Query & set emissions schedule
+        getEmissionsSchedule()
+      }
+      if (userStake.staked === 0){
+        //Get user staked & unstaking MBRN
+        getUserStake()
+      }
+      if (userClaims.mbrnClaims === 0 && userClaims.cdtClaims === 0){
+        //Get user claims
+        getuserClaims()
+      }
+      if (delegations[0].amount === 0 || delegations[0].amount === undefined){
+        console.log("attempt")
+        //Get delegation info
+        getDelegations()
+      }
+      if (walletMBRN === 0 && address !== undefined){
+        //Get account's balance of MBRN
+        governancequeryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
+          setwalletMBRN(parseInt(res.amount) / 1_000_000);
+        })
+      }
+      if (maxCommission === 0){
+        //Get staking max commission
+        getStakingCommission()
+      }
     }
     
-  }, [oraclequeryClient, cdpqueryClient, prices, address])
+  }, [oraclequeryClient, cdpqueryClient, prices, address, activeComponent])
 
   const renderComponent = () => {
     if (activeComponent === 'dashboard') {
