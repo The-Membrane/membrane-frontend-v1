@@ -7,7 +7,7 @@ import { chainName, testnetAddrs } from '../config';
 
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate/build/cosmwasmclient';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { GasPrice } from '@cosmjs/stargate';
+// import { GasPrice } from '@cosmjs/stargate';
 import { OracleClient, OracleQueryClient } from '../codegen/oracle/Oracle.client';
 import { PositionsClient, PositionsQueryClient } from '../codegen/positions/Positions.client';
 import { LiquidationQueueClient, LiquidationQueueQueryClient } from '../codegen/liquidation_queue/LiquidationQueue.client';
@@ -15,6 +15,7 @@ import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stabil
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { VestingClient } from '../codegen/vesting/Vesting.client';
+import { GasPrice } from '@cosmjs/stargate/build/fee';
 
 export function useClients(): {
   cdp_client: PositionsClient | null;
@@ -53,6 +54,7 @@ export function useClients(): {
       var client = SigningCosmWasmClient.connectWithSigner(
         'https://osmosis-rpc.polkachu.com/', 
         signer,
+        //@ts-ignore
         { gasPrice: GasPrice.fromString("0.025uosmo") }
       ).catch((e) => {
         console.log(e);
@@ -119,7 +121,7 @@ export function useQueryClients(): {
     //Reece's: osmosis-rpc.reece.sh
     //Polkachu's: https://osmosis-rpc.polkachu.com/
     //Meta: https://rpc.cosmos.directory/osmosis
-    var client = CosmWasmClient.connect("osmosis-rpc.reece.sh")
+    var client = CosmWasmClient.connect("https://rpc.cosmos.directory/osmosis")
     .catch((e) => {
       console.log(e);
       query_errored = true;
