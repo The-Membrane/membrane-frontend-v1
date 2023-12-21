@@ -85,6 +85,7 @@ export default function Home() {
     osmo: 0,
     atom: 0,
     axlusdc: 0,
+    usdc: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
     brw_LTV: 0,
@@ -1094,14 +1095,14 @@ export default function Home() {
     if (activeComponent === 'dashboard') {
       return <Dashboard setActiveComponent={setActiveComponent} basketRes={basketRes}/>;
     } else if (activeComponent === 'vault') {
-      // return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
-      //     rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
-      //     popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
-      //     osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
-      //     debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
-      //     contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs}
+      return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
+          rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
+          popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
+          osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
+          debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
+          contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs}
 
-      // />;
+      />;
     } else if (activeComponent === 'liquidation') {
       return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} index_lqClaimables={lqClaimables}
         capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL} setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead}

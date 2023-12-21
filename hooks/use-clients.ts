@@ -46,22 +46,22 @@ export function useClients(): {
       signed_errored = false;
       
       //Use this to access the RPC node directly instead of using public RPCs with getSigningCosmWasmClient()
-      //https://rpc.osmotest5.osmosis.zone/
-      //https://rpc.osmosis.zone
-      //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
-      // const signer = getOfflineSigner();
-      // var client = SigningCosmWasmClient.connectWithSigner(
-      //   'https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573', 
-      //   signer,
-      //   { gasPrice: GasPrice.fromString("0.025uosmo") }
-      // ).catch((e) => {
-      //   console.log(e);
-      //   signed_errored = true;
-      // });
+      // https://rpc.osmotest5.osmosis.zone/
+      // https://rpc.osmosis.zone
+      // https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
+      const signer = getOfflineSigner();
+      var client = SigningCosmWasmClient.connectWithSigner(
+        'https://rpc.cosmos.directory/osmosis', 
+        signer,
+        { gasPrice: GasPrice.fromString("0.025uosmo") }
+      ).catch((e) => {
+        console.log(e);
+        signed_errored = true;
+      });
 
-      // if (signed_errored) {
-       var client = getSigningCosmWasmClient();
-      // }
+      if (signed_errored) {
+       client = getSigningCosmWasmClient();
+      }
 
       client.then((cosmwasmClient) => {
         if (!cosmwasmClient || !address) {
@@ -118,7 +118,7 @@ export function useQueryClients(): {
     //https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
     //Reece's: osmosis-rpc.reece.sh
     //Polkachu's: https://osmosis-rpc.polkachu.com/
-    //Meta: https://rpc.cosmos.directory/cosmoshub
+    //Meta: https://rpc.cosmos.directory/osmosis
     var client = CosmWasmClient.connect("osmosis-rpc.reece.sh")
     .catch((e) => {
       console.log(e);

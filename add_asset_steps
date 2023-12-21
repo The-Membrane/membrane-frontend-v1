@@ -1,0 +1,33 @@
+- add image file
+
+index.tsx: 
+- add QTY object
+- add to Prices struct
+- add to contractQTYs initiation
+
+Vaults.tsx:
+- add to contractQTYs struct
+- Add QTY to Props
+- add to the switch statement in handledepositClick & handlewithdrawClick
+- add to handleQTYaddition & handleQTYsubtraction & handlecontractQTYupdate
+- add to getcoinsfromassetIntents & getassetsfromassetIntents
+- getRataCost
+- getRataLTV
+- getassetRatios
+- getTVL
+- add to asset-info styles
+  - create handle___Click function
+  - create handle___qtyClick function
+  - add to qty & logo-icon styles
+  - add to menu stlyes
+
+Liquidations.tsx:
+- Add to menuAsset
+  - Create handleMenu___
+  - Add to handledepositClick & handlewithdrawClick
+  - Menu within html
+- Add to barGraphs
+- Add to useEffect
+- getmenuAssetPrice
+- add a 0 to the highestBar state
+- shift menu style to accomadate (40% maybe)

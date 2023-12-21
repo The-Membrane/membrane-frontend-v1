@@ -596,7 +596,7 @@ h3[data-descr]:hover::after {
 }
 .menu {
   position: absolute;
-  margin-top: 120%;
+  margin-top: 160%;
   width: 75px;
 }
 .menu > li:hover {
@@ -2981,7 +2981,7 @@ span[data-descr]:hover::after {
 }
 .assetinfo-menuitem {
   top: 2.5%;
-  gap: 8%;
+  gap: 7.5%;
   left: 2%;
 }
 .assetinfo-assets {

@@ -57,6 +57,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     osmo: 0,
     atom: 0,
     axlUSDC: 0,
+    usdc: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
   });
@@ -143,10 +144,21 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     { height: 0, color: "#000000", tvl: "0" },
     { height: 0, color: "#000000", tvl: "0" },
     { height: 0, color: "#000000", tvl: "0" },
+  ],[
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
   ]]);
   const [collateralTVL, setcollateralTVL] = useState(0);
   //index for highest bar in barGraph
-  const [highestBar, sethighestBar] = useState<number[]>([0,0,0,0,0]);
+  const [highestBar, sethighestBar] = useState<number[]>([0,0,0,0,0,0]);
   //index for the barGraph to display
   const [barIndex, setbarIndex] = useState(0);
 
@@ -177,6 +189,11 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     setOpen(false);
     setMenuAsset("OSMO-axlUSDC");
     setbarIndex(4);
+  };  
+  const handleMenuSix = () => {
+    setOpen(false);
+    setMenuAsset("USDC");
+    setbarIndex(5);
   };
   
   // Query premiums slots and save new heights
@@ -250,7 +267,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Query TVL as collateral in Basket
     try {
       await cdp_queryClient?.getBasket().then((res) => {
-        console.log(res)
+        console.log(prices)
         //Get price
         var price = 0;
         switch (asset) {
@@ -266,6 +283,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             price = prices.axlUSDC;
             break;
           }
+          case denoms.usdc: {
+            price = prices.usdc;
+            break;
+          }
           case denoms.atomosmo_pool: {
             price = prices.atomosmo_pool;
             break;
@@ -279,8 +300,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         for (let i = 0; i < res.collateral_types.length; i++) {
           //@ts-ignore
           if (res.collateral_types[i].asset.info.native_token.denom === asset) {
-            console.log(res.collateral_types[i].asset.amount, price)
-            console.log(parseFloat(((parseInt(res.collateral_types[i].asset.amount)) * price).toFixed(2)))
             if (asset === denoms.atomosmo_pool || asset === denoms.osmousdc_pool) {
               setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount)/1000) * price).toFixed(2)));
               break;
@@ -334,6 +353,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "axlUSDC": {
         workingDenom = denoms.axlUSDC;
+        break;
+      }
+      case "USDC": {
+        workingDenom = denoms.usdc;
         break;
       }
       case "ATOM-OSMO": {
@@ -393,6 +416,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "axlUSDC": {
         workingDenom = denoms.axlUSDC;
+        break;
+      }
+      case "USDC": {
+        workingDenom = denoms.usdc;
         break;
       }
       case "ATOM-OSMO": {
@@ -673,6 +700,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         }
         break;
       }
+      case "USDC": {
+        if (barGraph[5][0].tvl === "0" && prices.usdc !== 0) {
+          queryQueuesaveHeights(denoms.usdc)
+        }
+        break;
+      }
       case "ATOM-OSMO": {
         if (barGraph[3][0].tvl === "0" && prices.atomosmo_pool !== 0) {
           queryQueuesaveHeights(denoms.atomosmo_pool)
@@ -731,6 +764,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "axlUSDC": {
         return prices.axlUSDC;
+      }
+      case "USDC": {
+        return prices.usdc;
       }
       case "ATOM-OSMO": {
         return prices.atomosmo_pool;
@@ -816,6 +852,9 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 </li>) : null}
                 {menuAsset !== "OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuThree} style={{outline: "none"}}>OSMO</button>
+                </li>) : null}
+                {menuAsset !== "USDC" ? (<li className="menu-item">
+                    <button onClick={handleMenuSix} style={{outline: "none"}}>USDC</button>
                 </li>) : null}
                 {/* {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuFour}>ATOM-OSMO</button>
