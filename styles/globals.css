@@ -111,19 +111,19 @@ input:focus {
 }
 .mint-symbol {
   position: relative;  
-  top: 53px;
+  top: 22px;
 }
 .liq-symbol {
   position: relative;  
-  top: 32px;
+  top: 15px;
 }
 .vote-symbol {
   position: relative;  
-  top: 53px;
+  top: 22px;
 }
 .launch-symbol {
   position: relative;  
-  top: 25px;
+  top: 15px;
 }
 .dash-stats {
   position: relative;
@@ -141,12 +141,15 @@ input:focus {
 .dash-logo {
   position: absolute;
   z-index: 1;
-  left: 47.2%;
+  left: 47.7%;
   top: 1.5vh;
   width: 4.5vw;
   min-width: 65px;
 }
 @media screen and (max-width:425px) {
+  .mobile-font {
+    font-size: 14px;
+  }
   .dash-logo  {
     left: 36.5%;
   }}
@@ -208,12 +211,16 @@ p{
   flex-direction: column;
   align-items: center;
 }
-.card-design {  
+.card-design,
+.card-designon {  
   background-color: #383838;
   border-radius: 1rem;  
-  height: 340px;
+  height: 240px;
   width: 16.2vw;
   min-width: 180px;
+}
+.card-designon {  
+  height: 320px;
 }
 .walletsection {  
   position: fixed;
@@ -296,8 +303,8 @@ ul{
 }
 .buttons {
   background-color: #798EFF;  
-  position: absolute;
-  top: 280px;
+  position: relative;
+  margin-top: 23%;
   width: 80%;
 }
 .buttons:hover{

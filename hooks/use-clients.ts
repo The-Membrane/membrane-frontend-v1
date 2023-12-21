@@ -51,7 +51,7 @@ export function useClients(): {
       // https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
       const signer = getOfflineSigner();
       var client = SigningCosmWasmClient.connectWithSigner(
-        'https://rpc.cosmos.directory/osmosis', 
+        'https://osmosis-rpc.polkachu.com/', 
         signer,
         { gasPrice: GasPrice.fromString("0.025uosmo") }
       ).catch((e) => {

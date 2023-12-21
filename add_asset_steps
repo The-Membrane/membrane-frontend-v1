@@ -3,7 +3,7 @@
 index.tsx: 
 - add QTY object
 - add to Prices struct
-- add to contractQTYs initiation
+- add to contractQTYs & walletQTYs initiation
 
 Vaults.tsx:
 - add to contractQTYs struct

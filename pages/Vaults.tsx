@@ -31,6 +31,14 @@ export interface ContractInfo {
     cost: number,
     sliderValue: number,
 }
+export interface CollateralAssets {
+    osmo: number | undefined,
+    atom: number | undefined,
+    axlusdc: number | undefined,
+    usdc: number | undefined,
+    atomosmo_pool: number | undefined,
+    osmousdc_pool: number | undefined,
+}
 
 interface Props {
     cdp_client: PositionsClient | null;
@@ -84,6 +92,7 @@ interface Props {
     setcreditPrice: (creditPrice: number) => void;
     contractQTYs: ContractInfo;
     setcontractQTYs: (contractQTYs: ContractInfo) => void;
+    walletQTYs: CollateralAssets;
 }
 
 const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
@@ -103,7 +112,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     user_address, setAddress,
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice,
-    contractQTYs, setcontractQTYs
+    contractQTYs, setcontractQTYs, walletQTYs
 }: Props) => {
     //WidgetPopup
     const [widgetpopupTrigger, setWidgetPopupTrigger] = useState(false);
@@ -152,25 +161,19 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const [assetIntent, setassetIntent] = useState<[string , number][]>([]);
     const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
     const [amount, setAmount] = useState<number>(0);
+    //Deposit-withdraw Card
+    const [OSMOdeposit, setOSMOdeposit] = useState(0);
+    const [ATOMdeposit, setATOMdeposit] = useState(0);
+    const [axlUSDCdeposit, setaxlUSDCdeposit] = useState(0);
+    const [USDCdeposit, setUSDCdeposit] = useState(0);
+    const [ATOMOSMO_LPdeposit, setATOMOSMO_LPdeposit] = useState(0);
+    const [OSMOaxlUSDC_LPdeposit, setOSMOaxlUSDC_LPdeposit] = useState(0);
 
     //Squid Widget
     const [swapScreen, setswapScreen] = useState(false);    
     //Menu
     const [open, setOpen] = useState(false);
     const [menuLabel, setMenuLabel] = useState("Value" as string);
-
-    //This is used to keep track of what asses the user has in the contract
-    //bc the input/output asset quantities are updated in responsive to the user's actions    
-    // const [contractQTYs, setcontractQTYs] = useState<ContractInfo>({
-    //     osmo: 0,
-    //     atom: 0,
-    //     axlusdc: 0,
-    //     atomosmo_pool: 0,
-    //     osmousdc_pool: 0,
-    //     brw_LTV: 0,
-    //     max_LTV: 0,
-    //     cost: 0,
-    //   });
 
     const [prices, setPrices] = useState<Prices>({
       osmo: 0,
@@ -1759,6 +1762,32 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         }
     }
 
+    function showDefault() {
+        return true
+    }
+
+    function handlesetDepositAmount(setFn: (amount: number) => void, deposit_amount: number) {
+        setFn(deposit_amount)
+    }
+    function handlesetDepositInput(setFn: (amount: number) => void, event: any){
+        event.preventDefault();
+        setFn(event.target.value);
+    }
+
+    function createDepositElements(){
+        {walletQTYs.osmo != undefined && walletQTYs.osmo > 0 ?        
+        <div className="deposit-element">
+            <div className="deposit-element-icon">
+                <Image className="osmo-deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
+            </div>
+            <form>
+                <div className="max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo??0)}>max: {walletQTYs.osmo}</div>
+                <label className="amount-label">OSMO amount:</label>     
+                <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOdeposit} type="number" onChange={(event)=>handlesetDepositInput(setOSMOdeposit, event)}/>
+            </form>
+        </div>: null}
+    }
+
     //getuserPosition info && set State
     useEffect(() => {    
         if (address) {
@@ -1784,7 +1813,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 VAULTS
                 <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
             </div>
-            <div className="asset-info">
+            {showDefault() ? <div className="asset-info">
                 <div className="infobox-icon3"/>
                 <div className="asset-info-child" />
                 <div className="asset-info-item" />
@@ -1863,9 +1892,22 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     {/* <div className={"osmousdcpool-qty"} onClick={()=>handleosmousdc_poolqtyClick(currentfunctionLabel)}>{getReadableLPQTY(osmousdc_poolQTY)}</div> */}
                     <div className={osmousdc_poolQTY > 0 ?  "cdp-div13" : "low-opacity cdp-div13"}>${((osmousdc_poolQTY * +prices.osmousdc_pool) ?? 0).toFixed(2)}</div>
                 </div>
+            </div> 
+            :
+            <div>
+                {true ? <div className="card" style={{borderRadius: "1rem"}}>
+                <div className="card-body card-design shadow">
+                    {/*For every collateral asset with a non-zero balance in the wallet, add an amount form */}
+
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}}>
+                    Deposit
+                    </a>
+                </div>
+                </div> : null}
             </div>
+            }
         </div>
-        <div className="controller-item">
+        {showDefault() ? <div className="controller-item">
             <div className="controller-frame">
                 
                 <div className="controller-label">
@@ -1918,8 +1960,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             {/* <div>
                 <h3>Bundle Fortune teller</h3>
             </div> */}
-        </div>
-        {swapScreen === false ? 
+        </div> : null}
+        {showDefault() && swapScreen === false ? 
         <div className="debt-visual">
             <div className="infobox-icon"/>
             <div className="debtbar-visual">
@@ -1985,7 +2027,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay debt using CDT</div>
                 </div>
             </div>
-        </div> : 
+        </div> 
+        : showDefault() && swapScreen === true ?  
         <div className="squid-router" style={swapScreen === true ? {opacity: 1, zIndex: 2} : {opacity: 0, zIndex: 0}}>
             <SquidWidget config={
                 {integratorId: "membrane-swap-widget",
@@ -1993,11 +2036,15 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 slippage:3,
                 hideAnimations: true,
                 showOnRampLink: true,
+                favTokens: [
+                    {address:"uosmo",
+                    chainId: "osmosis-1"}
+                ],
                 initialToChainId: "osmosis-1",
                 initialFromChainId: "cosmoshub-4",
             }}
             />
-        </div>}
+        </div> : null}
         <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
         <WidgetPopup trigger={widgetpopupTrigger} setTrigger={setWidgetPopupTrigger} msgStatus={widgetpopupStatus} errorMsg={popupWidget}/>
     </div>

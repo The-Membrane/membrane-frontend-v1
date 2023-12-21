@@ -7,7 +7,7 @@ import NavBar from '../components/NavBar';
 import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
 import Governance, { Delegation, Delegator, EmissionsSchedule, ProposalList, UserClaims, UserStake } from './Governance';
-import Positions, { ContractInfo } from './Vaults';
+import Positions, { CollateralAssets, ContractInfo } from './Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import Popup from "../components/Popup";
@@ -76,7 +76,9 @@ export default function Home() {
   const [rateRes, setrateRes] = useState<CollateralInterestResponse>();
   const [creditRateRes, setcreditRateRes] = useState<InterestResponse>();
   const [basketRes, setbasketRes] = useState<Basket>();
-  const [walletCDT, setwalletCDT] = useState(0);
+  const [walletCDT, setwalletCDT] = useState<number | undefined>(undefined);
+  const [walletMBRN, setwalletMBRN] = useState<number | undefined>(undefined);
+  const [inLaunch, setinLaunch] = useState<boolean | undefined>(undefined);
 
   ////Positions////
   //This is used to keep track of what asses the user has in the contract
@@ -92,6 +94,14 @@ export default function Home() {
     max_LTV: 0,
     cost: 0,
     sliderValue: 0,
+  });
+  const [walletQTYs, setwalletQTYs] = useState<CollateralAssets>({
+    osmo: 0,
+    atom: 0,
+    axlusdc: 0,
+    usdc: 0,
+    atomosmo_pool: 0,
+    osmousdc_pool: 0,
   });
   //Asset specific
   //qty
@@ -650,7 +660,6 @@ export default function Home() {
     cdtClaims: 0,
   });
   const [maxCommission, setmaxCommission] = useState(0);
-  const [walletMBRN, setwalletMBRN] = useState(0);
   //Delegations
   
   const getDelegations = async () => {
@@ -1001,6 +1010,10 @@ export default function Home() {
       return "Against";
     }
   }
+
+  function onlyVaultPage(){
+    return !((walletCDT != undefined && walletCDT > 0) || (walletMBRN != undefined && walletMBRN > 0) || (inLaunch != undefined && inLaunch === true))
+  }
   
 
   useEffect(() => {    
@@ -1016,10 +1029,62 @@ export default function Home() {
     if (address !== undefined) {
       //setAddress
       setAddress(address as string)
-      //Get account's balance of cDT
-      oraclequeryClient?.client.getBalance(address as string, denoms.cdt).then((res) => {
-        setwalletCDT(parseInt(res.amount));
-      })
+
+      //Get account's balance of CDT
+      if (walletCDT === undefined){
+        oraclequeryClient?.client.getBalance(address as string, denoms.cdt).then((res) => {
+          setwalletCDT(parseInt(res.amount) / 1_000_000);
+        })
+      }
+      if (walletMBRN === undefined){
+        //Get account's balance of MBRN
+        oraclequeryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
+          setwalletMBRN(parseInt(res.amount) / 1_000_000);
+        })
+      }
+      //Check if user participated in the lockdrop
+      if (inLaunch === undefined){
+        launchqueryClient?.userInfo({user: address as string}).then((res) => {
+          setinLaunch(true);
+        })
+      }
+      ///Get wallet's available collateral balances      
+      if (walletQTYs.osmo === undefined){
+        var wallet_qtys: CollateralAssets = {
+          osmo: 0,
+          atom: 0,
+          axlusdc: 0,
+          usdc: 0,
+          atomosmo_pool: 0,
+          osmousdc_pool: 0,
+        };
+        //Get account's balance of OSMO
+        oraclequeryClient?.client.getBalance(address as string, denoms.osmo).then((res) => {
+          wallet_qtys.osmo = (parseInt(res.amount) / 1_000_000);
+        })
+        //Get account's balance of ATOM
+        oraclequeryClient?.client.getBalance(address as string, denoms.atom).then((res) => {
+          wallet_qtys.atom = (parseInt(res.amount) / 1_000_000);
+        })
+        //Get account's balance of axlUSDC
+        oraclequeryClient?.client.getBalance(address as string, denoms.axlUSDC).then((res) => {
+          wallet_qtys.axlusdc = (parseInt(res.amount) / 1_000_000);
+        })
+        //Get account's balance of USDC
+        oraclequeryClient?.client.getBalance(address as string, denoms.usdc).then((res) => {
+          wallet_qtys.usdc = (parseInt(res.amount) / 1_000_000);
+        })
+        //Get account's balance of ATOM - OSMO LP
+        oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
+          wallet_qtys.atomosmo_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000);
+        })
+        //Get account's balance of OSMO - USDC LP
+        oraclequeryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
+          wallet_qtys.osmousdc_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000);
+        })
+        //Set walletQTYs
+        setwalletQTYs(wallet_qtys)
+      }
     }
     //Get basket for Dashboard total minted
     if (basketRes === undefined){
@@ -1077,12 +1142,6 @@ export default function Home() {
         //Get delegation info
         getDelegations()
       }
-      if (walletMBRN === 0 && address !== undefined){
-        //Get account's balance of MBRN
-        governancequeryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
-          setwalletMBRN(parseInt(res.amount) / 1_000_000);
-        })
-      }
       if (maxCommission === 0){
         //Get staking max commission
         getStakingCommission()
@@ -1092,16 +1151,25 @@ export default function Home() {
   }, [oraclequeryClient, cdpqueryClient, prices, address, activeComponent])
 
   const renderComponent = () => {
-    if (activeComponent === 'dashboard') {
-      return <Dashboard setActiveComponent={setActiveComponent} basketRes={basketRes}/>;
+    ///If the dashboard is only going to show the vualt page then load the vault page only
+    if (onlyVaultPage() && activeComponent === 'dashboard'){
+      return <Dashboard setActiveComponent={setActiveComponent} basketRes={basketRes} walletCDT={walletCDT} walletMBRN={walletMBRN} inLaunch={inLaunch}/>;
+    //   return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
+    //     rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
+    //     popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
+    //     osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
+    //     debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
+    //     contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs} walletQTYs={walletQTYs}
+    // />;
+    } else if (activeComponent === 'dashboard') {
+      return <Dashboard setActiveComponent={setActiveComponent} basketRes={basketRes} walletCDT={walletCDT} walletMBRN={walletMBRN} inLaunch={inLaunch}/>;
     } else if (activeComponent === 'vault') {
-      // return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT}
+      // return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
       //     rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
       //     popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
       //     osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
       //     debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
-      //     contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs}
-
+      //     contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs} walletQTYs={walletQTYs}
       // />;
     } else if (activeComponent === 'liquidation') {
       return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} index_lqClaimables={lqClaimables}
@@ -1109,7 +1177,7 @@ export default function Home() {
       />;
     } else if (activeComponent === 'staking') {
       return <Governance govClient={governance_client} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} vestingClient={vesting_client} address={address as string | undefined} 
-        Delegations={delegations} Delegators={delegators} quorum={quorum} Proposals={proposals} UserVP={userVP} EmissionsSchedule={emissionsSchedule} UserStake={userStake} UserClaims={userClaims} WalletMBRN={walletMBRN}
+        Delegations={delegations} Delegators={delegators} quorum={quorum} Proposals={proposals} UserVP={userVP} EmissionsSchedule={emissionsSchedule} UserStake={userStake} UserClaims={userClaims} WalletMBRN={walletMBRN??0}
         setQuorum={setQuorum} maxCommission={maxCommission} setmaxCommission={setmaxCommission}
       />;
     } else if (activeComponent === 'launch') {
