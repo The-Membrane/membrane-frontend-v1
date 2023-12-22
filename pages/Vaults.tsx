@@ -12,8 +12,6 @@ import WidgetPopup from "../components/widgetPopup";
 import Image from "next/image";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
-import { SquidWidget } from "@0xsquid/widget";
-
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
       orient?: string;
@@ -162,15 +160,15 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
     const [amount, setAmount] = useState<number>(0);
     //Deposit-withdraw Card
-    const [OSMOdeposit, setOSMOdeposit] = useState(0);
-    const [ATOMdeposit, setATOMdeposit] = useState(0);
-    const [axlUSDCdeposit, setaxlUSDCdeposit] = useState(0);
-    const [USDCdeposit, setUSDCdeposit] = useState(0);
-    const [ATOMOSMO_LPdeposit, setATOMOSMO_LPdeposit] = useState(0);
-    const [OSMOaxlUSDC_LPdeposit, setOSMOaxlUSDC_LPdeposit] = useState(0);
+    const [OSMOdeposit, setOSMOdeposit] = useState<number | undefined>(undefined);
+    const [ATOMdeposit, setATOMdeposit] = useState<number | undefined>(undefined);
+    const [axlUSDCdeposit, setaxlUSDCdeposit] = useState<number | undefined>(undefined);
+    const [USDCdeposit, setUSDCdeposit] = useState<number | undefined>(undefined);
+    const [ATOMOSMO_LPdeposit, setATOMOSMO_LPdeposit] = useState<number | undefined>(undefined);
+    const [OSMOaxlUSDC_LPdeposit, setOSMOaxlUSDC_LPdeposit] = useState<number | undefined>(undefined);
 
     //Squid Widget
-    const [swapScreen, setswapScreen] = useState(false);    
+    // const [swapScreen, setswapScreen] = useState(false);    
     //Menu
     const [open, setOpen] = useState(false);
     const [menuLabel, setMenuLabel] = useState("Value" as string);
@@ -1104,11 +1102,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         }
     }
     const handleExecution = async () => {
-        //Check if we are just going back to the mint visual
-        if (swapScreen === true) {
-            setswapScreen(false)
-            return;
-        }
         //Check if wallet is connected & connect if not
         if (address === undefined) {
             connect();
@@ -1459,23 +1452,23 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         "https://tfm.com/ibc"
         );
    };  
-   const handleswapClick = () => {
-    //Set popup for squid widget
-    setWidgetPopupTrigger(true);
-    setPopupWidget(<div>
-        <SquidWidget config={
-        {integratorId: "membrane-swap-widget",
-        companyName:"Membrane",
-        slippage:3,
-        hideAnimations: true,
-        showOnRampLink: true,
-        initialToChainId: "osmosis-1",
-        initialFromChainId: "cosmoshub-4",
-        }}/>
-    </div>);
-    setWidgetPopupStatus("Swap to Osmosis");
-        // setswapScreen(true);
-   };
+//    const handleswapClick = () => {
+//     //Set popup for squid widget
+//     setWidgetPopupTrigger(true);
+//     setPopupWidget(<div>
+//         <SquidWidget config={
+//         {integratorId: "membrane-swap-widget",
+//         companyName:"Membrane",
+//         slippage:3,
+//         hideAnimations: true,
+//         showOnRampLink: true,
+//         initialToChainId: "osmosis-1",
+//         initialFromChainId: "cosmoshub-4",
+//         }}/>
+//     </div>);
+//     setWidgetPopupStatus("Swap to Osmosis");
+//         // setswapScreen(true);
+//    };
 
    function getTVL() {
     return(
@@ -1763,7 +1756,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     }
 
     function showDefault() {
-        return true
+        return false
     }
 
     function handlesetDepositAmount(setFn: (amount: number) => void, deposit_amount: number) {
@@ -1775,17 +1768,19 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     }
 
     function createDepositElements(){
-        {walletQTYs.osmo != undefined && walletQTYs.osmo > 0 ?        
-        <div className="deposit-element">
-            <div className="deposit-element-icon">
-                <Image className="osmo-deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
-            </div>
-            <form>
-                <div className="max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo??0)}>max: {walletQTYs.osmo}</div>
-                <label className="amount-label">OSMO amount:</label>     
-                <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOdeposit} type="number" onChange={(event)=>handlesetDepositInput(setOSMOdeposit, event)}/>
-            </form>
-        </div>: null}
+        return(<>
+            {walletQTYs.osmo != undefined && walletQTYs.osmo > 0 ?        
+            <div className="deposit-element">
+                <div className="deposit-element-icon">
+                    <Image className="osmo-deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
+                </div>
+                <form className="deposit-form">
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo??0)}>max: {walletQTYs.osmo}</div>
+                    <label className="deposit-amount-label">OSMO amount:</label>     
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setOSMOdeposit, event)}/>
+                </form>
+            </div>: null}
+        </>);
     }
 
     //getuserPosition info && set State
@@ -1801,7 +1796,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setbasketRes(basketRes as Basket)
         getassetdebtUtil();
         resettoContractPosition();
-        console.log(pricez)
 
     }, [pricez, address, rateRes, creditRateRes, basketRes])
     
@@ -1896,9 +1890,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             :
             <div>
                 {true ? <div className="card" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design shadow">
+                <div className="card-body card-design shadow" style={{paddingRight: "0", paddingLeft: "0", paddingTop: "1.5rem", paddingBottom: "1.5rem"}}>
                     {/*For every collateral asset with a non-zero balance in the wallet, add an amount form */}
-
+                    {createDepositElements()}
                     <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}}>
                     Deposit
                     </a>
@@ -1917,13 +1911,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <div className="starting-screen">
                         { currentfunctionLabel === "" ? 
                         <div style={{fontSize: "medium", left: ".5vw", position: "relative"}}>Depositing requires assets on Osmosis. &nbsp;
-                        <div className="nowrap" style={{textDecoration: "underline", display: "inline"}} onClick={onTFMTextClick}>IBC Bridge</div> / <div className="btn swap-button" onClick={handleswapClick}>Swap</div>
+                        <div className="nowrap" style={{textDecoration: "underline", display: "inline"}} onClick={onTFMTextClick}>IBC Bridge</div> / <div className="btn swap-button" >Swap</div>
                         </div>
                         : null}
                     </div>
                 </div>            
                 <div className={getTVL()*(maxLTV/100) < (debtAmount/1000000)*creditPrice ? "user-redemption-button red-border" : redeemButton} onClick={handleExecution}>
-                    <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : swapScreen === true ? "Back to Minting" : getTVL() > 0 ? "Mint ---->" : "<---- Deposit" }</div>
+                    <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : currentfunctionLabel === "redemptions" ? "Update" : getTVL() > 0 ? "Mint ---->" : "<---- Deposit" }</div>
                 </div>    
                 <div className={redeemScreen}>
                     <form>            
@@ -1961,7 +1955,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 <h3>Bundle Fortune teller</h3>
             </div> */}
         </div> : null}
-        {showDefault() && swapScreen === false ? 
+        {showDefault() ? 
         <div className="debt-visual">
             <div className="infobox-icon"/>
             <div className="debtbar-visual">
@@ -2028,23 +2022,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 </div>
             </div>
         </div> 
-        : showDefault() && swapScreen === true ?  
-        <div className="squid-router" style={swapScreen === true ? {opacity: 1, zIndex: 2} : {opacity: 0, zIndex: 0}}>
-            <SquidWidget config={
-                {integratorId: "membrane-swap-widget",
-                companyName:"Membrane",
-                slippage:3,
-                hideAnimations: true,
-                showOnRampLink: true,
-                favTokens: [
-                    {address:"uosmo",
-                    chainId: "osmosis-1"}
-                ],
-                initialToChainId: "osmosis-1",
-                initialFromChainId: "cosmoshub-4",
-            }}
-            />
-        </div> : null}
+        : null}
         <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
         <WidgetPopup trigger={widgetpopupTrigger} setTrigger={setWidgetPopupTrigger} msgStatus={widgetpopupStatus} errorMsg={popupWidget}/>
     </div>

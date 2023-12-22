@@ -96,12 +96,12 @@ export default function Home() {
     sliderValue: 0,
   });
   const [walletQTYs, setwalletQTYs] = useState<CollateralAssets>({
-    osmo: 0,
-    atom: 0,
-    axlusdc: 0,
-    usdc: 0,
-    atomosmo_pool: 0,
-    osmousdc_pool: 0,
+    osmo: undefined,
+    atom: undefined,
+    axlusdc: undefined,
+    usdc: undefined,
+    atomosmo_pool: undefined,
+    osmousdc_pool: undefined,
   });
   //Asset specific
   //qty
@@ -1027,6 +1027,7 @@ export default function Home() {
       queryPrices()
     }
     if (address !== undefined) {
+      console.log("here")
       //setAddress
       setAddress(address as string)
 
@@ -1048,42 +1049,49 @@ export default function Home() {
           setinLaunch(true);
         })
       }
-      ///Get wallet's available collateral balances      
-      if (walletQTYs.osmo === undefined){
+      ///Get wallet's available collateral balances
+      if (walletQTYs.osmo === undefined || walletQTYs.atom === undefined || walletQTYs.axlusdc === undefined || walletQTYs.usdc === undefined || walletQTYs.atomosmo_pool === undefined || walletQTYs.osmousdc_pool === undefined){
         var wallet_qtys: CollateralAssets = {
-          osmo: 0,
-          atom: 0,
-          axlusdc: 0,
-          usdc: 0,
-          atomosmo_pool: 0,
-          osmousdc_pool: 0,
+          osmo: walletQTYs.osmo,
+          atom: walletQTYs.atom,
+          axlusdc: walletQTYs.axlusdc,
+          usdc: walletQTYs.usdc,
+          atomosmo_pool: walletQTYs.atomosmo_pool,
+          osmousdc_pool: walletQTYs.osmousdc_pool,
         };
-        //Get account's balance of OSMO
-        oraclequeryClient?.client.getBalance(address as string, denoms.osmo).then((res) => {
-          wallet_qtys.osmo = (parseInt(res.amount) / 1_000_000);
-        })
-        //Get account's balance of ATOM
-        oraclequeryClient?.client.getBalance(address as string, denoms.atom).then((res) => {
-          wallet_qtys.atom = (parseInt(res.amount) / 1_000_000);
-        })
-        //Get account's balance of axlUSDC
-        oraclequeryClient?.client.getBalance(address as string, denoms.axlUSDC).then((res) => {
-          wallet_qtys.axlusdc = (parseInt(res.amount) / 1_000_000);
-        })
-        //Get account's balance of USDC
-        oraclequeryClient?.client.getBalance(address as string, denoms.usdc).then((res) => {
-          wallet_qtys.usdc = (parseInt(res.amount) / 1_000_000);
-        })
-        //Get account's balance of ATOM - OSMO LP
-        oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
-          wallet_qtys.atomosmo_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000);
-        })
-        //Get account's balance of OSMO - USDC LP
-        oraclequeryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
-          wallet_qtys.osmousdc_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000);
-        })
+        try {
+          //Get account's balance of OSMO
+          oraclequeryClient?.client.getBalance(address as string, denoms.osmo).then((res) => {
+            console.log(res)
+            wallet_qtys.osmo = (parseInt(res.amount) / 1_000_000)
+          })
+          //Get account's balance of ATOM
+          oraclequeryClient?.client.getBalance(address as string, denoms.atom).then((res) => {
+            wallet_qtys.atom = (parseInt(res.amount) / 1_000_000)
+          })
+          //Get account's balance of axlUSDC
+          oraclequeryClient?.client.getBalance(address as string, denoms.axlUSDC).then((res) => {
+            wallet_qtys.axlusdc = (parseInt(res.amount) / 1_000_000)
+          })
+          //Get account's balance of USDC
+          oraclequeryClient?.client.getBalance(address as string, denoms.usdc).then((res) => {
+            wallet_qtys.usdc = (parseInt(res.amount) / 1_000_000)
+          })
+          //Get account's balance of ATOM - OSMO LP
+          oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
+            wallet_qtys.atomosmo_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000)
+          })
+          //Get account's balance of OSMO - USDC LP
+          oraclequeryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
+            wallet_qtys.osmousdc_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000)
+          })
+        
+        } catch (error) {
+          console.log(error)
+        }
         //Set walletQTYs
         setwalletQTYs(wallet_qtys)
+        console.log(wallet_qtys)
       }
     }
     //Get basket for Dashboard total minted
@@ -1151,26 +1159,25 @@ export default function Home() {
   }, [oraclequeryClient, cdpqueryClient, prices, address, activeComponent])
 
   const renderComponent = () => {
-    ///If the dashboard is only going to show the vualt page then load the vault page only
+    ///If the dashboard is only going to show the vault page then load the vault page only
     if (onlyVaultPage() && activeComponent === 'dashboard'){
-      return <Dashboard setActiveComponent={setActiveComponent} basketRes={basketRes} walletCDT={walletCDT} walletMBRN={walletMBRN} inLaunch={inLaunch}/>;
-    //   return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
-    //     rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
-    //     popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
-    //     osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
-    //     debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
-    //     contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs} walletQTYs={walletQTYs}
-    // />;
+      return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
+        rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
+        popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
+        osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
+        debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
+        contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs} walletQTYs={walletQTYs}
+    />;
     } else if (activeComponent === 'dashboard') {
       return <Dashboard setActiveComponent={setActiveComponent} basketRes={basketRes} walletCDT={walletCDT} walletMBRN={walletMBRN} inLaunch={inLaunch}/>;
     } else if (activeComponent === 'vault') {
-      // return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
-      //     rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
-      //     popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
-      //     osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
-      //     debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
-      //     contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs} walletQTYs={walletQTYs}
-      // />;
+      return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
+          rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
+          popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
+          osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
+          debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
+          contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs} walletQTYs={walletQTYs}
+      />;
     } else if (activeComponent === 'liquidation') {
       return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} index_lqClaimables={lqClaimables}
         capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL} setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead}

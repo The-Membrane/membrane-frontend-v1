@@ -3405,6 +3405,48 @@ span[data-descr]:hover::after {
   background: linear-gradient(176.07deg, #4fcabb, #798eff);
   overflow: hidden;
 }
+.deposit-element {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  width: 100%;
+  height: 20%;
+  gap: 13%;
+}
+.deposit-element-icon {
+  top: -4px;
+  position: relative;
+  right: -15px;
+}
+.deposit-form {
+  width: 100%;
+  left: -5px;
+  position: relative;
+}
+.deposit-max-amount-label {  
+  cursor: pointer;
+  opacity: .7;
+  position: relative;
+  text-align: right;
+  top: 100px;
+  font-size: large;
+}
+.deposit-amount-label { 
+  position: relative;
+  top: 7px;
+  font-size: large;
+}
+.card-deposit-amount {  
+  position: relative;
+  width: 100%;
+  border-radius: 0.5rem;
+  text-align: right;
+}
+.osmo-deposit-icon {
+  color: transparent;
+  position: relative;
+}
 .mint-button-icon1 {
   position: absolute;
   top: -3px;
