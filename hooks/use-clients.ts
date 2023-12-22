@@ -7,7 +7,6 @@ import { chainName, testnetAddrs } from '../config';
 
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate/build/cosmwasmclient';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-// import { GasPrice } from '@cosmjs/stargate';
 import { OracleClient, OracleQueryClient } from '../codegen/oracle/Oracle.client';
 import { PositionsClient, PositionsQueryClient } from '../codegen/positions/Positions.client';
 import { LiquidationQueueClient, LiquidationQueueQueryClient } from '../codegen/liquidation_queue/LiquidationQueue.client';
@@ -15,7 +14,7 @@ import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stabil
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { VestingClient } from '../codegen/vesting/Vesting.client';
-import { GasPrice } from '@cosmjs/stargate/build/fee';
+import { GasPrice } from '@cosmjs/stargate';
 
 export function useClients(): {
   cdp_client: PositionsClient | null;
@@ -51,6 +50,7 @@ export function useClients(): {
       // https://rpc.osmosis.zone
       // https://g.w.lavanet.xyz:443/gateway/cos4/rpc-http/fc41b9ab0767527272a12a8f2f87009c
       const signer = getOfflineSigner();
+      
       var client = SigningCosmWasmClient.connectWithSigner(
         'https://osmosis-rpc.polkachu.com/', 
         signer,
