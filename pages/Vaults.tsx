@@ -1766,9 +1766,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setFn(event.target.value);        
     }
     function checkIfWalletEmpty() {
-        //check if wallet is empty
-        if (walletQTYs.osmo === 0 && walletQTYs.atom === 0 && walletQTYs.axlusdc === 0 && walletQTYs.usdc === 0 && walletQTYs.atomosmo_pool === 0 && walletQTYs.osmousdc_pool === 0){
-            return true
+        if (address !== undefined) {
+            //check if wallet is empty
+            if ((walletQTYs.osmo??0) === 0 && (walletQTYs.atom??0) === 0 && (walletQTYs.axlusdc??0) === 0 && (walletQTYs.usdc??0) === 0 && (walletQTYs.atomosmo_pool??0) === 0 && (walletQTYs.osmousdc_pool??0) === 0){
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }
