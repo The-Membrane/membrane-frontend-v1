@@ -1781,7 +1781,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     function createDepositElements(){
         console.log(walletQTYs)
         return(<>
-            {walletQTYs.osmo != undefined && (walletQTYs.osmo??0) > 0 ?        
+            {(walletQTYs.osmo??0) > 0 ?        
             <div className="deposit-element">
                 <div className="deposit-element-icon">
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
