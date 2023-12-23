@@ -1787,7 +1787,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo??0)}>max: {(walletQTYs.osmo??0).toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, (walletQTYs.osmo??0))}>max: {(walletQTYs.osmo??0).toFixed(3)}</div>
                     <label className="deposit-amount-label">OSMO amount:</label>     
                     <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setOSMOdeposit, event)}/>
                 </form>
