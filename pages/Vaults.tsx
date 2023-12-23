@@ -1409,7 +1409,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     })
                     break;
                 }
-                case "axlUSDC": {
+                case "USDC": {
                     workingIntents.push({
                         amount: (intent[1]* 1_000_000).toString(),
                         //@ts-ignore
@@ -1758,30 +1758,167 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     function showDefault() {
         return false
     }
-
     function handlesetDepositAmount(setFn: (amount: number) => void, deposit_amount: number) {
         setFn(deposit_amount)
     }
     function handlesetDepositInput(setFn: (amount: number) => void, event: any){
         event.preventDefault();
-        setFn(event.target.value);
+        setFn(event.target.value);        
+    }
+    function checkIfWalletEmpty() {
+        //check if wallet is empty
+        if (walletQTYs.osmo === 0 && walletQTYs.atom === 0 && walletQTYs.axlusdc === 0 && walletQTYs.usdc === 0 && walletQTYs.atomosmo_pool === 0 && walletQTYs.osmousdc_pool === 0){
+            return true
+        } else {
+            return false
+        }
     }
 
     function createDepositElements(){
+        console.log(walletQTYs)
         return(<>
             {walletQTYs.osmo != undefined && walletQTYs.osmo > 0 ?        
             <div className="deposit-element">
                 <div className="deposit-element-icon">
-                    <Image className="osmo-deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
+                    <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo??0)}>max: {walletQTYs.osmo}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo??0)}>max: {walletQTYs.osmo.toFixed(3)}</div>
                     <label className="deposit-amount-label">OSMO amount:</label>     
                     <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setOSMOdeposit, event)}/>
                 </form>
             </div>: null}
+            {walletQTYs.atom != undefined && walletQTYs.atom > 0 ?        
+            <div className="deposit-element">
+                <div className="deposit-element-icon">
+                    <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
+                </div>
+                <form className="deposit-form">
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMdeposit, walletQTYs.atom??0)}>max: {walletQTYs.atom.toFixed(3)}</div>
+                    <label className="deposit-amount-label">ATOM amount:</label>     
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={ATOMdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setATOMdeposit, event)}/>
+                </form>
+            </div>: null}
+            {walletQTYs.usdc != undefined && walletQTYs.usdc > 0 ?        
+            <div className="deposit-element">
+                <div className="deposit-element-icon">
+                    <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.svg" />
+                </div>
+                <form className="deposit-form">
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setUSDCdeposit, walletQTYs.usdc??0)}>max: {walletQTYs.usdc.toFixed(3)}</div>
+                    <label className="deposit-amount-label">USDC amount:</label>     
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={USDCdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setUSDCdeposit, event)}/>
+                </form>
+            </div>: null}
+            {walletQTYs.axlusdc != undefined && walletQTYs.axlusdc > 0 ?        
+            <div className="deposit-element">
+                <div className="deposit-element-icon">
+                    <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.axl.svg" />
+                </div>
+                <form className="deposit-form">
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setaxlUSDCdeposit, walletQTYs.axlusdc??0)}>max: {walletQTYs.axlusdc.toFixed(3)}</div>
+                    <label className="deposit-amount-label">axlUSDC amount:</label>     
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={axlUSDCdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setaxlUSDCdeposit, event)}/>
+                </form>
+            </div>: null}
+            {walletQTYs.atomosmo_pool != undefined && walletQTYs.atomosmo_pool > 0 ?        
+            <div className="deposit-element">
+                <div className="deposit-element-icon">
+                    <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
+                </div>
+                <form className="deposit-form">
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMOSMO_LPdeposit, walletQTYs.atomosmo_pool??0)}>max: {walletQTYs.atomosmo_pool.toFixed(3)}</div>
+                    <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={ATOMOSMO_LPdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setATOMOSMO_LPdeposit, event)}/>
+                </form>
+            </div>: null}
+            {walletQTYs.osmousdc_pool != undefined && walletQTYs.osmousdc_pool > 0 ?        
+            <div className="deposit-element">
+                <div className="deposit-element-icon">
+                    <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
+                </div>
+                <form className="deposit-form">
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOaxlUSDC_LPdeposit, walletQTYs.osmousdc_pool??0)}>max: {walletQTYs.osmousdc_pool.toFixed(3)}</div>
+                    <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOaxlUSDC_LPdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setOSMOaxlUSDC_LPdeposit, event)}/>
+                </form>
+            </div>: null}
         </>);
     }
+    
+    const onSquidClick = () => {
+        window.open(
+        "https://app.squidrouter.com/"
+        );
+    };
+    const onIBCClick = () => {
+        window.open(
+        "https://ibc.fun/"
+        );
+    };
+    const onCCTPClick = () => {
+        window.open(
+        "https://cctp.money/"
+        );
+    };
+    const handleonboardingDeposit = async () => {
+        ///Set asset intents
+        var asset_intent: [string, number][] = [];
+        if (OSMOdeposit != undefined && OSMOdeposit > 0){
+            asset_intent.push(["OSMO", OSMOdeposit])
+        }
+        if (ATOMdeposit != undefined && ATOMdeposit > 0){
+            asset_intent.push(["ATOM", ATOMdeposit])
+        }
+        if (USDCdeposit != undefined && USDCdeposit > 0){
+            asset_intent.push(["USDC", USDCdeposit])
+        }
+        if (axlUSDCdeposit != undefined && axlUSDCdeposit > 0){
+            asset_intent.push(["axlUSDC", axlUSDCdeposit])
+        }
+        if (ATOMOSMO_LPdeposit != undefined && ATOMOSMO_LPdeposit > 0){
+            asset_intent.push(["ATOM-OSMO LP", ATOMOSMO_LPdeposit])
+        }
+        if (OSMOaxlUSDC_LPdeposit != undefined && OSMOaxlUSDC_LPdeposit > 0){
+            asset_intent.push(["OSMO-axlUSDC LP", OSMOaxlUSDC_LPdeposit])
+        }
+        var user_coins = getcoinsfromassetIntents(asset_intent);     
+
+        try {
+            cdp_client?.deposit({
+                positionId: undefined,
+                positionOwner: address as string,
+            }, "auto", undefined, user_coins).then((res) => {           
+                console.log(res?.events.toString())
+                //Update mint amount
+                setOSMOdeposit(undefined);
+                setATOMdeposit(undefined);
+                setUSDCdeposit(undefined);
+                setaxlUSDCdeposit(undefined);
+                setATOMOSMO_LPdeposit(undefined);
+                setOSMOaxlUSDC_LPdeposit(undefined);
+                //format pop up
+                setPopupTrigger(true);
+                //map asset intents to readable string
+                var readable_asset_intent = asset_intent.map((asset) => {
+                    return asset[1] + " " + asset[0]
+                })
+                setPopupMsg(<div>Deposit of {readable_asset_intent} successful</div>);
+                setPopupStatus("Success");
+                
+                //Clear intents
+                setassetIntent([])
+            })
+        } catch (error) {            
+            ////Error message
+            const e = error as { message: string }
+            console.log(e.message)
+            ///Format Pop up
+            setPopupTrigger(true);
+            setPopupMsg(<div>{e.message}</div>);
+            setPopupStatus("Deposit Error");
+        }
+    };
 
     //getuserPosition info && set State
     useEffect(() => {    
@@ -1803,10 +1940,21 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
   return (
     <div className="page-frame positions">
         <div className="first-vault-component">
-            <div className="vaults1">
+            {showDefault() ? <div className="vaults-title">
                 VAULTS
                 <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
             </div>
+                : 
+            checkIfWalletEmpty() === true ?             
+            <div className="onboarding-deposit-title" style={{left: "0%"}}>
+                Bridge to Osmosis     
+            </div> 
+            :
+            <div className="onboarding-deposit-title" style={{left: "3%"}}>
+                Fund Position
+                <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
+            </div> 
+            }
             {showDefault() ? <div className="asset-info">
                 <div className="infobox-icon3"/>
                 <div className="asset-info-child" />
@@ -1889,13 +2037,36 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             </div> 
             :
             <div>
-                {true ? <div className="card" style={{borderRadius: "1rem"}}>
-                <div className="card-body card-design shadow" style={{paddingRight: "0", paddingLeft: "0", paddingTop: "1.5rem", paddingBottom: "1.5rem"}}>
+                {true ? <div className="card" style={{borderRadius: "1rem", width: "16.35vw"}}>
+                <div className="deposit-card-body deposit-card-design shadow" style={{paddingRight: "0", paddingLeft: "0", paddingTop: ".75rem", paddingBottom: ".75rem"}}>
                     {/*For every collateral asset with a non-zero balance in the wallet, add an amount form */}
                     {createDepositElements()}
-                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white"}}>
+                    {checkIfWalletEmpty() === false && address !== undefined ? 
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%"}} onClick={handleonboardingDeposit}>
                     Deposit
+                    </a> 
+                    : address === undefined ?
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%"}} onClick={()=>connect()}>                        
+                    {/*If wallet is not connected, connect*/}
+                    Connect Wallet
+                    </a> 
+                    :
+                    <>
+                    {/*If wallet is empty, give Bridge links*/}
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%"}} onClick={onIBCClick}>
+                    {/*ibc.fun*/}
+                    IBC
                     </a>
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%"}} onClick={onCCTPClick}>
+                    {/*cctp.money*/}
+                    1-Click USDC
+                    </a>
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%"}} onClick={onSquidClick}>
+                    {/*https://app.squidrouter.com/*/}
+                    Misc.
+                    </a>
+                    </>
+                    }
                 </div>
                 </div> : null}
             </div>
