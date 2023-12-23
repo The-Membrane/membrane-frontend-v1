@@ -37,6 +37,14 @@ export interface CollateralAssets {
     atomosmo_pool: number | undefined,
     osmousdc_pool: number | undefined,
 }
+export interface DefinedCollateralAssets {
+    osmo: number,
+    atom: number,
+    axlusdc: number,
+    usdc: number,
+    atomosmo_pool: number,
+    osmousdc_pool: number,
+}
 
 interface Props {
     cdp_client: PositionsClient | null;
@@ -90,7 +98,7 @@ interface Props {
     setcreditPrice: (creditPrice: number) => void;
     contractQTYs: ContractInfo;
     setcontractQTYs: (contractQTYs: ContractInfo) => void;
-    walletQTYs: CollateralAssets;
+    walletQTYz: CollateralAssets;
 }
 
 const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
@@ -110,7 +118,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     user_address, setAddress,
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice,
-    contractQTYs, setcontractQTYs, walletQTYs
+    contractQTYs, setcontractQTYs, walletQTYz
 }: Props) => {
     //WidgetPopup
     const [widgetpopupTrigger, setWidgetPopupTrigger] = useState(false);
@@ -166,6 +174,14 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const [USDCdeposit, setUSDCdeposit] = useState<number | undefined>(undefined);
     const [ATOMOSMO_LPdeposit, setATOMOSMO_LPdeposit] = useState<number | undefined>(undefined);
     const [OSMOaxlUSDC_LPdeposit, setOSMOaxlUSDC_LPdeposit] = useState<number | undefined>(undefined);
+    const [walletQTYs, setwalletQTYs] = useState<DefinedCollateralAssets>({
+      osmo: 0,
+      atom: 0,
+      axlusdc: 0,
+      usdc: 0,
+      atomosmo_pool: 0,
+      osmousdc_pool: 0,
+    });
 
     //Squid Widget
     // const [swapScreen, setswapScreen] = useState(false);    
@@ -1937,8 +1953,18 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setbasketRes(basketRes as Basket)
         getassetdebtUtil();
         resettoContractPosition();
+        //Set walletQTYs
+        var walletQTYs = {
+            osmo: walletQTYz.osmo??0,
+            atom: walletQTYz.atom??0,
+            axlusdc: walletQTYz.axlusdc??0,
+            usdc: walletQTYz.usdc??0,
+            atomosmo_pool: walletQTYz.atomosmo_pool??0,
+            osmousdc_pool: walletQTYz.osmousdc_pool??0,
+        };
+        setwalletQTYs(walletQTYs);
 
-    }, [pricez, address, rateRes, creditRateRes, basketRes])
+    }, [pricez, address, rateRes, creditRateRes, basketRes, walletQTYz])
     
 
   return (
