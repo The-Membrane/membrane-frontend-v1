@@ -1781,68 +1781,68 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     function createDepositElements(){
         console.log(walletQTYs)
         return(<>
-            {walletQTYs.osmo != undefined && walletQTYs.osmo > 0 ?        
+            {walletQTYs.osmo != undefined && (walletQTYs.osmo??0) > 0 ?        
             <div className="deposit-element">
                 <div className="deposit-element-icon">
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo??0)}>max: {walletQTYs.osmo.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo??0)}>max: {(walletQTYs.osmo??0).toFixed(3)}</div>
                     <label className="deposit-amount-label">OSMO amount:</label>     
                     <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setOSMOdeposit, event)}/>
                 </form>
             </div>: null}
-            {walletQTYs.atom != undefined && walletQTYs.atom > 0 ?        
+            {walletQTYs.atom != undefined && (walletQTYs.atom??0) > 0 ?        
             <div className="deposit-element">
                 <div className="deposit-element-icon">
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMdeposit, walletQTYs.atom??0)}>max: {walletQTYs.atom.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMdeposit, walletQTYs.atom??0)}>max: {(walletQTYs.atom??0).toFixed(3)}</div>
                     <label className="deposit-amount-label">ATOM amount:</label>     
                     <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={ATOMdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setATOMdeposit, event)}/>
                 </form>
             </div>: null}
-            {walletQTYs.usdc != undefined && walletQTYs.usdc > 0 ?        
+            {walletQTYs.usdc != undefined && (walletQTYs.usdc??0) > 0 ?        
             <div className="deposit-element">
                 <div className="deposit-element-icon">
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setUSDCdeposit, walletQTYs.usdc??0)}>max: {walletQTYs.usdc.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setUSDCdeposit, walletQTYs.usdc??0)}>max: {(walletQTYs.usdc??0).toFixed(3)}</div>
                     <label className="deposit-amount-label">USDC amount:</label>     
                     <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={USDCdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setUSDCdeposit, event)}/>
                 </form>
             </div>: null}
-            {walletQTYs.axlusdc != undefined && walletQTYs.axlusdc > 0 ?        
+            {walletQTYs.axlusdc != undefined && (walletQTYs.axlusdc??0) > 0 ?        
             <div className="deposit-element">
                 <div className="deposit-element-icon">
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setaxlUSDCdeposit, walletQTYs.axlusdc??0)}>max: {walletQTYs.axlusdc.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setaxlUSDCdeposit, walletQTYs.axlusdc??0)}>max: {(walletQTYs.axlusdc??0).toFixed(3)}</div>
                     <label className="deposit-amount-label">axlUSDC amount:</label>     
                     <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={axlUSDCdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setaxlUSDCdeposit, event)}/>
                 </form>
             </div>: null}
-            {walletQTYs.atomosmo_pool != undefined && walletQTYs.atomosmo_pool > 0 ?        
+            {walletQTYs.atomosmo_pool != undefined && (walletQTYs.atomosmo_pool??0) > 0 ?        
             <div className="deposit-element">
                 <div className="deposit-element-icon">
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMOSMO_LPdeposit, walletQTYs.atomosmo_pool??0)}>max: {walletQTYs.atomosmo_pool.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMOSMO_LPdeposit, walletQTYs.atomosmo_pool??0)}>max: {(walletQTYs.atomosmo_pool??0).toFixed(3)}</div>
                     <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
                     <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={ATOMOSMO_LPdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setATOMOSMO_LPdeposit, event)}/>
                 </form>
             </div>: null}
-            {walletQTYs.osmousdc_pool != undefined && walletQTYs.osmousdc_pool > 0 ?        
+            {walletQTYs.osmousdc_pool != undefined && (walletQTYs.osmousdc_pool??0) > 0 ?        
             <div className="deposit-element">
                 <div className="deposit-element-icon">
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOaxlUSDC_LPdeposit, walletQTYs.osmousdc_pool??0)}>max: {walletQTYs.osmousdc_pool.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOaxlUSDC_LPdeposit, walletQTYs.osmousdc_pool??0)}>max: {(walletQTYs.osmousdc_pool??0).toFixed(3)}</div>
                     <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
                     <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOaxlUSDC_LPdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setOSMOaxlUSDC_LPdeposit, event)}/>
                 </form>
