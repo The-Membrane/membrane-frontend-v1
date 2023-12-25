@@ -1008,7 +1008,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
           <form style={{position: "relative", bottom: "10%"}}>
             <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
             <button className="btn stake-button1" type="button" onClick={handlestakeClick}>
-              <div className="stake">Stake:</div>
+              <div className="stake" data-tvl="Unstaking is currently broken">Stake:</div>
             </button>
           </form>
         </div>  

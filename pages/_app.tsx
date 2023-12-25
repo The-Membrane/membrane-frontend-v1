@@ -25,9 +25,6 @@ function CreateCosmosApp({ Component, pageProps }: AppProps) {
     signingCosmwasm: (chain) => {
       switch (chain.chain_name) {
         case 'osmosis':
-          return {
-            gasPrice: GasPrice.fromString('0.0025uosmo'),
-          };
         case 'osmosistestnet':
           return {
             gasPrice: GasPrice.fromString('0.0025uosmo'),

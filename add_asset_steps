@@ -21,6 +21,7 @@ Vaults.tsx:
   - create handle___qtyClick function
   - add to qty & logo-icon styles
   - add to menu stlyes
+- add to onboardingDeposit logic
 
 Liquidations.tsx:
 - Add to menuAsset
