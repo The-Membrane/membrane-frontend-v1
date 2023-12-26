@@ -3420,7 +3420,8 @@ span[data-descr]:hover::after {
   background: linear-gradient(176.07deg, #4fcabb, #798eff);
   overflow: hidden;
 }
-.deposit-element {
+.deposit-element,
+.deposit-element-lp {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -3429,10 +3430,18 @@ span[data-descr]:hover::after {
   height: 10vh;
   gap: 13%;
 }
-.deposit-element-icon {
+.deposit-element-lp {
+  gap: 0%;
+}
+.deposit-element-icon,
+.deposit-element-icon-lp {
   top: -4px;
   position: relative;
   right: -12px;
+  display: flex;
+}
+.deposit-element-icon-lp {
+  right: -17px;
 }
 .deposit-form {
   width: 100%;
@@ -3460,9 +3469,21 @@ span[data-descr]:hover::after {
   text-align: right;
   z-index: 999;
 }
-.deposit-icon {
+.deposit-icon,
+.deposit-icon-lp-left,
+.deposit-icon-lp-right {
   color: transparent;
   position: relative;
+  width: 45px;
+  height: 32.5px;
+}
+.deposit-icon-lp-left {
+  left: -20%;
+  z-index: 999;
+}
+.deposit-icon-lp-right {
+  left: -45%;
+  z-index: 998;
 }
 .mint-button-icon1 {
   position: absolute;

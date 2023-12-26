@@ -1774,11 +1774,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     }
 
     function showDefault() {
-        if (positionID === "0"){
+        // if (positionID === "0"){
             return false
-        } else {
-            return true
-        }
+        // } else {
+        //     return true
+        // }
     }
     function handlesetDepositAmount(setFn: (amount: number) => void, deposit_amount: number) {
         setFn(deposit_amount)
@@ -1848,9 +1848,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 </form>
             </div>: null}
             {walletQTYs.atomosmo_pool > 0 ?        
-            <div className="deposit-element">
-                <div className="deposit-element-icon">
-                    <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
+            <div className="deposit-element-lp">
+                <div className="deposit-element-icon-lp">
+                    <Image className="deposit-icon-lp-left" width={45} height={45} alt="" src="images/atom.svg" />
+                    <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/osmo.svg" />
                 </div>
                 <form className="deposit-form">
                     <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMOSMO_LPdeposit, walletQTYs.atomosmo_pool)}>max: {walletQTYs.atomosmo_pool.toFixed(3)}</div>
@@ -1859,9 +1860,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 </form>
             </div>: null}
             {walletQTYs.osmousdc_pool > 0 ?        
-            <div className="deposit-element">
-                <div className="deposit-element-icon">
-                    <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
+            <div className="deposit-element-lp">
+                <div className="deposit-element-icon-lp">
+                    <Image className="deposit-icon-lp-left" width={45} height={45} alt="" src="images/osmo.svg" />
+                    <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                 </div>
                 <form className="deposit-form">
                     <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOaxlUSDC_LPdeposit, walletQTYs.osmousdc_pool)}>max: {walletQTYs.osmousdc_pool.toFixed(3)}</div>
