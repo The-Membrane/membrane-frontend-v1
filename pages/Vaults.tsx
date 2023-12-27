@@ -11,6 +11,7 @@ import Popup from "../components/Popup";
 import WidgetPopup from "../components/widgetPopup";
 import Image from "next/image";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { onStableswapTextClick } from "./Dashboard";
 
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
@@ -100,6 +101,7 @@ interface Props {
     setcontractQTYs: (contractQTYs: ContractInfo) => void;
     walletQTYz: CollateralAssets;
     walletChecked: boolean;
+    fetch_update_positionData: () => void;
 }
 
 const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
@@ -120,7 +122,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice,
     contractQTYs, setcontractQTYs, 
-    walletQTYz, walletChecked
+    walletQTYz, walletChecked,
+    fetch_update_positionData,
 }: Props) => {
     //WidgetPopup
     const [widgetpopupTrigger, setWidgetPopupTrigger] = useState(false);
@@ -1224,7 +1227,15 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         setsliderValue((+debtAmount + +((amount ?? 0) * 1_000_000))/1000000);
                         //format pop up
                         setPopupTrigger(true);
-                        setPopupMsg(<div>Mint of {(amount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the yellow line & you will be liquidated down to said line if you reach the red. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.</div>);
+                        setPopupMsg(
+                            <div>
+                                Mint of {(amount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the yellow line & you will be liquidated down to said line if you reach the red. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.
+                            <p/>
+                            <p className="dash-stats mobile-font">
+                                Provide Liquidity to the CDT&nbsp;<a style={{cursor:"pointer", textDecoration:"underline"}} onClick={onStableswapTextClick}>stableswap</a>&nbsp;on Osmosis for ~10%+ APR
+                            </p>
+                            </div>
+                                );
                         setPopupStatus("Success");
                     })
                     
@@ -1774,11 +1785,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     }
 
     function showDefault() {
-        // if (positionID === "0"){
+        if (positionID === "0"){
             return false
-        // } else {
-        //     return true
-        // }
+        } else {
+            return true
+        }
     }
     function handlesetDepositAmount(setFn: (amount: number) => void, deposit_amount: number) {
         setFn(deposit_amount)
@@ -1938,6 +1949,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 
                 //Clear intents
                 setassetIntent([])
+                //Requery position
+                fetch_update_positionData();
             })
         } catch (error) {            
             ////Error message
@@ -1947,6 +1960,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             setPopupTrigger(true);
             setPopupMsg(<div>{e.message}</div>);
             setPopupStatus("Deposit Error");
+            //Requery position
+            fetch_update_positionData();
         }
     };
 
@@ -1973,6 +1988,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             osmousdc_pool: walletQTYz.osmousdc_pool??0,
         };
         setwalletQTYs(walletQTYs);
+        
 
     }, [pricez, address, rateRes, creditRateRes, basketRes, walletQTYz])
     

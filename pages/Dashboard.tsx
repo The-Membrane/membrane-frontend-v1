@@ -12,6 +12,13 @@ type DashboardProps = {
     inLaunch: boolean | undefined;
   };
 
+//LP links
+export const onStableswapTextClick = () => {
+    window.open(
+    "https://app.osmosis.zone/pool/1268"
+    );
+}; 
+
 const Dashboard: React.FC<DashboardProps> = ({setActiveComponent, basketRes, walletCDT, walletMBRN, inLaunch}) => {
 
     const [sign, setSign] = React.useState("");
@@ -37,12 +44,6 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent, basketRes, wal
     const onDiscordTextClick = () => {
     window.open("https://discord.gg/ksT6cdHpbV");
     };
-    //LP links
-    const onStableswapTextClick = () => {
-        window.open(
-        "https://app.osmosis.zone/pool/1268"
-        );
-   };  
 
     useEffect(() => {
         if(basketRes){
