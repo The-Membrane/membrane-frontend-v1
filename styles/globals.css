@@ -234,6 +234,11 @@ p{
 .deposit-card-design {  
   height: fit-content;
 }
+.mint-card-div {
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+}
 .mint-card-design {
   height: 260px;
   width: 24.2vw;

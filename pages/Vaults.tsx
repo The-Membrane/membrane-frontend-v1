@@ -173,12 +173,14 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const [maxLPamount, setmaxLPamount] = useState<bigint>(BigInt(0));
     const [amount, setAmount] = useState<number>(0);
     //Deposit-withdraw Card
-    const [OSMOdeposit, setOSMOdeposit] = useState<number | undefined>(undefined);
-    const [ATOMdeposit, setATOMdeposit] = useState<number | undefined>(undefined);
-    const [axlUSDCdeposit, setaxlUSDCdeposit] = useState<number | undefined>(undefined);
-    const [USDCdeposit, setUSDCdeposit] = useState<number | undefined>(undefined);
-    const [ATOMOSMO_LPdeposit, setATOMOSMO_LPdeposit] = useState<number | undefined>(undefined);
-    const [OSMOaxlUSDC_LPdeposit, setOSMOaxlUSDC_LPdeposit] = useState<number | undefined>(undefined);
+    const [depositAmounts, setdepositAmounts] = useState<CollateralAssets>({
+        osmo: undefined,
+        atom: undefined,
+        axlusdc: undefined,
+        usdc: undefined,
+        atomosmo_pool: undefined,
+        osmousdc_pool: undefined,
+    });
     const [walletQTYs, setwalletQTYs] = useState<DefinedCollateralAssets>({
       osmo: 0,
       atom: 0,
@@ -187,6 +189,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
       atomosmo_pool: 0,
       osmousdc_pool: 0,
     });
+    //Mint-Repay card
+    const [mintAmount, setmintAmount] = useState<number | undefined>();
+    const [repayAmount, setrepayAmount] = useState<number | undefined>();
 
     //Squid Widget
     // const [swapScreen, setswapScreen] = useState(false);    
@@ -1221,17 +1226,17 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     ///Execute the Mint
                     await cdp_client?.increaseDebt({
                         positionId: positionID,
-                        amount: ((amount ?? 0) * 1_000_000).toString(),
+                        amount: ((mintAmount ?? 0) * 1_000_000).toString(),
                     }, "auto", undefined).then((res) => {           
                         console.log(res?.events.toString())             
                         //Update mint amount
-                        setdebtAmount(+debtAmount + +((amount ?? 0) * 1_000_000));
-                        setsliderValue((+debtAmount + +((amount ?? 0) * 1_000_000))/1000000);
+                        setdebtAmount(+debtAmount + +((mintAmount ?? 0) * 1_000_000));
+                        setsliderValue((+debtAmount + +((mintAmount ?? 0) * 1_000_000))/1000000);
                         //format pop up
                         setPopupTrigger(true);
                         setPopupMsg(
                             <div>
-                                Mint of {(amount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the yellow line & you will be liquidated down to said line if you reach the red. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.
+                                Mint of {(mintAmount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the yellow line & you will be liquidated down to said line if you reach the red. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.
                             <p/>
                             <p className="dash-stats mobile-font">
                                 Provide Liquidity to the CDT&nbsp;<a style={{cursor:"pointer", textDecoration:"underline"}} onClick={onStableswapTextClick}>stableswap</a>&nbsp;on Osmosis for ~10%+ APR
@@ -1256,7 +1261,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             case "repay": {
                 //if trying to full repay, because sending back excess debt doesn't work...
                 //repay needs to accrue & then query new debt amount and then repay
-                if (((amount ?? 0)* 1_000_000) >= debtAmount) {
+                if (((repayAmount ?? 0)* 1_000_000) >= debtAmount) {
                     //execute an accrue msg first
                     try {
                         ///Execute the Accrue
@@ -1315,15 +1320,15 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     try {
                         var res = await cdp_client?.repay({
                             positionId: positionID,
-                        }, "auto", undefined, coins(Math.ceil(((amount??0) * 1_000_000)), denoms.cdt))
+                        }, "auto", undefined, coins(Math.ceil(((repayAmount??0) * 1_000_000)), denoms.cdt))
                         .then((res) => {           
                             console.log(res?.events.toString())
                             //Update mint amount
-                            setdebtAmount(+debtAmount - +((amount ?? 0)* 1_000_000));
-                            setsliderValue((+debtAmount - +((amount ?? 0)* 1_000_000))/1000000);
+                            setdebtAmount(+debtAmount - +((repayAmount ?? 0)* 1_000_000));
+                            setsliderValue((+debtAmount - +((repayAmount ?? 0)* 1_000_000))/1000000);
                             //format pop up
                             setPopupTrigger(true);
-                            setPopupMsg(<div>Repayment of {(amount ?? 0)} CDT successful</div>);
+                            setPopupMsg(<div>Repayment of {(repayAmount ?? 0)} CDT successful</div>);
                             setPopupStatus("Success");
                         })
                         
@@ -1793,12 +1798,123 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             return true
         }
     }
-    function handlesetDepositAmount(setFn: (amount: number) => void, deposit_amount: number) {
-        setFn(deposit_amount)
+    function handlesetDepositAmount(asset: string, deposit_amount: number) {
+        switch (asset){
+            case "osmo": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        osmo: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "atom": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        atom: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "axlusdc": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        axlusdc: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "usdc": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        usdc: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "atomosmo_pool": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        atomosmo_pool: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "osmoaxlusdc_pool": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        osmousdc_pool: deposit_amount,
+                    }
+                })
+                break;
+            }
+        }
     }
-    function handlesetDepositInput(setFn: (amount: number) => void, event: any){
+    function handlesetDepositInput(asset: string, event: any){event.target.value
         event.preventDefault();
-        setFn(event.target.value);        
+        var deposit_amount = event.target.value;
+        switch (asset){
+            case "osmo": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        osmo: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "atom": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        atom: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "axlusdc": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        axlusdc: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "usdc": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        usdc: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "atomosmo_pool": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        atomosmo_pool: deposit_amount,
+                    }
+                })
+                break;
+            }
+            case "osmoaxlusdc_pool": {
+                setdepositAmounts(prevState => {
+                    return { 
+                        ...prevState,
+                        osmousdc_pool: deposit_amount,
+                    }
+                })
+                break;
+            }
+        }
     }
     function checkIfWalletEmpty() {
         if (address !== undefined) {
@@ -1822,9 +1938,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOdeposit, walletQTYs.osmo)}>max: {walletQTYs.osmo.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmo", walletQTYs.osmo)}>max: {walletQTYs.osmo.toFixed(3)}</div>
                     <label className="deposit-amount-label">OSMO amount:</label>     
-                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setOSMOdeposit, event)}/>
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
                 </form>
             </div>: null}
             {walletQTYs.atom > 0 ?        
@@ -1833,9 +1949,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMdeposit, walletQTYs.atom)}>max: {walletQTYs.atom.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atom", walletQTYs.atom)}>max: {walletQTYs.atom.toFixed(3)}</div>
                     <label className="deposit-amount-label">ATOM amount:</label>     
-                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={ATOMdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setATOMdeposit, event)}/>
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atom", event)}/>
                 </form>
             </div>: null}
             {walletQTYs.usdc > 0 ?        
@@ -1844,9 +1960,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setUSDCdeposit, walletQTYs.usdc)}>max: {walletQTYs.usdc.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("usdc", walletQTYs.usdc)}>max: {walletQTYs.usdc.toFixed(3)}</div>
                     <label className="deposit-amount-label">USDC amount:</label>     
-                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={USDCdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setUSDCdeposit, event)}/>
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdc", event)}/>
                 </form>
             </div>: null}
             {walletQTYs.axlusdc > 0 ?        
@@ -1855,9 +1971,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setaxlUSDCdeposit, walletQTYs.axlusdc)}>max: {walletQTYs.axlusdc.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("axlusdc", walletQTYs.axlusdc)}>max: {walletQTYs.axlusdc.toFixed(3)}</div>
                     <label className="deposit-amount-label">axlUSDC amount:</label>     
-                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={axlUSDCdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setaxlUSDCdeposit, event)}/>
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
                 </form>
             </div>: null}
             {walletQTYs.atomosmo_pool > 0 ?        
@@ -1867,9 +1983,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/osmo.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setATOMOSMO_LPdeposit, walletQTYs.atomosmo_pool)}>max: {walletQTYs.atomosmo_pool.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atomosmo_pool", walletQTYs.atomosmo_pool)}>max: {walletQTYs.atomosmo_pool.toFixed(3)}</div>
                     <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
-                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={ATOMOSMO_LPdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setATOMOSMO_LPdeposit, event)}/>
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
                 </form>
             </div>: null}
             {walletQTYs.osmousdc_pool > 0 ?        
@@ -1879,9 +1995,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                 </div>
                 <form className="deposit-form">
-                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount(setOSMOaxlUSDC_LPdeposit, walletQTYs.osmousdc_pool)}>max: {walletQTYs.osmousdc_pool.toFixed(3)}</div>
+                    <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmoaxlusdc_pool", walletQTYs.osmousdc_pool)}>max: {walletQTYs.osmousdc_pool.toFixed(3)}</div>
                     <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
-                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={OSMOaxlUSDC_LPdeposit ?? ''} type="number" onChange={(event)=>handlesetDepositInput(setOSMOaxlUSDC_LPdeposit, event)}/>
+                    <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
                 </form>
             </div>: null}
         </>);
@@ -1905,23 +2021,23 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     const handleonboardingDeposit = async () => {
         ///Set asset intents
         var asset_intent: [string, number][] = [];
-        if (OSMOdeposit != undefined && OSMOdeposit > 0){
-            asset_intent.push(["OSMO", OSMOdeposit])
+        if (depositAmounts.osmo != undefined && depositAmounts.osmo > 0){
+            asset_intent.push(["OSMO", depositAmounts.osmo])
         }
-        if (ATOMdeposit != undefined && ATOMdeposit > 0){
-            asset_intent.push(["ATOM", ATOMdeposit])
+        if (depositAmounts.atom != undefined && depositAmounts.atom > 0){
+            asset_intent.push(["ATOM", depositAmounts.atom])
         }
-        if (USDCdeposit != undefined && USDCdeposit > 0){
-            asset_intent.push(["USDC", USDCdeposit])
+        if (depositAmounts.usdc != undefined && depositAmounts.usdc > 0){
+            asset_intent.push(["USDC", depositAmounts.usdc])
         }
-        if (axlUSDCdeposit != undefined && axlUSDCdeposit > 0){
-            asset_intent.push(["axlUSDC", axlUSDCdeposit])
+        if (depositAmounts.axlusdc != undefined && depositAmounts.axlusdc > 0){
+            asset_intent.push(["axlUSDC", depositAmounts.axlusdc])
         }
-        if (ATOMOSMO_LPdeposit != undefined && ATOMOSMO_LPdeposit > 0){
-            asset_intent.push(["ATOM-OSMO LP", ATOMOSMO_LPdeposit])
+        if (depositAmounts.atomosmo_pool != undefined && depositAmounts.atomosmo_pool > 0){
+            asset_intent.push(["ATOM-OSMO LP", depositAmounts.atomosmo_pool])
         }
-        if (OSMOaxlUSDC_LPdeposit != undefined && OSMOaxlUSDC_LPdeposit > 0){
-            asset_intent.push(["OSMO-axlUSDC LP", OSMOaxlUSDC_LPdeposit])
+        if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool > 0){
+            asset_intent.push(["OSMO-axlUSDC LP", depositAmounts.osmousdc_pool])
         }
         var user_coins = getcoinsfromassetIntents(asset_intent);
         //Coins must be in order to send to contract
@@ -1934,12 +2050,14 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }, "auto", undefined, user_coins).then((res) => {           
                 console.log(res?.events.toString())
                 //Update mint amount
-                setOSMOdeposit(undefined);
-                setATOMdeposit(undefined);
-                setUSDCdeposit(undefined);
-                setaxlUSDCdeposit(undefined);
-                setATOMOSMO_LPdeposit(undefined);
-                setOSMOaxlUSDC_LPdeposit(undefined);
+                setdepositAmounts({
+                    osmo: undefined,
+                    atom: undefined,
+                    axlusdc: undefined,
+                    usdc: undefined,
+                    atomosmo_pool: undefined,
+                    osmousdc_pool: undefined,
+                })
                 //format pop up
                 setPopupTrigger(true);
                 //map asset intents to readable string
@@ -2202,13 +2320,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 </div>
                 {/*Mint/Repay card with position stats*/}
                 <div><div className="mint-element" style={currentfunctionLabel !== "repay" ? {} : {opacity: ".3"}}>
-                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%", width: "7vw", top: "-19%"}} onClick={handleonboardingDeposit}>
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%", width: "7vw", top: "-19%"}} onClick={()=>{()=>setcurrentfunctionLabel("mint"); handleExecution()}}>
                         Mint
                     </a> 
                     <form className="deposit-form" style={{top: "-19%"}}>
-                        <div className="mint-max-amount-label" onClick={()=>handlesetAmount(((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1) - debtAmount/1_000000))}>max: {((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1) - debtAmount/1_000000).toFixed(1)}</div>
+                        <div className="mint-max-amount-label" onClick={()=>setmintAmount(parseFloat(((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1) - debtAmount/1_000000).toFixed(1)))}>max: {((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1) - debtAmount/1_000000).toFixed(1)}</div>
                         {/* <label className="deposit-amount-label"></label>      */}
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("mint")} onChange={(event)=>handlesetAmountInput(event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} value={mintAmount} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("mint")} onChange={(event)=>{event.preventDefault(); setmintAmount(parseFloat(event.target.value))}}/>
                     </form>
                     <div className="mint-element-icon" style={{top: "-19%"}}>
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/CDT.svg" />
@@ -2217,13 +2335,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 {//Only show if there is minted debt
                 debtAmount > 0 ?
                     <div className="mint-element" style={currentfunctionLabel !== "mint" ? {} : {opacity: ".3"}}>
-                        <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%", width: "7vw", top: "-19%"}} onClick={handleonboardingDeposit}>
+                        <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%", width: "7vw", top: "-19%"}} onClick={()=>{()=>setcurrentfunctionLabel("repay"); handleExecution()}}>
                             Repay
                         </a> 
                         <form className="deposit-form" style={{top: "-19%"}}>
-                            <div className="mint-max-amount-label" onClick={()=>handlesetAmount(debtAmount/1_000000)}>max: {(debtAmount/1_000000).toFixed(1)}</div>
+                            <div className="mint-max-amount-label" onClick={()=>setrepayAmount(debtAmount/1_000000)}>max: {(debtAmount/1_000000).toFixed(1)}</div>
                             {/* <label className="deposit-amount-label">OSMO amount:</label>      */}
-                            <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("repay")} onChange={(event)=>handlesetAmountInput(event)}/>
+                            <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} value={repayAmount} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("repay")} onChange={(event)=>{event.preventDefault(); setrepayAmount(parseFloat(event.target.value))}}/>
                         </form>
                         <div className="mint-element-icon" style={{top: "-19%"}}>
                             <Image className="deposit-icon" width={45} height={45} alt="" src="images/CDT.svg" />

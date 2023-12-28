@@ -22,6 +22,7 @@ Vaults.tsx:
   - add to qty & logo-icon styles
   - add to menu stlyes
 - add to onboardingDeposit logic
+- add to handlesetDepositAmount & handlesetDepositInput fn 
 
 Liquidations.tsx:
 - Add to menuAsset
