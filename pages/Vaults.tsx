@@ -762,8 +762,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setCost(getRataCost());
 
       };
-    const handlesetAmount = () => {
-        var newAmount = Number(maxLPamount);
+    const handlesetAmount = (newAmount?: number) => {
+        if (newAmount === undefined) {
+            newAmount = Number(maxLPamount);
+        }
         setAmount(newAmount);
         if (currentfunctionLabel === "deposit"){
             //Subtract from qty to reset amount to the actual ownership
@@ -2093,7 +2095,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             </div> 
             :
             <div>
-                {true ? <div className="card" style={{borderRadius: "1rem", width: "16.35vw"}}>
+                {showDefault() !== true ? <div className="card" style={{borderRadius: "1rem", width: "16.35vw"}}>
                 <div className="deposit-card-body deposit-card-design shadow" style={{paddingRight: "0", paddingLeft: "0", paddingTop: ".75rem", paddingBottom: ".75rem"}}>
                     {/*For every collateral asset with a non-zero balance in the wallet, add an amount form */}
                     {createDepositElements()}
@@ -2172,7 +2174,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <div className="slash">/</div>
                     <div className={currentfunctionLabel === "withdraw" ? "cdp-withdraw-label bold" : "cdp-withdraw-label low-opacity"} onClick={handlewithdrawClick}>Withdraw</div>
                     <form>
-                        { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={handlesetAmount}>max: {maxLPamount.toString()}</div></>) : null}            
+                        { maxLPamount !== BigInt(0) ? (<><div className="max-amount-label" onClick={()=>handlesetAmount}>max: {maxLPamount.toString()}</div></>) : null}            
                         <label className="amount-label">{currentAsset} amount:</label>     
                         <input className="amount" style={{backgroundColor:"#454444"}} name="amount" value={currentfunctionLabel !== "deposit" && currentfunctionLabel !== "withdraw" ? 0 : amount} type="number" onChange={handlesetAmountInput}/>
                     </form>
@@ -2183,73 +2185,121 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             </div> */}
         </div> : null}
         {showDefault() ? 
-        <div className="debt-visual">
-            <div className="infobox-icon"/>
-            <div className="debtbar-visual">
-                <div className="max-ltv">
-                <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
-                <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
-                <div className="max-ltv-child" />
-                </div>
-                <div className="max-borrow-ltv" style={{top: 39 + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
-                <div className="cdp-div3" >{(brwLTV ?? 0).toFixed(0)}%</div>
-                <div className="max-borrow-ltv-child" />
-                </div>
-                <div className="debt-visual-child" />
-                <div className="debt-visual-item" style={{top: 427 - (363 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))), height: (340 * (((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))}}/>
-                <div className="debt-visual-label" style={{top: 407 - (359 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
-                <input className="cdt-amount" style={{top: 63 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
-                id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} defaultValue={1} orient="vertical" onChange={({ target: { value: radius } }) => {                
-                if (getTVL() !== 0 && debtAmount === 0 && parseInt(radius) < 100){
-                    setsliderValue(100);
-                } else if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
-                    setsliderValue((debtAmount - walletCDT)/1000000);
-
-                    //Bc we know this is a repay (less than current debt), set amount to Wallet CDT
-                    setAmount((walletCDT/1000000));
-                    setcurrentfunctionLabel("repay");
-                } else {
-                    setsliderValue(parseInt(radius));
-
-                    if (parseInt(radius) > (debtAmount/1000000)){
-                        //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
-                        setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
-                        setcurrentfunctionLabel("mint");
-                    } else if (parseInt(radius) === 0){
-                        //Repay it all
-                        setAmount((debtAmount/1000000));
-                        setcurrentfunctionLabel("repay");
-                    } else {
-                        //Bc we know this is a repay (less than current debt), set amount to radius
-                        setAmount(parseFloat(((debtAmount/1000000) - parseInt(radius)).toFixed(6)));
-                        setcurrentfunctionLabel("repay");
-                    }
-                }
-                }}/>
-                <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
-                //-(ratio of slidervalue to max value * (label starting point - the borrow_LTVs top position) + 395
-                style={getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? {left: "8.5vw", top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (408 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
-                + (395)} : {top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (408 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
-                + (395)}}>
-                { getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? "Minimum:" : (sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
-                </label>
-                <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
-            </div>
-            <div className="position-stats">
-                <div className="infobox-icon2">            
-                    <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
-                        <div className="repay" onClick={handleExecution}>REPAY</div>
+        <div className="mint-card-div">
+            <div className="card" style={{borderRadius: "1rem", width: "24.3vw"}}>
+            <div className="mint-card-body mint-card-design shadow" style={{paddingRight: ".75rem", paddingLeft: ".75rem", paddingTop: "1rem", paddingBottom: ".75rem"}}>                
+                <div className="mint-stats-grid">
+                    <div className="value-div">
+                        <div className="mint-card-stats">Debt: {(debtAmount/1_000000).toFixed(2)} CDT</div>
+                        <div className="mint-card-stats">Liq. Value: ${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
+                        <div className="mint-card-stats">TVL: ${(getTVL() ?? 0).toFixed(2)}</div>
                     </div>
-                    <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} onClick={handleExecution}>
-                        <div className="mint" onClick={handleExecution}>MINT</div>                
+                    <div className="ltv-div">
+                        <div className="mint-card-stats">LTV: {((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) * 100).toFixed(1)}%</div>                        
+                        <div className="mint-card-stats">Borrowable LTV: {(brwLTV ?? 0).toFixed(0)}%</div>
+                        <div className="mint-card-stats">Liquidation LTV: {(maxLTV ?? 0).toFixed(0)}%</div>
                     </div>
-                    <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
-                    <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using your Bundle</div>
-                    <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay debt using CDT</div>
                 </div>
+                {/*Mint/Repay card with position stats*/}
+                <div><div className="mint-element" style={currentfunctionLabel !== "repay" ? {} : {opacity: ".3"}}>
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%", width: "7vw", top: "-19%"}} onClick={handleonboardingDeposit}>
+                        Mint
+                    </a> 
+                    <form className="deposit-form" style={{top: "-19%"}}>
+                        <div className="mint-max-amount-label" onClick={()=>handlesetAmount(((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1) - debtAmount/1_000000))}>max: {((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1) - debtAmount/1_000000).toFixed(1)}</div>
+                        {/* <label className="deposit-amount-label"></label>      */}
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("mint")} onChange={(event)=>handlesetAmountInput(event)}/>
+                    </form>
+                    <div className="mint-element-icon" style={{top: "-19%"}}>
+                        <Image className="deposit-icon" width={45} height={45} alt="" src="images/CDT.svg" />
+                    </div>
+                </div>
+                {//Only show if there is minted debt
+                debtAmount > 0 ?
+                    <div className="mint-element" style={currentfunctionLabel !== "mint" ? {} : {opacity: ".3"}}>
+                        <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%", width: "7vw", top: "-19%"}} onClick={handleonboardingDeposit}>
+                            Repay
+                        </a> 
+                        <form className="deposit-form" style={{top: "-19%"}}>
+                            <div className="mint-max-amount-label" onClick={()=>handlesetAmount(debtAmount/1_000000)}>max: {(debtAmount/1_000000).toFixed(1)}</div>
+                            {/* <label className="deposit-amount-label">OSMO amount:</label>      */}
+                            <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("repay")} onChange={(event)=>handlesetAmountInput(event)}/>
+                        </form>
+                        <div className="mint-element-icon" style={{top: "-19%"}}>
+                            <Image className="deposit-icon" width={45} height={45} alt="" src="images/CDT.svg" />
+                        </div>
+                </div> : null}</div>
             </div>
-        </div> 
-        : null}
+            </div>
+        </div>
+        :  null //Likely gonna get rid of the debt visual 
+        // <div className="debt-visual">
+        //     <div className="infobox-icon"/>
+        //     <div className="debtbar-visual">
+        //         <div className="max-ltv">
+        //         <div className="liq-value">${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
+        //         <div className="cdp-div2">{(maxLTV ?? 0).toFixed(0)}%</div>
+        //         <div className="max-ltv-child" />
+        //         </div>
+        //         <div className="max-borrow-ltv" style={{top: 39 + (335 * ((maxLTV-brwLTV)/maxLTV))}}>
+        //         <div className="cdp-div3" >{(brwLTV ?? 0).toFixed(0)}%</div>
+        //         <div className="max-borrow-ltv-child" />
+        //         </div>
+        //         <div className="debt-visual-child" />
+        //         <div className="debt-visual-item" style={{top: 427 - (363 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))), height: (340 * (((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100))}}/>
+        //         <div className="debt-visual-label" style={{top: 407 - (359 * ((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) / (maxLTV/100)))}}>{(debtAmount/1000000).toString()} CDT</div>
+        //         <input className="cdt-amount" style={{top: 63 + (335 * ((maxLTV-brwLTV)/maxLTV)), height: 445 - (100 + (335 * ((maxLTV-brwLTV)/maxLTV)))}} 
+        //         id="amount" type="range" min="0" max={(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)} value={sliderValue} defaultValue={1} orient="vertical" onChange={({ target: { value: radius } }) => {                
+        //         if (getTVL() !== 0 && debtAmount === 0 && parseInt(radius) < 100){
+        //             setsliderValue(100);
+        //         } else if ((debtAmount/1000000) - parseInt(radius) > (walletCDT/1000000)){
+        //             setsliderValue((debtAmount - walletCDT)/1000000);
+
+        //             //Bc we know this is a repay (less than current debt), set amount to Wallet CDT
+        //             setAmount((walletCDT/1000000));
+        //             setcurrentfunctionLabel("repay");
+        //         } else {
+        //             setsliderValue(parseInt(radius));
+
+        //             if (parseInt(radius) > (debtAmount/1000000)){
+        //                 //Bc we know this is a mint (more than current debt), set amount to radius - debt amount. Radius at 114 -100 debt = 14 new mint
+        //                 setAmount(parseInt((parseInt(radius) - (debtAmount/1000000)).toFixed(0)));
+        //                 setcurrentfunctionLabel("mint");
+        //             } else if (parseInt(radius) === 0){
+        //                 //Repay it all
+        //                 setAmount((debtAmount/1000000));
+        //                 setcurrentfunctionLabel("repay");
+        //             } else {
+        //                 //Bc we know this is a repay (less than current debt), set amount to radius
+        //                 setAmount(parseFloat(((debtAmount/1000000) - parseInt(radius)).toFixed(6)));
+        //                 setcurrentfunctionLabel("repay");
+        //             }
+        //         }
+        //         }}/>
+        //         <label className={sliderValue > (debtAmount/1000000) ? "green range-label" : sliderValue < (debtAmount/1000000) ? "red range-label" : "neutral range-label"} 
+        //         //-(ratio of slidervalue to max value * (label starting point - the borrow_LTVs top position) + 395
+        //         style={getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? {left: "8.5vw", top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (408 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
+        //         + (395)} : {top: -((sliderValue/(getTVL()*(brwLTV/100))/Math.max(creditPrice, 1)) * (408 - (75 + (335 * ((maxLTV-brwLTV)/maxLTV)))))
+        //         + (395)}}>
+        //         { getTVL() !== 0 && debtAmount === 0 && sliderValue === 100 ? "Minimum:" : (sliderValue - (debtAmount/1000000)) > 0 ? "+" : null}{((sliderValue - (debtAmount/1000000)) ?? 0).toFixed(0)}
+        //         </label>
+        //         <div className="cost-4">{cost > 0 ? "+" : null}{(cost ?? 0).toFixed(4)}%/yr</div>              
+        //     </div>
+        //     <div className="position-stats">
+        //         <div className="infobox-icon2">            
+        //             <div className={currentfunctionLabel !== "repay" ? "low-opacity repay-button" : "repay-button"} onClick={handleExecution}>                
+        //                 <div className="repay" onClick={handleExecution}>REPAY</div>
+        //             </div>
+        //             <div className={currentfunctionLabel !== "mint" ? "low-opacity mint-button" : "mint-button"} onClick={handleExecution}>
+        //                 <div className="mint" onClick={handleExecution}>MINT</div>                
+        //             </div>
+        //             <Image className="cdt-logo-icon-cdp" width={45} height={45} alt="" src="/images/CDT.svg" />
+        //             <div className="position-visual-words"><span className="slider-desc">Slider up:</span> Mint CDT using your Bundle</div>
+        //             <div className="position-visual-words-btmright"><span className="slider-desc">Slider down:</span> Repay debt using CDT</div>
+        //         </div>
+        //     </div>
+        // </div>
+        }
         <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
         <WidgetPopup trigger={widgetpopupTrigger} setTrigger={setWidgetPopupTrigger} msgStatus={widgetpopupStatus} errorMsg={popupWidget}/>
     </div>

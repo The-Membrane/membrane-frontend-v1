@@ -89,7 +89,9 @@
     text-shadow: inherit;
   }
 }
-
+.brand-blue {
+  color: #50C9BD;
+}
 body, html {  
   height: 100%; 
 }
@@ -206,7 +208,8 @@ p{
   color: white
 }
 .card-body,
-.deposit-card-body {    
+.deposit-card-body,
+.mint-card-body {    
   display: flex;
   justify-items: center;
   flex-direction: column;
@@ -217,7 +220,8 @@ p{
 }
 .card-design,
 .card-designon,
-.deposit-card-design {  
+.deposit-card-design,
+.mint-card-design {  
   background-color: #383838;
   border-radius: 1rem;  
   height: 240px;
@@ -229,6 +233,22 @@ p{
 }
 .deposit-card-design {  
   height: fit-content;
+}
+.mint-card-design {
+  height: 260px;
+  width: 24.2vw;
+  min-width: 180px;
+  gap: 1vw;
+}
+.mint-card-stats {
+  font-size: large;
+}
+/*Grid design: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Basic_concepts_of_grid_layout*/
+.mint-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1%;
+  width: 100%;
 }
 .walletsection {  
   position: fixed;
@@ -3421,7 +3441,8 @@ span[data-descr]:hover::after {
   overflow: hidden;
 }
 .deposit-element,
-.deposit-element-lp {
+.deposit-element-lp,
+.mint-element {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -3433,8 +3454,12 @@ span[data-descr]:hover::after {
 .deposit-element-lp {
   gap: 0%;
 }
+.mint-element {
+  gap: 5%;
+}
 .deposit-element-icon,
-.deposit-element-icon-lp {
+.deposit-element-icon-lp,
+.mint-element-icon {
   top: -4px;
   position: relative;
   right: -12px;
@@ -3443,12 +3468,16 @@ span[data-descr]:hover::after {
 .deposit-element-icon-lp {
   right: -17px;
 }
+.mint-element-icon {
+  right: 9px;
+}
 .deposit-form {
   width: 100%;
   left: -5px;
   position: relative;
 }
-.deposit-max-amount-label {  
+.deposit-max-amount-label,
+.mint-max-amount-label {  
   cursor: pointer;
   opacity: .7;
   position: relative;
@@ -3456,6 +3485,9 @@ span[data-descr]:hover::after {
   top: 100px;
   font-size: large;
   z-index: 999;
+}
+.mint-max-amount-label {
+  top: 59px;
 }
 .deposit-amount-label { 
   position: relative;
