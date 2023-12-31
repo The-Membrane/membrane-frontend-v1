@@ -2051,11 +2051,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     }
 
     function showDefault() {
-        // if (positionID === "0"){
+        if (positionID === "0"){
             return false
-        // } else {
-        //     return true
-        // }
+        } else {
+            return true
+        }
     }
     function handlesetDepositAmount(asset: string, deposit_amount: number) {
         switch (asset){
@@ -2237,7 +2237,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmo", walletQTYs.osmo)}>max: {walletQTYs.osmo.toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={0} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.atom > 0 ?        
