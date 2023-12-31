@@ -1414,11 +1414,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     }
 
     function showDefault() {
-        // if (positionID === "0"){
+        if (positionID === "0"){
             return false
-        // } else {
-        //     return true
-        // }
+        } else {
+            return true
+        }
     }
     function handlesetDepositAmount(asset: string, deposit_amount: number) {
         switch (asset){
@@ -1590,7 +1590,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     function createDepositElements(forVaults: boolean) {
         console.log(walletQTYs)
         return(<>
-            <div style={{display: "flex", gap: "5vh", flexDirection: "column", marginBottom: "2vh", alignItems: "center"}}>
+            <div style={forVaults ? {display: "flex", gap: "5vh", flexDirection: "column", marginBottom: "2vh", alignItems: "center"}: {display: "flex", gap: "5vh", flexDirection: "column", alignItems: "center"}}>
             {currentfunctionLabel === "deposit" ? <>
                 {walletQTYs.osmo > 0 ?        
                 <div className="deposit-element">

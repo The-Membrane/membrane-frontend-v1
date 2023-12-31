@@ -228,9 +228,6 @@ p{
   min-width: 180px;
   height: fit-content;
 }
-.deposit-card-body {  
-  gap: 4vh;
-}
 .card-design,
 .card-designon,
 .deposit-card-design,
