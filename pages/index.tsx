@@ -7,7 +7,7 @@ import NavBar from '../components/NavBar';
 import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
 import Governance, { Delegation, Delegator, EmissionsSchedule, ProposalList, UserClaims, UserStake } from './Governance';
-import Positions, { CollateralAssets, ContractInfo } from './Vaults';
+import Positions, { CollateralAssets, ContractInfo, DefinedCollateralAssets } from './Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import Popup from "../components/Popup";
@@ -37,6 +37,10 @@ export const denoms = {
   osmousdc_pool: "gamm/pool/678",
   //Noble USDC
   usdc: "ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4",
+  //Stride Atom
+  stAtom: "ibc/C140AFD542AE77BD7DCC83F13FDD8C5E5BB8C4929785E6EC2F4C636F98F17901",
+  //Stride Osmo
+  stOsmo: "ibc/D176154B0C63D1F9C6DCFB4F70349EBF2E2B5A87A05902F57A6AE92B863E9AEC",
 };
 
 export interface Prices {
@@ -46,6 +50,8 @@ export interface Prices {
   atomosmo_pool: number,
   osmousdc_pool: number,
   usdc: number,
+  stAtom: number,
+  stOsmo: number,
 }
 
 export default function Home() {
@@ -72,6 +78,8 @@ export default function Home() {
     atomosmo_pool: 0,
     osmousdc_pool: 0,
     usdc: 0,
+    stAtom: 0,
+    stOsmo: 0,
   });
   const [rateRes, setrateRes] = useState<CollateralInterestResponse>();
   const [creditRateRes, setcreditRateRes] = useState<InterestResponse>();
@@ -88,6 +96,8 @@ export default function Home() {
     atom: 0,
     axlusdc: 0,
     usdc: 0,
+    stAtom: 0,
+    stOsmo: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
     brw_LTV: 0,
@@ -100,18 +110,24 @@ export default function Home() {
     atom: undefined,
     axlusdc: undefined,
     usdc: undefined,
+    stAtom: undefined,
+    stOsmo: undefined,
     atomosmo_pool: undefined,
     osmousdc_pool: undefined,
   });
   const [walletChecked, setwalletChecked] = useState<boolean>(false);
   //Asset specific
   //qty
-  const [osmoQTY, setosmoQTY] = useState(0);
-  const [atomQTY, setatomQTY] = useState(0);
-  const [axlusdcQTY, setaxlusdcQTY] = useState(0);
-  const [atomosmo_poolQTY, setatomosmo_poolQTY] = useState(0);
-  const [osmousdc_poolQTY, setosmousdc_poolQTY] = useState(0);
-  const [usdcQTY, setusdcQTY] = useState(0);
+  const [positionQTYs, setpositionQTYs] = useState<DefinedCollateralAssets>({
+    osmo: 0,
+    atom: 0,
+    axlusdc: 0,
+    usdc: 0,
+    stAtom: 0,
+    stOsmo: 0,
+    atomosmo_pool: 0,
+    osmousdc_pool: 0,
+  });
   //Positions Visual
   const [debtAmount, setdebtAmount] = useState(0);
   const [maxLTV, setmaxLTV] = useState(100);
@@ -156,7 +172,17 @@ export default function Home() {
                     native_token: {
                         denom: denoms.usdc
                     }
-                }
+                },
+                {
+                    native_token: {
+                        denom: denoms.stAtom
+                    }
+                },
+                {
+                    native_token: {
+                        denom: denoms.stOsmo
+                    }
+                },
             ],
             oracleTimeLimit: 10,
             twapTimeframe: 0,
@@ -168,6 +194,8 @@ export default function Home() {
                 atomosmo_pool: parseFloat(res[3].price),
                 osmousdc_pool: parseFloat(res[4].price),
                 usdc: parseFloat(res[5].price),
+                stAtom: parseFloat(res[6].price),
+                stOsmo: parseFloat(res[7].price),
             })
         })
     } catch (error) {
@@ -177,13 +205,15 @@ export default function Home() {
 
   const fetch_update_positionData = async () => {
     //blank ContractInfo
-    var contract_info = {
+    var contract_info: ContractInfo = {
       osmo: 0,
       atom: 0,
       axlusdc: 0,
       atomosmo_pool: 0,
       osmousdc_pool: 0,
       usdc: 0,
+      stAtom: 0,
+      stOsmo: 0,
       brw_LTV: 0,
       max_LTV: 0,
       cost: 0,
@@ -226,33 +256,49 @@ export default function Home() {
             contract_info.brw_LTV = (parseFloat(userRes[0].positions[0].avg_borrow_LTV) * +100);            
             
             //setAssetQTYs
+            var position_qtys: DefinedCollateralAssets = {
+                osmo: 0,
+                atom: 0,
+                axlusdc: 0,
+                usdc: 0,
+                stAtom: 0,
+                stOsmo: 0,
+                atomosmo_pool: 0,
+                osmousdc_pool: 0,
+            };
             //@ts-ignore
             userRes[0].positions[0].collateral_assets.forEach(asset => {
                 // @ts-ignore
-                var actual_asset = asset.asset.info.native_token.denom;
-                
+                var actual_asset = asset.asset.info.native_token.denom;                
                 console.log("actual_asset: ", actual_asset)
-                if (actual_asset === denoms.osmo) {
-                    setosmoQTY(parseInt(asset.asset.amount) / 1_000_000)      
-                    contract_info.osmo = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.atom) {
-                    setatomQTY(parseInt(asset.asset.amount) / 1_000_000)
-                    contract_info.atom = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.axlUSDC) {
-                    setaxlusdcQTY(parseInt(asset.asset.amount) / 1_000_000)
-                    contract_info.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.atomosmo_pool) {
-                    setatomosmo_poolQTY(Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n))
-                    contract_info.atomosmo_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
-                } else if (actual_asset === denoms.osmousdc_pool) {
-                    setosmousdc_poolQTY(Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n))
-                    contract_info.osmousdc_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
-                } else if (actual_asset === denoms.usdc) {
-                    setusdcQTY(parseInt(asset.asset.amount) / 1_000_000)
-                    contract_info.usdc = parseInt(asset.asset.amount) / 1_000_000;
-                }                
-            })
 
+                if (actual_asset === denoms.osmo) {
+                  position_qtys.osmo = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.osmo = parseInt(asset.asset.amount) / 1_000_000;
+                } else if (actual_asset === denoms.atom) {
+                  position_qtys.atom = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.atom = parseInt(asset.asset.amount) / 1_000_000;
+                } else if (actual_asset === denoms.axlUSDC) {
+                  position_qtys.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
+                } else if (actual_asset === denoms.atomosmo_pool) {
+                  position_qtys.atomosmo_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
+                  contract_info.atomosmo_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
+                } else if (actual_asset === denoms.osmousdc_pool) {
+                  position_qtys.osmousdc_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
+                  contract_info.osmousdc_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
+                } else if (actual_asset === denoms.usdc) {
+                  position_qtys.usdc = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.usdc = parseInt(asset.asset.amount) / 1_000_000;
+                } else if (actual_asset === denoms.stAtom) {
+                  position_qtys.stAtom = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.stAtom = parseInt(asset.asset.amount) / 1_000_000;
+                } else if (actual_asset === denoms.stOsmo) {
+                  position_qtys.stOsmo = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.stOsmo = parseInt(asset.asset.amount) / 1_000_000;
+                }          
+            })
+            setpositionQTYs(position_qtys);
 
             if (basketRes != undefined){
                 
@@ -1022,7 +1068,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-
     if (prices.osmo === 0) {
       //Get prices
       queryPrices()
@@ -1051,12 +1096,14 @@ export default function Home() {
         })
       }
       ///Get wallet's available collateral balances
-      if (walletQTYs.osmo === undefined || walletQTYs.atom === undefined || walletQTYs.axlusdc === undefined || walletQTYs.usdc === undefined || walletQTYs.atomosmo_pool === undefined || walletQTYs.osmousdc_pool === undefined){
+      if (walletQTYs.osmo === undefined || walletQTYs.atom === undefined || walletQTYs.axlusdc === undefined || walletQTYs.usdc === undefined || walletQTYs.atomosmo_pool === undefined || walletQTYs.osmousdc_pool === undefined || walletQTYs.stAtom === undefined || walletQTYs.stOsmo === undefined){
         var wallet_qtys: CollateralAssets = {
           osmo: walletQTYs.osmo,
           atom: walletQTYs.atom,
           axlusdc: walletQTYs.axlusdc,
           usdc: walletQTYs.usdc,
+          stAtom: walletQTYs.stAtom,
+          stOsmo: walletQTYs.stOsmo,
           atomosmo_pool: walletQTYs.atomosmo_pool,
           osmousdc_pool: walletQTYs.osmousdc_pool,
         };
@@ -1077,6 +1124,14 @@ export default function Home() {
           oraclequeryClient?.client.getBalance(address as string, denoms.usdc).then((res) => {
             wallet_qtys.usdc = (parseInt(res.amount) / 1_000_000)
           })
+          //Get account's balance of stATOM
+          oraclequeryClient?.client.getBalance(address as string, denoms.stAtom).then((res) => {
+            wallet_qtys.stAtom = (parseInt(res.amount) / 1_000_000)
+          })
+          //Get account's balance of stOSMO
+          oraclequeryClient?.client.getBalance(address as string, denoms.stOsmo).then((res) => {
+            wallet_qtys.stOsmo = (parseInt(res.amount) / 1_000_000)
+          })
           //Get account's balance of ATOM - OSMO LP
           oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
             wallet_qtys.atomosmo_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000)
@@ -1087,6 +1142,7 @@ export default function Home() {
           })
           //Set walletChecked
           setwalletChecked(true)
+          console.log("checked")
         } catch (error) {
           console.log(error)
         }
@@ -1156,15 +1212,15 @@ export default function Home() {
       }
     }
     
-  }, [oraclequeryClient, cdpqueryClient, prices, address, activeComponent])
+  }, [oraclequeryClient, cdpqueryClient, prices, address, activeComponent, walletChecked])
 
   const renderComponent = () => {
     ///If the dashboard is only going to show the vault page then load the vault page only
     if (onlyVaultPage() && activeComponent === 'dashboard'){
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
         rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
-        popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
-        osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
+        popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}
+        positionQTYs={positionQTYs} setpositionQTYs={setpositionQTYs}
         debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
         contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs} walletQTYz={walletQTYs} walletChecked={walletChecked} fetch_update_positionData={fetch_update_positionData}
     />;
@@ -1173,8 +1229,8 @@ export default function Home() {
     } else if (activeComponent === 'vault') {
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
           rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
-          popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}          
-          osmoQTY={osmoQTY} setosmoQTY={setosmoQTY} atomQTY={atomQTY} setatomQTY={setatomQTY} axlusdcQTY={axlusdcQTY} setaxlusdcQTY={setaxlusdcQTY} usdcQTY={usdcQTY} setusdcQTY={setusdcQTY} atomosmo_poolQTY={atomosmo_poolQTY} setatomosmo_poolQTY={setatomosmo_poolQTY} osmousdc_poolQTY={osmousdc_poolQTY} setosmousdc_poolQTY={setosmousdc_poolQTY}          
+          popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}
+          positionQTYs={positionQTYs} setpositionQTYs={setpositionQTYs}
           debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
           contractQTYs={contractQTYs} setcontractQTYs={setcontractQTYs} walletQTYz={walletQTYs} walletChecked={walletChecked} fetch_update_positionData={fetch_update_positionData}
       />;

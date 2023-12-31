@@ -58,6 +58,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     atom: 0,
     axlUSDC: 0,
     usdc: 0,
+    stAtom: 0,
+    stOsmo: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
   });
@@ -155,10 +157,32 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     { height: 0, color: "#000000", tvl: "0" },
     { height: 0, color: "#000000", tvl: "0" },
     { height: 0, color: "#000000", tvl: "0" },
+  ],[
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+  ],[
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
   ]]);
   const [collateralTVL, setcollateralTVL] = useState(0);
   //index for highest bar in barGraph
-  const [highestBar, sethighestBar] = useState<number[]>([0,0,0,0,0,0]);
+  const [highestBar, sethighestBar] = useState<number[]>([0,0,0,0,0,0,0,0]);
   //index for the barGraph to display
   const [barIndex, setbarIndex] = useState(0);
 
@@ -189,11 +213,21 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     setOpen(false);
     setMenuAsset("OSMO-axlUSDC");
     setbarIndex(4);
-  };  
+  };
   const handleMenuSix = () => {
     setOpen(false);
     setMenuAsset("USDC");
     setbarIndex(5);
+  };
+  const handleMenuSeven = () => {
+    setOpen(false);
+    setMenuAsset("stATOM");
+    setbarIndex(6);
+  };
+  const handleMenuEight = () => {
+    setOpen(false);
+    setMenuAsset("stOSMO");
+    setbarIndex(7);
   };
   
   // Query premiums slots and save new heights
@@ -359,6 +393,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         workingDenom = denoms.usdc;
         break;
       }
+      case "stATOM": {
+        workingDenom = denoms.stAtom;
+        break;
+      }
+      case "stOSMO": {
+        workingDenom = denoms.stOsmo;
+        break;
+      }
       case "ATOM-OSMO": {
         workingDenom = denoms.atomosmo_pool;
         break;
@@ -420,6 +462,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "USDC": {
         workingDenom = denoms.usdc;
+        break;
+      }
+      case "stATOM": {
+        workingDenom = denoms.stAtom;
+        break;
+      }
+      case "stOSMO": {
+        workingDenom = denoms.stOsmo;
         break;
       }
       case "ATOM-OSMO": {
@@ -706,6 +756,18 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         }
         break;
       }
+      case "stATOM": {
+        if (barGraph[6][0].tvl === "0" && prices.stAtom !== 0) {
+          queryQueuesaveHeights(denoms.stAtom)
+        }
+        break;
+      }
+      case "stOSMO": {
+        if (barGraph[7][0].tvl === "0" && prices.stOsmo !== 0) {
+          queryQueuesaveHeights(denoms.stOsmo)
+        }
+        break;
+      }
       case "ATOM-OSMO": {
         if (barGraph[3][0].tvl === "0" && prices.atomosmo_pool !== 0) {
           queryQueuesaveHeights(denoms.atomosmo_pool)
@@ -767,6 +829,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "USDC": {
         return prices.usdc;
+      }
+      case "stATOM": {
+        return prices.stAtom;
+      }
+      case "stOSMO": {
+        return prices.stOsmo;
       }
       case "ATOM-OSMO": {
         return prices.atomosmo_pool;
@@ -855,6 +923,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 </li>) : null}
                 {menuAsset !== "USDC" ? (<li className="menu-item">
                     <button onClick={handleMenuSix} style={{outline: "none"}}>USDC</button>
+                </li>) : null}
+                {menuAsset !== "sTATOM" ? (<li className="menu-item">
+                    <button onClick={handleMenuSeven} style={{outline: "none"}}>stATOM</button>
+                </li>) : null}
+                {menuAsset !== "stOSMO" ? (<li className="menu-item">
+                    <button onClick={handleMenuEight} style={{outline: "none"}}>stOSMO</button>
                 </li>) : null}
                 {/* {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuFour}>ATOM-OSMO</button>

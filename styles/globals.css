@@ -215,6 +215,19 @@ p{
   flex-direction: column;
   align-items: center;
 }
+.vault-deposit-card-body {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1%;
+}
+.vault-deposit-card-design {
+  background-color: #383838;
+  border-radius: 1rem;
+  width: 27.2vw;
+  min-width: 180px;
+  height: fit-content;
+}
 .deposit-card-body {  
   gap: 4vh;
 }
@@ -254,6 +267,29 @@ p{
   grid-template-columns: 1fr 1fr;
   gap: 1%;
   width: 100%;
+}
+.vault-menu-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: -2vh;
+  gap: 1vh;
+  position: relative;
+}
+.vault-menu-items-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9vh;
+  position: relative;
+}
+.deposit-withdraw-card-btns {
+  display: flex;
+  align-items: center;
+  grid-column: 1/3;
+  gap: 5%;
+  padding-top: 3vh;
+  padding-left: 0.5vw;
 }
 .walletsection {  
   position: fixed;
@@ -2980,11 +3016,12 @@ span[data-descr]:hover::after {
   top: 120px;
   left: 267px;
 }
-.tvl-500 {    
+.tvl-500 {   
   font-size: large;
-  position: absolute;
-  bottom: 2%;
-  right: 5%;
+  position: relative;
+  bottom: -49%;
+  left: 100%;
+  padding-bottom: 3vh;
 }
 .position-stats {
   position: absolute;
@@ -3041,7 +3078,7 @@ span[data-descr]:hover::after {
     gap: 6%;
   }
   .tvl-500 {
-    bottom: 0%;
+    /* bottom: 0%; */
   }
 }
 .osmo-logo-icon,
@@ -3427,12 +3464,13 @@ span[data-descr]:hover::after {
   font-size: xx-large;
 }
 .vaults-title {  
-  top: 6%;
+  
 }
 .first-vault-component {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 .vault-frame {
   position: absolute;
@@ -3769,9 +3807,8 @@ input[type=range][orient=vertical] {
   background-color: gray;
   border: 2px solid #50C9BD;
   border-radius: 1rem;
-  top: 130px;
   left: 70px;
-  width: 126px;
+  width: 281px;
   height: 33px;
   cursor: pointer;
   text-align: center;
@@ -3805,9 +3842,8 @@ input[type=range][orient=vertical] {
   z-index: 0;
 }
 .user-redemption-button {
-  top: 92.5%;
   z-index: 51;
-  left: 28%;
+  left: -2%;
   font-size: large;
 }
 .red-border {
