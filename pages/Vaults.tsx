@@ -2051,11 +2051,11 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     }
 
     function showDefault() {
-        if (positionID === "0"){
+        // if (positionID === "0"){
             return false
-        } else {
-            return true
-        }
+        // } else {
+        //     return true
+        // }
     }
     function handlesetDepositAmount(asset: string, deposit_amount: number) {
         switch (asset){
