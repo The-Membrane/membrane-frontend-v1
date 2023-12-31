@@ -74,8 +74,7 @@ interface Props {
     setPopupStatus: (popupStatus: string) => void;
     //Asset specific
         //qty
-    positionQTYs: DefinedCollateralAssets;
-    setpositionQTYs: (positionQTYs: DefinedCollateralAssets) => void;
+    positionQTYz: DefinedCollateralAssets;
     //Positions Visual
     debtAmount: number;
     setdebtAmount: (debtAmount: number) => void;
@@ -102,7 +101,7 @@ interface Props {
 const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
     popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
     rateRes, setrateRes, creditRateRes, basketRes, setcreditRateRes, setbasketRes,
-    positionQTYs, setpositionQTYs,
+    positionQTYz,
     debtAmount, setdebtAmount,
     maxLTV, setmaxLTV,
     brwLTV, setbrwLTV,
@@ -158,6 +157,16 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
       max_LTV: 0,
       cost: 0,
       sliderValue: 0,
+    });
+    const [positionQTYs, setpositionQTYs] = useState<DefinedCollateralAssets>({
+      osmo: 0,
+      atom: 0,
+      axlusdc: 0,
+      usdc: 0,
+      stAtom: 0,
+      stOsmo: 0,
+      atomosmo_pool: 0,
+      osmousdc_pool: 0,
     });
     
     //Redemptions
@@ -1909,8 +1918,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setwalletQTYs(walletQTYs);
         //Set contractQTYs
         setcontractQTYs(contractQTYz);
+        //Set positionQTYs
+        setpositionQTYs(positionQTYz);
 
-    }, [pricez, address, rateRes, creditRateRes, basketRes, walletQTYz, contractQTYz])
+    }, [pricez, address, rateRes, creditRateRes, basketRes, walletQTYz, contractQTYz, positionQTYz])
     
 
   return (
