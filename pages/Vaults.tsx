@@ -1308,30 +1308,30 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             return;
         }///Set asset intents
         var asset_intent: [string, number][] = [];
-        if (depositAmounts.osmo != undefined && (depositAmounts.osmo??0) > 0){
-            asset_intent.push(["OSMO", depositAmounts.osmo])
-        }
-        if (depositAmounts.atom != undefined && depositAmounts.atom > 0){
-            asset_intent.push(["ATOM", depositAmounts.atom])
-        }
-        if (depositAmounts.usdc != undefined && depositAmounts.usdc > 0){
-            asset_intent.push(["USDC", depositAmounts.usdc])
-        }
-        if (depositAmounts.axlusdc != undefined && depositAmounts.axlusdc > 0){
-            asset_intent.push(["axlUSDC", depositAmounts.axlusdc])
-        }
-        if (depositAmounts.stAtom != undefined && depositAmounts.stAtom > 0){
-            asset_intent.push(["stATOM", depositAmounts.stAtom])
-        }
-        if (depositAmounts.stOsmo != undefined && depositAmounts.stOsmo > 0){
-            asset_intent.push(["stOSMO", depositAmounts.stOsmo])
-        }
-        if (depositAmounts.atomosmo_pool != undefined && depositAmounts.atomosmo_pool > 0){
-            asset_intent.push(["ATOM-OSMO LP", depositAmounts.atomosmo_pool])
-        }
-        if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool > 0){
-            asset_intent.push(["OSMO-axlUSDC LP", depositAmounts.osmousdc_pool])
-        }
+        // if (depositAmounts.osmo != undefined && (depositAmounts.osmo??0) > 0){
+        //     asset_intent.push(["OSMO", depositAmounts.osmo])
+        // }
+        // if (depositAmounts.atom != undefined && depositAmounts.atom > 0){
+        //     asset_intent.push(["ATOM", depositAmounts.atom])
+        // }
+        // if (depositAmounts.usdc != undefined && depositAmounts.usdc > 0){
+        //     asset_intent.push(["USDC", depositAmounts.usdc])
+        // }
+        // if (depositAmounts.axlusdc != undefined && depositAmounts.axlusdc > 0){
+        //     asset_intent.push(["axlUSDC", depositAmounts.axlusdc])
+        // }
+        // if (depositAmounts.stAtom != undefined && depositAmounts.stAtom > 0){
+        //     asset_intent.push(["stATOM", depositAmounts.stAtom])
+        // }
+        // if (depositAmounts.stOsmo != undefined && depositAmounts.stOsmo > 0){
+        //     asset_intent.push(["stOSMO", depositAmounts.stOsmo])
+        // }
+        // if (depositAmounts.atomosmo_pool != undefined && depositAmounts.atomosmo_pool > 0){
+        //     asset_intent.push(["ATOM-OSMO LP", depositAmounts.atomosmo_pool])
+        // }
+        // if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool > 0){
+        //     asset_intent.push(["OSMO-axlUSDC LP", depositAmounts.osmousdc_pool])
+        // }
 
         //switch on functionality
         switch (currentfunction_label){
