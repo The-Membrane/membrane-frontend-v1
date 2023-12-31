@@ -225,659 +225,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setMenuLabel("Value");
       };
 
-    const handleOSMOqtyClick = async (currentFunction: string) => {
-        //Reset Amount
-        setAmount(0);
-        //Reset QTYs
-        resettoContractPosition();
-        //Set functionality
-        setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setcurrentAsset("OSMO");
-        if (currentFunction !== "withdraw") {
-            setcurrentfunctionLabel("deposit");
-            //Get account's balance
-            if (address !== undefined) {
-                queryClient?.client.getBalance(address as string, denoms.osmo).then((res) => {
-                    setmaxLPamount(BigInt(res.amount) / 1_000_000n);
-                })
-            }
-        } else if (currentFunction == "withdraw") {
-            //Set max to collateral amount
-            setmaxLPamount(BigInt(contractQTYs.osmo))
-        }
-        //Send to back
-        setredeemScreen("redemption-screen");
-        // setcloseScreen("redemption-screen");
-        setredeemInfoScreen("redemption-screen");
-    };
-    const handleATOMqtyClick = async (currentFunction: string) => {
-        //Reset Amount
-        setAmount(0);
-        //Reset QTYs
-        resettoContractPosition();
-        //Set functionality
-        setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setcurrentAsset("ATOM");
-        if (currentFunction !== "withdraw") {
-            setcurrentfunctionLabel("deposit");
-            //Get account's balance
-            if (address !== undefined) {
-                queryClient?.client.getBalance(address as string, denoms.atom).then((res) => {
-                    setmaxLPamount(BigInt(res.amount) / 1_000_000n);
-                })
-            }
-        } else if (currentFunction == "withdraw") {
-            //Set max to collateral amount
-            setmaxLPamount(BigInt(contractQTYs.atom))
-        }
-        //Send to back
-        setredeemScreen("redemption-screen");
-        // setcloseScreen("redemption-screen");
-        setredeemInfoScreen("redemption-screen");
-    };
-    const handleaxlUSDCqtyClick = async (currentFunction: string) => {
-        //Reset Amount
-        setAmount(0);
-        //Reset QTYs
-        resettoContractPosition();
-        //Set functionality
-        setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setcurrentAsset("axlUSDC");
-        if (currentFunction !== "withdraw") {
-            setcurrentfunctionLabel("deposit");
-            //Get account's balance
-            if (address !== undefined) {
-                queryClient?.client.getBalance(address as string, denoms.axlUSDC).then((res) => {
-                    setmaxLPamount(BigInt(res.amount) / 1_000_000n);
-                })
-            }
-        } else if (currentFunction == "withdraw") {
-            //Set max to collateral amount
-            setmaxLPamount(BigInt(contractQTYs.axlusdc))
-        }
-        //Send to back
-        setredeemScreen("redemption-screen");
-        // setcloseScreen("redemption-screen");
-        setredeemInfoScreen("redemption-screen");
-    };    
-    const handleusdcqtyClick = async (currentFunction: string) => {
-        //Reset Amount
-        setAmount(0);
-        //Reset QTYs
-        resettoContractPosition();
-        //Set functionality
-        setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setcurrentAsset("USDC");
-        if (currentFunction !== "withdraw") {
-            setcurrentfunctionLabel("deposit");
-            //Get account's balance
-            if (address !== undefined) {
-                queryClient?.client.getBalance(address as string, denoms.usdc).then((res) => {
-                    setmaxLPamount(BigInt(res.amount) / 1_000_000n);
-                })
-            }
-        } else if (currentFunction == "withdraw") {
-            //Set max to collateral amount
-            setmaxLPamount(BigInt(contractQTYs.usdc))
-        }
-        //Send to back
-        setredeemScreen("redemption-screen");
-        // setcloseScreen("redemption-screen");
-        setredeemInfoScreen("redemption-screen");
-    };    
-    const handleatomosmo_poolqtyClick = async (currentFunction: string) => {
-        //Reset Amount
-        setAmount(0);
-        //Reset QTYs
-        resettoContractPosition();
-        //Set functionality
-        setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setcurrentAsset("ATOM-OSMO LP");
-        if (currentFunction !== "withdraw") {
-            setcurrentfunctionLabel("deposit");
-            //Get account's balance
-            if (address !== undefined) {
-                queryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
-                    setmaxLPamount(BigInt(res.amount) / 1_000_000_000_000_000_000n);
-                })
-            }
-        } else if (currentFunction == "withdraw") {
-            //Set max to collateral amount
-            setmaxLPamount(BigInt(contractQTYs.atomosmo_pool))
-        }
-        //Send to back
-        setredeemScreen("redemption-screen");
-        // setcloseScreen("redemption-screen");
-        setredeemInfoScreen("redemption-screen");
-    };
-    const handleosmousdc_poolqtyClick = async (currentFunction: string) => {
-        //Reset Amount
-        setAmount(0);
-        //Reset QTYs
-        resettoContractPosition();
-        //Set functionality
-        setdepositwithdrawScreen("deposit-withdraw-screen front-screen");
-        setcurrentAsset("OSMO-axlUSDC LP");
-        if (currentFunction !== "withdraw") {
-            setcurrentfunctionLabel("deposit");
-            //Get account's balance
-            if (address !== undefined) {
-                queryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
-                    setmaxLPamount(BigInt(res.amount) / 1_000_000_000_000_000_000n);
-                })
-            }
-        } else if (currentFunction == "withdraw") {
-            //Set max to collateral amount
-            setmaxLPamount(BigInt(contractQTYs.osmousdc_pool))
-        }
-        //Send to back
-        setredeemScreen("redemption-screen");
-        // setcloseScreen("redemption-screen");
-        setredeemInfoScreen("redemption-screen");
-    };
-
-   //Redeem
-    const handleredeemScreen = () => {
-        setredeemScreen("redemption-screen front-screen");
-        setredeemInfoScreen("redemption-screen");
-        setdepositwithdrawScreen("deposit-withdraw-screen");
-        //Set functionality        
-        setcurrentfunctionLabel("redemptions");
-        //
-        //Format popup to inform user that redemptions are unaudited
-        setPopupTrigger(true);
-        setPopupMsg(<div>Redemptions are unaudited & fully opt-in, so please use at your own risk.</div>);
-        setPopupStatus("Warning");
-    };
-    const handleredeeminfoClick = async () => {
-
-        try {
-            console.log("trying")
-            await queryClient?.getBasketRedeemability({
-                limit: 1,
-                positionOwner: user_address,
-            }).then((res) => {
-
-            if (res?.premium_infos.length > 0) {
-                setredemptionRes(res)
-                setredeemScreen("redemption-screen");
-                setredeemInfoScreen("redemption-screen front-screen");
-                setredeemButton("user-redemption-button")
-            } else {
-                setredeemButton("user-redemption-button red-border")
-            }
-            console.log(res)
-        })
-        } catch (error) {
-            setredeemButton("user-redemption-button red-border")
-            console.log(error)
-        }   
-
-    };
-    const handlesetPremium = (event: any) => {
-        event.preventDefault();
-        setPremium(event.target.value);
-      };
-    const handlesetloanUsage = (event: any) => {
-        event.preventDefault();
-        setloanUsage(event.target.value);
-    };
-    const handleposClick = () => {
-        if (posClick == "mint-button-icon3") {
-            setposClick("mint-button-icon3-solid");
-            setnegClick("mint-button-icon4");
-            setRedeemability(true);
-        } else {
-            setposClick("mint-button-icon3");
-            setRedeemability(undefined);
-        }
-      };
-
-    const handlenegClick = () => {
-        if (negClick == "mint-button-icon4") {
-            setnegClick("mint-button-icon4-solid");
-            setposClick("mint-button-icon3");
-            setRedeemability(false);
-        } else {
-            setnegClick("mint-button-icon4");
-            setRedeemability(undefined);
-        }
-      };
-    const handleOSMOClick = () => {
-        //Search for OSMO_denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.osmo)
-        
-        //If unadded, add to assets && sentence
-        if (asset_check.length == 0) {
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: [
-                        ...prevState.readable_assets,
-                        "OSMO"
-                    ],
-                    assets: [
-                        ...prevState.assets,
-                        denoms.osmo
-                    ]
-                }
-            })
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        } else {
-            //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.osmo)
-            let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "OSMO")
-            //Update assets
-                        //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: readable_asset_check,
-                    assets: asset_check
-                }
-            })
-            //Update sentence
-                        //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        }
-    };
-    const handleATOMClick = () => {
-        //Search for ATOM_denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.atom)
-        
-        //If unadded, add to assets && sentence
-        if (asset_check.length == 0) {
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: [
-                        ...prevState.readable_assets,
-                        "ATOM"
-                    ],
-                    assets: [
-                        ...prevState.assets,
-                        denoms.atom
-                    ]
-                }
-            })
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        } else {
-            //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.atom)
-            let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "ATOM")
-            //Update assets
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: readable_asset_check,
-                    assets: asset_check
-                }
-            })
-            //Update sentence
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        }
-    };
-    const handleaxlUSDCClick = () => {
-        //Search for axlUSDC_denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.axlUSDC)
-        
-        //If unadded, add to assets && sentence
-        if (asset_check.length == 0) {
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: [
-                        ...prevState.readable_assets,
-                        "axlUSDC"
-                    ],
-                    assets: [
-                        ...prevState.assets,
-                        denoms.axlUSDC
-                    ]
-                }
-            })
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        } else {
-            //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.axlUSDC)
-            let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "axlUSDC")
-            //Update assets
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: readable_asset_check,
-                    assets: asset_check
-                }
-            })
-            //Update sentence
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        }
-    };
-    const handleusdcClick = () => {
-        //Search for axlUSDC_denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.usdc)
-        
-        //If unadded, add to assets && sentence
-        if (asset_check.length == 0) {
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: [
-                        ...prevState.readable_assets,
-                        "USDC"
-                    ],
-                    assets: [
-                        ...prevState.assets,
-                        denoms.usdc
-                    ]
-                }
-            })
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        } else {
-            //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.usdc)
-            let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "USDC")
-            //Update assets
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: readable_asset_check,
-                    assets: asset_check
-                }
-            })
-            //Update sentence
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        }
-    };
-    const handleatomosmo_poolClick = () => {
-        //Search for atomosmo_pool denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.atomosmo_pool)
-        
-        //If unadded, add to assets && sentence
-        if (asset_check.length == 0) {
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: [
-                        ...prevState.readable_assets,
-                        "ATOM-OSMO LP"
-                    ],
-                    assets: [
-                        ...prevState.assets,
-                        denoms.atomosmo_pool
-                    ]
-                }
-            })
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        } else {
-            //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.atomosmo_pool)
-            let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "ATOM-OSMO LP")
-            //Update assets
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: readable_asset_check,
-                    assets: asset_check
-                }
-            })
-            //Update sentence
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        }
-    };
-    const handleosmousdc_poolClick = () => {
-        //Search for osmousdc_pool denom in the asset list
-        let asset_check = restrictedAssets.assets.filter(asset => asset === denoms.osmousdc_pool)
-        
-        //If unadded, add to assets && sentence
-        if (asset_check.length == 0) {
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: [
-                        ...prevState.readable_assets,
-                        "OSMO-axlUSDC LP"
-                    ],
-                    assets: [
-                        ...prevState.assets,
-                        denoms.osmousdc_pool
-                    ]
-                }
-            })
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        } else {
-            //Remove from assets list
-            let asset_check = restrictedAssets.assets.filter(asset => asset != denoms.osmousdc_pool)
-            let readable_asset_check = restrictedAssets.readable_assets.filter(asset => asset != "OSMO-axlUSDC LP")
-            //Update assets
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    readable_assets: readable_asset_check,
-                    assets: asset_check
-                }
-            })
-            //Update sentence
-            //@ts-ignore
-            setRestricted(prevState => {
-                return { 
-                    ...prevState,
-                    sentence: "Click Assets on the left to restrict redemption from, currently restricted: " + prevState.readable_assets,
-                }
-            })
-        }
-    };
-    const handlesetAmountInput = (event: any) => {
-        event.preventDefault();
-        setAmount(event.target.value);
-        if (currentfunctionLabel === "deposit"){
-            //Subtract from qty to reset amount to the actual ownership
-            // handleQTYsubtraction(currentAsset, amount as number);
-            //Add to qty to enable responsive Data/Visuals
-            handleQTYaddition(currentAsset, event.target.value - (amount??0) as number);            
-        } else if (currentfunctionLabel === "withdraw"){
-            if (event.target.value > maxLPamount) {
-                setAmount(Number(maxLPamount));
-            }
-            //Add to qty to reset amount to the actual ownership
-            // handleQTYaddition(currentAsset, amount as number);    
-            //Subtract from qty to enable responsive Data/Visuals
-            handleQTYsubtraction(currentAsset, +(event.target.value) - +(amount as number));
-        }
-        //Set avg MAX/BRW LTV
-        let LTVs = getRataLTV();
-        setmaxLTV(LTVs[1]);
-        setbrwLTV(LTVs[0]);
-        //Set cost
-        setCost(getRataCost());
-
-      };
-    const handlesetAmount = (newAmount?: number) => {
-        if (newAmount === undefined) {
-            newAmount = Number(maxLPamount);
-        }
-        setAmount(newAmount);
-        if (currentfunctionLabel === "deposit"){
-            //Subtract from qty to reset amount to the actual ownership
-            // handleQTYsubtraction(currentAsset, amount as number);
-            //Add to qty to enable responsive Data/Visuals
-            handleQTYaddition(currentAsset, newAmount - (amount??0) as number);            
-        } else if (currentfunctionLabel === "withdraw"){
-            if (newAmount > maxLPamount) {
-                setAmount(Number(maxLPamount));
-            }
-            //Add to qty to reset amount to the actual ownership
-            // handleQTYaddition(currentAsset, amount as number);    
-            //Subtract from qty to enable responsive Data/Visuals
-            handleQTYsubtraction(currentAsset, +(newAmount) - +(amount as number));
-        }
-    };
-    //Reset position data to its contract based values
-    const resettoContractPosition = () => {
-        setpositionQTYs({
-            osmo: contractQTYs.osmo,
-            atom: contractQTYs.atom,
-            axlusdc: contractQTYs.axlusdc,
-            usdc: contractQTYs.usdc,
-            stAtom: contractQTYs.stAtom,
-            stOsmo: contractQTYs.stOsmo,
-            atomosmo_pool: contractQTYs.atomosmo_pool,
-            osmousdc_pool: contractQTYs.osmousdc_pool,
-        });
-        setmaxLTV(contractQTYs.max_LTV);
-        setbrwLTV(contractQTYs.brw_LTV);
-        setCost(contractQTYs.cost);
-        setsliderValue(contractQTYs.sliderValue);
-    }
-    //Deposit-Withdraw screen    
-    const handledepositClick = async () => {
-        //Reset Amount
-        setAmount(0);
-        //Reset QTYs
-        resettoContractPosition();
-        //Set functionality
-        setcurrentfunctionLabel("deposit");
-        //clear intents
-        setassetIntent([]);
-        switch (currentAsset) {
-            case "OSMO": {
-                handleOSMOqtyClick("deposit")
-                break;
-            }
-            case "ATOM": {
-                handleATOMqtyClick("deposit")
-                break;
-            }
-            case "axlUSDC": {
-                handleaxlUSDCqtyClick("deposit")
-                break;
-            }
-            case "USDC": {
-                handleusdcqtyClick("deposit")
-                break;
-            }
-            case "ATOM-OSMO LP": {
-                handleatomosmo_poolqtyClick("deposit")
-                break;
-            }
-            case "OSMO-axlUSDC LP": {
-                handleosmousdc_poolqtyClick("deposit")
-                break;
-            }
-        }
-    };
-    const handlewithdrawClick = async () => {
-        //Reset Amount
-        setAmount(0);
-        //Reset QTYs
-        resettoContractPosition();
-        //Set functionality
-        setcurrentfunctionLabel("withdraw");
-        //clear intents
-        setassetIntent([]);
-        switch (currentAsset) {
-            case "OSMO": {
-                handleOSMOqtyClick("withdraw")
-                break;
-            }
-            case "ATOM": {
-                handleATOMqtyClick("withdraw")
-                break;
-            }
-            case "axlUSDC": {
-                handleaxlUSDCqtyClick("withdraw")
-                break;
-            }
-            case "USDC": {
-                handleusdcqtyClick("withdraw")
-                break;
-            }
-            case "ATOM-OSMO LP": {
-                handleatomosmo_poolqtyClick("withdraw")
-                break;
-            }
-            case "OSMO-axlUSDC LP": {
-                handleosmousdc_poolqtyClick("withdraw");
-                break;
-            }
-        }
-    };
     //Logo functionality activation
     const handleQTYaddition = (current_asset: string, amount: number) => {
 
@@ -2237,7 +1584,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmo", walletQTYs.osmo)}>max: {walletQTYs.osmo.toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.atom > 0 ?        
@@ -2248,7 +1595,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atom", walletQTYs.atom)}>max: {walletQTYs.atom.toFixed(3)}</div>
                         <label className="deposit-amount-label">ATOM amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atom", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom} type="number" onChange={(event)=>handlesetDepositInput("atom", event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.usdc > 0 ?        
@@ -2259,7 +1606,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("usdc", walletQTYs.usdc)}>max: {walletQTYs.usdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">USDC amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdc", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc} type="number" onChange={(event)=>handlesetDepositInput("usdc", event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.axlusdc > 0 ?        
@@ -2270,7 +1617,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("axlusdc", walletQTYs.axlusdc)}>max: {walletQTYs.axlusdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">axlUSDC amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.atomosmo_pool > 0 ?        
@@ -2282,7 +1629,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atomosmo_pool", walletQTYs.atomosmo_pool)}>max: {walletQTYs.atomosmo_pool.toFixed(3)}</div>
                         <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.osmousdc_pool > 0 ?        
@@ -2294,7 +1641,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmoaxlusdc_pool", walletQTYs.osmousdc_pool)}>max: {walletQTYs.osmousdc_pool.toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
                     </form>
                 </div>: null}
                 </> : //Withdraw elements
@@ -2307,7 +1654,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmo", contractQTYs.osmo)}>max: {contractQTYs.osmo.toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.atom > 0 ?        
@@ -2318,7 +1665,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atom", contractQTYs.atom)}>max: {contractQTYs.atom.toFixed(3)}</div>
                         <label className="deposit-amount-label">ATOM amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atom", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom} type="number" onChange={(event)=>handlesetDepositInput("atom", event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.usdc > 0 ?        
@@ -2329,7 +1676,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("usdc", contractQTYs.usdc)}>max: {contractQTYs.usdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">USDC amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdc", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc} type="number" onChange={(event)=>handlesetDepositInput("usdc", event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.axlusdc > 0 ?        
@@ -2340,7 +1687,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("axlusdc", contractQTYs.axlusdc)}>max: {contractQTYs.axlusdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">axlUSDC amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.atomosmo_pool > 0 ?        
@@ -2352,7 +1699,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atomosmo_pool", contractQTYs.atomosmo_pool)}>max: {contractQTYs.atomosmo_pool.toFixed(3)}</div>
                         <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.osmousdc_pool > 0 ?        
@@ -2364,7 +1711,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <form className="deposit-form">
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmoaxlusdc_pool", contractQTYs.osmousdc_pool)}>max: {contractQTYs.osmousdc_pool.toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
                     </form>
                 </div> : null}
                 </>
@@ -2541,7 +1888,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setcreditRateRes(creditRateRes as InterestResponse)
         setbasketRes(basketRes as Basket)
         getassetdebtUtil();
-        resettoContractPosition();
         //Set walletQTYs
         var walletQTYs: DefinedCollateralAssets = {
             osmo: walletQTYz.osmo??0,
