@@ -6,7 +6,8 @@ import { chainName } from '../config';
 import { Coin, coin, coins } from "@cosmjs/amino";
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import { Asset, Basket, CollateralInterestResponse, InterestResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
-import { denoms, Prices } from ".";
+import { Prices } from ".";
+import { denoms } from "../config";
 import Popup from "../components/Popup";
 import WidgetPopup from "../components/widgetPopup";
 import Image from "next/image";
@@ -695,6 +696,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool > 0){
             asset_intent.push(["OSMO-axlUSDC LP", depositAmounts.osmousdc_pool])
         }
+        console.log(asset_intent)
 
         //switch on functionality
         switch (currentfunction_label){
@@ -948,6 +950,14 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 case "USDC": {
                     workingIntents.push(coin(intent[1] * 1_000_000, denoms.usdc))
                     break;
+                }      
+                case "stATOM": {
+                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.stAtom))
+                    break;
+                }      
+                case "stOSMO": {
+                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.stOsmo))
+                    break;
                 }
                 case "ATOM-OSMO LP": { 
                     workingIntents.push(coin((BigInt(intent[1]) * 1_000_000_000_000_000_000n).toString(), denoms.atomosmo_pool))
@@ -1005,6 +1015,28 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         info: {native_token :{
                             //@ts-ignore
                             denom: denoms.usdc,
+                        }}
+                    })
+                    break;
+                }
+                case "stATOM": {
+                    workingIntents.push({
+                        amount: (intent[1]* 1_000_000).toString(),
+                        //@ts-ignore
+                        info: {native_token :{
+                            //@ts-ignore
+                            denom: denoms.stAtom,
+                        }}
+                    })
+                    break;
+                }
+                case "stOSMO": {
+                    workingIntents.push({
+                        amount: (intent[1]* 1_000_000).toString(),
+                        //@ts-ignore
+                        info: {native_token :{
+                            //@ts-ignore
+                            denom: denoms.stOsmo,
                         }}
                     })
                     break;
@@ -1496,7 +1528,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
         }
     }
-    function handlesetDepositInput(asset: string, event: any){event.target.value
+    function handlesetDepositInput(asset: string, event: any){
         event.preventDefault();
         var deposit_amount = event.target.value;
         switch (asset){
@@ -1797,25 +1829,25 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             <div className="vault-menu-items-div">
             {menuLabel === "Value" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || (contractQTYs.osmo??0) > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.osmo * +prices.osmo) > 1000 ? (((positionQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.osmo * +prices.osmo) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.atom * +prices.atom) > 1000 ? (((positionQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.atom * +prices.atom) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((positionQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.usdc * +prices.usdc) > 1000 ? (((positionQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.usdc * +prices.usdc) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stAtom * +prices.stAtom) > 1000 ? (((positionQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((positionQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel === "withdraw" && contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.osmo * +prices.osmo) > 1000 ? (((positionQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.osmo * +prices.osmo) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel === "withdraw" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.atom * +prices.atom) > 1000 ? (((positionQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.atom * +prices.atom) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel === "withdraw" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((positionQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel === "withdraw" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.usdc * +prices.usdc) > 1000 ? (((positionQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.usdc * +prices.usdc) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel === "withdraw" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stAtom * +prices.stAtom) > 1000 ? (((positionQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel === "withdraw" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((positionQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2)}</div> : null}
                 </>
             : menuLabel === "Rate" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || (contractQTYs.osmo??0) ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{rates.osmo.toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(rates.atom).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(rates.axlUSDC).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(rates.usdc).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(rates.stAtom).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(rates.stOsmo).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel === "withdraw" && contractQTYs.osmo ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{rates.osmo.toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel === "withdraw" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(rates.atom).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel === "withdraw" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(rates.axlUSDC).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel === "withdraw" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(rates.usdc).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel === "withdraw" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(rates.stAtom).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel === "withdraw" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(rates.stOsmo).toFixed(4)}%</div> : null}
                 </>
             : menuLabel === "Util" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || (contractQTYs.osmo??0) > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{(debtCaps.osmo * 100).toFixed(2)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{(debtCaps.osmo * 100).toFixed(2)}%</div> : null}
                 {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(debtCaps.atom * 100).toFixed(2)}%</div> : null}
                 {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div> : null}
                 {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(debtCaps.usdc * 100).toFixed(2)}%</div> : null}

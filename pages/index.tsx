@@ -16,32 +16,12 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
-import { delegateList, quadraticVoting, skipProposals } from "../config";
+import { delegateList, denoms, quadraticVoting, skipProposals } from "../config";
 
 
 export const SECONDS_PER_DAY = 86400;
 export const BLOCK_TIME_IN_SECONDS = 6;
 export const unstakingPeriod = 4; //days
-
-export const denoms = {
-  mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
-  cdt: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/ucdt",
-  osmo: "uosmo",
-  //mainnet atom ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
-  atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-  //mainnet axlUSDC ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858
-  axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
-  //mainnet "gamm/pool/1"
-  atomosmo_pool: "gamm/pool/1",
-  //mainnet "gamm/pool/678"
-  osmousdc_pool: "gamm/pool/678",
-  //Noble USDC
-  usdc: "ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4",
-  //Stride Atom
-  stAtom: "ibc/C140AFD542AE77BD7DCC83F13FDD8C5E5BB8C4929785E6EC2F4C636F98F17901",
-  //Stride Osmo
-  stOsmo: "ibc/D176154B0C63D1F9C6DCFB4F70349EBF2E2B5A87A05902F57A6AE92B863E9AEC",
-};
 
 export interface Prices {
   osmo: number,

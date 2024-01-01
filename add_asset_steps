@@ -16,13 +16,10 @@ Vaults.tsx:
 - getRataLTV
 - getassetRatios
 - getTVL
-- add to asset-info styles
-  - create handle___Click function
-  - create handle___qtyClick function
-  - add to qty & logo-icon styles
-  - add to menu stlyes
+- add to menu stlyes
 - add to onboardingDeposit logic
 - add to handlesetDepositAmount & handlesetDepositInput fn 
+- add to assetintents logic
 
 Liquidations.tsx:
 - Add to menuAsset
