@@ -120,7 +120,7 @@ export function useQueryClients(): {
     //Reece's: osmosis-rpc.reece.sh
     //Polkachu's: https://osmosis-rpc.polkachu.com/
     //Meta: https://rpc.cosmos.directory/osmosis
-    var client = CosmWasmClient.connect("osmosis-rpc.reece.sh")
+    var client = CosmWasmClient.connect("https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573")
     .catch((e) => {
       console.log(e);
       query_errored = true;
