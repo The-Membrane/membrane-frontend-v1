@@ -1636,6 +1636,28 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
                     </form>
                 </div>: null}
+                {walletQTYs.stAtom > 0 ?        
+                <div className="deposit-element">
+                    <div className="deposit-element-icon">
+                        <Image className="deposit-icon" width={45} height={45} alt="" src="images/statom.svg" />
+                    </div>
+                    <form className="deposit-form">
+                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("stAtom", walletQTYs.stAtom)}>max: {walletQTYs.stAtom.toFixed(3)}</div>
+                        <label className="deposit-amount-label">stATOM amount:</label>     
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stAtom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stAtom", event)}/>
+                    </form>
+                </div>: null}
+                {walletQTYs.stOsmo > 0 ?        
+                <div className="deposit-element">
+                    <div className="deposit-element-icon">
+                        <Image className="deposit-icon" width={45} height={45} alt="" src="images/stosmo.svg" />
+                    </div>
+                    <form className="deposit-form">
+                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("stOsmo", walletQTYs.stOsmo)}>max: {walletQTYs.stOsmo.toFixed(3)}</div>
+                        <label className="deposit-amount-label">stOSMO amount:</label>     
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stOsmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stOsmo", event)}/>
+                    </form>
+                </div>: null}
                 {walletQTYs.atomosmo_pool > 0 ?        
                 <div className="deposit-element-lp">
                     <div className="deposit-element-icon-lp">
@@ -1704,6 +1726,28 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("axlusdc", contractQTYs.axlusdc)}>max: {contractQTYs.axlusdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">axlUSDC amount:</label>     
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
+                    </form>
+                </div>: null}
+                {contractQTYs.stAtom > 0 ?        
+                <div className="deposit-element">
+                    <div className="deposit-element-icon">
+                        <Image className="deposit-icon" width={45} height={45} alt="" src="images/statom.svg" />
+                    </div>
+                    <form className="deposit-form">
+                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("stAtom", contractQTYs.stAtom)}>max: {contractQTYs.stAtom.toFixed(3)}</div>
+                        <label className="deposit-amount-label">stATOM amount:</label>     
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stAtom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stAtom", event)}/>
+                    </form>
+                </div>: null}
+                {contractQTYs.stOsmo > 0 ?        
+                <div className="deposit-element">
+                    <div className="deposit-element-icon">
+                        <Image className="deposit-icon" width={45} height={45} alt="" src="images/stosmo.svg" />
+                    </div>
+                    <form className="deposit-form">
+                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("stOsmo", contractQTYs.stOsmo)}>max: {contractQTYs.stOsmo.toFixed(3)}</div>
+                        <label className="deposit-amount-label">stOSMO amount:</label>     
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stOsmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stOsmo", event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.atomosmo_pool > 0 ?        
