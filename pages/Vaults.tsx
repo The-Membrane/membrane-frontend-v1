@@ -696,7 +696,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool > 0){
             asset_intent.push(["OSMO-axlUSDC LP", depositAmounts.osmousdc_pool])
         }
-        console.log(asset_intent)
 
         //switch on functionality
         switch (currentfunction_label){
@@ -732,10 +731,24 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    ///Format Pop up
-                    setPopupTrigger(true);
-                    setPopupMsg(<div>{e.message}</div>);
-                    setPopupStatus("Deposit Error");
+                    //This is a success msg but a cosmjs error
+                    if (e.message === "Invalid string. Length must be a multiple of 4"){
+                        //format pop up
+                        setPopupTrigger(true);
+                        //map asset intents to readable string
+                        var readable_asset_intent = asset_intent.map((asset) => {
+                            return asset[1] + " " + asset[0]
+                        })
+                        setPopupMsg(<div>Deposit of {readable_asset_intent} successful</div>);
+                        setPopupStatus("Success");   
+                        //Update contract QTYs
+                        handlecontractQTYupdate();
+                    } else {
+                        ///Format Pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>{e.message}</div>);
+                        setPopupStatus("Deposit Error");
+                    }
                 }
                break;
             }
@@ -769,10 +782,24 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    ///Format Pop up
-                    setPopupTrigger(true);
-                    setPopupMsg(<div>{e.message}</div>);
-                    setPopupStatus("Withdrawal Error");
+                    //This is a success msg but a cosmjs error
+                    if (e.message === "Invalid string. Length must be a multiple of 4"){
+                        //map asset intents to readable string
+                        let readable_asset_intent = asset_intent.map((asset) => {
+                            return asset[1] + " " + asset[0]
+                        })
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>Withdrawal of {readable_asset_intent} successful</div>);
+                        setPopupStatus("Success");       
+                        //Update contract QTYs
+                        handlecontractQTYupdate();   
+                    } else {
+                        ///Format Pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>{e.message}</div>);
+                        setPopupStatus("Withdrawal Error");
+                    }
                 } 
                 break;
             }
@@ -804,11 +831,30 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 } catch (error){
                     ////Error message
                     const e = error as { message: string }
-                    console.log(e.message)
-                    ///Format Pop up
-                    setPopupTrigger(true);
-                    setPopupMsg(<div>{e.message}</div>);
-                    setPopupStatus("Mint Error");
+                    console.log(e.message)                    
+                    //This is a success msg but a cosmjs error
+                    if (e.message === "Invalid string. Length must be a multiple of 4"){
+                        //Update mint amount
+                        setdebtAmount(+debtAmount + +((mintAmount ?? 0) * 1_000_000));
+                        setsliderValue((+debtAmount + +((mintAmount ?? 0) * 1_000_000))/1000000);
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(
+                            <div>
+                                Mint of {(mintAmount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the yellow line & you will be liquidated down to said line if you reach the red. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.
+                            <p/>
+                            <p className="dash-stats mobile-font">
+                                Provide Liquidity to the CDT&nbsp;<a style={{cursor:"pointer", textDecoration:"underline"}} onClick={onStableswapTextClick}>stableswap</a>&nbsp;on Osmosis for ~10%+ APR
+                            </p>
+                            </div>
+                                );
+                        setPopupStatus("Success");
+                    } else {
+                        ///Format Pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>{e.message}</div>);
+                        setPopupStatus("Mint Error");
+                    }
                 }
                 
                 break;
@@ -854,10 +900,22 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                                     ////Error message
                                     const e = error as { message: string }
                                     console.log(e.message)
-                                    ///Format Pop up
-                                    setPopupTrigger(true);
-                                    setPopupMsg(<div>{e.message}</div>);
-                                    setPopupStatus("Repay Error");
+                                    //This is a success msg but a cosmjs error
+                                    if (e.message === "Invalid string. Length must be a multiple of 4"){
+                                        //Update mint amount
+                                        setdebtAmount(+debtAmount - +(repay_amount* 1_000_000));
+                                        setsliderValue((+debtAmount - +(repay_amount* 1_000_000))/1000000);
+                                        //format pop up
+                                        setPopupTrigger(true);
+                                        setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
+                                        setPopupStatus("Success");
+                                        } else {
+                                        
+                                        ///Format Pop up
+                                        setPopupTrigger(true);
+                                        setPopupMsg(<div>{e.message}</div>);
+                                        setPopupStatus("Repay Error");
+                                    }
                                 }
                             })
                         })
@@ -891,10 +949,21 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         ////Error message
                         const e = error as { message: string }
                         console.log(e.message)
-                        ///Format Pop up
-                        setPopupTrigger(true);
-                        setPopupMsg(<div>{e.message}</div>);
-                        setPopupStatus("Repay Error");
+                        //This is a success msg but a cosmjs error
+                        if (e.message === "Invalid string. Length must be a multiple of 4"){
+                            //Update mint amount
+                            setdebtAmount(+debtAmount - +((repayAmount ?? 0)* 1_000_000));
+                            setsliderValue((+debtAmount - +((repayAmount ?? 0)* 1_000_000))/1000000);
+                            //format pop up
+                            setPopupTrigger(true);
+                            setPopupMsg(<div>Repayment of {(repayAmount ?? 0)} CDT successful</div>);
+                            setPopupStatus("Success");
+                        } else {
+                            ///Format Pop up
+                            setPopupTrigger(true);
+                            setPopupMsg(<div>{e.message}</div>);
+                            setPopupStatus("Repay Error");
+                        }
                     }
                 }
                 break;
@@ -921,10 +990,18 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     ////Error message
                     const e = error as { message: string }
                     console.log(e.message)
-                    ///Format Pop up
-                    setPopupTrigger(true);
-                    setPopupMsg(<div>{e.message}</div>);
-                    setPopupStatus("Edit Redemption Info Error");
+                    //This is a success msg but a cosmjs error
+                    if (e.message === "Invalid string. Length must be a multiple of 4"){
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>Redemption settings updated successfully</div>);
+                        setPopupStatus("Success");
+                    } else {
+                        ///Format Pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>{e.message}</div>);
+                        setPopupStatus("Edit Redemption Info Error");
+                    }
                 }
             }
         }
@@ -1829,30 +1906,30 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             <div className="vault-menu-items-div">
             {menuLabel === "Value" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel === "withdraw" && contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.osmo * +prices.osmo) > 1000 ? (((positionQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.osmo * +prices.osmo) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel === "withdraw" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.atom * +prices.atom) > 1000 ? (((positionQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.atom * +prices.atom) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel === "withdraw" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((positionQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel === "withdraw" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.usdc * +prices.usdc) > 1000 ? (((positionQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.usdc * +prices.usdc) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel === "withdraw" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stAtom * +prices.stAtom) > 1000 ? (((positionQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel === "withdraw" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((positionQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.osmo * +prices.osmo) > 1000 ? (((positionQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.osmo * +prices.osmo) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.atom * +prices.atom) > 1000 ? (((positionQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.atom * +prices.atom) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((positionQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.usdc * +prices.usdc) > 1000 ? (((positionQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.usdc * +prices.usdc) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stAtom * +prices.stAtom) > 1000 ? (((positionQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2)}</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((positionQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2)}</div> : null}
                 </>
             : menuLabel === "Rate" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel === "withdraw" && contractQTYs.osmo ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{rates.osmo.toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel === "withdraw" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(rates.atom).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel === "withdraw" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(rates.axlUSDC).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel === "withdraw" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(rates.usdc).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel === "withdraw" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(rates.stAtom).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel === "withdraw" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(rates.stOsmo).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.osmo ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{rates.osmo.toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(rates.atom).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(rates.axlUSDC).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(rates.usdc).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(rates.stAtom).toFixed(4)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(rates.stOsmo).toFixed(4)}%</div> : null}
                 </>
             : menuLabel === "Util" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{(debtCaps.osmo * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(debtCaps.atom * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(debtCaps.usdc * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(debtCaps.stAtom * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(debtCaps.stOsmo * 100).toFixed(2)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{(debtCaps.osmo * 100).toFixed(2)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(debtCaps.atom * 100).toFixed(2)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(debtCaps.usdc * 100).toFixed(2)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(debtCaps.stAtom * 100).toFixed(2)}%</div> : null}
+                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(debtCaps.stOsmo * 100).toFixed(2)}%</div> : null}
                 </>
             : null}
             </div>
@@ -1962,6 +2039,22 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             ///Format Pop up
             setPopupTrigger(true);
             setPopupMsg(<div>{e.message}</div>);
+            //This is a success msg but a cosmjs error
+            if (e.message === "Invalid string. Length must be a multiple of 4"){
+                //format pop up
+                setPopupTrigger(true);
+                //map asset intents to readable string
+                var readable_asset_intent = asset_intent.map((asset) => {
+                    return asset[1] + " " + asset[0]
+                })
+                setPopupMsg(<div>Deposit of {readable_asset_intent} successful</div>);
+                setPopupStatus("Success");
+                
+                //Clear intents
+                setassetIntent([])
+                //Requery position
+                fetch_update_positionData();
+            }
             setPopupStatus("Deposit Error");
             //Requery position
             fetch_update_positionData();

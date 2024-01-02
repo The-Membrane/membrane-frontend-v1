@@ -365,10 +365,18 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     } catch (error) {
       console.log(error)
       let e = error as {message: string};
-      //format popup message
-      setPopupTrigger(true)
-      setPopupMsg(<div>{e.message}</div>)
-      setPopupStatus("Error")
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Voted</div>)
+        setPopupStatus("Success")
+      } else {
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>{e.message}</div>)
+        setPopupStatus("Error")
+      }
     }
   }
   const handleproposalSubmission = async (title: string, description: string, link: string, msgs: ProposalMessage[]) => {
@@ -389,10 +397,18 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     } catch (error) {
       console.log(error)
       let e = error as {message: string};
-      //format popup message
-      setPopupTrigger(true)
-      setPopupMsg(<div>{e.message}</div>)
-      setPopupStatus("Error")        
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Submitted</div>)
+        setPopupStatus("Success")
+      } else {
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>{e.message}</div>)
+        setPopupStatus("Error")
+      }
     }
   }
   
@@ -487,10 +503,26 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     } catch (error) {
       console.log(error)
       const e = error as {message: string};
-      //format popup message
-      setPopupTrigger(true)
-      setPopupMsg(<div>{e.message}</div>)
-      setPopupStatus("Error")
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Staked</div>)
+        setPopupStatus("Success")
+        //Update user stake
+            //@ts-ignore
+        setUserStake(prevState => {
+          return {
+            ...prevState,
+            staked: +prevState.staked + +((stakeAmount ?? 0)* 1_000_000),
+          }
+        })
+      } else {
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>{e.message}</div>)
+        setPopupStatus("Error")
+      }
     }
   }
 
@@ -539,10 +571,42 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     } catch (error) {
       console.log(error)
       const e = error as {message: string};
-      //format popup message
-      setPopupTrigger(true)
-      setPopupMsg(<div>{e.message}</div>)
-      setPopupStatus("Error")
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Unstaked</div>)
+        setPopupStatus("Success")
+        //Update user stake
+        if (userStake.unstaking.amount === 0) {
+          //@ts-ignore
+          setUserStake(prevState => {
+            return {              
+              staked: +prevState.staked - +((unstakeAmount ?? 0)* 1_000_000),
+              unstaking_total: +prevState.unstaking_total + +((unstakeAmount ?? 0)* 1_000_000),
+              unstaking: {
+                amount: +prevState.unstaking.amount + +((unstakeAmount ?? 0)* 1_000_000),
+                timeLeft: unstakingPeriod,
+              }
+            }
+          })
+        } else {
+          //If there is already an unstaking deposit, don't change it
+            //@ts-ignore
+          setUserStake(prevState => {
+            return {
+              ...prevState,
+              unstaking_total: +prevState.unstaking_total + +((unstakeAmount ?? 0)* 1_000_000),
+              staked: +prevState.staked - +((unstakeAmount ?? 0)* 1_000_000),
+            }
+          })
+        }
+      } else {
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>{e.message}</div>)
+        setPopupStatus("Error")
+      }
     }
   }
   const handleclaimClick = async () => {
@@ -565,10 +629,18 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     } catch (error) {
       console.log(error)
       const e = error as {message: string};
-      //format popup message
-      setPopupTrigger(true)
-      setPopupMsg(<div>{e.message}</div>)
-      setPopupStatus("Error")
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Claimed</div>)
+        setPopupStatus("Success")
+      } else {
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>{e.message}</div>)
+        setPopupStatus("Error")
+      }
     }
   }
   const handledelegateForm = (fluid: boolean, vp: boolean, delegate: boolean, delegate_index?: number, var_governator?: string) => {
@@ -770,10 +842,31 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     } catch (error) {
       console.log(error)
       let e = error as {message: string};
-      //format popup message
-      setPopupTrigger(true)
-      setPopupMsg(<div>{e.message}</div>)
-      setPopupStatus("Error")        
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Delegation to {governator} updated</div>)
+        setPopupStatus("Success")
+        
+        //Update delegation info
+        delegations.forEach((element, index) => {
+          if (element.delegator === governator) {
+            if (delegations[index].amount !== undefined){
+              //@ts-ignore
+              delegations[index].amount += parseInt(amount ?? "0") * 1_000_000;
+            } else {
+              delegations[index].amount = parseInt(amount ?? "0") * 1_000_000;
+            }             
+            delegations[index].fluid = fluid;
+          }
+        })
+      } else {
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>{e.message}</div>)
+        setPopupStatus("Error")
+      }
     }
   }
   const handlefluiddelegationSubmission = async (
@@ -794,10 +887,18 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     } catch (error) {
       console.log(error)
       let e = error as {message: string};
-      //format popup message
-      setPopupTrigger(true)
-      setPopupMsg(<div>{e.message}</div>)
-      setPopupStatus("Error")        
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>Delegation to {governator} updated</div>)
+        setPopupStatus("Success")
+      } else {
+        //format popup message
+        setPopupTrigger(true)
+        setPopupMsg(<div>{e.message}</div>)
+        setPopupStatus("Error")
+      }
     }
   }
   const handlecommissionChange = async () => {
@@ -819,21 +920,24 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
               setPopupTrigger(true)
               setPopupMsg(<div>Commission changed</div>)
               setPopupStatus("Success")
-
-              //Set new commission
-              await stakingQueryClient?.delegations({
-                user: address ?? "",
-              }).then((res) => {
-                setCommission(parseInt(res[0].delegation_info.commission) * 100) //Commission is a % so multiply by 100
-              })
+              setCommission(parseInt(commission) * 100) //Commission is a % so multiply by 100
             })
           } catch (error) {
             console.log(error)
             let e = error as {message: string};
-            //format popup message
-            setPopupTrigger(true)
-            setPopupMsg(<div>{e.message}</div>)
-            setPopupStatus("Error")        
+            //This is a success msg but a cosmjs error
+            if (e.message === "Invalid string. Length must be a multiple of 4"){
+              //format popup message
+              setPopupTrigger(true)
+              setPopupMsg(<div>Commission changed</div>)
+              setPopupStatus("Success")
+              setCommission(parseInt(commission) * 100) //Commission is a % so multiply by 100
+            } else {
+              //format popup message
+              setPopupTrigger(true)
+              setPopupMsg(<div>{e.message}</div>)
+              setPopupStatus("Error")
+            }
           }
         }}>  
         {/*Commission*/}

@@ -1239,10 +1239,18 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
     } catch (error) {
       console.log(error);
       const e = error as { message: string }
-      //Format popup message
-      setPopupMsg(e.message)
-      setPopupStatus("Error")
-      setPopupTrigger(true)
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //Format popup message
+        setPopupMsg("Claim of a portion of your total "+MBRNreward+" MBRN share was successful")
+        setPopupStatus("Success")
+        setPopupTrigger(true)
+      } else {
+        //Format popup message
+        setPopupMsg(e.message)
+        setPopupStatus("Error")
+        setPopupTrigger(true)
+      }
     }
   }
 

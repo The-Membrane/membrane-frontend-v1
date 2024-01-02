@@ -432,10 +432,18 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     } catch (error) {
       console.log(error)
       const e = error as { message: string }
-      //Format popup
-      setPopupStatus("Error")
-      setPopupMsg(e.message)
-      setPopupTrigger(true)
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //Format popup
+        setPopupStatus("Success")
+        setPopupMsg("Bid of "+ depositAmount +" CDT at a " +premium+ "% premium successful")
+        setPopupTrigger(true)
+      } else {
+        //Format popup
+        setPopupStatus("Error")
+        setPopupMsg(e.message)
+        setPopupTrigger(true)
+      }
     }
   }
 
@@ -525,10 +533,18 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           } catch (error) {
             console.log(error)
             const e = error as { message: string }
-            //Format popup
-            setPopupStatus("Error")
-            setPopupMsg(e.message)
-            setPopupTrigger(true)
+            //This is a success msg but a cosmjs error
+            if (e.message === "Invalid string. Length must be a multiple of 4"){
+              //Format popup
+              setPopupStatus("Success")
+              setPopupMsg("Retracted " +withdrawAmount+ " CDT from bid "+ bidId)
+              setPopupTrigger(true)
+            } else {
+              //Format popup
+              setPopupStatus("Error")
+              setPopupMsg(e.message)
+              setPopupTrigger(true)
+            }
           }
         }
       })
@@ -570,10 +586,18 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     } catch (error) {
       console.log(error)
       const e = error as { message: string }
-      //Format popup
-      setPopupStatus("Error")
-      setPopupMsg(e.message)
-      setPopupTrigger(true)
+      //This is a success msg but a cosmjs error
+      if (e.message === "Invalid string. Length must be a multiple of 4"){
+        //Format popup
+        setPopupStatus("Success")
+        setPopupMsg("Claimed " + lqClaimables.bidFor)
+        setPopupTrigger(true)
+      } else {
+        //Format popup
+        setPopupStatus("Error")
+        setPopupMsg(e.message)
+        setPopupTrigger(true)
+      }
 
     }
     
