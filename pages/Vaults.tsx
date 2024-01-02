@@ -1699,7 +1699,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     function createDepositElements(forVaults: boolean) {
         console.log(walletQTYs)
         return(<>
-            <div style={forVaults ? {display: "flex", gap: "5vh", flexDirection: "column", marginBottom: "2vh", alignItems: "center"}: {display: "flex", gap: "5vh", flexDirection: "column", alignItems: "center"}}>
+            <div style={forVaults ? {display: "flex", gap: "18%", flexDirection: "column", marginBottom: "5%", alignItems: "center"}: {display: "flex", gap: "5vh", flexDirection: "column", alignItems: "center"}}>
             {currentfunctionLabel === "deposit" ? <>
                 {walletQTYs.osmo > 0 ?        
                 <div className="deposit-element">
@@ -2113,7 +2113,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
             {showDefault() ?
                 <div>
-                    <div className="card" style={{borderRadius: "1rem", width: "27.35vw", minWidth: "182px"}}>
+                    <div className="card" style={{borderRadius: "1rem", width: "372px", height: "fit-content"}}>
                     <div className="vault-deposit-card-body vault-deposit-card-design shadow" style={{paddingRight: "0", paddingLeft: "0", paddingTop: ".75rem", paddingBottom: ".75rem"}}>
                         {/*For every collateral asset with a non-zero balance in the wallet, add an amount form */}
                         {createDepositElements(true)}
@@ -2122,7 +2122,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 </div>
             :
                 <div>
-                    {showDefault() !== true ? <div className="card" style={{borderRadius: "1rem", width: "16.35vw", minWidth: "182px"}}>
+                    {showDefault() !== true ? <div className="card" style={{borderRadius: "1rem", width: "16.35vw", minWidth: "182px", height: "fit-content"}}>
                     <div className="deposit-card-body deposit-card-design shadow" style={{paddingRight: "0", paddingLeft: "0", paddingTop: ".75rem", paddingBottom: ".75rem"}}>
                         {/*For every collateral asset with a non-zero balance in the wallet, add an amount form */}
                         {createDepositElements(false)}
@@ -2162,7 +2162,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         </div> */}
         {showDefault() ? 
         <div className="mint-card-div">
-            <div className="card" style={{borderRadius: "1rem", width: "24.35vw", marginBottom: "0%", marginTop: "5%"}}>
+            <div className="card" style={{borderRadius: "1rem", width: "331px", marginBottom: "0%", marginTop: "5%"}}>
             <div className="mint-card-body mint-card-design shadow" style={{paddingRight: ".75rem", paddingLeft: ".75rem", paddingTop: "1rem", paddingBottom: ".75rem"}}>                
                 <div className="mint-stats-grid">
                     <div className="value-div">
@@ -2178,7 +2178,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 </div>
                 {/*Mint/Repay card with position stats*/}
                 <div><div className="mint-element" style={currentfunctionLabel !== "repay" ? {} : {opacity: ".3"}}>
-                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%", width: "7vw", top: "-19%"}} onClick={()=>{handleExecution("mint")}}>
+                    <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%", width: "61px", top: "-19%"}} onClick={()=>{handleExecution("mint")}}>
                         Mint
                     </a> 
                     <form className="deposit-form" style={{top: "-19%"}}>
@@ -2192,7 +2192,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 {//Only show if there is minted debt
                 debtAmount > 0 ?
                     <div className="mint-element" style={currentfunctionLabel !== "mint" ? {} : {opacity: ".3"}}>
-                        <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%", width: "7vw", top: "-19%"}} onClick={()=>{handleExecution("repay")}}>
+                        <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%", width: "61px", top: "-19%"}} onClick={()=>{handleExecution("repay")}}>
                             Repay
                         </a> 
                         <form className="deposit-form" style={{top: "-19%"}}>

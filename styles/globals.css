@@ -224,9 +224,8 @@ p{
 .vault-deposit-card-design {
   background-color: #383838;
   border-radius: 1rem;
-  width: 27.2vw;
-  min-width: 180px;
-  height: fit-content;
+  width: 100%;
+  height: 100%;
 }
 .card-design,
 .card-designon,
@@ -251,9 +250,8 @@ p{
 }
 .mint-card-design {
   height: 260px;
-  width: 24.2vw;
-  min-width: 180px;
-  gap: 1vw;
+  width: 329px;
+  gap: 5px;
 }
 .mint-card-stats {
   font-size: large;
@@ -269,8 +267,8 @@ p{
   display: flex;
   flex-direction: column;
   align-items: center;
-  top: -2vh;
-  gap: 1vh;
+  top: -8%;
+  gap: 6px;
   position: relative;
 }
 .vault-menu-items-div {
@@ -3154,9 +3152,8 @@ span[data-descr]:hover::after {
 }
 .value-menu-dropdown {  
   border: 2px solid #798eff;
-  width: 5.5vw;
-  min-width: 51px;
-  height: 6vh;
+  width: 75px;
+  height: 38px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -3468,6 +3465,7 @@ span[data-descr]:hover::after {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 5%;
 }
 .vault-frame {
   position: absolute;
@@ -3488,7 +3486,7 @@ span[data-descr]:hover::after {
   flex-direction: row;
   align-items: flex-end;
   width: 100%;
-  height: 10vh;
+  height: 63px;
   gap: 13%;
 }
 .deposit-element-lp {
