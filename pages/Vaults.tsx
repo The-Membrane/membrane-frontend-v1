@@ -2159,7 +2159,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         </div> */}
         {showDefault() ? 
         <div className="mint-card-div">
-            <div className="card" style={{borderRadius: "1rem", width: "331px", marginBottom: "0%", marginTop: "5%"}}>
+            <div className="card" style={{borderRadius: "1rem", width: "331px", marginBottom: "0%", marginTop: "14%"}}>
             <div className="mint-card-body mint-card-design shadow" style={{paddingRight: ".75rem", paddingLeft: ".75rem", paddingTop: "1rem", paddingBottom: ".75rem"}}>                
                 <div className="mint-stats-grid">
                     <div className="value-div">
