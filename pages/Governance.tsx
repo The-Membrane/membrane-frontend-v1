@@ -15,6 +15,7 @@ import { useChain } from "@cosmos-kit/react";
 import { chainName, Delegate, delegateList, quadraticVoting } from "../config";
 import { VestingClient } from "../codegen/vesting/Vesting.client";
 import { IoTrophyOutline } from "react-icons/io5";
+import { get } from "http";
 
 const VOTING_PERIOD_IN_SECONDS = 7 * 86400;//
 
@@ -643,7 +644,7 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       }
     }
   }
-  const handledelegateForm = (fluid: boolean, vp: boolean, delegate: boolean, delegate_index?: number, var_governator?: string) => {
+  const handledelegateForm = async (fluid: boolean, vp: boolean, delegate: boolean, delegate_index?: number, var_governator?: string) => {
     //Initialize variables
     var stored_governator: Delegate;
     if (var_governator === undefined) {
@@ -656,6 +657,12 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
     } else {
       stored_governator = findDelegate(var_governator);
     }
+
+    if (delegate_index !== undefined && delegations[delegate_index].amount === 0) {
+      //Requery delegations if the user is attempting to undelegate & the governator amount is 0
+      getDelegations();
+    }
+
     var amount: string;
     //format popup message
     setPopupTrigger(true)
@@ -962,58 +969,89 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
   const getDelegations = async () => {
     try {
       await stakingQueryClient?.delegations({
-        user: address ?? "",
+        user: address as string ?? undefined,
       }).then( async (res) => {
         var delegationVP = 0;
-        //Set max parse
-        var max_parse = Math.min(res[0].delegation_info.delegated_to.length, 8)
+        var delegatedStake = 0;
 
-        //Set delegations
-        for (let i = 0; i < max_parse; i++) {
-          delegations[i].amount = parseInt(res[i].delegation_info.delegated_to[i].amount)
-          delegations[i].delegator = res[i].delegation_info.delegated_to[i].delegate
-          delegations[i].fluid = res[i].delegation_info.delegated_to[i].fluidity
-          //Subtract from user VP
-          if (res[i].delegation_info.delegated_to[i].voting_power_delegation === true) {
-            delegationVP -= parseInt(res[i].delegation_info.delegated_to[i].amount)
-          }
-          //Query and set commission
-          await stakingQueryClient?.delegations({
-            user: res[i].delegation_info.delegated_to[i].delegate,
-          }).then((res) => {
-            delegations[i].commission = parseInt(res[0].delegation_info.commission) * 100 //Commission is a % so multiply by 100
-          })
-        }
-        
-        //Set max parse
-        var max_parse = Math.min(res[0].delegation_info.delegated.length, 8)
-        //Set Delegators
-        for (let i = 0; i < max_parse; i++) {
-          delegators[i].amount = parseInt(res[i].delegation_info.delegated[i].amount)
-          delegators[i].delegator = res[i].delegation_info.delegated[i].delegate
-          delegators[i].fluid = res[i].delegation_info.delegated[i].fluidity
-          
-          //Add to user total VP
-          if (res[i].delegation_info.delegated[i].voting_power_delegation === true) {
-            delegationVP += parseInt(res[i].delegation_info.delegated_to[i].amount)
-          }          
-          //Add to user total VP
-            //@ts-ignore
-          setuserVP(prevState => {
-            return {
-              ...prevState,
-              userDelegations: prevState.userDelegations + delegationVP
+        if (res.length > 0) {
+          //Set delegation state for the listed delegates
+          delegateList.forEach((delegate, index) => {
+            let delegate_index = res[0].delegation_info.delegated_to.findIndex((delegate) => { delegate.delegate === delegateList[index].address});
+            if (delegate_index !== -1) {
+              delegations[index].amount = parseInt(res[0].delegation_info.delegated_to[delegate_index].amount)
+              delegations[index].fluid = res[0].delegation_info.delegated_to[delegate_index].fluidity
+              //Remove delegate from list
+              delegateList.splice(index, 1);
             }
+            delegations[index].delegator = delegate.name;
+          })
+          console.log(delegations)
+
+          //Set delegations
+          //We add the delegateList length bc we are going to remove them from the list
+          for (let i = 0; i < res[0].delegation_info.delegated_to.length; i++) {
+            //Set delegations if within the list length of 8
+            let index = i + delegateList.length;
+            if (index < 8) {
+              delegations[index].amount = parseInt(res[index].delegation_info.delegated_to[index].amount)
+              delegations[index].delegator = res[index].delegation_info.delegated_to[index].delegate.slice(13) + '...';
+              delegations[index].fluid = res[index].delegation_info.delegated_to[index].fluidity
+              
+              //Query and set commission
+              await stakingQueryClient?.delegations({
+                user: res[index].delegation_info.delegated_to[index].delegate,
+              }).then((res) => {
+                delegations[index].commission = parseInt(res[0].delegation_info.commission) * 100 //Commission is a % so multiply by 100
+              })
+              //////Move this to query when clicking on a delegate//////
+            }
+            //Subtract from user VP
+            if (res[index].delegation_info.delegated_to[index].voting_power_delegation === true) {
+              delegatedStake += parseInt(res[index].delegation_info.delegated_to[index].amount)
+            }
+          }
+          
+          //Set Delegators
+          for (let i = 0; i < res[0].delegation_info.delegated.length; i++) {          
+            //Add to user total VP
+            if (res[i].delegation_info.delegated[i].voting_power_delegation === true) {
+              if (quadraticVoting === true){
+                delegationVP += Math.sqrt(parseInt(res[i].delegation_info.delegated[i].amount))            
+              } else {              
+                delegationVP += parseInt(res[i].delegation_info.delegated_to[i].amount)
+              }
+            }          
+            //Add to user VP
+            setuserVP(prevState => {
+              return {
+                userStake: prevState.userStake - delegatedStake,
+                userDelegations: delegationVP,
+              }
+            })
+          }
+        } else {          
+          //Set delegation state for the listed delegates
+          delegateList.forEach((delegate, index) => {
+            delegations[index].amount = 0;
+            delegations[index].fluid = true;            
+            delegations[index].delegator = delegate.name;
           })
         }
         //Set delegations
         setDelegations(delegations)
-        //Set delegators
-        setDelegators(delegators)
       })
 
     } catch (error) {
       console.log(error)
+      //Set delegateList even though the VP amounts are not set
+      delegateList.forEach((delegate, index) => {
+        delegations[index].amount = 0;
+        delegations[index].fluid = true;
+        delegations[index].delegator = delegate.name;
+      })
+      //Set delegations
+      setDelegations(delegations)
     }
   }
 
