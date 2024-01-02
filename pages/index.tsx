@@ -282,44 +282,9 @@ export default function Home() {
 
             if (basketRes != undefined){
                 
-                //calc Debt
-                //@ts-ignore
-                setcreditPrice(parseFloat(basketRes.credit_price.price))
-                
-                if (rateRes != undefined){
-                    ///setCost///
-                    var total_rate = 0.0;
-                    //get the positions collateral indices in Basket rates
-                    //@ts-ignore
-                    userRes[0].positions[0].collateral_assets.forEach((asset, index, _) => {
-                        //find the asset's index                
-                        var rate_index = basketRes.collateral_types.findIndex((info) => {
-                            // @ts-ignore
-                            return info.asset.info.native_token.denom === asset.asset.info.native_token.denom
-                        })
-
-                        //use the index to get its interest rate
-                        var asset_rate = rateRes.rates[rate_index];
-
-                        //add pro-rata rate to sum 
-                        //@ts-ignore
-                        total_rate += parseFloat((parseFloat(asset_rate) * parseFloat(userRes[0].positions[0].cAsset_ratios[index])).toFixed(4));
-                    })
-
-                    if (creditRateRes != undefined){
-                        //Add credit rate to cost
-                        if (creditRateRes.negative_rate && basketRes.negative_rates){
-                            total_rate -= parseFloat(creditRateRes.credit_interest);
-                            console.log(creditRateRes.negative_rate && basketRes.negative_rates)
-                        } else {
-                            total_rate += parseFloat(creditRateRes.credit_interest);
-                        }   
-                    }
-                    //setCost 
-                    setCost(total_rate);
-                    contract_info.cost = total_rate;
-                }
-                
+              //calc Debt
+              //@ts-ignore
+              setcreditPrice(parseFloat(basketRes.credit_price.price))
             }
         }
         setcontractQTYs(contract_info);
@@ -1201,7 +1166,7 @@ export default function Home() {
         rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
         popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}
         positionQTYz={positionQTYs}
-        debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
+        debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
         contractQTYz={contractQTYs} walletQTYz={walletQTYs} walletChecked={walletChecked} fetch_update_positionData={fetch_update_positionData}
     />;
     } else if (activeComponent === 'dashboard') {
@@ -1211,7 +1176,7 @@ export default function Home() {
           rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
           popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}
           positionQTYz={positionQTYs}
-          debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} cost={cost} setCost={setCost} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
+          debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
           contractQTYz={contractQTYs} walletQTYz={walletQTYs} walletChecked={walletChecked} fetch_update_positionData={fetch_update_positionData}
       />;
     } else if (activeComponent === 'liquidation') {

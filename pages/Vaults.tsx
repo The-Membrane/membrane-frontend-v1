@@ -83,8 +83,6 @@ interface Props {
     setmaxLTV: (maxLTV: number) => void;
     brwLTV: number;
     setbrwLTV: (brwLTV: number) => void;
-    cost: number;
-    setCost: (cost: number) => void;
     positionID: string;
     setpositionID: (positionID: string) => void;
     user_address: string;
@@ -106,7 +104,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     debtAmount, setdebtAmount,
     maxLTV, setmaxLTV,
     brwLTV, setbrwLTV,
-    cost, setCost,
     positionID, setpositionID,
     user_address, setAddress,
     sliderValue, setsliderValue,
@@ -2167,6 +2164,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 <div className="mint-stats-grid">
                     <div className="value-div">
                         <div className="mint-card-stats">Debt: {(debtAmount/1_000000).toFixed(2)} CDT</div>
+                        <div className="mint-card-stats">Cost: {getRataCost()}%</div>
                         <div className="mint-card-stats">Liq. Value: ${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
                         <div className="mint-card-stats">TVL: ${(getTVL() ?? 0).toFixed(2)}</div>
                     </div>

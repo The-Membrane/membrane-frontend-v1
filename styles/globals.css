@@ -251,7 +251,7 @@ p{
 .mint-card-design {
   height: 260px;
   width: 329px;
-  gap: 5px;
+  /* gap: 5px; */
 }
 .mint-card-stats {
   font-size: large;
