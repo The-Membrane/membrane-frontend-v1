@@ -94,6 +94,8 @@ interface Props {
     contractQTYz: ContractInfo;
     walletQTYz: CollateralAssets;
     walletChecked: boolean;
+    positionChecked: boolean;
+    //Functions
     fetch_update_positionData: () => void;
 }
 
@@ -109,7 +111,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     sliderValue, setsliderValue,
     creditPrice, setcreditPrice,
     contractQTYz,
-    walletQTYz, walletChecked,
+    walletQTYz, walletChecked, positionChecked,
     fetch_update_positionData,
 }: Props) => {
     //WidgetPopup
@@ -669,7 +671,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             return;
         }///Set asset intents
         var asset_intent: [string, number][] = [];
-        if (depositAmounts.osmo != undefined && (depositAmounts.osmo??0) > 0){
+        if (depositAmounts.osmo != undefined && depositAmounts.osmo > 0){
             asset_intent.push(["OSMO", depositAmounts.osmo])
         }
         if (depositAmounts.atom != undefined && depositAmounts.atom > 0){
@@ -696,7 +698,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
 
         //switch on functionality
         switch (currentfunction_label){
-            case "deposit":{                
+            case "deposit":{
                 var user_coins = getcoinsfromassetIntents(asset_intent);
                 //Coins must be in order to send to contract
                 user_coins.sort((a, b) => a.denom < b.denom ? -1 : 1,);
@@ -1998,7 +2000,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         //Coins must be in order to send to contract
         user_coins.sort((a, b) => a.denom < b.denom ? -1 : 1,);
 
-        try {
+        try {            
+            if (positionChecked === false){
+                //Format popup msg
+                setPopupTrigger(true);
+                setPopupMsg(<div>Signing this message will create a new position, if that's not your goal wait for the query to finish & refresh if you've waited more than a couple minutes.</div>);
+                setPopupStatus("Position hasn't been queried yet");
+            }
             await cdp_client?.deposit({
                 positionId: undefined,
                 positionOwner: user_address as string,

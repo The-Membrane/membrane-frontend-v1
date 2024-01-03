@@ -96,6 +96,7 @@ export default function Home() {
     osmousdc_pool: undefined,
   });
   const [walletChecked, setwalletChecked] = useState<boolean>(false);
+  const [positionChecked, setpositionChecked] = useState<boolean>(false);
   //Asset specific
   //qty
   const [positionQTYs, setpositionQTYs] = useState<DefinedCollateralAssets>({
@@ -200,7 +201,7 @@ export default function Home() {
       sliderValue: 0,
     };
     //Query for position data
-    try {        
+    try {
         //getBasket
         const basketRes = await cdpqueryClient?.getBasket();
         setbasketRes(basketRes as Basket);        
@@ -219,6 +220,7 @@ export default function Home() {
 
         //Set state
         if (userRes != undefined && address != undefined){
+          setpositionChecked(true)
             //setPositionID
             //@ts-ignore
             setpositionID(userRes[0].positions[0].position_id)
@@ -289,7 +291,11 @@ export default function Home() {
         }
         setcontractQTYs(contract_info);
     } catch (error) {
-        console.log(error)
+        const e = error as { message: string }
+        console.log(e.message)
+        if (e.message.includes("No User Positions")){
+          setpositionChecked(true)
+        }
     }
   };
 
@@ -1168,7 +1174,7 @@ export default function Home() {
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
         rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
         popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}
-        positionQTYz={positionQTYs}
+        positionQTYz={positionQTYs} positionChecked={positionChecked}
         debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
         contractQTYz={contractQTYs} walletQTYz={walletQTYs} walletChecked={walletChecked} fetch_update_positionData={fetch_update_positionData}
     />;
@@ -1178,7 +1184,7 @@ export default function Home() {
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}
           rateRes={rateRes} setrateRes={setrateRes} creditRateRes={creditRateRes} setcreditRateRes={setcreditRateRes} basketRes={basketRes} setbasketRes={setbasketRes}
           popupTrigger={popupTrigger} setPopupTrigger={setPopupTrigger} popupMsg={popupMsg} setPopupMsg={setPopupMsg} popupStatus={popupStatus} setPopupStatus={setPopupStatus}
-          positionQTYz={positionQTYs}
+          positionQTYz={positionQTYs} positionChecked={positionChecked}
           debtAmount={debtAmount} setdebtAmount={setdebtAmount} maxLTV={maxLTV} setmaxLTV={setmaxLTV} brwLTV={brwLTV} setbrwLTV={setbrwLTV} positionID={positionID} setpositionID={setpositionID} user_address={user_address} setAddress={setAddress} sliderValue={sliderValue} setsliderValue={setsliderValue} creditPrice={creditPrice} setcreditPrice={setcreditPrice}
           contractQTYz={contractQTYs} walletQTYz={walletQTYs} walletChecked={walletChecked} fetch_update_positionData={fetch_update_positionData}
       />;
