@@ -2004,8 +2004,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             if (positionChecked === false){
                 //Format popup msg
                 setPopupTrigger(true);
-                setPopupMsg(<div>Signing this message will create a new position, if that's not your goal wait for the query to finish & refresh if you've waited more than a couple minutes.</div>);
-                setPopupStatus("Position hasn't been queried yet");
+                setPopupMsg(<div>Signing this message will create a new position, if that is not your goal wait for the query to finish & refresh if you have waited more than a couple minutes.</div>);
+                setPopupStatus("Position has not been queried yet");
             }
             await cdp_client?.deposit({
                 positionId: undefined,
