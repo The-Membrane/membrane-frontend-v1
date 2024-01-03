@@ -20,6 +20,7 @@ Vaults.tsx:
 - add to onboardingDeposit logic
 - add to handlesetDepositAmount & handlesetDepositInput fn 
 - add to assetintents logic
+- add to checkIfWalletEmpty
 
 Liquidations.tsx:
 - Add to menuAsset

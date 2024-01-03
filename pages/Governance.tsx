@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ProgressBar from "../components/progress_bar";
-import { GovernanceClient } from "../codegen/governance/Governance.client";
+import { GovernanceClient, GovernanceQueryClient } from "../codegen/governance/Governance.client";
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { ProposalResponse, ProposalMessage, VoteOption, ProposalVoteOption } from "../codegen/governance/Governance.types";
 import Popup from "../components/Popup";
@@ -58,6 +58,7 @@ export interface UserVP {
 }
 interface Props {
   govClient: GovernanceClient | null;
+  govQueryClient: GovernanceQueryClient | null;
   stakingClient: StakingClient | null;
   stakingQueryClient: StakingQueryClient | null;
   vestingClient: VestingClient | null;
@@ -76,7 +77,7 @@ interface Props {
   WalletMBRN: number;
 }
 
-const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient, address,
+const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClient, vestingClient, address,
   Delegations, Delegators, quorum, setQuorum, maxCommission, setmaxCommission, Proposals, UserVP, EmissionsSchedule, UserStake, UserClaims, WalletMBRN
 }: Props) => {
   const { connect } = useChain(chainName);
@@ -277,8 +278,8 @@ const Governance = ({govClient, stakingClient, stakingQueryClient, vestingClient
       }
       //Get user vote
       var userVote = "N/A";
-      
-      await govClient?.proposal({proposalId: parseInt(proposal.proposal_id)}).then( (voters) => {
+      console.log(parseInt(proposal.proposal_id))
+      await govQueryClient?.proposal({proposalId: parseInt(proposal.proposal_id)}).then( (voters) => {
         voters.for_voters.forEach((vote) => {
           if (vote === address) {
             userVote = "For";

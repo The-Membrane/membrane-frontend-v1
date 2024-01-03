@@ -906,7 +906,10 @@ export default function Home() {
           //Active
           for (let i = 0; i < active_proposals.length; i++) {
             let proposal = active_proposals[i];
-            if (skipProposals.includes(proposal.proposal_id)) {continue}
+            if (skipProposals.includes(proposal.proposal_id)) {
+              console.log("skipped:", proposal.proposal_id)
+              continue
+            }
               if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
                               
                 //Query total voting power
@@ -1184,7 +1187,7 @@ export default function Home() {
         capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL} setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead}
       />;
     } else if (activeComponent === 'staking') {
-      return <Governance govClient={governance_client} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} vestingClient={vesting_client} address={address as string | undefined} 
+      return <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} vestingClient={vesting_client} address={address as string | undefined} 
         Delegations={delegations} Delegators={delegators} quorum={quorum} Proposals={proposals} UserVP={userVP} EmissionsSchedule={emissionsSchedule} UserStake={userStake} UserClaims={userClaims} WalletMBRN={walletMBRN??0}
         setQuorum={setQuorum} maxCommission={maxCommission} setmaxCommission={setmaxCommission}
       />;
