@@ -267,15 +267,15 @@ p{
   display: flex;
   flex-direction: column;
   align-items: center;
-  top: -8%;
-  gap: 6px;
+  top: -13px;
+  gap: 0px;
   position: relative;
 }
 .vault-menu-items-div {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 9vh;
+  gap: 8.2vh;
   position: relative;
 }
 .deposit-withdraw-card-btns {
@@ -3454,18 +3454,24 @@ span[data-descr]:hover::after {
   display: flex;
   flex-direction: row;
   position: relative;
-  height: 8%;
+  height: 47px;
   font-size: xx-large;
 }
-.vaults-title {  
-  
+.asset-card-title {  
+  font-size: medium;
+  z-index: 999;
+}
+.vaults-title-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .first-vault-component {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5%;
+  gap: 6px;
 }
 .vault-frame {
   position: absolute;
@@ -3530,6 +3536,7 @@ span[data-descr]:hover::after {
 .deposit-amount-label { 
   position: relative;
   top: 7px;
+  width: 155%;
   font-size: large;
 }
 .card-deposit-amount {  

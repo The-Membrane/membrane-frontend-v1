@@ -204,12 +204,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
       atomosmo_pool: 0,
       osmousdc_pool: 0,
     });
+    const [assetcardTitle, setassetcardTitle] = useState("Show All Assets");
     //Mint-Repay card
     const [mintAmount, setmintAmount] = useState<number | undefined>();
     const [repayAmount, setrepayAmount] = useState<number | undefined>();
-
-    //Squid Widget
-    // const [swapScreen, setswapScreen] = useState(false);    
     //Menu
     const [open, setOpen] = useState(false);
     const [menuLabel, setMenuLabel] = useState("Value" as string);
@@ -1698,9 +1696,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     function createDepositElements(forVaults: boolean) {
         console.log(walletQTYs)
         return(<>
-            <div style={forVaults ? {display: "flex", gap: "18%", flexDirection: "column", marginBottom: "5%", alignItems: "center"}: {display: "flex", gap: "5vh", flexDirection: "column", alignItems: "center"}}>
+            <div style={forVaults ? {display: "flex", gap: "23px", flexDirection: "column", marginBottom: "5%", alignItems: "center"}: {display: "flex", gap: "23px", flexDirection: "column", alignItems: "center"}}>
             {currentfunctionLabel === "deposit" ? <>
-                {walletQTYs.osmo > 0 ?        
+                {walletQTYs.osmo > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element">
                     <div className="deposit-element-icon">
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
@@ -1711,7 +1709,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
                     </form>
                 </div>: null}
-                {walletQTYs.atom > 0 ?        
+                {walletQTYs.atom > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element">
                     <div className="deposit-element-icon">
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
@@ -1722,7 +1720,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atom", event)}/>
                     </form>
                 </div>: null}
-                {walletQTYs.usdc > 0 ?        
+                {walletQTYs.usdc > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element">
                     <div className="deposit-element-icon">
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.svg" />
@@ -1733,7 +1731,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdc", event)}/>
                     </form>
                 </div>: null}
-                {walletQTYs.axlusdc > 0 ?        
+                {walletQTYs.axlusdc > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element">
                     <div className="deposit-element-icon">
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.axl.svg" />
@@ -1744,7 +1742,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
                     </form>
                 </div>: null}
-                {walletQTYs.stAtom > 0 ?        
+                {walletQTYs.stAtom > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element">
                     <div className="deposit-element-icon">
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/statom.svg" />
@@ -1755,7 +1753,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stAtom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stAtom", event)}/>
                     </form>
                 </div>: null}
-                {walletQTYs.stOsmo > 0 ?        
+                {walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element">
                     <div className="deposit-element-icon">
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/stosmo.svg" />
@@ -1766,7 +1764,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stOsmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stOsmo", event)}/>
                     </form>
                 </div>: null}
-                {walletQTYs.atomosmo_pool > 0 ?        
+                {/* {walletQTYs.atomosmo_pool > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element-lp">
                     <div className="deposit-element-icon-lp">
                         <Image className="deposit-icon-lp-left" width={45} height={45} alt="" src="images/atom.svg" />
@@ -1778,7 +1776,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
                     </form>
                 </div>: null}
-                {walletQTYs.osmousdc_pool > 0 ?        
+                {walletQTYs.osmousdc_pool > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element-lp">
                     <div className="deposit-element-icon-lp">
                         <Image className="deposit-icon-lp-left" width={45} height={45} alt="" src="images/osmo.svg" />
@@ -1789,7 +1787,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
                     </form>
-                </div>: null}
+                </div>: null} */}
                 </> : //Withdraw elements
                 <> 
                 {contractQTYs.osmo > 0 ?        
@@ -1905,30 +1903,30 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             <div className="vault-menu-items-div">
             {menuLabel === "Value" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.osmo * +prices.osmo) > 1000 ? (((positionQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.osmo * +prices.osmo) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.atom * +prices.atom) > 1000 ? (((positionQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.atom * +prices.atom) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((positionQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>${ (positionQTYs.usdc * +prices.usdc) > 1000 ? (((positionQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.usdc * +prices.usdc) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stAtom * +prices.stAtom) > 1000 ? (((positionQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2)}</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>${ (positionQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((positionQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.osmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmo > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.osmo > 0 ?  "" : "low-opacity") : (positionQTYs.osmo > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.osmo * +prices.osmo) > 1000 ? (((walletQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.osmo * +prices.osmo) ?? 0).toFixed(2)) : ((positionQTYs.osmo * +prices.osmo) > 1000 ? (((positionQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.osmo * +prices.osmo) ?? 0).toFixed(2))}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.atom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.atom > 0 ?  "" : "low-opacity") : (positionQTYs.atom > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.atom * +prices.atom) > 1000 ? (((walletQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.atom * +prices.atom) ?? 0).toFixed(2)) : ((positionQTYs.atom * +prices.atom) > 1000 ? (((positionQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.atom * +prices.atom) ?? 0).toFixed(2))}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.usdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.usdc > 0 ?  "" : "low-opacity") : (positionQTYs.usdc > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.usdc * +prices.usdc) > 1000 ? (((walletQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.usdc * +prices.usdc) ?? 0).toFixed(2)) : ((positionQTYs.usdc * +prices.usdc) > 1000 ? (((positionQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.usdc * +prices.usdc) ?? 0).toFixed(2))}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.axlusdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.axlusdc > 0 ?  "" : "low-opacity") : (positionQTYs.axlusdc > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((walletQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2)) : ((positionQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((positionQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2))}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.stAtom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.stAtom > 0 ?  "" : "low-opacity") : (positionQTYs.stAtom > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.stAtom * +prices.stAtom) > 1000 ? (((walletQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2)) : ((positionQTYs.stAtom * +prices.stAtom) > 1000 ? (((positionQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2))}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.stOsmo > 0 ?  "" : "low-opacity") : (positionQTYs.stOsmo > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((walletQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2)) : ((positionQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((positionQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2))}</div> : null}
                 </>
             : menuLabel === "Rate" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.osmo ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{rates.osmo.toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(rates.atom).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(rates.axlUSDC).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(rates.usdc).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(rates.stAtom).toFixed(4)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(rates.stOsmo).toFixed(4)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.osmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmo ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{rates.osmo.toFixed(4)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.atom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(rates.atom).toFixed(4)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.usdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(rates.usdc).toFixed(4)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.axlusdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(rates.axlUSDC).toFixed(4)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.stAtom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(rates.stAtom).toFixed(4)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(rates.stOsmo).toFixed(4)}%</div> : null}
                 </>
             : menuLabel === "Util" ? 
                 <>
-                {currentfunctionLabel === "deposit" && walletQTYs.osmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{(debtCaps.osmo * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.atom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(debtCaps.atom * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.axlusdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.usdc > 0 || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(debtCaps.usdc * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stAtom > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(debtCaps.stAtom * 100).toFixed(2)}%</div> : null}
-                {currentfunctionLabel === "deposit" && walletQTYs.stOsmo > 0 || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(debtCaps.stOsmo * 100).toFixed(2)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.osmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmo > 0 ? <div className={positionQTYs.osmo > 0 ?  "" : "low-opacity"}>{(debtCaps.osmo * 100).toFixed(2)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.atom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={positionQTYs.atom > 0 ?  "" : "low-opacity"}>{(debtCaps.atom * 100).toFixed(2)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.usdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={positionQTYs.usdc > 0 ?  "" : "low-opacity"}>{(debtCaps.usdc * 100).toFixed(2)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.axlusdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={positionQTYs.axlusdc > 0 ?  "" : "low-opacity"}>{(debtCaps.axlUSDC * 100).toFixed(2)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.stAtom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={positionQTYs.stAtom > 0 ?  "" : "low-opacity"}>{(debtCaps.stAtom * 100).toFixed(2)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(debtCaps.stOsmo * 100).toFixed(2)}%</div> : null}
                 </>
             : null}
             </div>
@@ -2065,6 +2063,12 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             fetch_update_positionData();
         }
     };
+    const handleshowAll = () => {
+        setassetcardTitle("Show Relevant Assets")
+    };
+    const handleshowRelevant = () => {
+        setassetcardTitle("Show All Assets")
+    };
 
     //getuserPosition info && set State
     useEffect(() => {    
@@ -2101,20 +2105,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
   return (
     <div className="page-frame positions">
         <div className="first-vault-component">
-            {showDefault() ? <div className="vaults-title">
-                VAULTS
-                <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
+            {showDefault() ? <div className="vaults-title-div">
+                <div className="vaults-title">
+                    VAULTS
+                    <div><Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" /></div>
+                </div>
+                {currentfunctionLabel === "deposit" ? (assetcardTitle === "Show All Assets" ? <a className="asset-card-title" style={{textDecoration: "underline"}} onClick={handleshowAll}>{assetcardTitle}</a> : <a className="asset-card-title" style={{textDecoration: "underline"}} onClick={handleshowRelevant}>{assetcardTitle}</a>) : null}
             </div>
                 : 
-            checkIfWalletEmpty() === true ?             
+            checkIfWalletEmpty() === true ?
             <div className="onboarding-deposit-title" style={{left: "0%"}}>
-                Bridge to Osmosis     
-            </div> 
+                Bridge to Osmosis
+            </div>
             :
-            <div className="onboarding-deposit-title" style={{left: "3%"}}>
-                Fund Position
-                <Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" />          
-            </div> 
+            <div className="vaults-title-div" style={{left: "3%"}}>
+                <div className="onboarding-deposit-title">
+                    Fund Position
+                    <div><Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" /></div>
+                </div>
+                {assetcardTitle === "Show All Assets" ? <a className="asset-card-title" style={{textDecoration: "underline"}} onClick={handleshowAll}>{assetcardTitle}</a> : <a className="asset-card-title" style={{textDecoration: "underline"}} onClick={handleshowRelevant}>{assetcardTitle}</a>}
+            </div>
             }
             {showDefault() ?
                 <div>
@@ -2136,7 +2146,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         Deposit
                         </a> 
                         : address === undefined ?
-                        <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%"}} onClick={()=>connect()}>                        
+                        <a className="btn buttons" style={assetcardTitle !== "Show Relevant Assets" ? {borderRadius: "1rem", color: "white", marginTop: "0%"} : {borderRadius: "1rem", color: "white", marginTop: "12%"}} onClick={()=>connect()}>                        
                         {/*If wallet is not connected, connect*/}
                         Connect Wallet
                         </a> 
