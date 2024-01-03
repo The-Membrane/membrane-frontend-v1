@@ -45,10 +45,13 @@ export function useClients(): {
 
       signed_errored = false;
       
-      //Use this to access the RPC node directly instead of using public RPCs with getSigningCosmWasmClient()
-      // https://rpc.osmotest5.osmosis.zone/
-      // https://rpc.osmosis.zone
-      // https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573
+      
+      ///I can change the RPC node here
+      //https://rpc.osmotest5.osmosis.zone/
+      //https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573
+      //Reece's: osmosis-rpc.reece.sh
+      //Polkachu's: https://osmosis-rpc.polkachu.com/
+      //Meta: https://rpc.cosmos.directory/osmosis (list of RPCs: https://cosmos.directory/osmosis/nodes)
       const signer = getOfflineSigner();
       
       var client = SigningCosmWasmClient.connectWithSigner(
@@ -119,7 +122,7 @@ export function useQueryClients(): {
     //https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573
     //Reece's: osmosis-rpc.reece.sh
     //Polkachu's: https://osmosis-rpc.polkachu.com/
-    //Meta: https://rpc.cosmos.directory/osmosis
+    //Meta: https://rpc.cosmos.directory/osmosis (list of RPCs: https://cosmos.directory/osmosis/nodes)
     var client = CosmWasmClient.connect("https://g.w.lavanet.xyz:443/gateway/cos3/rpc-http/bb6d2019c50124ec4fdb78498bc50573")
     .catch((e) => {
       console.log(e);
