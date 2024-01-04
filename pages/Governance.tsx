@@ -17,7 +17,8 @@ import { VestingClient } from "../codegen/vesting/Vesting.client";
 import { IoTrophyOutline } from "react-icons/io5";
 import { get } from "http";
 
-const VOTING_PERIOD_IN_SECONDS = 7 * 86400;//
+const VOTING_PERIOD_IN_SECONDS = 7 * 86400;
+const EXPEDITED_VOTING_PERIOD_IN_SECONDS = 3 * 86400;
 
 export interface Delegation {
   delegator: string;
@@ -272,7 +273,12 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       }
       //Get daysLeft
       var daysPast = (Date.now() / 1000) - proposal.start_time;
-      var daysLeft = (VOTING_PERIOD_IN_SECONDS - daysPast) / SECONDS_PER_DAY;
+      var daysLeft = 0;
+      if (proposal.end_block - proposal.start_block === 43,200){
+        daysLeft = (EXPEDITED_VOTING_PERIOD_IN_SECONDS - daysPast) / SECONDS_PER_DAY;
+      } else {
+        daysLeft = (VOTING_PERIOD_IN_SECONDS - daysPast) / SECONDS_PER_DAY;
+      };
       if (daysLeft < 0) {
         daysLeft = 0;
       }

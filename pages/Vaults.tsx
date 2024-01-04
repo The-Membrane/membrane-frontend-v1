@@ -2039,9 +2039,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             ////Error message
             const e = error as { message: string }
             console.log(e.message)
-            ///Format Pop up
-            setPopupTrigger(true);
-            setPopupMsg(<div>{e.message}</div>);
             //This is a success msg but a cosmjs error
             if (e.message === "Invalid string. Length must be a multiple of 4"){
                 //format pop up
@@ -2057,8 +2054,12 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 setassetIntent([])
                 //Requery position
                 fetch_update_positionData();
+            } else {                
+                ///Format Pop up
+                setPopupTrigger(true);
+                setPopupMsg(<div>{e.message}</div>);
+                setPopupStatus("Deposit Error");
             }
-            setPopupStatus("Deposit Error");
             //Requery position
             fetch_update_positionData();
         }
