@@ -94,6 +94,11 @@ export const delegateList = [
         socials: ["@nostradamus411", "nostradamus.nosnode"]
     },
     {
+        name: "Banana DAO",
+        address: "osmo1uvnk984yhpw48jfu5srvsrqdt03kkvlcjqx8x5",
+        socials: ["@thebananadao", "arcmosis"]
+    },
+    {
         name: "Trix",
         address: "osmo13gu58hzw3e9aqpj25h67m7snwcjuccd7v4p55w",
         socials: ["@brane_trix", "tri.xxx"]

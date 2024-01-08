@@ -1155,6 +1155,13 @@ span[data-descr]:hover::after {
 .twitter1 {
   left: 85px;
 }
+.dash-footer {
+  cursor: pointer;
+  position: absolute;
+  left: 186px;
+  width: 63px;
+  height: 18px;
+}
 .discord1,
 .twitter1 {
   position: absolute;
@@ -1171,7 +1178,7 @@ span[data-descr]:hover::after {
   position: fixed;
   height: 4vh;
   bottom: 1vh;
-  right: 1%;
+  right: 6%;
   width: 190px;
   color: #ffffff;
   z-index: 1;
@@ -2388,7 +2395,7 @@ span[data-descr]:hover::after {
 .stake {
   position: absolute;
   top: -10%;
-  left: 5;
+  left: 54%;
   text-align: center;
   font-size: 150%;
 }
@@ -2399,7 +2406,7 @@ span[data-descr]:hover::after {
   width: 55px;
   height: 28px;
   bottom: 5.5%;
-  left: 54%;
+  left: 14%;
   z-index: 30;
 }
 .stake-button1 {

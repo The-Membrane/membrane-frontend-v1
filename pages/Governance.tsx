@@ -1156,10 +1156,10 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
             <div className="staked-mbrn2">in Wallet: {walletMBRN.toFixed(2)}</div>
           </div>
           <form style={{position: "relative", bottom: "10%"}}>
-            <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
             <button className="btn stake-button1" type="button" onClick={handlestakeClick}>
-              <div className="stake" data-tvl="Unstaking is currently broken">Stake:</div>
+              <div className="stake" data-tvl="Unstaking is currently broken">Stake</div>
             </button>
+            <input className="stake-input" name="amount" value={stakeAmount} type="number" onChange={handlesetstakeAmount}/>
           </form>
         </div>  
         <div className="unstake-button-frame">
