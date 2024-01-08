@@ -98,6 +98,66 @@ interface Props {
     //Functions
     fetch_update_positionData: () => void;
 }
+    
+   export function getassetRatios(TVL: number, positionQTYs: DefinedCollateralAssets, prices: Prices) {
+    return(
+        {
+            osmo: (positionQTYs.osmo * +prices.osmo) / TVL,
+            atom: (positionQTYs.atom * +prices.atom) / TVL,
+            axlusdc: (positionQTYs.axlusdc * +prices.axlUSDC) /TVL,
+            usdc: (positionQTYs.usdc * +prices.usdc) /TVL,
+            stAtom: (positionQTYs.stAtom * +prices.stAtom) /TVL,
+            stOsmo: (positionQTYs.stOsmo * +prices.stOsmo) /TVL,
+            atomosmo_pool: (positionQTYs.atomosmo_pool * +prices.atomosmo_pool) /TVL,
+            osmousdc_pool: (positionQTYs.osmousdc_pool * +prices.osmousdc_pool) /TVL,
+        }
+    )
+   }
+
+   /// Get pro-rata LTV
+   export function getRataLTV(TVL: number, positionQTYs: DefinedCollateralAssets, prices: Prices, basketRes: Basket | undefined) {
+    var ratios = getassetRatios(TVL, positionQTYs, prices);
+    var maxLTV = 0;
+    var brwLTV = 0;
+    
+    basketRes?.collateral_types.forEach((collateral) => {      
+        //@ts-ignore
+        if (collateral.asset.info.native_token.denom === denoms.osmo){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.osmo;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.osmo;  
+        //@ts-ignore          
+        } else if (collateral.asset.info.native_token.denom === denoms.atom){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.atom;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.atom;   
+        //@ts-ignore          
+        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.axlusdc;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.axlusdc;  
+        //@ts-ignore          
+        } else if (collateral.asset.info.native_token.denom === denoms.usdc){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.usdc;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.usdc;
+        //@ts-ignore
+        } else if (collateral.asset.info.native_token.denom === denoms.stAtom){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.stAtom;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.stAtom;  
+        //@ts-ignore
+        } else if (collateral.asset.info.native_token.denom === denoms.stOsmo){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.stOsmo;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.stOsmo;
+        //@ts-ignore          
+        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.atomosmo_pool;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.atomosmo_pool;  
+        //@ts-ignore           
+        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool){
+            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.osmousdc_pool;
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.osmousdc_pool;  
+        }
+    });
+
+    return( [brwLTV, maxLTV] )
+   }
 
 const Positions = ({cdp_client, queryClient, address, walletCDT, pricez, 
     popupTrigger, setPopupTrigger, popupMsg, setPopupMsg, popupStatus, setPopupStatus,
@@ -476,7 +536,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     };
     const handlecontractQTYupdate = () => {        
         //Set new LTVs & costs
-        let LTVs = getRataLTV();
+        let LTVs = getRataLTV(getTVL(), positionQTYs, prices, basketRes);
         let cost = getRataCost();
         //@ts-ignore
         setcontractQTYs(prevState => {
@@ -1147,23 +1207,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         "https://tfm.com/ibc"
         );
    };  
-//    const handleswapClick = () => {
-//     //Set popup for squid widget
-//     setWidgetPopupTrigger(true);
-//     setPopupWidget(<div>
-//         <SquidWidget config={
-//         {integratorId: "membrane-swap-widget",
-//         companyName:"Membrane",
-//         slippage:3,
-//         hideAnimations: true,
-//         showOnRampLink: true,
-//         initialToChainId: "osmosis-1",
-//         initialFromChainId: "cosmoshub-4",
-//         }}/>
-//     </div>);
-//     setWidgetPopupStatus("Swap to Osmosis");
-//         // setswapScreen(true);
-//    };
 
    function getTVL() {
     return(
@@ -1171,68 +1214,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         + (positionQTYs.atomosmo_pool * +prices.atomosmo_pool) + (positionQTYs.osmousdc_pool * +prices.osmousdc_pool) + (positionQTYs.stAtom * +prices.stAtom) + (positionQTYs.stOsmo * +prices.stOsmo)
     )
    }
-   function getassetRatios() {
-    var TVL = getTVL();
-    return(
-        {
-            osmo: (positionQTYs.osmo * +prices.osmo) / TVL,
-            atom: (positionQTYs.atom * +prices.atom) / TVL,
-            axlusdc: (positionQTYs.axlusdc * +prices.axlUSDC) /TVL,
-            usdc: (positionQTYs.usdc * +prices.usdc) /TVL,
-            stAtom: (positionQTYs.stAtom * +prices.stAtom) /TVL,
-            stOsmo: (positionQTYs.stOsmo * +prices.stOsmo) /TVL,
-            atomosmo_pool: (positionQTYs.atomosmo_pool * +prices.atomosmo_pool) /TVL,
-            osmousdc_pool: (positionQTYs.osmousdc_pool * +prices.osmousdc_pool) /TVL,
-        }
-    )
-   }
-   /// Get pro-rata LTV
-   function getRataLTV() {
-    var ratios = getassetRatios();
-    var maxLTV = 0;
-    var brwLTV = 0;
-    
-    basketRes?.collateral_types.forEach((collateral) => {      
-        //@ts-ignore
-        if (collateral.asset.info.native_token.denom === denoms.osmo){
-            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.osmo;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.osmo;  
-        //@ts-ignore          
-        } else if (collateral.asset.info.native_token.denom === denoms.atom){
-            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.atom;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.atom;   
-        //@ts-ignore          
-        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC){
-            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.axlusdc;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.axlusdc;  
-        //@ts-ignore          
-        } else if (collateral.asset.info.native_token.denom === denoms.usdc){
-            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.usdc;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.usdc;
-        //@ts-ignore
-        } else if (collateral.asset.info.native_token.denom === denoms.stAtom){
-            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.stAtom;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.stAtom;  
-        //@ts-ignore
-        } else if (collateral.asset.info.native_token.denom === denoms.stOsmo){
-            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.stOsmo;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.stOsmo;
-        //@ts-ignore          
-        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool){
-            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.atomosmo_pool;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.atomosmo_pool;  
-        //@ts-ignore           
-        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool){
-            maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.osmousdc_pool;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.osmousdc_pool;  
-        }
-    });
-
-    return( [brwLTV, maxLTV] )
-   }
    ///Get pro-rata cost
     function getRataCost() {
-        var ratios = getassetRatios();
+        var ratios = getassetRatios(getTVL(), positionQTYs, prices);
         var cost = 0;
 
         if (positionQTYs.osmo > 0){

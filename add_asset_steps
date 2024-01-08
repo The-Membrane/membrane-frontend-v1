@@ -5,6 +5,8 @@ index.tsx:
 - add to Prices struct
 - add to contractQTYs & walletQTYs initiation
 - add to walletQTY query logic
+- add to getPositionValue 
+- add to getPositionQTYs
 
 Vaults.tsx:
 - add to contractQTYs struct

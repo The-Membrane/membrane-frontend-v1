@@ -1116,9 +1116,9 @@ span[data-descr]:hover::after {
   justify-content: flex-start;
 }
 .titleicon {
-  position: absolute;
+  position: relative;
   top: 7px;
-  left: 238px;
+  left: 21px;
   width: 45px;
   height: 45px;
 }
@@ -1188,7 +1188,7 @@ span[data-descr]:hover::after {
   left: 50px;
 }
 .pagetitle {
-  position: absolute;
+  position: relative;
   top: 12px;
   left: 27px;
   font-size: xx-large;
@@ -1281,7 +1281,23 @@ span[data-descr]:hover::after {
   align-items: flex-start;
   justify-content: flex-start;
 }
-
+.liquidation-pool-title {
+  display: inline-flex;
+}
+.liquidation-pool-header {
+  display: inline-flex;
+  gap: 81px;
+}
+.liquidatible-positions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.liquidate-button {
+  position: relative;
+  width: 11vw;
+  background-color: #798EFF;
+}
 /*LOCKDROP SPECIFIC*/
 .deposit,
 .withdraw,

@@ -7,13 +7,13 @@ import NavBar from '../components/NavBar';
 import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
 import Governance, { Delegation, Delegator, EmissionsSchedule, ProposalList, UserClaims, UserStake } from './Governance';
-import Positions, { CollateralAssets, ContractInfo, DefinedCollateralAssets } from './Vaults';
+import Positions, { CollateralAssets, ContractInfo, DefinedCollateralAssets, getRataLTV } from './Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import Popup from "../components/Popup";
 import Hotjar from '@hotjar/browser';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, RedeemabilityResponse } from "../codegen/positions/Positions.types";
+import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
 import { delegateList, denoms, quadraticVoting, skipProposals } from "../config";
@@ -67,6 +67,7 @@ export default function Home() {
   const [walletCDT, setwalletCDT] = useState<number | undefined>(undefined);
   const [walletMBRN, setwalletMBRN] = useState<number | undefined>(undefined);
   const [inLaunch, setinLaunch] = useState<boolean | undefined>(undefined);
+  const [riskyPositions, setriskyPositions] = useState<[string, number, PositionResponse][]>([]);
 
   ////Positions////
   //This is used to keep track of what asses the user has in the contract
@@ -1016,7 +1017,114 @@ export default function Home() {
     return !((walletCDT != undefined && walletCDT > 0) || (walletMBRN != undefined && walletMBRN > 0) || (inLaunch != undefined && inLaunch === true))
   }
   
+  //Calculate the position value using prices and collateral quantities
+  function getPositionValue(position: PositionResponse){
+    var position_value = 0;
+    //Calc position value
+    if (position.collateral_assets.length > 0) {
+      position.collateral_assets.forEach((collateral) => {//@ts-ignore   
+        if (collateral.asset.info.native_token.denom === denoms.osmo) {
+          position_value += prices.osmo * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.atom) {
+          position_value += prices.atom * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC) {
+          position_value += prices.axlUSDC * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.usdc) {
+          position_value += prices.usdc * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.stAtom) {
+          position_value += prices.stAtom * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.stOsmo) {
+          position_value += prices.stOsmo * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool) {
+          position_value += prices.atomosmo_pool * parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool) {
+          position_value += prices.osmousdc_pool * parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
+        }
+      })
+    }  
+    return position_value;
+  }
 
+  function getPositionLTV(position_value: number, credit_amount: number){
+    let debt_value = (credit_amount / 1_000_000) * parseFloat(basketRes?.credit_price.price ?? "1");
+
+    return debt_value / position_value;
+  }
+
+  function getPositionQTYs(position: PositionResponse){
+    var position_collateral_qtys = {
+      osmo: 0,
+      atom: 0,
+      axlusdc: 0,
+      usdc: 0,
+      stAtom: 0,
+      stOsmo: 0,
+      atomosmo_pool: 0,
+      osmousdc_pool: 0,
+    };
+    //Set position collateral QTYs
+    if (position.collateral_assets.length > 0) {
+      position.collateral_assets.forEach((collateral) => {//@ts-ignore   
+        if (collateral.asset.info.native_token.denom === denoms.osmo) {
+          position_collateral_qtys.osmo = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.atom) {
+          position_collateral_qtys.atom = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC) {
+          position_collateral_qtys.axlusdc = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.usdc) {
+          position_collateral_qtys.usdc = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.stAtom) {
+          position_collateral_qtys.stAtom = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.stOsmo) {
+          position_collateral_qtys.stOsmo = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool) {
+          position_collateral_qtys.atomosmo_pool = parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool) {
+          position_collateral_qtys.osmousdc_pool = parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
+        }
+      })
+    }
+    return position_collateral_qtys;
+  }
+
+  function nonZeroPrices(){
+    return prices.osmo !== 0 || prices.atom !== 0 || prices.axlUSDC !== 0 || prices.usdc !== 0 || prices.stAtom !== 0 || prices.stOsmo !== 0 || prices.atomosmo_pool !== 0 || prices.osmousdc_pool !== 0;
+
+  }
+
+ //query positions and add any above 90% LTV to risky positions
+ const getRiskyPositions = async () => {
+    var riskyPositions = [] as [string, number, PositionResponse][];
+    try {
+      await cdpqueryClient?.getBasketPositions({
+        limit: 1024,
+      }).then((res) => {
+        //Check if any positions are above 90% LTV
+        res.forEach((user) => {
+          user.positions.forEach((position) => {
+            if ((parseInt(position.credit_amount) != 0) && nonZeroPrices()) {
+              //Calc position value
+              var position_value = getPositionValue(position);
+              //Set position collateral QTYs
+              var position_collateral_qtys = getPositionQTYs(position);
+              //Get positions max LTV
+              var max_LTV = getRataLTV(position_value, position_collateral_qtys, prices, basketRes)[1];
+
+              //Check insolvency
+              var insolvency = (getPositionLTV(position_value, parseInt(position.credit_amount)) / (max_LTV/100));
+              if (insolvency > 0.9) {
+                riskyPositions.push([user.user, insolvency, position]);
+              }
+            }
+          })
+        })   
+        setriskyPositions(riskyPositions);
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  
+ }
   useEffect(() => {    
     Hotjar.init(siteId, hotjarVersion);
   }, []);
@@ -1104,6 +1212,10 @@ export default function Home() {
         setwalletQTYs(wallet_qtys)
       }
     }
+    //Get at risk positions
+    if (riskyPositions.length === 0) {
+      getRiskyPositions()
+    }
     //Get basket for Dashboard total minted
     if (basketRes === undefined){
       cdpqueryClient?.getBasket().then((res) => {
@@ -1136,7 +1248,7 @@ export default function Home() {
         //Check for unstaking positions
         getunstakingSP()
       }
-    }    
+    }
     ///////Governance queries
     if (activeComponent === "staking"){
       if (quorum === 0){
@@ -1189,8 +1301,8 @@ export default function Home() {
           contractQTYz={contractQTYs} walletQTYz={walletQTYs} walletChecked={walletChecked} fetch_update_positionData={fetch_update_positionData}
       />;
     } else if (activeComponent === 'liquidation') {
-      return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} index_lqClaimables={lqClaimables}
-        capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL} setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead}
+      return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_client={cdp_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} index_lqClaimables={lqClaimables}        capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL}
+        setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead} riskyPositions={riskyPositions}
       />;
     } else if (activeComponent === 'staking') {
       return <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} vestingClient={vesting_client} address={address as string | undefined} 

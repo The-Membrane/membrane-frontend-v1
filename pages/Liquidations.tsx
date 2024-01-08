@@ -12,10 +12,11 @@ import { denoms } from "../config";
 import { coins } from "@cosmjs/stargate";
 import Popup from "../components/Popup";
 import { StabilityPoolClient, StabilityPoolQueryClient } from "../codegen/stability_pool/StabilityPool.client";
-import { PositionsQueryClient } from "../codegen/positions/Positions.client";
+import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
 import Image from "next/image";
 import { useChain } from "@cosmos-kit/react";
 import { chainName } from "../config";
+import { PositionResponse } from "../codegen/positions/Positions.types";
 
 //Bar graph scale
 const CDTperPIXEL = 100_000_000; //100
@@ -30,6 +31,7 @@ interface Props {
   liq_queueClient: LiquidationQueueClient | null;
   sp_queryClient: StabilityPoolQueryClient | null;
   sp_client: StabilityPoolClient | null;
+  cdp_client: PositionsClient | null;
   cdp_queryClient: PositionsQueryClient | null;
   address: string | undefined;
   pricez: Prices;  
@@ -47,10 +49,12 @@ interface Props {
   setSPclaimables: (SPclaimables: string) => void;
   unstakingMsg: string;
   setunstakingMsg: (unstakingMsg: string) => void;
+  riskyPositions: [string, number, PositionResponse][];
 }
 
-const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, address, pricez, index_lqClaimables,
-  capitalAhead, setcapitalAhead, userclosestDeposit, setuserclosestDeposit, userTVL, setuserTVL, TVL, setTVL, SPclaimables, setSPclaimables, unstakingMsg, setunstakingMsg
+const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_client, cdp_queryClient, address, pricez, index_lqClaimables,
+  capitalAhead, setcapitalAhead, userclosestDeposit, setuserclosestDeposit, userTVL, setuserTVL, TVL, setTVL, SPclaimables, setSPclaimables,
+  unstakingMsg, setunstakingMsg, riskyPositions
 }: Props) => {
   const { connect } = useChain(chainName);
   
@@ -809,7 +813,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     //Set LQ claimables
     setlqClaimables(index_lqClaimables);
 
-  }, [menuAsset, prices, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient])
+  }, [menuAsset, prices, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, riskyPositions])
 
   function plusPremium() {
     if (((premium??0) < parseInt(queue?.max_premium ?? "9")) && saFunctionLabel === "Place") {
@@ -901,7 +905,55 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
     }
   }
-  
+  function getLiquidatiblePositions() {
+    var liquidatiblePositions: [string, string][] = []; //user, position_id
+    riskyPositions.forEach((position) => {
+      if (position[1] > 1) {
+        liquidatiblePositions.push([position[0], position[2].position_id]);
+      }
+    })
+
+    return liquidatiblePositions;
+  }
+  const handleLiquidation = async () => {
+    //Check if wallet is connected & connect if not
+    if (address === undefined) {
+      connect();
+      return;
+    }
+    var liquidatiblePositions = getLiquidatiblePositions();
+    if (liquidatiblePositions.length !== 0) {
+      liquidatiblePositions.forEach(async (position) => {
+        try {
+          await cdp_client?.liquidate({
+            positionOwner: position[0],
+            positionId: position[1]
+          }, "auto", undefined).then((res) => {
+            console.log(res)
+            //Format popup
+            setPopupStatus("Success")
+            setPopupMsg("Liquidated position " + position[1])
+            setPopupTrigger(true)
+          })
+        } catch (error) {
+          console.log(error)
+          const e = error as { message: string }
+          //This is a success msg but a cosmjs error
+          if (e.message === "Invalid string. Length must be a multiple of 4"){
+            //Format popup
+            setPopupStatus("Success")
+            setPopupMsg("Liquidated position " + position[1])
+            setPopupTrigger(true)
+          } else {
+            //Format popup
+            setPopupStatus("Error")
+            setPopupMsg(e.message)
+            setPopupTrigger(true)
+          }
+        }
+      })
+    }
+  }
 
   return (
     
@@ -909,7 +961,16 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     {/* // <div className="row ">
     // <div className="col shiftRight"> */}
     <div className="liquidation-pools">
-    <h1 className="pagetitle">Liquidation Pools</h1>
+        <div className="liquidation-pool-header">
+        <div className="liquidation-pool-title">
+            <h1 className="pagetitle">Liquidation Pools</h1>
+            <Image className="titleicon" width={45} height={45} alt="" src="/images/liquidation_pool.svg" />
+          </div>
+          <div className="liquidatible-positions">
+            <div className="at-risk-positions">At-Risk Positions: {riskyPositions.length}</div>
+            <div className="btn liquidate-button" style={getLiquidatiblePositions.length > 0 ? {} : {opacity: 0.3}} onClick={handleLiquidation}>Liquidate</div>
+          </div>
+        </div>
         <div className="singleassetframe">
           <h3 className="pool-titles" data-descr="Liquidations start at the lowest, capitalized premium & distribute assets based on your proportion of the premium's TVL">SINGLE ASSET*</h3>
           <div className="single-asset-info-circle" />
@@ -1049,7 +1110,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
               </div>
             ) : null}
         </div>
-        <Image className="titleicon" width={45} height={45} alt="" src="/images/liquidation_pool.svg" />
         <div className="middleborder" />
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
       </div>
