@@ -59,7 +59,7 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent, basketRes, wal
         <Image className="dash-logo" src="/images/MBRN-logo-template.svg" width={0} height={0} alt="" />
         <div className="cards">
             <p className="dash-stats mobile-font">
-                Provide Liquidity to the CDT&nbsp;<a style={{cursor:"pointer", textDecoration:"underline"}} onClick={onStableswapTextClick}>stableswap</a>&nbsp;on Osmosis for ~10%+ APR
+                Provide Liquidity to the CDT&nbsp;<a style={{cursor:"pointer", textDecoration:"underline"}} onClick={onStableswapTextClick}>stableswap</a>&nbsp;on Osmosis for ~30%+ APR
             </p>
             <div className="dash-stats">
                 CDT Minted: {totalSupply?.toFixed(0)}
