@@ -49,15 +49,16 @@ interface Props {
   setSPclaimables: (SPclaimables: string) => void;
   unstakingMsg: string;
   setunstakingMsg: (unstakingMsg: string) => void;
-  riskyPositions: [string, number, PositionResponse][];
+  riskyPositionz: [string, number, PositionResponse][];
 }
 
 const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_client, cdp_queryClient, address, pricez, index_lqClaimables,
   capitalAhead, setcapitalAhead, userclosestDeposit, setuserclosestDeposit, userTVL, setuserTVL, TVL, setTVL, SPclaimables, setSPclaimables,
-  unstakingMsg, setunstakingMsg, riskyPositions
+  unstakingMsg, setunstakingMsg, riskyPositionz
 }: Props) => {
   const { connect } = useChain(chainName);
   
+  //Prices
   const [prices, setPrices] = useState<Prices>({
     osmo: 0,
     atom: 0,
@@ -70,6 +71,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     atomosmo_pool: 0,
     osmousdc_pool: 0,
   });
+  //At risk positions  
+  const [riskyPositions, setriskyPositions] = useState<[string, number, PositionResponse][]>([]);
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(false);
   const [popupMsg, setPopupMsg] = useState("");
@@ -889,8 +892,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
     //Set LQ claimables
     setlqClaimables(index_lqClaimables);
+    //Set risky positions
+    setriskyPositions(riskyPositionz);
 
-  }, [menuAsset, prices, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, riskyPositions])
+  }, [menuAsset, prices, address, queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_queryClient, riskyPositionz])
 
   function plusPremium() {
     if (((premium??0) < parseInt(queue?.max_premium ?? "9")) && saFunctionLabel === "Place") {

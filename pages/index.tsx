@@ -1385,7 +1385,7 @@ export default function Home() {
       />;
     } else if (activeComponent === 'liquidation') {
       return <LiquidationPools queryClient={liqqueuequeryClient} liq_queueClient={liq_queue_client} sp_queryClient={stabilitypoolqueryClient} sp_client={stability_pool_client} cdp_client={cdp_client} cdp_queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} index_lqClaimables={lqClaimables}        capitalAhead={capitalAhead} userclosestDeposit={userclosestDeposit} userTVL={userTVL} TVL={spTVL} SPclaimables={SPclaimables} unstakingMsg={unstakingMsg} setunstakingMsg={setunstakingMsg} setSPclaimables={setSPclaimables} setTVL={setspTVL} setuserTVL={setuserTVL}
-        setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead} riskyPositions={riskyPositions}
+        setuserclosestDeposit={setuserclosestDeposit} setcapitalAhead={setcapitalAhead} riskyPositionz={riskyPositions}
       />;
     } else if (activeComponent === 'staking') {
       return <Governance govClient={governance_client} govQueryClient={governancequeryClient} stakingClient={staking_client} stakingQueryClient={stakingqueryClient} vestingClient={vesting_client} address={address as string | undefined} 
