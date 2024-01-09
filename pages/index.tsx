@@ -1185,7 +1185,7 @@ export default function Home() {
 
               //Check insolvency
               var insolvency = (getPositionLTV(position_value, parseInt(position.credit_amount)) / (max_LTV/100));
-              if (insolvency > 0.9) {
+              if (insolvency > 0.95) {
                 riskyPositions.push([user.user, insolvency, position]);
               }
             }
