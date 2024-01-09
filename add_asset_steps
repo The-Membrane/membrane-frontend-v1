@@ -7,6 +7,7 @@ index.tsx:
 - add to walletQTY query logic
 - add to getPositionValue 
 - add to getPositionQTYs
+- add to Liquidation claimables 
 
 Vaults.tsx:
 - add to contractQTYs struct

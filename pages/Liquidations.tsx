@@ -65,6 +65,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     usdc: 0,
     stAtom: 0,
     stOsmo: 0,
+    tia: 0,
+    usdt: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
   });
@@ -184,10 +186,32 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     { height: 0, color: "#000000", tvl: "0" },
     { height: 0, color: "#000000", tvl: "0" },
     { height: 0, color: "#000000", tvl: "0" },
+  ],[
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+  ],[
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
+    { height: 0, color: "#000000", tvl: "0" },
   ]]);
   const [collateralTVL, setcollateralTVL] = useState(0);
   //index for highest bar in barGraph
-  const [highestBar, sethighestBar] = useState<number[]>([0,0,0,0,0,0,0,0]);
+  const [highestBar, sethighestBar] = useState<number[]>([0,0,0,0,0,0,0,0,0,0]);
   //index for the barGraph to display
   const [barIndex, setbarIndex] = useState(0);
 
@@ -234,7 +258,16 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     setMenuAsset("stOSMO");
     setbarIndex(7);
   };
-  
+  const handleMenuNine = () => {
+    setOpen(false);
+    setMenuAsset("TIA");
+    setbarIndex(8);
+  };
+  const handleMenuTen = () => {
+    setOpen(false);
+    setMenuAsset("USDT");
+    setbarIndex(9);
+  };
   // Query premiums slots and save new heights
   //Heights are denominated 10K per pixel
   const queryQueuesaveHeights = async (asset: string) => {
@@ -326,6 +359,22 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             price = prices.usdc;
             break;
           }
+          case denoms.stAtom: {
+            price = prices.stAtom;
+            break;
+          }
+          case denoms.stOsmo: {
+            price = prices.stOsmo;
+            break;
+          }
+          case denoms.tia: {
+            price = prices.tia;
+            break;
+          }
+          case denoms.usdt: {
+            price = prices.usdt;
+            break;
+          }
           case denoms.atomosmo_pool: {
             price = prices.atomosmo_pool;
             break;
@@ -340,7 +389,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           //@ts-ignore
           if (res.collateral_types[i].asset.info.native_token.denom === asset) {
             if (asset === denoms.atomosmo_pool || asset === denoms.osmousdc_pool) {
-              setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount)/1000) * price).toFixed(2)));
+              setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount)/1000_000_000_000_000_000_000) * price).toFixed(2)));
               break;
             } else {
               setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount) / 1000_000_000) * price).toFixed(2)));
@@ -404,6 +453,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "stOSMO": {
         workingDenom = denoms.stOsmo;
+        break;
+      }
+      case "TIA": {
+        workingDenom = denoms.tia;
+        break;
+      }
+      case "USDT": {
+        workingDenom = denoms.usdt;
         break;
       }
       case "ATOM-OSMO": {
@@ -483,6 +540,14 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "stOSMO": {
         workingDenom = denoms.stOsmo;
+        break;
+      }
+      case "TIA": {
+        workingDenom = denoms.tia;
+        break;
+      }
+      case "USDT": {
+        workingDenom = denoms.usdt;
         break;
       }
       case "ATOM-OSMO": {
@@ -797,6 +862,18 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         }
         break;
       }
+      case "TIA": {
+        if (barGraph[8][0].tvl === "0" && prices.tia !== 0) {
+          queryQueuesaveHeights(denoms.tia)
+        }
+        break;
+      }
+      case "USDT": {
+        if (barGraph[9][0].tvl === "0" && prices.usdt !== 0) {
+          queryQueuesaveHeights(denoms.usdt)
+        }
+        break;
+      }
       case "ATOM-OSMO": {
         if (barGraph[3][0].tvl === "0" && prices.atomosmo_pool !== 0) {
           queryQueuesaveHeights(denoms.atomosmo_pool)
@@ -864,6 +941,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       }
       case "stOSMO": {
         return prices.stOsmo;
+      }
+      case "TIA": {
+        return prices.tia;
+      }
+      case "USDT": {
+        return prices.usdt;
       }
       case "ATOM-OSMO": {
         return prices.atomosmo_pool;
@@ -1015,6 +1098,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 </li>) : null}
                 {menuAsset !== "stOSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuEight} style={{outline: "none"}}>stOSMO</button>
+                </li>) : null}
+                {menuAsset !== "TIA" ? (<li className="menu-item">
+                    <button onClick={handleMenuNine} style={{outline: "none"}}>TIA</button>
+                </li>) : null}
+                {menuAsset !== "USDT" ? (<li className="menu-item">
+                    <button onClick={handleMenuTen} style={{outline: "none"}}>USDT</button>
                 </li>) : null}
                 {/* {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuFour}>ATOM-OSMO</button>

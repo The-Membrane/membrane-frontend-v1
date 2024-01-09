@@ -32,6 +32,8 @@ export interface Prices {
   usdc: number,
   stAtom: number,
   stOsmo: number,
+  tia: number,
+  usdt: number,
 }
 
 export default function Home() {
@@ -60,6 +62,8 @@ export default function Home() {
     usdc: 0,
     stAtom: 0,
     stOsmo: 0,
+    tia: 0,
+    usdt: 0,
   });
   const [rateRes, setrateRes] = useState<CollateralInterestResponse>();
   const [creditRateRes, setcreditRateRes] = useState<InterestResponse>();
@@ -79,6 +83,8 @@ export default function Home() {
     usdc: 0,
     stAtom: 0,
     stOsmo: 0,
+    tia: 0,
+    usdt: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
     brw_LTV: 0,
@@ -93,6 +99,8 @@ export default function Home() {
     usdc: undefined,
     stAtom: undefined,
     stOsmo: undefined,
+    tia: undefined,
+    usdt: undefined,
     atomosmo_pool: undefined,
     osmousdc_pool: undefined,
   });
@@ -107,6 +115,8 @@ export default function Home() {
     usdc: 0,
     stAtom: 0,
     stOsmo: 0,
+    tia: 0,
+    usdt: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
   });
@@ -165,6 +175,17 @@ export default function Home() {
                         denom: denoms.stOsmo
                     }
                 },
+                {
+                    native_token: {
+                        denom: denoms.tia
+                    }
+                },
+                {
+                    native_token: {
+                        denom: denoms.usdt
+                    }
+                },
+
             ],
             oracleTimeLimit: 10,
             twapTimeframe: 0,
@@ -178,6 +199,8 @@ export default function Home() {
                 usdc: parseFloat(res[5].price),
                 stAtom: parseFloat(res[6].price),
                 stOsmo: parseFloat(res[7].price),
+                tia: parseFloat(res[8].price),
+                usdt: parseFloat(res[9].price),
             })
         })
     } catch (error) {
@@ -196,6 +219,8 @@ export default function Home() {
       usdc: 0,
       stAtom: 0,
       stOsmo: 0,
+      tia: 0,
+      usdt: 0,
       brw_LTV: 0,
       max_LTV: 0,
       cost: 0,
@@ -246,14 +271,15 @@ export default function Home() {
                 usdc: 0,
                 stAtom: 0,
                 stOsmo: 0,
+                tia: 0,
+                usdt: 0,
                 atomosmo_pool: 0,
                 osmousdc_pool: 0,
             };
             //@ts-ignore
             userRes[0].positions[0].collateral_assets.forEach(asset => {
                 // @ts-ignore
-                var actual_asset = asset.asset.info.native_token.denom;                
-                console.log("actual_asset: ", actual_asset)
+                var actual_asset = asset.asset.info.native_token.denom;
 
                 if (actual_asset === denoms.osmo) {
                   position_qtys.osmo = parseInt(asset.asset.amount) / 1_000_000;
@@ -279,7 +305,13 @@ export default function Home() {
                 } else if (actual_asset === denoms.stOsmo) {
                   position_qtys.stOsmo = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.stOsmo = parseInt(asset.asset.amount) / 1_000_000;
-                }          
+                } else if (actual_asset === denoms.tia) {
+                  position_qtys.tia = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.tia = parseInt(asset.asset.amount) / 1_000_000;
+                } else if (actual_asset === denoms.usdt) {
+                  position_qtys.usdt = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.usdt = parseInt(asset.asset.amount) / 1_000_000;
+                }
             })
             setpositionQTYs(position_qtys);
 
@@ -348,6 +380,22 @@ export default function Home() {
                 new_display += asset_claims + " USDC, ";
                 break;
               }
+              case denoms.stAtom: {
+                new_display += asset_claims + " stATOM, ";
+                break;
+              }
+              case denoms.stOsmo: {
+                new_display += asset_claims + " stOSMO, ";
+                break;
+              }
+              case denoms.tia: {
+                new_display += asset_claims + " TIA, ";
+                break;
+              }
+              case denoms.usdt: {
+                new_display += asset_claims + " USDT, ";
+                break;
+              }
               case denoms.atomosmo_pool: {
                 new_display += asset_claims + " ATOM-OSMO LP, ";
                 break;
@@ -410,6 +458,22 @@ export default function Home() {
             }
             case denoms.usdc: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " USDC, "
+              break;
+            }
+            case denoms.stAtom: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " stATOM, "
+              break;
+            }
+            case denoms.stOsmo: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " stOSMO, "
+              break;
+            }
+            case denoms.tia: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " TIA, "
+              break;
+            }
+            case denoms.usdt: {
+              claims += parseInt(res.claims[i].amount)/1_000_000 + " USDT, "
               break;
             }
             case denoms.atomosmo_pool: {
@@ -1034,7 +1098,11 @@ export default function Home() {
         } else if (collateral.asset.info.native_token.denom === denoms.stAtom) {
           position_value += prices.stAtom * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
         } else if (collateral.asset.info.native_token.denom === denoms.stOsmo) {
-          position_value += prices.stOsmo * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+          position_value += prices.stOsmo * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore  
+        } else if (collateral.asset.info.native_token.denom === denoms.tia) {
+          position_value += prices.tia * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore  
+        } else if (collateral.asset.info.native_token.denom === denoms.usdt) {
+          position_value += prices.usdt * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore 
         } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool) {
           position_value += prices.atomosmo_pool * parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
         } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool) {
@@ -1052,13 +1120,15 @@ export default function Home() {
   }
 
   function getPositionQTYs(position: PositionResponse){
-    var position_collateral_qtys = {
+    var position_collateral_qtys: DefinedCollateralAssets = {
       osmo: 0,
       atom: 0,
       axlusdc: 0,
       usdc: 0,
       stAtom: 0,
       stOsmo: 0,
+      tia: 0,
+      usdt: 0,
       atomosmo_pool: 0,
       osmousdc_pool: 0,
     };
@@ -1077,6 +1147,10 @@ export default function Home() {
           position_collateral_qtys.stAtom = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
         } else if (collateral.asset.info.native_token.denom === denoms.stOsmo) {
           position_collateral_qtys.stOsmo = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.tia) {
+          position_collateral_qtys.tia = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.usdt) {
+          position_collateral_qtys.usdt = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore
         } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool) {
           position_collateral_qtys.atomosmo_pool = parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
         } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool) {
@@ -1088,8 +1162,7 @@ export default function Home() {
   }
 
   function nonZeroPrices(){
-    return prices.osmo !== 0 || prices.atom !== 0 || prices.axlUSDC !== 0 || prices.usdc !== 0 || prices.stAtom !== 0 || prices.stOsmo !== 0 || prices.atomosmo_pool !== 0 || prices.osmousdc_pool !== 0;
-
+    return prices.osmo !== 0 || prices.atom !== 0 || prices.axlUSDC !== 0 || prices.usdc !== 0 || prices.stAtom !== 0 || prices.stOsmo !== 0 || prices.tia !== 0 || prices.usdt !== 0 || prices.atomosmo_pool !== 0 || prices.osmousdc_pool !== 0;
   }
 
  //query positions and add any above 90% LTV to risky positions
@@ -1158,7 +1231,7 @@ export default function Home() {
         })
       }
       ///Get wallet's available collateral balances
-      if (walletQTYs.osmo === undefined || walletQTYs.atom === undefined || walletQTYs.axlusdc === undefined || walletQTYs.usdc === undefined || walletQTYs.atomosmo_pool === undefined || walletQTYs.osmousdc_pool === undefined || walletQTYs.stAtom === undefined || walletQTYs.stOsmo === undefined){
+      if (walletQTYs.osmo === undefined || walletQTYs.atom === undefined || walletQTYs.axlusdc === undefined || walletQTYs.usdc === undefined || walletQTYs.atomosmo_pool === undefined || walletQTYs.osmousdc_pool === undefined || walletQTYs.stAtom === undefined || walletQTYs.stOsmo === undefined || walletQTYs.tia === undefined || walletQTYs.usdt === undefined){
         var wallet_qtys: CollateralAssets = {
           osmo: walletQTYs.osmo,
           atom: walletQTYs.atom,
@@ -1166,6 +1239,8 @@ export default function Home() {
           usdc: walletQTYs.usdc,
           stAtom: walletQTYs.stAtom,
           stOsmo: walletQTYs.stOsmo,
+          tia: walletQTYs.tia,
+          usdt: walletQTYs.usdt,
           atomosmo_pool: walletQTYs.atomosmo_pool,
           osmousdc_pool: walletQTYs.osmousdc_pool,
         };
@@ -1193,6 +1268,14 @@ export default function Home() {
           //Get account's balance of stOSMO
           oraclequeryClient?.client.getBalance(address as string, denoms.stOsmo).then((res) => {
             wallet_qtys.stOsmo = (parseInt(res.amount) / 1_000_000)
+          })
+          //Get account's balance of TIA
+          oraclequeryClient?.client.getBalance(address as string, denoms.tia).then((res) => {
+            wallet_qtys.tia = (parseInt(res.amount) / 1_000_000)
+          })
+          //Get account's balance of USDT
+          oraclequeryClient?.client.getBalance(address as string, denoms.usdt).then((res) => {
+            wallet_qtys.usdt = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of ATOM - OSMO LP
           oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
