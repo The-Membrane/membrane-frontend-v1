@@ -274,7 +274,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
       //Get daysLeft
       var daysPast = (Date.now() / 1000) - proposal.start_time;
       var daysLeft = 0;
-      if (proposal.end_block - proposal.start_block === 43,200){
+      if (proposal.end_block - proposal.start_block === 43200){
         daysLeft = (EXPEDITED_VOTING_PERIOD_IN_SECONDS - daysPast) / SECONDS_PER_DAY;
       } else {
         daysLeft = (VOTING_PERIOD_IN_SECONDS - daysPast) / SECONDS_PER_DAY;
