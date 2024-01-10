@@ -743,8 +743,8 @@ h3[data-descr]:hover::after {
 }
 .bid-actionbox {
   position: relative;
-  width: 11vw;
-  left: 31.8vw;
+  width: 149px;
+  left: 435px;
   top: -1vh;
 }
 .bid-actionbox-input{  
@@ -3795,7 +3795,7 @@ input[type=range][orient=vertical] {
   position: relative;
   width: 100vw;
   height: 111vh;
-  margin-left: 9vw;
+  margin-left: 5vw;
   text-align: left;
   color: white;
   font-family: 'Abel';
