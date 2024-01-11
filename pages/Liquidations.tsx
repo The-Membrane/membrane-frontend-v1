@@ -9,7 +9,6 @@ import { LiquidationQueueClient, LiquidationQueueQueryClient } from "../codegen/
 import { QueueResponse, SlotResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { Prices } from ".";
 import { denoms } from "../config";
-import { coins } from "@cosmjs/stargate";
 import Popup from "../components/Popup";
 import { StabilityPoolClient, StabilityPoolQueryClient } from "../codegen/stability_pool/StabilityPool.client";
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
@@ -21,6 +20,8 @@ import { QueueStatsItem } from "../components/liquidations/QueueStatsItem";
 import AssetDropdownMenu from "../components/liquidations/AssetDropdownMenu";
 import Chart from "../components/liquidations/Chart";
 import { queryPremiumSlots, queryQueue } from "../components/liquidations/HelperFunctions";
+import OmniAssetBid from "../components/liquidations/OmniAssetBid";
+import { SingleAssetBid } from "../components/liquidations/SingleAssetBid";
 
 //Bar graph scale
 const CDTperPIXEL = 100_000_000; //100
@@ -284,329 +285,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
 
   }
 
-  const handledepositClick = async () => {
-    var depositAmount = bidAmount;
-    //Check if wallet is connected & connect if not
-    if (address === undefined) {
-      connect();
-      return;
-    }
-    //Get denom from menu asset
-    let workingDenom: string = "";
-    if (menuAsset in assets) {
-      workingDenom = assets[menuAsset].denom;
-    }
-
-    ///Try execution
-    try {
-      await liq_queueClient?.submitBid({
-        bidInput: {          
-          bid_for: {
-            native_token: {
-              denom: workingDenom,
-            }
-          },          
-          liq_premium: premium ?? 0,
-        }
-      }, "auto", undefined, coins(((depositAmount ?? 0) * 1_000_000), denoms.cdt)).then((res) => {
-        console.log(res)
-        //Format popup
-        setPopupStatus("Success")
-        setPopupMsg("Bid of "+ depositAmount +" CDT at a " +premium+ "% premium successful")
-        setPopupTrigger(true)
-      })
-    } catch (error) {
-      console.log(error)
-      const e = error as { message: string }
-      //This is a success msg but a cosmjs error
-      if (e.message === "Invalid string. Length must be a multiple of 4"){
-        //Format popup
-        setPopupStatus("Success")
-        setPopupMsg("Bid of "+ depositAmount +" CDT at a " +premium+ "% premium successful")
-        setPopupTrigger(true)
-      } else {
-        //Format popup
-        setPopupStatus("Error")
-        setPopupMsg(e.message)
-        setPopupTrigger(true)
-      }
-    }
-  }
-
-  const handlewithdrawClick = async () => {
-    var withdrawAmount = bidAmount;
-    //Check if wallet is connected & connect if not
-    if (address === undefined) {
-      connect();
-      return;
-    }
-    //Get denom from menu asset
-    let workingDenom: string = "";
-    if (menuAsset in assets) {
-      workingDenom = assets[menuAsset].denom;
-    }
-
-    ///Try execution
-    try {
-      //Query bidId in slot
-      await queryClient?.bidsByUser({
-        bidFor: {
-          native_token: {
-            denom: workingDenom,
-          }
-        }, 
-        user: address ?? "",
-      }).then(async (res) => {
-        //Find bidId in slot of premium
-        let bidId: string = "";
-        for (let i = 0; i < res.length; i++) {
-          if (res[i].liq_premium === premium) {
-            bidId = res[i].id;
-            break;
-          }
-        }
-
-        //If bidId is not empty, retract bid
-        if (bidId !== "") {
-          try{
-            await liq_queueClient?.retractBid({
-                bidFor: {
-                  native_token: {
-                    denom: workingDenom,
-                  }
-                },
-                amount: ((withdrawAmount ?? 0) * 1_000_000).toString(),
-                bidId: bidId,
-              
-            }, "auto", undefined).then((res) => {
-                console.log(res)
-                //Format popup
-                setPopupStatus("Success")
-                setPopupMsg("Retracted " +withdrawAmount+ " CDT from bid "+ bidId)
-                setPopupTrigger(true)
-                
-              })
-          } catch (error) {
-            console.log(error)
-            const e = error as { message: string }
-            //This is a success msg but a cosmjs error
-            if (e.message === "Invalid string. Length must be a multiple of 4"){
-              //Format popup
-              setPopupStatus("Success")
-              setPopupMsg("Retracted " +withdrawAmount+ " CDT from bid "+ bidId)
-              setPopupTrigger(true)
-            } else {
-              //Format popup
-              setPopupStatus("Error")
-              setPopupMsg(e.message)
-              setPopupTrigger(true)
-            }
-          }
-        }
-      })
-    } catch (error) {
-      //We popup for the query error here bc its an execution function that is dependent on this
-      console.log(error)
-      const e = error as { message: string }
-      //Format popup
-      setPopupStatus("Error")
-      setPopupMsg(e.message)
-      setPopupTrigger(true)
-    }
-  }
-
-  const handleclaimClick = async () => {
-    //Check if wallet is connected & connect if not
-    if (address === undefined) {
-      connect();
-      return;
-    }
-    try {
-      //Claim for each bidFor asset
-      for (let i = 0; i < lqClaimables.bidFor.length; i++) {     
-        console.log(lqClaimables.bidFor[i])   
-        await liq_queueClient?.claimLiquidations({
-          bidFor: {
-            native_token: {
-              denom: lqClaimables.bidFor[i],
-            }
-          }
-        }).then((res) => {
-          console.log(res)
-          //Format popup
-          setPopupStatus("Success")
-          setPopupMsg("Claimed " + lqClaimables.bidFor[i])
-          setPopupTrigger(true)
-        })
-      }
-    } catch (error) {
-      console.log(error)
-      const e = error as { message: string }
-      //This is a success msg but a cosmjs error
-      if (e.message === "Invalid string. Length must be a multiple of 4"){
-        //Format popup
-        setPopupStatus("Success")
-        setPopupMsg("Claimed " + lqClaimables.bidFor)
-        setPopupTrigger(true)
-      } else {
-        //Format popup
-        setPopupStatus("Error")
-        setPopupMsg(e.message)
-        setPopupTrigger(true)
-      }
-
-    }
-    
-    //Reset claimables
-    setlqClaimables(prevState => {
-      return { bidFor: [""], display: "No Claims"}
-    });
-  }
-
-  const handleStabilityDeposit = async () => {
-    //Check if wallet is connected & connect if not
-    if (address === undefined) {
-      connect();
-      return;
-    }
-    try {
-      await sp_client?.deposit({}
-        , "auto", undefined, coins(((omniAmount ?? 0) * 1_000_000), denoms.cdt)
-        ).then(async (res) => {
-          console.log(res)
-          //Format popup
-          setPopupStatus("Success")
-          setPopupMsg("Deposited " + omniAmount + " CDT")
-          setPopupTrigger(true)
-
-          //Query capital ahead of user deposit
-          await sp_queryClient?.capitalAheadOfDeposit({
-            user: address ?? "",
-          }).then((res) => {
-            console.log(res)
-            //set capital ahead of user deposit
-            setcapitalAhead(parseInt(res.capital_ahead ?? 0) / 1_000_000)
-            //set user closest deposit in K
-            if (res.deposit !== undefined) {
-              setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
-            } else {  
-              //set to 0 if no deposit        
-              setuserclosestDeposit(0)
-            }
-          })
-          //Query user's total deposit
-          await sp_queryClient?.assetPool({
-            user: address ?? "",
-          }).then((res) => {
-            console.log(res)
-            //Calc user tvl
-            var tvl = 0;
-            for (let i = 0; i < res.deposits.length; i++) {
-              tvl += parseInt(res.deposits[i].amount) / 1_000_000;
-            }
-            //set user tvl
-            setuserTVL(tvl)
-          })
-        })
-
-    } catch (error) {
-      console.log(error)
-      const e = error as { message: string }
-      //Format popup
-      setPopupStatus("Error")
-      setPopupMsg(e.message)
-      setPopupTrigger(true)
-    }
-  }
-
-  const handleStabilityWithdraw = async () => {
-    //Check if wallet is connected & connect if not
-    if (address === undefined) {
-      connect();
-      return;
-    }
-    try {
-      await sp_client?.withdraw({
-        amount: ((omniAmount ?? 0) * 1_000_000).toString(),
-      }, "auto", undefined)
-        .then(async (res) => {
-          console.log(res)
-          //Format popup
-          setPopupStatus("Success")
-          setPopupTrigger(true)
-
-          //Query capital ahead of user deposit
-          await sp_queryClient?.capitalAheadOfDeposit({
-            user: address ?? "",
-          }).then((res) => {
-            console.log(res)
-            //set capital ahead of user deposit
-            setcapitalAhead(parseInt(res.capital_ahead ?? 0) / 1_000_000)
-            //set user closest deposit in K
-            if (res.deposit !== undefined) {
-              setuserclosestDeposit(parseInt(res.deposit.amount ?? 0) / 1_000_000)
-            } else {  
-              //set to 0 if no deposit        
-              setuserclosestDeposit(0)
-            }
-          })
-          //Query user's total deposit
-          await sp_queryClient?.assetPool({
-            user: address ?? "",
-          }).then((res) => {
-            console.log(res)
-            //Calc user tvl
-            var tvl = 0;
-            for (let i = 0; i < res.deposits.length; i++) {
-              tvl += parseInt(res.deposits[i].amount) / 1_000_000;
-            }
-            //Format pop-up
-            if (tvl < userTVL){
-              setPopupMsg("Withdrew " + omniAmount + " CDT")
-              //set user tvl
-              setuserTVL(tvl)
-            } else {              
-              setPopupMsg("Unstaked " + omniAmount + " CDT")
-            }
-
-          })
-        })
-
-    } catch (error) {
-      console.log(error)
-      const e = error as { message: string }
-      //Format popup
-      setPopupStatus("Error")
-      setPopupMsg(e.message)
-      setPopupTrigger(true)
-    }
-  }
-
-  const handleStabilityClaim = async () => {
-    //Check if wallet is connected & connect if not
-    if (address === undefined) {
-      connect();
-      return;
-    }
-    try { 
-      await sp_client?.claimRewards("auto", undefined).then((res) => {
-        console.log(res)
-        //Format popup
-        setPopupStatus("Success")
-        setPopupMsg("Claimed " + SPclaimables)
-        setPopupTrigger(true)
-      })
-    } catch (error) { 
-      console.log(error)
-      const e = error as { message: string }
-      //Format popup
-      setPopupStatus("Error")
-      setPopupMsg(e.message)
-      setPopupTrigger(true)
-    }
-  }
-  
-
   useEffect(() => {
     //Set prices
     if (prices.osmo === 0 ){ setPrices(pricez) }
@@ -657,38 +335,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   function getmenuAssetPrice() {
     if (menuAsset in assets) {
       return assets[menuAsset].price;
-    }
-  }
-  function setBidAmount(event: any) {
-    event.preventDefault();
-    setbidAmount(event.target.value)
-  }
-  function setOmniAmount(event: any) {
-    event.preventDefault();
-    setomniAmount(event.target.value)
-  }
-  function handlebidExecution() {    
-    switch (saFunctionLabel) {
-      case "Place": {
-        handledepositClick();
-        break;
-      }
-      case "Retract": {
-        handlewithdrawClick();
-        break;
-      }
-    }
-  }
-  function handleOmniExecution() {    
-    switch (oaFunctionLabel) {
-      case "Join": {
-        // handleStabilityDeposit();
-        break;
-      }
-      case "Exit": {
-        handleStabilityWithdraw();
-        break;
-      }
     }
   }
   function getLiquidatiblePositions() {
@@ -778,24 +424,19 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           </div>
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (7 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl} CDT</div>
           <div className="x-axis" />
-          <form className="bid-actionbox" style={{top: "-9vh"}}>
-            <div>
-              <div className="bid-actionlabel" style={saFunctionLabel === "Place" ? {} : {opacity: 0.3}} onClick={()=>{setsaFunctionLabel("Place"); setbidAmount(5)}}>Place </div>
-              <>/ </>
-              <div className="bid-actionlabel" style={saFunctionLabel === "Retract" ? {} : {opacity: 0.3}} onClick={()=>{setsaFunctionLabel("Retract")}}>Retract </div>
-               Bid
-            </div>
-            <div className="bid-actionbox-labels">Premium: </div>
-            <input className="bid-actionbox-input" value={premium} defaultValue={0} style={{width: "3.2vw"}}/>
-            <div style={{display: "inline-block", backgroundColor: "#454444", height: "4vh"}}>%</div>
-            <div className="premium-toggle">
-              <a className="plus-premium" onClick={plusPremium}>+</a>
-              <a className="minus-premium" onClick={minusPremium}>-</a>
-            </div>
-            <div className="bid-actionbox-labels">Amount: </div><input className="bid-actionbox-input" style={{marginTop: "0.3vh"}} value={bidAmount} onChange={setBidAmount}/><div className="bid-actionbox-labels"  style={{textAlign: "center", width: "3vw"}}> CDT</div>
-            <div className="btn bid-button" onClick={handlebidExecution}>{saFunctionLabel} Bid</div>
-            <div className="btn sa-claim-button" data-descr={lqClaimables.display} style={lqClaimables.display === "No Claims" ? {opacity: 0.1, color: "black", padding: "0px", cursor: "default"} : {color: "black", padding: "0px"}} onClick={handleclaimClick}>Claim</div>
-          </form>
+          <SingleAssetBid 
+            premium={premium} 
+            plusPremium={plusPremium} 
+            minusPremium={minusPremium} 
+            lqClaimables={lqClaimables} 
+            address={address} 
+            connect={connect} 
+            menuAsset={menuAsset} 
+            assets={assets} 
+            liq_queueClient={liq_queueClient} 
+            queryClient={queryClient} 
+            setlqClaimables={setlqClaimables} 
+          />
         </div>
         <div className="omniassetframe">
           <h3 className="pool-titles" data-descr="Liquidations are distributed to deposits first-in-first-out (FIFO) so you are essentially waiting in line for the liquidated collateral.">OMNI-ASSET*</h3>
@@ -808,17 +449,17 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           <div className="total-tvl-label">TVL: {TVL > 1000000 ? TVL /1000000 + "M" : TVL > 1000 ? TVL /1000 + "K" : TVL} CDT</div>
           <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl_container.svg" />
           <div className="premium">10%</div>
-          <form className="bid-actionbox">
-            <div>
-              <div className="bid-actionlabel" style={oaFunctionLabel === "Join" ? {} : {opacity: 0.3}} onClick={()=>{setoaFunctionLabel("Join"); setomniAmount(5)}}>Join </div>
-              <>/ </>
-              <div className="bid-actionlabel" style={oaFunctionLabel === "Exit" ? {} : {opacity: 0.3}} onClick={()=>{setoaFunctionLabel("Exit")}}>Exit </div>
-               the Queue
-            </div>
-            <div className="bid-actionbox-labels">Amount: </div><input className="bid-actionbox-input" style={{marginTop: "0.3vh"}} value={omniAmount} onChange={setOmniAmount}/><div className="bid-actionbox-labels"  style={{textAlign: "center", width: "3vw"}}> CDT</div>
-            <div className="btn bid-button" onClick={handleOmniExecution} style={oaFunctionLabel === "Join" ? {opacity: 0.3} : {}}>{oaFunctionLabel} Queue</div>
-            <div className="btn sa-claim-button" data-descr={SPclaimables} style={SPclaimables === "No Claims" ? {opacity: 0.1, color: "black", padding: "0px", cursor: "default"} : {color: "black", padding: "0px"}} onClick={handleStabilityClaim}>Claim</div>
-          </form>
+          <OmniAssetBid 
+            address={address} 
+            connect={connect}
+            sp_client={sp_client} 
+            sp_queryClient={sp_queryClient} 
+            setcapitalAhead={setcapitalAhead} 
+            setuserclosestDeposit={setuserclosestDeposit} 
+            userTVL={userTVL} 
+            setuserTVL={setuserTVL} 
+            SPclaimables={SPclaimables} 
+          />
           <div className="omni-stats-box">
             <QueueStatsItem metric={formatNumber(TVL) + " CDT"} label='Total TVL' color={"#798EFF"}/>
             <QueueStatsItem metric={formatNumber(TVL) + " CDT"} label='Your TVL' color={"#798EFF"}/>

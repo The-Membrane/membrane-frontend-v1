@@ -1,5 +1,5 @@
 //============================================================================
-// This file contains queries for the liquidations page and related components
+// This file contains Helper functions for the liquidations page
 //============================================================================
 
 import { useState } from "react";
@@ -37,7 +37,6 @@ export const queryPremiumSlots = async (asset: string, queryClient: LiquidationQ
       console.log(error);
     }
   };
-  
   export const usePopup = () => {
     const [trigger, setTrigger] = useState(false);
     const [msg, setMsg] = useState("");
@@ -51,6 +50,8 @@ export const queryPremiumSlots = async (asset: string, queryClient: LiquidationQ
   
     return { trigger, setTrigger, msg, status, showPopup };
   };
+  
+  export default usePopup;
   
   export const connectWallet = (address: any, connect: () => void) => {
     if (address === undefined) {
