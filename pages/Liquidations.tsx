@@ -17,6 +17,10 @@ import Image from "next/image";
 import { useChain } from "@cosmos-kit/react";
 import { chainName } from "../config";
 import { PositionResponse } from "../codegen/positions/Positions.types";
+import { QueueStatsItem } from "../components/liquidations/QueueStatsItem";
+import AssetDropdownMenu from "../components/liquidations/AssetDropdownMenu";
+import Chart from "../components/liquidations/Chart";
+import { queryPremiumSlots, queryQueue } from "../components/liquidations/HelperFunctions";
 
 //Bar graph scale
 const CDTperPIXEL = 100_000_000; //100
@@ -82,6 +86,60 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   //Menu
   const [open, setOpen] = useState(false);
   const [menuAsset, setMenuAsset] = useState("OSMO" as string);
+
+ //Assets (used as a lookup for prices and denoms)
+  type AssetInfo = {
+    price: number;
+    denom: string;
+  };
+
+  type Assets = {
+    [key: string]: AssetInfo;
+  };
+
+ const assets: Assets = {
+  "OSMO": {
+    price: prices.osmo,
+    denom: denoms.osmo,
+  },
+  "ATOM": {
+    price: prices.atom,
+    denom: denoms.atom,
+  },
+  "axlUSDC": {
+    price: prices.axlUSDC,
+    denom: denoms.axlUSDC,
+  },
+  "USDC": {
+    price: prices.usdc,
+    denom: denoms.usdc,
+  },
+  "stATOM": {
+    price: prices.stAtom,
+    denom: denoms.stAtom,
+  },
+  "stOSMO": {
+    price: prices.stOsmo,
+    denom: denoms.stOsmo,
+  },
+  "TIA": {
+    price: prices.tia,
+    denom: denoms.tia,
+  },
+  "USDT": {
+    price: prices.usdt,
+    denom: denoms.usdt,
+  },
+  "ATOM-OSMO": {
+    price: prices.atomosmo_pool,
+    denom: denoms.atomosmo_pool,
+  },
+  "OSMO-axlUSDC": {
+    price: prices.osmousdc_pool,
+    denom: denoms.osmousdc_pool,
+  },
+}
+
   //Liq Queue execution
   const [bidAmount, setbidAmount] = useState(5);
   const [premium, setPremium] = useState<number>();
@@ -98,120 +156,16 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     height: number;
     color: string;
     tvl: string;
+    asset: string;
   }
-  const [barGraph, setbarGraph] = useState<Bar[][]>([[
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],[
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],
-  [
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],
-  [
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],[
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],[
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],[
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],[
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],[
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ],[
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-    { height: 0, color: "#000000", tvl: "0" },
-  ]]);
+  
+  // Concise method of chart creation
+  const createBar = (asset: string) => ({ height: 0, color: "#000000", tvl: "0", asset });
+  
+  const [barGraph, setbarGraph] = useState<Bar[][]>(
+    Object.keys(assets).map(asset => Array.from({ length: 10 }, () => createBar(asset)))
+  );
+
   const [collateralTVL, setcollateralTVL] = useState(0);
   //index for highest bar in barGraph
   const [highestBar, sethighestBar] = useState<number[]>([0,0,0,0,0,0,0,0,0,0]);
@@ -221,71 +175,19 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   const handleOpen = () => {
     setOpen(!open);
   };
-  const handleMenuOne = () => {
+  
+  const handleMenu = (asset: string, index: number) => {
     setOpen(false);
-    setMenuAsset("ATOM");
-    setbarIndex(1);
-  };
-  const handleMenuTwo = () => {
-    setOpen(false);
-    setMenuAsset("axlUSDC");
-    setbarIndex(2);
-  };
-  const handleMenuThree = () => {
-    setOpen(false);
-    setMenuAsset("OSMO");
-    setbarIndex(0);
-  };
-  const handleMenuFour = () => {
-    setOpen(false);
-    setMenuAsset("ATOM-OSMO");
-    setbarIndex(3);
-  };
-  const handleMenuFive = () => {
-    setOpen(false);
-    setMenuAsset("OSMO-axlUSDC");
-    setbarIndex(4);
-  };
-  const handleMenuSix = () => {
-    setOpen(false);
-    setMenuAsset("USDC");
-    setbarIndex(5);
-  };
-  const handleMenuSeven = () => {
-    setOpen(false);
-    setMenuAsset("stATOM");
-    setbarIndex(6);
-  };
-  const handleMenuEight = () => {
-    setOpen(false);
-    setMenuAsset("stOSMO");
-    setbarIndex(7);
-  };
-  const handleMenuNine = () => {
-    setOpen(false);
-    setMenuAsset("TIA");
-    setbarIndex(8);
-  };
-  const handleMenuTen = () => {
-    setOpen(false);
-    setMenuAsset("USDT");
-    setbarIndex(9);
+    setMenuAsset(asset);
+    setbarIndex(index);
   };
   // Query premiums slots and save new heights
   //Heights are denominated 10K per pixel
   const queryQueuesaveHeights = async (asset: string) => {
     try {
-      await queryClient?.premiumSlots({
-        bidFor: {
-          native_token: {
-            denom: asset,
-          }
-        },
-      }).then((res) => {
-        let resp = res as SlotResponse[];
-        let highest = highestBar[barIndex];
+      let resp = await queryPremiumSlots(asset, queryClient) as SlotResponse[];
+      let highest = highestBar[barIndex];
 
-        //Set new heights
         for (let i = 0; i < resp.length; i++) {
           let premium_index =  parseInt((parseFloat(resp[i].liq_premium) * 100).toFixed(0));
           if (premium_index < 10){
@@ -333,7 +235,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         //Set highest 
         highestBar[barIndex] = highest;
         sethighestBar(highestBar);
-      })
     } catch (error) {
       //We don't popup for query errors
       console.log(error)
@@ -343,50 +244,16 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     try {
       await cdp_queryClient?.getBasket().then((res) => {
         console.log(prices)
-        //Get price
+
+        //Get price by iterating asset lookup until denom matches
         var price = 0;
-        switch (asset) {
-          case denoms.osmo: {
-            price = prices.osmo;
-            break;
-          } 
-          case denoms.atom: {
-            price = prices.atom;
-            break;
-          }
-          case denoms.axlUSDC: {
-            price = prices.axlUSDC;
-            break;
-          }
-          case denoms.usdc: {
-            price = prices.usdc;
-            break;
-          }
-          case denoms.stAtom: {
-            price = prices.stAtom;
-            break;
-          }
-          case denoms.stOsmo: {
-            price = prices.stOsmo;
-            break;
-          }
-          case denoms.tia: {
-            price = prices.tia;
-            break;
-          }
-          case denoms.usdt: {
-            price = prices.usdt;
-            break;
-          }
-          case denoms.atomosmo_pool: {
-            price = prices.atomosmo_pool;
-            break;
-          }
-          case denoms.osmousdc_pool: {
-            price = prices.osmousdc_pool;
+        for (let key in assets) {
+          if (assets[key].denom === asset) {
+            price = assets[key].price;
             break;
           }
         }
+
         //Set collateral TVL
         for (let i = 0; i < res.collateral_types.length; i++) {
           //@ts-ignore
@@ -408,15 +275,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
 
     //Query queue
     try {
-      await queryClient?.queue({
-        bidFor: {
-          native_token: {
-            denom: asset,
-          }
-        },
-      }).then((res) => {
-        setQueue(res);
-      })
+      let res = await queryQueue(asset, queryClient);
+      setQueue(res);
     } catch (error) {
       //We don't popup for query errors
       console.log(error)
@@ -433,48 +293,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
     //Get denom from menu asset
     let workingDenom: string = "";
-    switch(menuAsset){
-      case "OSMO": {  
-        workingDenom = denoms.osmo; 
-        break;
-      }
-      case "ATOM": {
-        workingDenom = denoms.atom;
-        break;
-      }
-      case "axlUSDC": {
-        workingDenom = denoms.axlUSDC;
-        break;
-      }
-      case "USDC": {
-        workingDenom = denoms.usdc;
-        break;
-      }
-      case "stATOM": {
-        workingDenom = denoms.stAtom;
-        break;
-      }
-      case "stOSMO": {
-        workingDenom = denoms.stOsmo;
-        break;
-      }
-      case "TIA": {
-        workingDenom = denoms.tia;
-        break;
-      }
-      case "USDT": {
-        workingDenom = denoms.usdt;
-        break;
-      }
-      case "ATOM-OSMO": {
-        workingDenom = denoms.atomosmo_pool;
-        break;
-      }
-      case "OSMO-axlUSDC": {
-        workingDenom = denoms.osmousdc_pool;
-        break;
-      }
+    if (menuAsset in assets) {
+      workingDenom = assets[menuAsset].denom;
     }
+
     ///Try execution
     try {
       await liq_queueClient?.submitBid({
@@ -520,48 +342,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
     //Get denom from menu asset
     let workingDenom: string = "";
-    switch(menuAsset){
-      case "OSMO": {  
-        workingDenom = denoms.osmo; 
-        break;
-      }
-      case "ATOM": {
-        workingDenom = denoms.atom;
-        break;
-      }
-      case "axlUSDC": {
-        workingDenom = denoms.axlUSDC;
-        break;
-      }
-      case "USDC": {
-        workingDenom = denoms.usdc;
-        break;
-      }
-      case "stATOM": {
-        workingDenom = denoms.stAtom;
-        break;
-      }
-      case "stOSMO": {
-        workingDenom = denoms.stOsmo;
-        break;
-      }
-      case "TIA": {
-        workingDenom = denoms.tia;
-        break;
-      }
-      case "USDT": {
-        workingDenom = denoms.usdt;
-        break;
-      }
-      case "ATOM-OSMO": {
-        workingDenom = denoms.atomosmo_pool;
-        break;
-      }
-      case "OSMO-axlUSDC": {
-        workingDenom = denoms.osmousdc_pool;
-        break;
-      }
+    if (menuAsset in assets) {
+      workingDenom = assets[menuAsset].denom;
     }
+
     ///Try execution
     try {
       //Query bidId in slot
@@ -734,6 +518,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       setPopupTrigger(true)
     }
   }
+
   const handleStabilityWithdraw = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
@@ -797,8 +582,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
   }
 
-  
-
   const handleStabilityClaim = async () => {
     //Check if wallet is connected & connect if not
     if (address === undefined) {
@@ -827,69 +610,13 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
   useEffect(() => {
     //Set prices
     if (prices.osmo === 0 ){ setPrices(pricez) }
+    
     //Set barGraph
-    switch(menuAsset){
-      case "OSMO": {
-        if (barGraph[0][0].tvl === "0" && prices.osmo !== 0) {
-          queryQueuesaveHeights(denoms.osmo)
-        }
-        break;
-      }
-      case "ATOM": {
-        if (barGraph[1][0].tvl === "0" && prices.atom !== 0) {
-          queryQueuesaveHeights(denoms.atom)
-        }
-        break;
-      }
-      case "axlUSDC": {
-        if (barGraph[2][0].tvl === "0" && prices.axlUSDC !== 0) {
-          queryQueuesaveHeights(denoms.axlUSDC)
-        }
-        break;
-      }
-      case "USDC": {
-        if (barGraph[5][0].tvl === "0" && prices.usdc !== 0) {
-          queryQueuesaveHeights(denoms.usdc)
-        }
-        break;
-      }
-      case "stATOM": {
-        if (barGraph[6][0].tvl === "0" && prices.stAtom !== 0) {
-          queryQueuesaveHeights(denoms.stAtom)
-        }
-        break;
-      }
-      case "stOSMO": {
-        if (barGraph[7][0].tvl === "0" && prices.stOsmo !== 0) {
-          queryQueuesaveHeights(denoms.stOsmo)
-        }
-        break;
-      }
-      case "TIA": {
-        if (barGraph[8][0].tvl === "0" && prices.tia !== 0) {
-          queryQueuesaveHeights(denoms.tia)
-        }
-        break;
-      }
-      case "USDT": {
-        if (barGraph[9][0].tvl === "0" && prices.usdt !== 0) {
-          queryQueuesaveHeights(denoms.usdt)
-        }
-        break;
-      }
-      case "ATOM-OSMO": {
-        if (barGraph[3][0].tvl === "0" && prices.atomosmo_pool !== 0) {
-          queryQueuesaveHeights(denoms.atomosmo_pool)
-        }
-        break;
-      }
-      case "OSMO-axlUSDC": {
-        if (barGraph[4][0].tvl === "0" && prices.osmousdc_pool !== 0) {
-          queryQueuesaveHeights(denoms.osmousdc_pool)
-        }
-        break;
-      }
+    const assetBars = barGraph.find(bars => bars[0].asset === menuAsset);
+    if (assetBars && assetBars[0].tvl === "0" && assets[menuAsset].price !== 0) {
+      queryQueuesaveHeights(assets[menuAsset].denom);
     }
+
     //Set LQ claimables
     setlqClaimables(index_lqClaimables);
     //Set risky positions
@@ -928,37 +655,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     }
   }
   function getmenuAssetPrice() {
-    switch(menuAsset){
-      case "OSMO": {
-        return prices.osmo;
-      }
-      case "ATOM": {
-        return prices.atom;
-      }
-      case "axlUSDC": {
-        return prices.axlUSDC;
-      }
-      case "USDC": {
-        return prices.usdc;
-      }
-      case "stATOM": {
-        return prices.stAtom;
-      }
-      case "stOSMO": {
-        return prices.stOsmo;
-      }
-      case "TIA": {
-        return prices.tia;
-      }
-      case "USDT": {
-        return prices.usdt;
-      }
-      case "ATOM-OSMO": {
-        return prices.atomosmo_pool;
-      }
-      case "OSMO-axlUSDC": {
-        return prices.osmousdc_pool;
-      }
+    if (menuAsset in assets) {
+      return assets[menuAsset].price;
     }
   }
   function setBidAmount(event: any) {
@@ -1042,7 +740,15 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       })
     }
   }
-
+  function formatNumber(TVL: number) {
+    if (TVL > 1000000) {
+        return (TVL / 1000000).toFixed(2) + "M";
+    } else if (TVL > 1000) {
+        return (TVL / 1000).toFixed(1) + "K";
+    } else {
+        return TVL.toString();
+    }
+}
   return (
     
     <div className="liquidations">
@@ -1062,80 +768,13 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         <div className="singleassetframe">
           <h3 className="pool-titles" data-descr="Liquidations start at the lowest, capitalized premium & distribute assets based on your proportion of the premium's TVL">SINGLE ASSET*</h3>
           <div className="single-asset-info-circle" />
-          <div className="bar-icon" data-descr={barGraph[barIndex][0].tvl} style={{height: barGraph[barIndex][0].height, backgroundColor: barGraph[barIndex][0].color,}}/>
-          <div className="bar-icon1" data-descr={barGraph[barIndex][1].tvl} style={{height: barGraph[barIndex][1].height, backgroundColor: barGraph[barIndex][1].color,}}/>
-          <div className="bar-icon2" data-descr={barGraph[barIndex][2].tvl} style={{height: barGraph[barIndex][2].height, backgroundColor: barGraph[barIndex][2].color,}}/>
-          <div className="bar-icon3" data-descr={barGraph[barIndex][3].tvl} style={{height: barGraph[barIndex][3].height, backgroundColor: barGraph[barIndex][3].color,}}/>
-          <div className="bar-icon4" data-descr={barGraph[barIndex][4].tvl} style={{height: barGraph[barIndex][4].height, backgroundColor: barGraph[barIndex][4].color,}}/>
-          <div className="bar-icon5" data-descr={barGraph[barIndex][5].tvl} style={{height: barGraph[barIndex][5].height, backgroundColor: barGraph[barIndex][5].color,}}/>
-          <div className="bar-icon6" data-descr={barGraph[barIndex][6].tvl} style={{height: barGraph[barIndex][6].height, backgroundColor: barGraph[barIndex][6].color,}}/>
-          <div className="bar-icon7" data-descr={barGraph[barIndex][7].tvl} style={{height: barGraph[barIndex][7].height, backgroundColor: barGraph[barIndex][7].color,}}/>
-          <div className="bar-icon8" data-descr={barGraph[barIndex][8].tvl} style={{height: barGraph[barIndex][8].height, backgroundColor: barGraph[barIndex][8].color,}}/>
-          <div className="bar-icon9" data-descr={barGraph[barIndex][9].tvl} style={{height: barGraph[barIndex][9].height, backgroundColor: barGraph[barIndex][9].color,}}/>
-          <div className="label4" data-tvl={barGraph[barIndex][0].tvl} style={(premium === 0) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(0)}}>0%</div>
-          <div className="label5" data-tvl={barGraph[barIndex][1].tvl} style={(premium === 1) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(1)}}>1%</div>
-          <div className="label6" data-tvl={barGraph[barIndex][2].tvl} style={(premium === 2) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(2)}}>2%</div>
-          <div className="label7" data-tvl={barGraph[barIndex][3].tvl} style={(premium === 3) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(3)}}>3%</div>
-          <div className="label8" data-tvl={barGraph[barIndex][4].tvl} style={(premium === 4) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(4)}}>4%</div>
-          <div className="label9" data-tvl={barGraph[barIndex][5].tvl} style={(premium === 5) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(5)}}>5%</div>
-          <div className="label10" data-tvl={barGraph[barIndex][6].tvl} style={(premium === 6) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(6)}}>6%</div>
-          <div className="label11" data-tvl={barGraph[barIndex][7].tvl} style={(premium === 7) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(7)}}>7%</div>
-          <div className="label12" data-tvl={barGraph[barIndex][8].tvl} style={(premium === 8) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(8)}}>8%</div>
-          <div className="label13" data-tvl={barGraph[barIndex][9].tvl} style={(premium === 9) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(9)}}>9%</div>
-          <div className="dropdown asset-dropdown">
-            <button onClick={handleOpen} style={{outline: "none"}}>{menuAsset}</button>
-            {open ? (
-                <ul className="menu">
-                {menuAsset !== "ATOM" ? (<li className="menu-item">
-                    <button onClick={handleMenuOne} style={{outline: "none"}}>ATOM</button>
-                </li>) : null}
-                {menuAsset !== "axlUSDC" ? (<li className="menu-item">
-                    <button onClick={handleMenuTwo} style={{outline: "none"}}>axlUSDC</button>
-                </li>) : null}
-                {menuAsset !== "OSMO" ? (<li className="menu-item">
-                    <button onClick={handleMenuThree} style={{outline: "none"}}>OSMO</button>
-                </li>) : null}
-                {menuAsset !== "USDC" ? (<li className="menu-item">
-                    <button onClick={handleMenuSix} style={{outline: "none"}}>USDC</button>
-                </li>) : null}
-                {menuAsset !== "sTATOM" ? (<li className="menu-item">
-                    <button onClick={handleMenuSeven} style={{outline: "none"}}>stATOM</button>
-                </li>) : null}
-                {menuAsset !== "stOSMO" ? (<li className="menu-item">
-                    <button onClick={handleMenuEight} style={{outline: "none"}}>stOSMO</button>
-                </li>) : null}
-                {menuAsset !== "TIA" ? (<li className="menu-item">
-                    <button onClick={handleMenuNine} style={{outline: "none"}}>TIA</button>
-                </li>) : null}
-                {menuAsset !== "USDT" ? (<li className="menu-item">
-                    <button onClick={handleMenuTen} style={{outline: "none"}}>USDT</button>
-                </li>) : null}
-                {/* {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
-                    <button onClick={handleMenuFour}>ATOM-OSMO</button>
-                </li>) : null}
-                {menuAsset !== "OSMO-axlUSDC" ? (<li className="menu-item">
-                    <button onClick={handleMenuFive}>OSMO-axlUSDC</button>
-                </li>) : null} */}
-                </ul>
-            ) : null}
-          </div>
+          <Chart barGraph={barGraph} barIndex={barIndex} setPremium={setPremium} premium={premium} />
+          <AssetDropdownMenu menuAsset={menuAsset} open={open} handleOpen={handleOpen} handleMenu={handleMenu}/>
           <div className="queue-stats-box">
-            <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{collateralTVL}K</div>
-             <div className="collateral-tvl-label" >TVL as Collateral</div>
-            </div>
-            <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{ parseInt(queue?.bid_asset.amount ?? "0") > 1000000_000000 ? (parseInt(queue?.bid_asset.amount ?? "0") / 1000000_000_000).toFixed(2)+"M CDT" : parseInt(queue?.bid_asset.amount ?? "0") > 1000_000000 ? (parseInt(queue?.bid_asset.amount ?? "0") / 1000_000_000).toFixed(1)+"K CDT" : (parseInt(queue?.bid_asset.amount ?? "0") / 1_000_000) + " CDT" }</div>
-             <div className="collateral-tvl-label" >Total Bids</div>
-            </div>
-            <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>${getmenuAssetPrice()?.toFixed(4)}</div>
-             <div className="collateral-tvl-label" >Collateral Price</div>
-             </div>
-            <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #50C9BD", fontSize: "large"}}>{queueuserBids} CDT</div>
-             <div className="collateral-tvl-label" >Your Bids</div>
-            </div>
+            <QueueStatsItem metric={collateralTVL+ " K"} label='TVL as Collateral' color={"#50C9BD"}/>            
+            <QueueStatsItem metric={ parseInt(queue?.bid_asset.amount ?? "0") > 1000000_000000 ? (parseInt(queue?.bid_asset.amount ?? "0") / 1000000_000_000).toFixed(2)+"M CDT" : parseInt(queue?.bid_asset.amount ?? "0") > 1000_000000 ? (parseInt(queue?.bid_asset.amount ?? "0") / 1000_000_000).toFixed(1)+"K CDT" : (parseInt(queue?.bid_asset.amount ?? "0") / 1_000_000) + " CDT" } label='Total Bids' color={"#50C9BD"}/>
+            <QueueStatsItem metric={"$" + (getmenuAssetPrice()?.toFixed(4) as string)} label="Collateral Price" color={"#50C9BD"}/>
+            <QueueStatsItem metric={queueuserBids + " CDT"} label="Your Bids" color={"#50C9BD"}/>
           </div>
           <div className="highest-tvl-bar-label" style={{top: (344 - barGraph[barIndex][highestBar[barIndex]].height), left: 42 + ((highestBar[barIndex]) * 39) - (7 - highestBar[barIndex])}}>{barGraph[barIndex][highestBar[barIndex]].tvl} CDT</div>
           <div className="x-axis" />
@@ -1164,8 +803,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           </div>
           <div className="capital-ahead-box" />
           <div className="user-tvl-box" />
-          <div className="user-tvl-label" data-descr={"Your TVL: "+userTVL}>{userclosestDeposit > 1000000 ? (userclosestDeposit /1000000).toFixed(2) + "M" : userclosestDeposit > 1000 ? (userclosestDeposit /1000).toFixed(1) + "K" : userclosestDeposit}</div>
-          <div className="captial-ahead-label" data-descr="Capital ahead of you">{capitalAhead > 1000000 ? (capitalAhead /1000000).toFixed(2) + "M" : capitalAhead > 1000 ? (capitalAhead /1000).toFixed(1) + "K" : capitalAhead}</div>
+          <div className="user-tvl-label" data-descr={"Your TVL: "+userTVL}>{formatNumber(userclosestDeposit)}</div>
+          <div className="captial-ahead-label" data-descr="Capital ahead of you">{formatNumber(capitalAhead)}</div>
           <div className="total-tvl-label">TVL: {TVL > 1000000 ? TVL /1000000 + "M" : TVL > 1000 ? TVL /1000 + "K" : TVL} CDT</div>
           <Image className="tvl-container-icon" width={253} height={236} alt="" src="/images/tvl_container.svg" />
           <div className="premium">10%</div>
@@ -1181,22 +820,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             <div className="btn sa-claim-button" data-descr={SPclaimables} style={SPclaimables === "No Claims" ? {opacity: 0.1, color: "black", padding: "0px", cursor: "default"} : {color: "black", padding: "0px"}} onClick={handleStabilityClaim}>Claim</div>
           </form>
           <div className="omni-stats-box">
-            <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #798EFF", fontSize: "large"}}>{TVL > 1000000 ? (TVL /1000000).toFixed(2) + "M" : TVL > 1000 ? (TVL /1000).toFixed(1) + "K" : TVL} CDT</div>
-             <div className="collateral-tvl-label" >Total TVL</div>
-            </div>
-            <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #798EFF", fontSize: "large"}}>{userTVL > 1000000 ? (userTVL /1000000).toFixed(2) + "M" : userTVL > 1000 ? (userTVL /1000).toFixed(1) + "K" : userTVL} CDT</div>
-             <div className="collateral-tvl-label" >Your TVL</div>
-            </div>
-            <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #798EFF", fontSize: "large"}}>{userclosestDeposit > 1000000 ? (userclosestDeposit /1000000).toFixed(2) + "M" : userclosestDeposit > 1000 ? (userclosestDeposit /1000).toFixed(1) + "K" : userclosestDeposit} CDT</div>
-             <div className="collateral-tvl-label" >Your Nearest Position</div>
-            </div>
-            <div className="queue-stats-item">
-              <div style={{textAlign: "center", borderBottom: "2px solid #798EFF", fontSize: "large"}}>{capitalAhead > 1000000 ? (capitalAhead /1000000).toFixed(2) + "M" : capitalAhead > 1000 ? (capitalAhead /1000).toFixed(1) + "K" : capitalAhead} CDT</div>
-             <div className="collateral-tvl-label" >Capital Ahead of Nearest</div>
-            </div>
+            <QueueStatsItem metric={formatNumber(TVL) + " CDT"} label='Total TVL' color={"#798EFF"}/>
+            <QueueStatsItem metric={formatNumber(TVL) + " CDT"} label='Your TVL' color={"#798EFF"}/>
+            <QueueStatsItem metric={formatNumber(userclosestDeposit) + "CDT"} label='Your Nearest Position' color={"#798EFF"}/>
+            <QueueStatsItem metric={formatNumber(capitalAhead)+ " CDT"} label='Capital Ahead of Nearest' color={"#798EFF"}/>
           </div>          
             {(unstakingMsg !== "") ? (
               <div className="omni-unstaking-msg">
