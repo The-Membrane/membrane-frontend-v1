@@ -1182,10 +1182,10 @@ export default function Home() {
               var position_collateral_qtys = getPositionQTYs(position);
               //Get positions max LTV
               var max_LTV = getRataLTV(position_value, position_collateral_qtys, prices, basketRes)[1];
-
+      
               //Check insolvency
               var insolvency = (getPositionLTV(position_value, parseInt(position.credit_amount)) / (max_LTV/100));
-              if (insolvency > 0.95) {
+              if ((insolvency > 0.95) && (insolvency < Infinity)) {
                 riskyPositions.push([user.user, insolvency, position]);
               }
             }

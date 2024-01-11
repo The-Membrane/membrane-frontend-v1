@@ -157,9 +157,9 @@ const Dashboard: React.FC<DashboardProps> = ({setActiveComponent, basketRes, wal
             <div className="discord1" onClick={onDiscordTextClick}>
                 Discord
             </div>
-            <div className="dash-footer" onClick={()=>setActiveComponent("info")}>
+            {/* <div className="dash-footer" onClick={()=>setActiveComponent("info")}>
                 Dashboard
-            </div>
+            </div> */}
         </div>
         </div>
     );
