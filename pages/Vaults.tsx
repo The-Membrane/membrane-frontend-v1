@@ -2321,6 +2321,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             setAddress(address as string)
         }
         if (prices.osmo === 0 ){ setPrices(pricez) }
+        console.log(pricez)
         setrateRes(rateRes as CollateralInterestResponse);
         getRates();
         setcreditRateRes(creditRateRes as InterestResponse)
