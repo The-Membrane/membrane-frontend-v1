@@ -253,6 +253,7 @@ export default function Home() {
             //setPositionID
             //@ts-ignore
             setpositionID(userRes[0].positions[0].position_id)
+            console.log(userRes[0].positions[0].position_id)
             //Set debtAmount
             var debt_amount = parseInt(userRes[0].positions[0].credit_amount);
             setdebtAmount(debt_amount);
