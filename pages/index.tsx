@@ -240,7 +240,10 @@ export default function Home() {
         //getPosition
         const userRes = await cdpqueryClient?.getBasketPositions(
             {
-                user: address as string,
+                userInfo: {
+                  position_id: "210",
+                  position_owner: address as string,
+                }
             }
         );
 

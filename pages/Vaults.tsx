@@ -2344,8 +2344,6 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setcontractQTYs(contractQTYz);
         //Set positionQTYs
         setpositionQTYs(positionQTYz);
-        //temp hard coded position id 
-        setpositionID("210")
 
     }, [pricez, address, rateRes, creditRateRes, basketRes, walletQTYz, contractQTYz, positionQTYz])
     
