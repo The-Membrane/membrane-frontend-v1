@@ -242,7 +242,7 @@ export default function Home() {
             {
                 userInfo: {
                   position_id: "210",
-                  position_owner: address as string,
+                  position_owner: "osmo18u6lt588ts54xu54twkhp7x78mpk0v9za20amz",
                 }
             }
         );
