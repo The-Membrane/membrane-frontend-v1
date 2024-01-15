@@ -361,7 +361,7 @@ export default function Home() {
         for (let i = 0; i < resp.length; i++) {
           let asset_claims = parseInt(resp[i].pending_liquidated_collateral) / 1_000_000; //Remove native token decimals
           
-          if (asset_claims > 1) {           
+          if (asset_claims > 0) {           
             //Add asset to display
             switch (resp[i].bid_for) {
               case denoms.osmo: {     
@@ -397,11 +397,11 @@ export default function Home() {
                 break;
               }
               case denoms.atomosmo_pool: {
-                new_display += asset_claims + " ATOM-OSMO LP, ";
+                new_display += (asset_claims/1_000000_000000) + " ATOM-OSMO LP, ";
                 break;
               }
               case denoms.osmousdc_pool: {
-                new_display += asset_claims + " OSMO-axlUSDC LP, ";
+                new_display += (asset_claims/1_000000_000000) + " OSMO-axlUSDC LP, ";
                 break;
               }
             }

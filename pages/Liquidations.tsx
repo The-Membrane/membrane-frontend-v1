@@ -19,7 +19,7 @@ import { chainName } from "../config";
 import { PositionResponse } from "../codegen/positions/Positions.types";
 
 //Bar graph scale
-const CDTperPIXEL = 100_000_000; //100
+const CDTperPIXEL = 10_000_000; //10
 
 interface LQClaims {
   display: string;
@@ -1110,12 +1110,12 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
                 {menuAsset !== "USDT" ? (<li className="menu-item">
                     <button onClick={handleMenuTen} style={{outline: "none"}}>USDT</button>
                 </li>) : null}
-                {/* {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
+                {menuAsset !== "ATOM-OSMO" ? (<li className="menu-item">
                     <button onClick={handleMenuFour}>ATOM-OSMO</button>
                 </li>) : null}
                 {menuAsset !== "OSMO-axlUSDC" ? (<li className="menu-item">
                     <button onClick={handleMenuFive}>OSMO-axlUSDC</button>
-                </li>) : null} */}
+                </li>) : null}
                 </ul>
             ) : null}
           </div>
