@@ -164,7 +164,8 @@ interface Props {
         //@ts-ignore
         } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool){
             maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.atomosmo_pool;
-            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.atomosmo_pool;  
+            brwLTV += (parseFloat(collateral.max_borrow_LTV) * +100) * ratios.atomosmo_pool;
+            console.log("atomosmo_pool", maxLTV, brwLTV, ratios.atomosmo_pool)
         //@ts-ignore           
         } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool){
             maxLTV += (parseFloat(collateral.max_LTV) * +100) * ratios.osmousdc_pool;
