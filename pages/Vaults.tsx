@@ -1972,7 +1972,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdt ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdt", event)}/>
                     </form>
                 </div>: null}
-                {walletQTYs.atomosmo_pool > 0 || assetcardTitle === "Show Relevant Assets" ?
+                {/* {walletQTYs.atomosmo_pool > 0 || assetcardTitle === "Show Relevant Assets" ?
                 <div className="deposit-element-lp">
                     <div className="deposit-element-icon-lp">
                         <Image className="deposit-icon-lp-left" width={45} height={45} alt="" src="images/atom.svg" />
@@ -1995,7 +1995,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
                     </form>
-                </div>: null}
+                </div>: null} */}
                 </> : //Withdraw elements
                 <> 
                 {contractQTYs.osmo > 0 ?        
