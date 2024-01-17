@@ -1056,7 +1056,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
           </div>
           <div className="liquidatible-positions">
             <div className="at-risk-positions">At-Risk Positions: {riskyPositions.length}</div>
-            <div className="btn liquidate-button" style={getLiquidatiblePositions().length > 0 ? {} : {opacity: 0.3}} onClick={handleLiquidation}>Liquidate</div>
+            {/* <div className="btn liquidate-button" style={getLiquidatiblePositions().length > 0 ? {} : {opacity: 0.3}} onClick={handleLiquidation}>Liquidate</div> */}
           </div>
         </div>
         <div className="singleassetframe">

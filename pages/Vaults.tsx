@@ -2463,9 +2463,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 {//Only show if there is minted debt
                 debtAmount > 0 ?
                     <div className="mint-element" style={currentfunctionLabel !== "mint" ? {} : {opacity: ".3"}}>
-                        <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%", width: "61px", top: "-19%"}} onClick={()=>{handleExecution("repay")}}>
+                        {/* <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "9%", width: "61px", top: "-19%"}} onClick={()=>{handleExecution("repay")}}>
                             Repay
-                        </a> 
+                        </a>  */}
                         <form className="deposit-form" style={{top: "-19%"}}>
                             <div className="mint-max-amount-label" onClick={()=>setrepayAmount(debtAmount/1_000000)}>max: {(debtAmount/1_000000).toFixed(1)}</div>
                             <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} value={repayAmount} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("repay")} onChange={(event)=>{event.preventDefault(); setrepayAmount(parseFloat(event.target.value))}}/>
