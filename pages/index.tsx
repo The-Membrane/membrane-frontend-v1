@@ -17,7 +17,6 @@ import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, Posi
 import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
 import { delegateList, denoms, quadraticVoting, skipProposals } from "../config";
-import { position } from "@chakra-ui/react";
 
 
 export const SECONDS_PER_DAY = 86400;
@@ -241,10 +240,7 @@ export default function Home() {
         //getPosition
         const userRes = await cdpqueryClient?.getBasketPositions(
             {
-                userInfo: {
-                  position_owner: "osmo18u6lt588ts54xu54twkhp7x78mpk0v9za20amz",
-                  position_id: "211"
-                },
+                user: address as string,
             }
         );
 
