@@ -1286,7 +1286,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "ATOM-OSMO LP": { //18 decimal instead of 6
                     workingIntents.push({
-                        amount: (BigInt(intent[1] * 1_000_000_000_000_000_000)).toString(),
+                        amount: (BigInt(intent[1]) * (1_000_000_000_000_000_000n)).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1297,7 +1297,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "OSMO-axlUSDC LP": { //18 decimal instead of 6
                     workingIntents.push({
-                        amount: (BigInt(intent[1] * 1_000_000_000_000_000_000)).toString(),
+                        amount: (BigInt(intent[1]) * (1_000_000_000_000_000_000n)).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -2436,10 +2436,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             <div className="mint-card-body mint-card-design shadow" style={{paddingRight: ".75rem", paddingLeft: ".75rem", paddingTop: "1rem", paddingBottom: ".75rem"}}>                
                 <div className="mint-stats-grid">
                     <div className="value-div">
-                        <div className="mint-card-stats">Debt: {(debtAmount/1_000000).toFixed(2)} CDT</div>
-                        <div className="mint-card-stats">Cost: {getRataCost()}%</div>
-                        <div className="mint-card-stats">Liq. Value: ${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(2)}</div>
-                        <div className="mint-card-stats">TVL: ${(getTVL() ?? 0).toFixed(2)}</div>
+                        <div className="mint-card-stats">Debt: {(debtAmount/1_000000).toFixed(0)} CDT</div>
+                        <div className="mint-card-stats">Cost: {getRataCost().toFixed(4)}%</div>
+                        <div className="mint-card-stats">Liq. Value: ${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(0)}</div>
+                        <div className="mint-card-stats">TVL: ${(getTVL() ?? 0).toFixed(0)}</div>
                     </div>
                     <div className="ltv-div">
                         <div className="mint-card-stats">LTV: {((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) * 100).toFixed(1)}%</div>                        

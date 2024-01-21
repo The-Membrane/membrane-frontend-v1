@@ -1279,11 +1279,11 @@ export default function Home() {
           })
           //Get account's balance of ATOM - OSMO LP
           oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
-            wallet_qtys.atomosmo_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000)
+            wallet_qtys.atomosmo_pool = parseInt((BigInt(res.amount) / 1_000_000_000_000_000_000n).toString())
           })
           //Get account's balance of OSMO - USDC LP
           oraclequeryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
-            wallet_qtys.osmousdc_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000)
+            wallet_qtys.osmousdc_pool = parseInt((BigInt(res.amount) / 1_000_000_000_000_000_000n).toString())
           })
           //Set walletChecked
           setwalletChecked(true)
