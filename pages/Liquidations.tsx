@@ -386,8 +386,10 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         return (TVL / 1000000).toFixed(2) + "M";
     } else if (TVL > 1000) {
         return (TVL / 1000).toFixed(1) + "K";
-    } else {
+    } else if (TVL != undefined) {
         return TVL.toFixed(0);
+    } else {
+        return "0";    
     }
 }
   return (
