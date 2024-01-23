@@ -14,18 +14,14 @@ import { chainName, testnetAddrs } from "../config";
 import { useChain } from "@cosmos-kit/react";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
-const usePopup = () => {
-    const [trigger, setTrigger] = useState(false);
-    const [msg, setMsg] = useState<ReactJSXElement>();
-    const [status, setStatus] = useState("");
-  
+const usePopup = (setStatus: any, setMsg: any, setTrigger: any) => {  
     const showPopup = (status: any, message: any) => {
       setStatus(status);
       setMsg(message);
       setTrigger(true);
     };
   
-    return { trigger, setTrigger, msg, setMsg, status, setStatus, showPopup };
+    return { showPopup };
 };
 
 interface Props {
@@ -49,7 +45,12 @@ interface LaunchRankings {
 
 const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Props) => {
   const { connect } = useChain(chainName);
-  const { trigger, setTrigger, msg, status, setMsg, showPopup } = usePopup();
+  //Popup  
+  const [trigger, setTrigger] = useState(false);
+  const [msg, setMsg] = useState<ReactJSXElement>();
+  const [status, setStatus] = useState("");
+  ///
+  const { showPopup } = usePopup(setStatus, setMsg, setTrigger);
   const depositIndices = Array.from({ length: 8 }, (_, index) => index + 1);
 
   //Visuals

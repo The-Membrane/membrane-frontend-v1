@@ -196,12 +196,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
             barGraph[barIndex][premium_index].height = parseFloat(resp[i].total_bid_amount) / CDTperPIXEL;
             //Set tvl            
             var tvl = parseInt(resp[i].total_bid_amount) / 1_000000;
-            var tvl_label = tvl.toString();
-            if (tvl >= 1000){
-              tvl_label = (tvl/1000).toString() + "K";
-            } else if (tvl >= 1000000){
-              tvl_label = (tvl/1000000).toString() + "M";
-            }
+            var tvl_label = formatNumber(tvl);
             barGraph[barIndex][premium_index].tvl = tvl_label;
             //Check if this is the highest bar
             if (barGraph[barIndex][premium_index].height > barGraph[barIndex][highest].height) {
@@ -392,7 +387,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     } else if (TVL > 1000) {
         return (TVL / 1000).toFixed(1) + "K";
     } else {
-        return TVL.toString();
+        return TVL.toFixed(0);
     }
 }
   return (
