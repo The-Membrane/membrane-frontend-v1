@@ -14,14 +14,18 @@ import { chainName, testnetAddrs } from "../config";
 import { useChain } from "@cosmos-kit/react";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
-const usePopup = (setStatus: any, setMsg: any, setTrigger: any) => {  
+const usePopup = () => {
+    const [trigger, setTrigger] = useState(false);
+    const [msg, setMsg] = useState<ReactJSXElement>();
+    const [status, setStatus] = useState("");
+  
     const showPopup = (status: any, message: any) => {
       setStatus(status);
       setMsg(message);
       setTrigger(true);
     };
   
-    return { showPopup };
+    return { trigger, setTrigger, msg, setMsg, status, setStatus, showPopup };
 };
 
 interface Props {
@@ -45,12 +49,7 @@ interface LaunchRankings {
 
 const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Props) => {
   const { connect } = useChain(chainName);
-  //Popup  
-  const [trigger, setTrigger] = useState(false);
-  const [msg, setMsg] = useState<ReactJSXElement>();
-  const [status, setStatus] = useState("");
-  ///
-  const { showPopup } = usePopup(setStatus, setMsg, setTrigger);
+  const { trigger, setTrigger, msg, status, setMsg, showPopup } = usePopup();
   const depositIndices = Array.from({ length: 8 }, (_, index) => index + 1);
 
   //Visuals
@@ -67,15 +66,64 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
 
   type StateFunction = [number, LockDisplay, React.Dispatch<React.SetStateAction<LockDisplay>>];
 
-  const depositArray: StateFunction[] = Array.from({ length: 8 }, (_, index) => {
-    const [deposit, setDeposit] = useState<LockDisplay>({
-      deposit: undefined,
-      new_lock_up_duration: 0,
-      old_lock_up_duration: undefined,
-      label: "LOCK",
-    });
-    return [index, deposit, setDeposit];
+  const depositArray: StateFunction[] = [] as StateFunction[];
+  const [deposit, setDeposit] = useState<LockDisplay>({
+    deposit: undefined,
+    new_lock_up_duration: 0,
+    old_lock_up_duration: undefined,
+    label: "LOCK",
   });
+  depositArray.push([0, deposit, setDeposit]);
+  const [deposit2, setDeposit2] = useState<LockDisplay>({
+    deposit: undefined,
+    new_lock_up_duration: 0,
+    old_lock_up_duration: undefined,
+    label: "LOCK",
+  });
+  depositArray.push([1, deposit2, setDeposit2]);
+  const [deposit3, setDeposit3] = useState<LockDisplay>({
+    deposit: undefined,
+    new_lock_up_duration: 0,
+    old_lock_up_duration: undefined,
+    label: "LOCK",
+  });
+  depositArray.push([2, deposit3, setDeposit3]);
+  const [deposit4, setDeposit4] = useState<LockDisplay>({
+    deposit: undefined,
+    new_lock_up_duration: 0,
+    old_lock_up_duration: undefined,
+    label: "LOCK",
+  });
+  depositArray.push([3, deposit4, setDeposit4]);
+  const [deposit5, setDeposit5] = useState<LockDisplay>({
+    deposit: undefined,
+    new_lock_up_duration: 0,
+    old_lock_up_duration: undefined,
+    label: "LOCK",
+  });
+  depositArray.push([4, deposit5, setDeposit5]);
+  const [deposit6, setDeposit6] = useState<LockDisplay>({
+    deposit: undefined,
+    new_lock_up_duration: 0,
+    old_lock_up_duration: undefined,
+    label: "LOCK",
+  });
+  depositArray.push([5, deposit6, setDeposit6]);
+  const [deposit7, setDeposit7] = useState<LockDisplay>({
+    deposit: undefined,
+    new_lock_up_duration: 0,
+    old_lock_up_duration: undefined,
+    label: "LOCK",
+  });
+  depositArray.push([6, deposit7, setDeposit7]);
+  const [deposit8, setDeposit8] = useState<LockDisplay>({
+    deposit: undefined,
+    new_lock_up_duration: 0,
+    old_lock_up_duration: undefined,
+    label: "LOCK",
+  });
+  depositArray.push([7, deposit8, setDeposit8]);
+  
   
 
   //Query & update list objects
