@@ -24,7 +24,7 @@ import OmniAssetBid from "../components/liquidations/OmniAssetBid";
 import { SingleAssetBid } from "../components/liquidations/SingleAssetBid";
 
 //Bar graph scale
-const CDTperPIXEL = 100_000_000; //100
+const CDTperPIXEL = 10_000_000; //10
 
 interface LQClaims {
   display: string;

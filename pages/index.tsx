@@ -291,11 +291,11 @@ export default function Home() {
                   position_qtys.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
                 } else if (actual_asset === denoms.atomosmo_pool) {
-                  position_qtys.atomosmo_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
-                  contract_info.atomosmo_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
+                  position_qtys.atomosmo_pool = (parseInt(asset.asset.amount)/1_000_000_000_000_000_000);
+                  contract_info.atomosmo_pool = (parseInt(asset.asset.amount)/1_000_000_000_000_000_000);
                 } else if (actual_asset === denoms.osmousdc_pool) {
-                  position_qtys.osmousdc_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
-                  contract_info.osmousdc_pool = Number(BigInt(parseInt(asset.asset.amount))/1_000_000_000_000_000_000n);
+                  position_qtys.osmousdc_pool = (parseInt(asset.asset.amount)/1_000_000_000_000_000_000);
+                  contract_info.osmousdc_pool = (parseInt(asset.asset.amount)/1_000_000_000_000_000_000);
                 } else if (actual_asset === denoms.usdc) {
                   position_qtys.usdc = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.usdc = parseInt(asset.asset.amount) / 1_000_000;
@@ -361,7 +361,7 @@ export default function Home() {
         for (let i = 0; i < resp.length; i++) {
           let asset_claims = parseInt(resp[i].pending_liquidated_collateral) / 1_000_000; //Remove native token decimals
           
-          if (asset_claims > 1) {           
+          if (asset_claims > 0) {           
             //Add asset to display
             switch (resp[i].bid_for) {
               case denoms.osmo: {     
@@ -397,11 +397,11 @@ export default function Home() {
                 break;
               }
               case denoms.atomosmo_pool: {
-                new_display += asset_claims + " ATOM-OSMO LP, ";
+                new_display += (asset_claims/1_000000_000000) + " ATOM-OSMO LP, ";
                 break;
               }
               case denoms.osmousdc_pool: {
-                new_display += asset_claims + " OSMO-axlUSDC LP, ";
+                new_display += (asset_claims/1_000000_000000) + " OSMO-axlUSDC LP, ";
                 break;
               }
             }
@@ -1279,11 +1279,11 @@ export default function Home() {
           })
           //Get account's balance of ATOM - OSMO LP
           oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
-            wallet_qtys.atomosmo_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000)
+            wallet_qtys.atomosmo_pool = parseInt((BigInt(res.amount) / 1_000_000_000_000_000_000n).toString())
           })
           //Get account's balance of OSMO - USDC LP
           oraclequeryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
-            wallet_qtys.osmousdc_pool = (parseInt(res.amount) / 1_000_000_000_000_000_000)
+            wallet_qtys.osmousdc_pool = parseInt((BigInt(res.amount) / 1_000_000_000_000_000_000n).toString())
           })
           //Set walletChecked
           setwalletChecked(true)
@@ -1334,7 +1334,7 @@ export default function Home() {
     }
     ///////Governance queries
     if (activeComponent === "staking"){
-      if (quorum === 0){
+      if (quorum === 0 || proposals.active[0][0] === undefined){
         //Query & set proposals
         getProposals()
       }

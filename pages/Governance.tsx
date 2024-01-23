@@ -1176,7 +1176,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
               <ProgressBar bgcolor="#50C9BD" noMargin={true} progress={userStake.unstaking.amount !== 0 ? parseFloat((((unstakingPeriod - userStake.unstaking.timeLeft) / unstakingPeriod) * 100).toFixed(2)) : 0}  height={20} />
             </div>
           </div>                   
-          <Image className="mbrn-unstake-logo" width={43} height={43} alt="" src="/images/Logo.svg" />
+          <Image className="mbrn-unstake-logo" width={43} height={43} alt="" src="/images/MBRN-logo-template.svg" />
         </div>
         <div className="claim-button-frame">        
           <div className="btn gov-claim-button" onClick={handleclaimClick}>
@@ -1189,7 +1189,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
             </div>
             <div style={{display: "flex", flexDirection: "row", position: "relative", justifyContent: "center"}}>
               <div className="mbrn-claims">{userClaims.mbrnClaims}</div>
-              <Image width={43} height={48} alt="" src="/images/Logo.svg" />
+              <Image width={43} height={48} alt="" src="/images/MBRN-logo-template.svg" />
             </div>
           </div>
         </div>
