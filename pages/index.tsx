@@ -86,8 +86,8 @@ export default function Home() {
     stOsmo: 0,
     tia: 0,
     usdt: 0,
-    atomosmo_pool: 0,
-    osmousdc_pool: 0,
+    atomosmo_pool: "0",
+    osmousdc_pool: "0",
     brw_LTV: 0,
     max_LTV: 0,
     cost: 0,
@@ -118,8 +118,8 @@ export default function Home() {
     stOsmo: 0,
     tia: 0,
     usdt: 0,
-    atomosmo_pool: 0,
-    osmousdc_pool: 0,
+    atomosmo_pool: "0",
+    osmousdc_pool: "0",
   });
   //Positions Visual
   const [debtAmount, setdebtAmount] = useState(0);
@@ -215,8 +215,8 @@ export default function Home() {
       osmo: 0,
       atom: 0,
       axlusdc: 0,
-      atomosmo_pool: 0,
-      osmousdc_pool: 0,
+      atomosmo_pool: "0",
+      osmousdc_pool: "0",
       usdc: 0,
       stAtom: 0,
       stOsmo: 0,
@@ -274,8 +274,8 @@ export default function Home() {
                 stOsmo: 0,
                 tia: 0,
                 usdt: 0,
-                atomosmo_pool: 0,
-                osmousdc_pool: 0,
+                atomosmo_pool: "0",
+                osmousdc_pool: "0",
             };
             //@ts-ignore
             userRes[0].positions[0].collateral_assets.forEach(asset => {
@@ -292,11 +292,11 @@ export default function Home() {
                   position_qtys.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
                 } else if (actual_asset === denoms.atomosmo_pool) {
-                  position_qtys.atomosmo_pool = (parseInt(asset.asset.amount)/1_000_000_000_000_000_000);
-                  contract_info.atomosmo_pool = (parseInt(asset.asset.amount)/1_000_000_000_000_000_000);
+                  position_qtys.atomosmo_pool = (BigInt(asset.asset.amount)/1_000_000_000_000_000_000n).toString();
+                  contract_info.atomosmo_pool = (BigInt(asset.asset.amount)/1_000_000_000_000_000_000n).toString();
                 } else if (actual_asset === denoms.osmousdc_pool) {
-                  position_qtys.osmousdc_pool = (parseInt(asset.asset.amount)/1_000_000_000_000_000_000);
-                  contract_info.osmousdc_pool = (parseInt(asset.asset.amount)/1_000_000_000_000_000_000);
+                  position_qtys.osmousdc_pool = (BigInt(asset.asset.amount)/1_000_000_000_000_000_000n).toString();
+                  contract_info.osmousdc_pool = (BigInt(asset.asset.amount)/1_000_000_000_000_000_000n).toString();
                 } else if (actual_asset === denoms.usdc) {
                   position_qtys.usdc = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.usdc = parseInt(asset.asset.amount) / 1_000_000;
@@ -1130,8 +1130,8 @@ export default function Home() {
       stOsmo: 0,
       tia: 0,
       usdt: 0,
-      atomosmo_pool: 0,
-      osmousdc_pool: 0,
+      atomosmo_pool: "0",
+      osmousdc_pool: "0",
     };
     //Set position collateral QTYs
     if (position.collateral_assets.length > 0) {
@@ -1153,9 +1153,9 @@ export default function Home() {
         } else if (collateral.asset.info.native_token.denom === denoms.usdt) {
           position_collateral_qtys.usdt = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore
         } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool) {
-          position_collateral_qtys.atomosmo_pool = parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
+          position_collateral_qtys.atomosmo_pool = (BigInt(collateral.asset.amount)/1_000_000_000_000_000_000n).toString();//@ts-ignore   
         } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool) {
-          position_collateral_qtys.osmousdc_pool = parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
+          position_collateral_qtys.osmousdc_pool = (BigInt(collateral.asset.amount)/1_000_000_000_000_000_000n).toString();//@ts-ignore   
         }
       })
     }
@@ -1280,11 +1280,11 @@ export default function Home() {
           })
           //Get account's balance of ATOM - OSMO LP
           oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
-            wallet_qtys.atomosmo_pool = parseInt((BigInt(res.amount) / 1_000_000_000_000_000_000n).toString())
+            wallet_qtys.atomosmo_pool = (BigInt(res.amount) / 1_000_000_000_000_000_000n).toString()
           })
           //Get account's balance of OSMO - USDC LP
           oraclequeryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
-            wallet_qtys.osmousdc_pool = parseInt((BigInt(res.amount) / 1_000_000_000_000_000_000n).toString())
+            wallet_qtys.osmousdc_pool = (BigInt(res.amount) / 1_000_000_000_000_000_000n).toString()
           })
           //Set walletChecked
           setwalletChecked(true)

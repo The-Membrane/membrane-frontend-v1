@@ -13,6 +13,7 @@ import WidgetPopup from "../components/widgetPopup";
 import Image from "next/image";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { onStableswapTextClick } from "./Dashboard";
+import { formatNumber } from "./Liquidations";
 
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
@@ -28,8 +29,8 @@ export interface ContractInfo {
     stOsmo: number,
     tia: number,
     usdt: number,
-    atomosmo_pool: number,
-    osmousdc_pool: number,
+    atomosmo_pool: string,
+    osmousdc_pool: string,
     max_LTV: number,
     brw_LTV: number,
     cost: number,
@@ -44,8 +45,8 @@ export interface CollateralAssets {
     stOsmo: number | undefined,
     tia: number | undefined,
     usdt: number | undefined,
-    atomosmo_pool: number | undefined,
-    osmousdc_pool: number | undefined,
+    atomosmo_pool: string | undefined,
+    osmousdc_pool: string | undefined,
 }
 export interface DefinedCollateralAssets {
     osmo: number,
@@ -56,8 +57,8 @@ export interface DefinedCollateralAssets {
     stOsmo: number,
     tia: number,
     usdt: number,
-    atomosmo_pool: number,
-    osmousdc_pool: number,
+    atomosmo_pool: string,
+    osmousdc_pool: string,
 }
 
 interface Props {
@@ -116,8 +117,8 @@ interface Props {
             stOsmo: (positionQTYs.stOsmo * +prices.stOsmo) /TVL,
             tia: (positionQTYs.tia * +prices.tia) /TVL,
             usdt: (positionQTYs.usdt * +prices.usdt) /TVL,
-            atomosmo_pool: (positionQTYs.atomosmo_pool * +prices.atomosmo_pool) /TVL,
-            osmousdc_pool: (positionQTYs.osmousdc_pool * +prices.osmousdc_pool) /TVL,
+            atomosmo_pool: parseFloat(((BigInt(positionQTYs.atomosmo_pool) * BigInt(prices.atomosmo_pool)) /BigInt(TVL)).toString()),
+            osmousdc_pool: parseFloat(((BigInt(positionQTYs.osmousdc_pool) * BigInt(prices.osmousdc_pool)) /BigInt(TVL)).toString()),
         }
     )
    }
@@ -234,8 +235,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
       stOsmo: 0,
       tia: 0,
       usdt: 0,
-      atomosmo_pool: 0,
-      osmousdc_pool: 0,
+      atomosmo_pool: "0",
+      osmousdc_pool: "0",
       brw_LTV: 0,
       max_LTV: 0,
       cost: 0,
@@ -250,8 +251,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
       stOsmo: 0,
       tia: 0,
       usdt: 0,
-      atomosmo_pool: 0,
-      osmousdc_pool: 0,
+      atomosmo_pool: "0",
+      osmousdc_pool: "0",
     });
     
     //Redemptions
@@ -290,8 +291,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
       stOsmo: 0,
       tia: 0,
       usdt: 0,
-      atomosmo_pool: 0,
-      osmousdc_pool: 0,
+      atomosmo_pool: "0",
+      osmousdc_pool: "0",
     });
     const [assetcardTitle, setassetcardTitle] = useState("Show All Assets");
     //Mint-Repay card
@@ -801,7 +802,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             connect();
             return;
         }///Set asset intents
-        var asset_intent: [string, number][] = [];
+        var asset_intent: [string, number | string][] = [];
         if (depositAmounts.osmo != undefined && depositAmounts.osmo > 0){
             asset_intent.push(["OSMO", depositAmounts.osmo])
         }
@@ -826,10 +827,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         if (depositAmounts.usdt != undefined && depositAmounts.usdt > 0){
             asset_intent.push(["USDT", depositAmounts.usdt])
         }
-        if (depositAmounts.atomosmo_pool != undefined && depositAmounts.atomosmo_pool > 0){
+        if (depositAmounts.atomosmo_pool != undefined && depositAmounts.atomosmo_pool !== "0"){
             asset_intent.push(["ATOM-OSMO LP", depositAmounts.atomosmo_pool])
         }
-        if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool > 0){
+        if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool !== "0"){
             asset_intent.push(["OSMO-axlUSDC LP", depositAmounts.osmousdc_pool])
         }
 
@@ -1144,61 +1145,61 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
 
     };
     //we add decimals to the asset amounts
-    const getcoinsfromassetIntents = (intents: [string, number][]) => {
+    const getcoinsfromassetIntents = (intents: [string, number | string][]) => {
         var workingIntents: Coin[] = [];
         intents.map((intent) => {
             switch (intent[0]){
                 case "OSMO": {
-                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.osmo))
+                    workingIntents.push(coin(intent[1] as number * 1_000_000, denoms.osmo))
                     break;
                 }
                 case "ATOM": {
-                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.atom))
+                    workingIntents.push(coin(intent[1] as number * 1_000_000, denoms.atom))
                     break;
                 }
                 case "axlUSDC": {
-                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.axlUSDC))
+                    workingIntents.push(coin(intent[1] as number * 1_000_000, denoms.axlUSDC))
                     break;
                 }                
                 case "USDC": {
-                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.usdc))
+                    workingIntents.push(coin(intent[1] as number * 1_000_000, denoms.usdc))
                     break;
                 }      
                 case "stATOM": {
-                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.stAtom))
+                    workingIntents.push(coin(intent[1] as number * 1_000_000, denoms.stAtom))
                     break;
                 }      
                 case "stOSMO": {
-                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.stOsmo))
+                    workingIntents.push(coin(intent[1] as number * 1_000_000, denoms.stOsmo))
                     break;
                 }
                 case "TIA": {
-                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.tia))
+                    workingIntents.push(coin(intent[1] as number * 1_000_000, denoms.tia))
                     break;
                 }
                 case "USDT": {
-                    workingIntents.push(coin(intent[1] * 1_000_000, denoms.usdt))
+                    workingIntents.push(coin(intent[1] as number * 1_000_000, denoms.usdt))
                     break;
                 }
                 case "ATOM-OSMO LP": { 
-                    workingIntents.push(coin((BigInt(intent[1] * 1_000_000_000_000_000_000)).toString(), denoms.atomosmo_pool))
+                    workingIntents.push(coin((BigInt(intent[1]) * 1_000_000_000_000_000_000n).toString(), denoms.atomosmo_pool))
                     break;
                 }
                 case "OSMO-axlUSDC LP": {
-                    workingIntents.push(coin((BigInt(intent[1] * 1_000_000_000_000_000_000)).toString(), denoms.osmousdc_pool))
+                    workingIntents.push(coin((BigInt(intent[1]) * 1_000_000_000_000_000_000n).toString(), denoms.osmousdc_pool))
                     break;
                 }
             }
         })
         return workingIntents
     };
-    const getassetsfromassetIntents = (intents: [string, number][]) => {
+    const getassetsfromassetIntents = (intents: [string, number | string][]) => {
         var workingIntents: Asset[] = [];
         intents.map((intent) => {
             switch (intent[0]){
                 case "OSMO": {
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000).toString(),
+                        amount: (intent[1] as number * 1_000_000).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1209,7 +1210,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "ATOM": {
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000).toString(),
+                        amount: (intent[1] as number * 1_000_000).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1220,7 +1221,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "axlUSDC": {
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000).toString(),
+                        amount: (intent[1] as number * 1_000_000).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1231,7 +1232,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "USDC": {
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000).toString(),
+                        amount: (intent[1] as number * 1_000_000).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1242,7 +1243,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "stATOM": {
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000).toString(),
+                        amount: (intent[1] as number * 1_000_000).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1253,7 +1254,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "stOSMO": {
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000).toString(),
+                        amount: (intent[1] as number * 1_000_000).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1264,7 +1265,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "TIA": {
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000).toString(),
+                        amount: (intent[1] as number * 1_000_000).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1275,7 +1276,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 }
                 case "USDT": {
                     workingIntents.push({
-                        amount: (intent[1]* 1_000_000).toString(),
+                        amount: (intent[1] as number * 1_000_000).toString(),
                         //@ts-ignore
                         info: {native_token :{
                             //@ts-ignore
@@ -1317,10 +1318,14 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         );
    };  
 
+   function getLPValue(QTY: string, price: number) {
+        return parseFloat((BigInt(QTY) * BigInt(price)).toString())
+   }
+
    function getTVL() {
     return(
         (positionQTYs.osmo * +prices.osmo) + (positionQTYs.atom * +prices.atom) + (positionQTYs.axlusdc * +prices.axlUSDC) + (positionQTYs.usdc * +prices.usdc)
-        + (positionQTYs.atomosmo_pool * +prices.atomosmo_pool) + (positionQTYs.osmousdc_pool * +prices.osmousdc_pool) + (positionQTYs.stAtom * +prices.stAtom) + (positionQTYs.stOsmo * +prices.stOsmo)
+        + getLPValue(positionQTYs.atomosmo_pool, prices.atomosmo_pool) + getLPValue(positionQTYs.osmousdc_pool, prices.osmousdc_pool) + (positionQTYs.stAtom * +prices.stAtom) + (positionQTYs.stOsmo * +prices.stOsmo)
         + (positionQTYs.tia * +prices.tia) + (positionQTYs.usdt * +prices.usdt)
     )
    }
@@ -1455,7 +1460,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.usdt).toFixed(4));
             }
         }
-        if (positionQTYs.atomosmo_pool > 0){
+        if (positionQTYs.atomosmo_pool !== "0"){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1471,7 +1476,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.atomosmo_pool).toFixed(4));
             }
         }
-        if (positionQTYs.osmousdc_pool > 0){
+        if (positionQTYs.osmousdc_pool !== "0"){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1870,7 +1875,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     function checkIfWalletEmpty() {
         if (address !== undefined) {
             //check if wallet has been checked & is empty
-            if (walletChecked && walletQTYs.osmo === 0 && walletQTYs.atom === 0 && walletQTYs.axlusdc === 0 && walletQTYs.usdc === 0 && walletQTYs.atomosmo_pool === 0 && walletQTYs.osmousdc_pool === 0 && walletQTYs.stAtom === 0 && walletQTYs.stOsmo === 0 && walletQTYs.tia === 0 && walletQTYs.usdt === 0){
+            if (walletChecked && walletQTYs.osmo === 0 && walletQTYs.atom === 0 && walletQTYs.axlusdc === 0 && walletQTYs.usdc === 0 && walletQTYs.atomosmo_pool !== "0" && walletQTYs.osmousdc_pool !== "0" && walletQTYs.stAtom === 0 && walletQTYs.stOsmo === 0 && walletQTYs.tia === 0 && walletQTYs.usdt === 0){
                 return true
             } else {
                 return false
@@ -2086,26 +2091,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdt ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdt", event)}/>
                     </form>
                 </div>: null}
-                {contractQTYs.atomosmo_pool > 0 ?        
+                {contractQTYs.atomosmo_pool !== "0" ?        
                 <div className="deposit-element-lp">
                     <div className="deposit-element-icon-lp">
                         <Image className="deposit-icon-lp-left" width={45} height={45} alt="" src="images/atom.svg" />
                         <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/osmo.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atomosmo_pool", contractQTYs.atomosmo_pool.toString())}>max: {contractQTYs.atomosmo_pool.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atomosmo_pool", contractQTYs.atomosmo_pool.toString())}>max: {parseInt(contractQTYs.atomosmo_pool).toFixed(3)}</div>
                         <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
                     </form>
                 </div>: null}
-                {contractQTYs.osmousdc_pool > 0 ?        
+                {contractQTYs.osmousdc_pool !== "0" ?        
                 <div className="deposit-element-lp">
                     <div className="deposit-element-icon-lp">
                         <Image className="deposit-icon-lp-left" width={45} height={45} alt="" src="images/osmo.svg" />
                         <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmoaxlusdc_pool", contractQTYs.osmousdc_pool.toString())}>max: {contractQTYs.osmousdc_pool.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmoaxlusdc_pool", contractQTYs.osmousdc_pool.toString())}>max: {parseInt(contractQTYs.osmousdc_pool).toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
                     </form>
@@ -2133,16 +2138,16 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             <div className="vault-menu-items-div">
             {menuLabel === "Value" ? 
                 <>
-                {(currentfunctionLabel === "deposit" && (walletQTYs.osmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmo > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.osmo > 0 ?  "" : "low-opacity") : (positionQTYs.osmo > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.osmo * +prices.osmo) > 1000 ? (((walletQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.osmo * +prices.osmo) ?? 0).toFixed(2)) : ((positionQTYs.osmo * +prices.osmo) > 1000 ? (((positionQTYs.osmo * +prices.osmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.osmo * +prices.osmo) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.atom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.atom > 0 ?  "" : "low-opacity") : (positionQTYs.atom > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.atom * +prices.atom) > 1000 ? (((walletQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.atom * +prices.atom) ?? 0).toFixed(2)) : ((positionQTYs.atom * +prices.atom) > 1000 ? (((positionQTYs.atom * +prices.atom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.atom * +prices.atom) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.usdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.usdc > 0 ?  "" : "low-opacity") : (positionQTYs.usdc > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.usdc * +prices.usdc) > 1000 ? (((walletQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.usdc * +prices.usdc) ?? 0).toFixed(2)) : ((positionQTYs.usdc * +prices.usdc) > 1000 ? (((positionQTYs.usdc * +prices.usdc)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.usdc * +prices.usdc) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.axlusdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.axlusdc > 0 ?  "" : "low-opacity") : (positionQTYs.axlusdc > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((walletQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2)) : ((positionQTYs.axlusdc * +prices.axlUSDC) > 1000 ? (((positionQTYs.axlusdc * +prices.axlUSDC)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.axlusdc * +prices.axlUSDC) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.stAtom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.stAtom > 0 ?  "" : "low-opacity") : (positionQTYs.stAtom > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.stAtom * +prices.stAtom) > 1000 ? (((walletQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2)) : ((positionQTYs.stAtom * +prices.stAtom) > 1000 ? (((positionQTYs.stAtom * +prices.stAtom)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stAtom * +prices.stAtom) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.stOsmo > 0 ?  "" : "low-opacity") : (positionQTYs.stOsmo > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((walletQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2)) : ((positionQTYs.stOsmo * +prices.stOsmo) > 1000 ? (((positionQTYs.stOsmo * +prices.stOsmo)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.stOsmo * +prices.stOsmo) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.tia > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.tia > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.tia > 0 ?  "" : "low-opacity") : (positionQTYs.tia > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.tia * +prices.tia) > 1000 ? (((walletQTYs.tia * +prices.tia)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.tia * +prices.tia) ?? 0).toFixed(2)) : ((positionQTYs.tia * +prices.tia) > 1000 ? (((positionQTYs.tia * +prices.tia)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.tia * +prices.tia) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.usdt > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdt > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.usdt > 0 ?  "" : "low-opacity") : (positionQTYs.usdt > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.usdt * +prices.usdt) > 1000 ? (((walletQTYs.usdt * +prices.usdt)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.usdt * +prices.usdt) ?? 0).toFixed(2)) : ((positionQTYs.usdt * +prices.usdt) > 1000 ? (((positionQTYs.usdt * +prices.usdt)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.usdt * +prices.usdt) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.atomosmo_pool > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atomosmo_pool > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.atomosmo_pool > 0 ?  "" : "low-opacity") : (positionQTYs.atomosmo_pool > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.atomosmo_pool * +prices.atomosmo_pool) > 1000 ? (((walletQTYs.atomosmo_pool * +prices.atomosmo_pool)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.atomosmo_pool * +prices.atomosmo_pool) ?? 0).toFixed(2)) : ((positionQTYs.atomosmo_pool * +prices.atomosmo_pool) > 1000 ? (((positionQTYs.atomosmo_pool * +prices.atomosmo_pool)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.atomosmo_pool * +prices.atomosmo_pool) ?? 0).toFixed(2))}</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.osmousdc_pool > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmousdc_pool > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.osmousdc_pool > 0 ?  "" : "low-opacity") : (positionQTYs.osmousdc_pool > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? ((walletQTYs.osmousdc_pool * +prices.osmousdc_pool) > 1000 ? (((walletQTYs.osmousdc_pool * +prices.osmousdc_pool)/1000) ?? 0).toFixed(2)+"k" : ((walletQTYs.osmousdc_pool * +prices.osmousdc_pool) ?? 0).toFixed(2)) : ((positionQTYs.osmousdc_pool * +prices.osmousdc_pool) > 1000 ? (((positionQTYs.osmousdc_pool * +prices.osmousdc_pool)/1000) ?? 0).toFixed(2)+"k" : ((positionQTYs.osmousdc_pool * +prices.osmousdc_pool) ?? 0).toFixed(2))}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.osmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmo > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.osmo > 0 ?  "" : "low-opacity") : (positionQTYs.osmo > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(walletQTYs.osmo * +prices.osmo) : formatNumber(positionQTYs.osmo* +prices.osmo)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.atom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atom > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.atom > 0 ?  "" : "low-opacity") : (positionQTYs.atom > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(walletQTYs.atom * +prices.atom) : formatNumber(positionQTYs.atom* +prices.atom)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.usdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdc > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.usdc > 0 ?  "" : "low-opacity") : (positionQTYs.usdc > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(walletQTYs.usdc * +prices.usdc) : formatNumber(positionQTYs.usdc* +prices.usdc)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.axlusdc > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.axlusdc > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.axlusdc > 0 ?  "" : "low-opacity") : (positionQTYs.axlusdc > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(walletQTYs.axlusdc * +prices.axlUSDC) : formatNumber(positionQTYs.axlusdc* +prices.axlUSDC)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.stAtom > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stAtom > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.stAtom > 0 ?  "" : "low-opacity") : (positionQTYs.stAtom > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(walletQTYs.stAtom * +prices.stAtom) : formatNumber(positionQTYs.stAtom* +prices.stAtom)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.stOsmo > 0 ?  "" : "low-opacity") : (positionQTYs.stOsmo > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(walletQTYs.stOsmo * +prices.stOsmo) : formatNumber(positionQTYs.stOsmo* +prices.stOsmo)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.tia > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.tia > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.tia > 0 ?  "" : "low-opacity") : (positionQTYs.tia > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit"? formatNumber(walletQTYs.tia * +prices.tia) : formatNumber(positionQTYs.tia* +prices.tia)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.usdt > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdt > 0 ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.usdt > 0 ?  "" : "low-opacity") : (positionQTYs.usdt > 0 ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(walletQTYs.usdt * +prices.usdt) : formatNumber(positionQTYs.usdt* +prices.usdt)}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.atomosmo_pool !== "0" || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atomosmo_pool !== "0" ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.atomosmo_pool !== "0" ?  "" : "low-opacity") : (positionQTYs.atomosmo_pool !== "0" ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(getLPValue(walletQTYs.atomosmo_pool, prices.atomosmo_pool)) : formatNumber(getLPValue(positionQTYs.atomosmo_pool, prices.atomosmo_pool))}</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.osmousdc_pool !== "0" || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmousdc_pool !== "0" ? <div className={currentfunctionLabel === "deposit" ? (walletQTYs.osmousdc_pool !== "0" ?  "" : "low-opacity") : (positionQTYs.osmousdc_pool !== "0" ?  "" : "low-opacity")}>${currentfunctionLabel === "deposit" ? formatNumber(getLPValue(walletQTYs.atomosmo_pool, prices.atomosmo_pool)) : formatNumber(getLPValue(positionQTYs.osmousdc_pool, prices.osmousdc_pool))}</div> : null}
                 </>
             : menuLabel === "Rate" ? 
                 <>
@@ -2154,8 +2159,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 {(currentfunctionLabel === "deposit" && (walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(rates.stOsmo).toFixed(4)}%</div> : null}
                 {(currentfunctionLabel === "deposit" && (walletQTYs.tia > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.tia > 0 ? <div className={positionQTYs.tia > 0 ?  "" : "low-opacity"}>{(rates.tia).toFixed(4)}%</div> : null}
                 {(currentfunctionLabel === "deposit" && (walletQTYs.usdt > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdt > 0 ? <div className={positionQTYs.usdt > 0 ?  "" : "low-opacity"}>{(rates.usdt).toFixed(4)}%</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.atomosmo_pool > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atomosmo_pool > 0 ? <div className={positionQTYs.atomosmo_pool > 0 ?  "" : "low-opacity"}>{(rates.atomosmo_pool).toFixed(4)}%</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.osmousdc_pool > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmousdc_pool > 0 ? <div className={positionQTYs.osmousdc_pool > 0 ?  "" : "low-opacity"}>{(rates.osmousdc_pool).toFixed(4)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.atomosmo_pool !== "0" || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atomosmo_pool !== "0" ? <div className={positionQTYs.atomosmo_pool !== "0" ?  "" : "low-opacity"}>{(rates.atomosmo_pool).toFixed(4)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.osmousdc_pool !== "0" || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmousdc_pool !== "0" ? <div className={positionQTYs.osmousdc_pool !== "0" ?  "" : "low-opacity"}>{(rates.osmousdc_pool).toFixed(4)}%</div> : null}
                 </>
             : menuLabel === "Util" ? 
                 <>
@@ -2167,8 +2172,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 {(currentfunctionLabel === "deposit" && (walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.stOsmo > 0 ? <div className={positionQTYs.stOsmo > 0 ?  "" : "low-opacity"}>{(debtCaps.stOsmo * 100).toFixed(2)}%</div> : null}
                 {(currentfunctionLabel === "deposit" && (walletQTYs.tia > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.tia > 0 ? <div className={positionQTYs.tia > 0 ?  "" : "low-opacity"}>{(debtCaps.tia * 100).toFixed(2)}%</div> : null}
                 {(currentfunctionLabel === "deposit" && (walletQTYs.usdt > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.usdt > 0 ? <div className={positionQTYs.usdt > 0 ?  "" : "low-opacity"}>{(debtCaps.usdt * 100).toFixed(2)}%</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.atomosmo_pool > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atomosmo_pool > 0 ? <div className={positionQTYs.atomosmo_pool > 0 ?  "" : "low-opacity"}>{(debtCaps.atomosmo_pool * 100).toFixed(2)}%</div> : null}
-                {(currentfunctionLabel === "deposit" && (walletQTYs.osmousdc_pool > 0 || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmousdc_pool > 0 ? <div className={positionQTYs.osmousdc_pool > 0 ?  "" : "low-opacity"}>{(debtCaps.osmousdc_pool * 100).toFixed(2)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.atomosmo_pool !== "0" || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.atomosmo_pool !== "0" ? <div className={positionQTYs.atomosmo_pool !== "0" ?  "" : "low-opacity"}>{(debtCaps.atomosmo_pool * 100).toFixed(2)}%</div> : null}
+                {(currentfunctionLabel === "deposit" && (walletQTYs.osmousdc_pool !== "0" || assetcardTitle === "Show Relevant Assets")) || currentfunctionLabel !== "deposit" && contractQTYs.osmousdc_pool !== "0" ? <div className={positionQTYs.osmousdc_pool !== "0" ?  "" : "low-opacity"}>{(debtCaps.osmousdc_pool * 100).toFixed(2)}%</div> : null}
                 </>
             : null}
             </div>
@@ -2211,7 +2216,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     };
     const handleonboardingDeposit = async () => {
         ///Set asset intents
-        var asset_intent: [string, number][] = [];
+        var asset_intent: [string, number | string][] = [];
         if (depositAmounts.osmo != undefined && (depositAmounts.osmo??0) > 0){
             asset_intent.push(["OSMO", depositAmounts.osmo])
         }
@@ -2236,10 +2241,10 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         if (depositAmounts.usdt != undefined && depositAmounts.usdt > 0){
             asset_intent.push(["USDT", depositAmounts.usdt])
         }
-        if (depositAmounts.atomosmo_pool != undefined && depositAmounts.atomosmo_pool > 0){
+        if (depositAmounts.atomosmo_pool != undefined && depositAmounts.atomosmo_pool !== "0"){
             asset_intent.push(["ATOM-OSMO LP", depositAmounts.atomosmo_pool])
         }
-        if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool > 0){
+        if (depositAmounts.osmousdc_pool != undefined && depositAmounts.osmousdc_pool !== "0"){
             asset_intent.push(["OSMO-axlUSDC LP", depositAmounts.osmousdc_pool])
         }
         var user_coins = getcoinsfromassetIntents(asset_intent);
@@ -2251,7 +2256,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 //Format popup msg
                 setPopupTrigger(true);
                 setPopupMsg(<div>Signing this message will create a new position, if that is not your goal wait for the query to finish & refresh if you have waited more than a couple minutes.</div>);
-                setPopupStatus("Position has not been queried yet");
+                setPopupStatus("WARNING!!! Position has not been queried yet.");
             }
             await cdp_client?.deposit({
                 positionId: undefined,
@@ -2344,8 +2349,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             stOsmo: walletQTYz.stOsmo??0,
             tia: walletQTYz.tia??0,
             usdt: walletQTYz.usdt??0,
-            atomosmo_pool: walletQTYz.atomosmo_pool??0,
-            osmousdc_pool: walletQTYz.osmousdc_pool??0,
+            atomosmo_pool: walletQTYz.atomosmo_pool??"0",
+            osmousdc_pool: walletQTYz.osmousdc_pool??"0",
         };
         setwalletQTYs(walletQTYs);
         //Set contractQTYs

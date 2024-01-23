@@ -57,6 +57,18 @@ interface Props {
   riskyPositionz: [string, number, PositionResponse][];
 }
 
+export function formatNumber(TVL: number) {
+  if (TVL > 1000000) {
+      return (TVL / 1000000).toFixed(2) + "M";
+  } else if (TVL > 1000) {
+      return (TVL / 1000).toFixed(1) + "K";
+  } else if (TVL != undefined) {
+      return TVL.toFixed(0);
+  } else {
+      return "0";    
+  }
+}
+
 const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_client, cdp_client, cdp_queryClient, address, pricez, index_lqClaimables,
   capitalAhead, setcapitalAhead, userclosestDeposit, setuserclosestDeposit, userTVL, setuserTVL, TVL, setTVL, SPclaimables, setSPclaimables,
   unstakingMsg, setunstakingMsg, riskyPositionz
@@ -381,17 +393,6 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
       })
     }
   }
-  function formatNumber(TVL: number) {
-    if (TVL > 1000000) {
-        return (TVL / 1000000).toFixed(2) + "M";
-    } else if (TVL > 1000) {
-        return (TVL / 1000).toFixed(1) + "K";
-    } else if (TVL != undefined) {
-        return TVL.toFixed(0);
-    } else {
-        return "0";    
-    }
-}
   return (
     
     <div className="liquidations">
