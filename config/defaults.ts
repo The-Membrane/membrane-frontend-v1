@@ -78,6 +78,11 @@ export const skipProposals = ["10", "16", "17"];
 /// Delegates List (non-exhaustive but makes it better UX for stakers to choose from a list)
 export const delegateList = [
     {
+        name: "Frontend Host",
+        address: "osmo1d9ryqp7yfmr92vkk2yal96824pewf2g5wx0h2r0",
+        socials: ["@Cyph3rpunk1", "cyph3rpunk"]
+    },
+    {
         name: "RoboMcGobo",
         address: "osmo1nktatq53eah8efefsry33yg3zkhrrzwq3k6wg7",
         socials: ["@RoboMcGobo", "robomcgobo"]
