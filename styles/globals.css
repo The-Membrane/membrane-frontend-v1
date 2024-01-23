@@ -157,6 +157,8 @@ input:focus {
   }}
 .page-frame {  
   position: relative; 
+  display: flex;
+  flex-direction: column;
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100vh;
@@ -1889,18 +1891,31 @@ span[data-descr]:hover::after {
   font-size: xx-large;
   color: white;
 }
-.proposal-axis,
-.proposal-axis1,
-.proposal-axis2,
-.proposal-axis3,
-.proposal-axis4,
-.proposal-axis5,
-.proposal-axis6,
-.proposal-axis7 {
-  position: absolute;
-  margin: 0 !important;
-  top: 53px;
-  left: 4px;
+
+/* Amended Gov CSS*/
+
+.proposal-item{
+  display: flex;
+  gap: 1rem;
+}
+.proposal-button {
+  position: relative;
+  margin-left: 5px;
+  border-radius: 50%;
+  background-color: #71BD36;
+  width: 22px;
+  height: 22px;
+  z-index: 0;
+}
+
+.proposal-title{
+  color: white;
+  cursor: pointer;
+}
+.proposal-axis{
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 15px;
   border-top: 2px solid var(--color-white);
   box-sizing: border-box;
   width: 392px;
@@ -1908,94 +1923,25 @@ span[data-descr]:hover::after {
   z-index: 0;
   background-color: white;
 }
-.proposal-axis1 {
-  top: 103px;
-  z-index: 1;
+.proposal-result{
+  position: relative;
+	margin-left: auto;
+  margin-right: 5px;
+  color: white;
 }
-.proposal-axis2 {
-  top: 153px;
-  z-index: 2;
+
+.proposal-pane{
+  display:flex;
+  flex-direction: column;
 }
-.proposal-axis3 {
-  top: 203px;
-  z-index: 3;
+
+.proposal-top{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
 }
-.proposal-axis4 {
-  top: 253px;
-  z-index: 4;
-}
-.proposal-axis5 {
-  top: 303px;
-  z-index: 5;
-}
-.proposal-axis6{
-  top: 353px;
-  z-index: 6;
-}
-.proposal-axis7 {
-  top: 403px;
-  z-index: 7;
-}
-.proposal1-button,
-.proposal2-button,
-.proposal3-button,
-.proposal4-button,
-.proposal5-button,
-.proposal6-button,
-.proposal7-button,
-.proposal8-button {
-  position: absolute;
-  margin: 0 !important;
-  top: 17px;
-  left: 18px;
-  border-radius: 50%;
-  background-color: #71BD36;
-  width: 22px;
-  height: 22px;
-  z-index: 0;
-}
-.proposal2-button,
-.proposal3-button,
-.proposal4-button,
-.proposal5-button,
-.proposal6-button,
-.proposal7-button,
-.proposal8-button {
-  top: 67px;
-}
-.proposal3-button,
-.proposal4-button,
-.proposal5-button,
-.proposal6-button,
-.proposal7-button,
-.proposal8-button {
-  top: 117px;
-}
-.proposal4-button,
-.proposal5-button,
-.proposal6-button,
-.proposal7-button,
-.proposal8-button {
-  top: 167px;
-}
-.proposal5-button,
-.proposal6-button,
-.proposal7-button,
-.proposal8-button {
-  top: 217px;
-}
-.proposal6-button,
-.proposal7-button,
-.proposal8-button {
-  top: 267px;
-}
-.proposal7-button,
-.proposal8-button {
-  top: 317px;
-}
-.proposal8-button {
-  top: 367px;
-}
+
 .vote-options {
   display: flex;
   flex-direction: row;
@@ -2019,59 +1965,7 @@ span[data-descr]:hover::after {
   font-size: 130%;
   color: #798EFF;
 }
-.proposal-1,
-.proposal-2,
-.proposal-3,
-.proposal-4,
-.proposal-5,
-.proposal-6,
-.proposal-7,
-.proposal-8 {
-  color: white;
-  cursor: pointer;
-}
 
-.proposal-1,
-.proposal-2,
-.proposal-3,
-.proposal-4 {
-  position: absolute;
-  margin: 0 !important;
-  top: 17px;
-  left: 70px;
-  z-index: 16;
-}
-.proposal-2 {
-  top: 67px;
-  z-index: 17;
-}
-.proposal-3 {
-  top: 117px;
-  z-index: 18;
-}
-.proposal-4 {
-  top: 167px;
-  z-index: 19;
-}
-.proposal-5,
-.proposal-6,
-.proposal-7,
-.proposal-8 {
-  position: absolute;
-  margin: 0 !important;
-  top: 217px;
-  left: 70px;
-  z-index: 20;
-}
-.proposal-6{
-  top: 267px;
-}
-.proposal-7 {
-  top: 317px;
-}
-.proposal-8 {
-  top: 367px;
-}
 .submit-proposal {
   position: absolute;
   cursor: pointer;
@@ -2081,11 +1975,11 @@ span[data-descr]:hover::after {
 .submit-proposal-button {
   position: relative;
   cursor: pointer;
-  top: 84%;
-  left: 31%;
   width: 154px;
   height: 32px;
   background-color: #D9D9D9;
+  margin: auto;
+  margin-bottom: 30px;
 }
 .proposal-days {
   position: absolute;
@@ -2134,7 +2028,6 @@ span[data-descr]:hover::after {
   z-index: 31;
 }
 .proposal-days7,
-.proposal-result,
 .proposal-result1 {
   position: absolute;
   margin: 0 !important;
@@ -2143,7 +2036,6 @@ span[data-descr]:hover::after {
   z-index: 32;
   color: white;
 }
-.proposal-result,
 .proposal-result1 {
   top: 17px;
   left: 340px;
@@ -2204,11 +2096,13 @@ span[data-descr]:hover::after {
 }
 .proposals-frame {
   position: relative;
-  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   /* left: 10%; */
   background-color: #2F2F2F;
   border: gray 2.5px solid;
-  width: 402px;
+  max-width: 402px;
   height: 499px;
 }
 .delegation-frame {
@@ -2675,8 +2569,9 @@ span[data-descr]:hover::after {
 }
 .proposal-axis-labels {
   position: relative;
-  top: -5%;
-  left: 81%;
+  margin-top: 10%;
+  align-self: flex-end;
+  text-align: right;
   width: 189px;
   color: white;
   font-size: small;
