@@ -107,6 +107,22 @@ interface Props {
 }
     
    export function getassetRatios(TVL: number, positionQTYs: DefinedCollateralAssets, prices: Prices) {
+    if (TVL === 0){
+        return(
+            {
+                osmo: 0,
+                atom: 0,
+                axlusdc: 0,
+                usdc: 0,
+                stAtom: 0,
+                stOsmo: 0,
+                tia: 0,
+                usdt: 0,
+                atomosmo_pool: 0,
+                osmousdc_pool: 0,
+            }
+        )
+    }
     return(
         {
             osmo: (positionQTYs.osmo * +prices.osmo) / TVL,
