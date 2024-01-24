@@ -241,10 +241,7 @@ export default function Home() {
         //getPosition
         const userRes = await cdpqueryClient?.getBasketPositions(
             {
-                userInfo: {
-                    position_owner: "osmo1v6rwuqche4kpqz8q9qlca3r95pnsxc39unj0k4",
-                    position_id: "230",
-                },
+                user: address as string,
             }
         );
 

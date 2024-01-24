@@ -14,6 +14,7 @@ import Image from "next/image";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { onStableswapTextClick } from "./Dashboard";
 import { formatNumber } from "./Liquidations";
+import BigNumber from "bignumber.js";
 
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
@@ -133,8 +134,8 @@ interface Props {
             stOsmo: (positionQTYs.stOsmo * +prices.stOsmo) /TVL,
             tia: (positionQTYs.tia * +prices.tia) /TVL,
             usdt: (positionQTYs.usdt * +prices.usdt) /TVL,
-            atomosmo_pool: parseFloat(((parseFloat(positionQTYs.atomosmo_pool) * prices.atomosmo_pool) /TVL).toString()),
-            osmousdc_pool: parseFloat(((parseFloat(positionQTYs.osmousdc_pool) * prices.osmousdc_pool) /TVL).toString()),
+            atomosmo_pool: parseFloat((BigNumber(positionQTYs.atomosmo_pool).times(BigNumber(prices.atomosmo_pool)).dividedBy(BigNumber(TVL))).toString()),
+            osmousdc_pool: parseFloat((BigNumber(positionQTYs.osmousdc_pool).times(BigNumber(prices.osmousdc_pool)).dividedBy(BigNumber(TVL))).toString()),
         }
     )
    }
@@ -1335,7 +1336,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
    };  
 
    function getLPValue(QTY: string, price: number) {
-        return parseFloat((parseFloat(QTY) * (price)).toString())
+        return parseFloat((BigNumber(QTY).times(BigNumber(price))).toString())
    }
 
    function getTVL() {
