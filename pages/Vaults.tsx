@@ -133,8 +133,8 @@ interface Props {
             stOsmo: (positionQTYs.stOsmo * +prices.stOsmo) /TVL,
             tia: (positionQTYs.tia * +prices.tia) /TVL,
             usdt: (positionQTYs.usdt * +prices.usdt) /TVL,
-            atomosmo_pool: parseFloat(((BigInt(positionQTYs.atomosmo_pool) * BigInt(prices.atomosmo_pool)) /BigInt(TVL)).toString()),
-            osmousdc_pool: parseFloat(((BigInt(positionQTYs.osmousdc_pool) * BigInt(prices.osmousdc_pool)) /BigInt(TVL)).toString()),
+            atomosmo_pool: parseFloat(((parseFloat(positionQTYs.atomosmo_pool) * prices.atomosmo_pool) /TVL).toString()),
+            osmousdc_pool: parseFloat(((parseFloat(positionQTYs.osmousdc_pool) * prices.osmousdc_pool) /TVL).toString()),
         }
     )
    }
@@ -1335,7 +1335,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
    };  
 
    function getLPValue(QTY: string, price: number) {
-        return parseFloat((BigInt(QTY) * BigInt(price)).toString())
+        return parseFloat((parseFloat(QTY) * (price)).toString())
    }
 
    function getTVL() {
