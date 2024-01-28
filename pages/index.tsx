@@ -972,8 +972,8 @@ export default function Home() {
           // var completed_proposals = res.proposal_list.filter(proposal => proposal.status === "passed" || proposal.status === "rejected" || proposal.status === "amendment_desired" || proposal.status === "expired");
           // var executed_proposals = res.proposal_list.filter(proposal => proposal.status === "executed");
           var active_proposals = [res];
-          var completed_proposals = [];
-          var executed_proposals = [];
+          var completed_proposals = [] as ProposalResponse[];
+          var executed_proposals = [] as ProposalResponse[];
 
           console.log(active_proposals)
           console.log(completed_proposals)
