@@ -965,12 +965,15 @@ export default function Home() {
       //Query Gov config
       await governancequeryClient?.config().then(async (config_res) => {
         //Get active
-        await governancequeryClient?.activeProposals({})
+        await governancequeryClient?.proposal({ proposalId: 19 })
         .then(async (res) => {
           //Sort then Set active, completed & executed
-          var active_proposals = res.proposal_list.filter(proposal => proposal.status === "active");
-          var completed_proposals = res.proposal_list.filter(proposal => proposal.status === "passed" || proposal.status === "rejected" || proposal.status === "amendment_desired" || proposal.status === "expired");
-          var executed_proposals = res.proposal_list.filter(proposal => proposal.status === "executed");
+          // var active_proposals = res.proposal_list.filter(proposal => proposal.status === "active");
+          // var completed_proposals = res.proposal_list.filter(proposal => proposal.status === "passed" || proposal.status === "rejected" || proposal.status === "amendment_desired" || proposal.status === "expired");
+          // var executed_proposals = res.proposal_list.filter(proposal => proposal.status === "executed");
+          var active_proposals = [res];
+          var completed_proposals = [];
+          var executed_proposals = [];
 
           console.log(active_proposals)
           console.log(completed_proposals)

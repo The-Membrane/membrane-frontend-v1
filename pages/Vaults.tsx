@@ -348,469 +348,249 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         setMenuLabel("Value");
       };
 
-    //Logo functionality activation
-    // const handleQTYaddition = (current_asset: string, amount: number) => {
-
-    //     switch(current_asset) {
-    //         case 'OSMO': {
-    //             var new_qty = Math.max(+positionQTYs.osmo + +amount, 0);
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     osmo: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'ATOM':{
-    //             var new_qty =  Math.max(+positionQTYs.atom + +amount, 0);
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     atom: new_qty,
-    //                 }
-    //             });
-                
-    //             break;
-    //         }
-    //         case 'axlUSDC':{
-    //             var new_qty =  Math.max(+positionQTYs.axlusdc + +amount, 0);
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     axlusdc: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'USDC':{
-    //             var new_qty =  Math.max(+positionQTYs.usdc + +amount, 0);
-    //             //@ts-ignore
-    //             setpositionQTYs((prevState: DefinedCollateralAssets) => {
-    //                 return { 
-    //                     ...prevState,
-    //                     usdc: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'stATOM':{
-    //             var new_qty =  Math.max(+positionQTYs.stAtom + +amount, 0);
-    //             //@ts-ignore
-    //             setpositionQTYs((prevState: DefinedCollateralAssets) => {
-    //                 return { 
-    //                     ...prevState,
-    //                     stAtom: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'stOSMO':{
-    //             var new_qty =  Math.max(+positionQTYs.stOsmo + +amount, 0);
-    //             //@ts-ignore
-    //             setpositionQTYs((prevState: DefinedCollateralAssets) => {
-    //                 return { 
-    //                     ...prevState,
-    //                     stOsmo: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'atomosmo_pool':{
-    //             var new_qty =  Math.max(+positionQTYs.atomosmo_pool + +amount, 0);
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     atomosmo_pool: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'osmousdc_pool':{
-    //             var new_qty =  Math.max(+positionQTYs.osmousdc_pool + +amount, 0);
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     osmousdc_pool: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //       }
-    // };
-    // const handleQTYsubtraction = (current_asset: string, amount: number) => {
-
-    //     switch(current_asset) {
-    //         case 'OSMO': {
-    //             var new_qty = Math.max(+positionQTYs.osmo - +amount, 0);
-    //             //Set to 0 if below
-    //             if (new_qty <= 0){
-    //                 new_qty = 0;
-    //             }
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     osmo: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'ATOM':{
-    //             var new_qty = Math.max(+positionQTYs.atom - +amount, 0);
-    //             //Set to 0 if below
-    //             if (new_qty <= 0){
-    //                 new_qty = 0;
-    //             }
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     atom: new_qty,
-    //                 }
-    //             });
-                
-    //             break;
-    //         }
-    //         case 'axlUSDC':{
-    //             var new_qty = Math.max(+positionQTYs.axlusdc - +amount, 0);
-    //             //Set to 0 if below
-    //             if (new_qty <= 0){
-    //                 new_qty = 0;
-    //             }
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     axlusdc: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'USDC':{
-    //             var new_qty = Math.max(+positionQTYs.usdc - +amount, 0);
-    //             //Set to 0 if below
-    //             if (new_qty <= 0){
-    //                 new_qty = 0;
-    //             }
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     usdc: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'stATOM':{
-    //             var new_qty = Math.max(+positionQTYs.stAtom - +amount, 0);
-    //             //Set to 0 if below
-    //             if (new_qty <= 0){
-    //                 new_qty = 0;
-    //             }
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     stAtom: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'stOSMO':{
-    //             var new_qty = Math.max(+positionQTYs.stOsmo - +amount, 0);
-    //             //Set to 0 if below
-    //             if (new_qty <= 0){
-    //                 new_qty = 0;
-    //             }
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     stOsmo: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'atomosmo_pool':{
-    //             var new_qty = Math.max(+positionQTYs.atomosmo_pool - +amount, 0);
-    //             //Set to 0 if below
-    //             if (new_qty <= 0){
-    //                 new_qty = 0;
-    //             }
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     atomosmo_pool: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //         case 'osmousdc_pool':{
-    //             var new_qty = Math.max(+positionQTYs.osmousdc_pool - +amount, 0);
-    //             //Set to 0 if below
-    //             if (new_qty <= 0){
-    //                 new_qty = 0;
-    //             }
-    //             //@ts-ignore
-    //             setpositionQTYs(prevState => {
-    //                 return { 
-    //                     ...prevState,
-    //                     osmousdc_pool: new_qty,
-    //                 }
-    //             });
-
-    //             break;
-    //         }
-    //       }
-    // };
-    const handlecontractQTYupdate = () => {        
-        //Set new LTVs & costs
-        let LTVs = getRataLTV(getTVL(), positionQTYs, prices, basketRes);
-        let cost = getRataCost();
-        //@ts-ignore
-        setcontractQTYs(prevState => {
-            return { 
-                ...prevState,
-                max_LTV: LTVs[1],
-                brw_LTV: LTVs[0],
-                cost: cost
-            }
-        })
-        //Set QTYs
-        switch (currentAsset) {
-            case "OSMO": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            osmo: +prevState.osmo + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            osmo: +prevState.osmo - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-            case "ATOM": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            atom: +prevState.atom + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            atom: +prevState.atom - +(amount??0),
-                        }
-                    })
-                }
-                
-                break;
-            }
-            case "axlUSDC": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            axlusdc: +prevState.axlusdc + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            axlusdc: +prevState.axlusdc - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-            case "USDC": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            usdc: +prevState.usdc + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            usdc: +prevState.usdc - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-            case "stATOM": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            stAtom: +prevState.stAtom + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            stAtom: +prevState.stAtom - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-            case "stOSMO": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            stOsmo: +prevState.stOsmo + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            stOsmo: +prevState.stOsmo - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-            case "TIA": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            tia: +prevState.tia + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            tia: +prevState.tia - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-            case "USDT": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs((prevState: ContractInfo) => {
-                        return { 
-                            ...prevState,
-                            usdt: +prevState.usdt + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs((prevState: ContractInfo) => {
-                        return { 
-                            ...prevState,
-                            usdt: +prevState.usdt - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-            case "ATOM-OSMO LP": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            atomosmo_pool: +prevState.atomosmo_pool + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            atomosmo_pool: +prevState.atomosmo_pool - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-            case "OSMO-axlUSDC LP": {
-                if (currentfunctionLabel === "deposit"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            osmousdc_pool: +prevState.osmousdc_pool + +(amount??0),
-                        }
-                    })
-                }
-                else if (currentfunctionLabel === "withdraw"){
-                    //@ts-ignore
-                    setcontractQTYs(prevState => {
-                        return { 
-                            ...prevState,
-                            osmousdc_pool: +prevState.osmousdc_pool - +(amount??0),
-                        }
-                    })
-                }
-                break;
-            }
-        }
+    const resetPositionQTYs = () => {
+        //set position QTYs to contract QTYs
+        setpositionQTYs({
+            osmo: contractQTYs.osmo,
+            atom: contractQTYs.atom,
+            axlusdc: contractQTYs.axlusdc,
+            usdc: contractQTYs.usdc,
+            stAtom: contractQTYs.stAtom,
+            stOsmo: contractQTYs.stOsmo,
+            tia: contractQTYs.tia,
+            usdt: contractQTYs.usdt,
+            atomosmo_pool: contractQTYs.atomosmo_pool,
+            osmousdc_pool: contractQTYs.osmousdc_pool,
+        });
     }
+    // const handlecontractQTYupdate = () => {        
+    //     //Set new LTVs & costs
+    //     let LTVs = getRataLTV(getTVL(), positionQTYs, prices, basketRes);
+    //     let cost = getRataCost();
+    //     //@ts-ignore
+    //     setcontractQTYs(prevState => {
+    //         return { 
+    //             ...prevState,
+    //             max_LTV: LTVs[1],
+    //             brw_LTV: LTVs[0],
+    //             cost: cost
+    //         }
+    //     })
+    //     //Set QTYs
+    //     switch (currentAsset) {
+    //         case "OSMO": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         osmo: +prevState.osmo + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         osmo: +prevState.osmo - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //         case "ATOM": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         atom: +prevState.atom + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         atom: +prevState.atom - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+                
+    //             break;
+    //         }
+    //         case "axlUSDC": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         axlusdc: +prevState.axlusdc + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         axlusdc: +prevState.axlusdc - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //         case "USDC": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         usdc: +prevState.usdc + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         usdc: +prevState.usdc - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //         case "stATOM": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         stAtom: +prevState.stAtom + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         stAtom: +prevState.stAtom - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //         case "stOSMO": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         stOsmo: +prevState.stOsmo + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         stOsmo: +prevState.stOsmo - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //         case "TIA": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         tia: +prevState.tia + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         tia: +prevState.tia - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //         case "USDT": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs((prevState: ContractInfo) => {
+    //                     return { 
+    //                         ...prevState,
+    //                         usdt: +prevState.usdt + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs((prevState: ContractInfo) => {
+    //                     return { 
+    //                         ...prevState,
+    //                         usdt: +prevState.usdt - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //         case "ATOM-OSMO LP": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         atomosmo_pool: +prevState.atomosmo_pool + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         atomosmo_pool: +prevState.atomosmo_pool - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //         case "OSMO-axlUSDC LP": {
+    //             if (currentfunctionLabel === "deposit"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         osmousdc_pool: +prevState.osmousdc_pool + +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             else if (currentfunctionLabel === "withdraw"){
+    //                 //@ts-ignore
+    //                 setcontractQTYs(prevState => {
+    //                     return { 
+    //                         ...prevState,
+    //                         osmousdc_pool: +prevState.osmousdc_pool - +(amount??0),
+    //                     }
+    //                 })
+    //             }
+    //             break;
+    //         }
+    //     }
+    // }
     const handleExecution = async (fn?: string) => {
         //Set function label if passed
         var currentfunction_label = fn ?? currentfunctionLabel;
@@ -874,8 +654,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         })
                         setPopupMsg(<div>Deposit of {readable_asset_intent} successful</div>);
                         setPopupStatus("Success");   
-                        //Update contract QTYs
-                        handlecontractQTYupdate();
+                        //Requery position
+                        fetch_update_positionData();
                     });
                     //
 
@@ -895,8 +675,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         })
                         setPopupMsg(<div>Deposit of {readable_asset_intent} successful</div>);
                         setPopupStatus("Success");   
-                        //Update contract QTYs
-                        handlecontractQTYupdate();
+                        //Requery position
+                        fetch_update_positionData();
                     } else {
                         ///Format Pop up
                         setPopupTrigger(true);
@@ -925,9 +705,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         //format pop up
                         setPopupTrigger(true);
                         setPopupMsg(<div>Withdrawal of {readable_asset_intent} successful</div>);
-                        setPopupStatus("Success");       
-                        //Update contract QTYs
-                        handlecontractQTYupdate();   
+                        setPopupStatus("Success");     
+                        //Requery position
+                        fetch_update_positionData();
                     })
 
                     //Clear intents
@@ -946,8 +726,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         setPopupTrigger(true);
                         setPopupMsg(<div>Withdrawal of {readable_asset_intent} successful</div>);
                         setPopupStatus("Success");       
-                        //Update contract QTYs
-                        handlecontractQTYupdate();   
+                        //Requery position
+                        fetch_update_positionData();
                     } else {
                         ///Format Pop up
                         setPopupTrigger(true);
@@ -972,7 +752,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         setPopupTrigger(true);
                         setPopupMsg(
                             <div>
-                                Mint of {(mintAmount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the yellow line & you will be liquidated down to said line if you reach the red. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.
+                                Mint of {(mintAmount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the borrowable LTV line & you will be liquidated down to said LTV if you reach the Max LTV. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.
                             <p/>
                             <p className="dash-stats mobile-font">
                                 Provide Liquidity to the CDT&nbsp;<a style={{cursor:"pointer", textDecoration:"underline"}} onClick={onStableswapTextClick}>stableswap</a>&nbsp;on Osmosis for ~30%+ APR
@@ -995,7 +775,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         setPopupTrigger(true);
                         setPopupMsg(
                             <div>
-                                Mint of {(mintAmount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the yellow line & you will be liquidated down to said line if you reach the red. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.
+                                Mint of {(mintAmount ?? 0)} CDT into your wallet successful. Be aware that now that you have minted, you cannot withdraw collateral that would push your LTV past the borrowable LTV line & you will be liquidated down to said LTV if you reach the Max LTV. Also, you cannot pay below minimum debt so if you have minted at the minimum you will need to repay in full + interest.
                             <p/>
                             <p className="dash-stats mobile-font">
                                 Provide Liquidity to the CDT&nbsp;<a style={{cursor:"pointer", textDecoration:"underline"}} onClick={onStableswapTextClick}>stableswap</a>&nbsp;on Osmosis for ~10%+ APR
@@ -1338,20 +1118,31 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
    function getLPValue(QTY: string, price: number) {
         return parseFloat((BigNumber(QTY).times(BigNumber(price))).toString())
    }
+   function istheUserWithdrawing() {
+        //Withdraws
+        if (contractQTYs.osmo > positionQTYs.osmo || contractQTYs.atom > positionQTYs.atom || contractQTYs.axlusdc > positionQTYs.axlusdc || contractQTYs.usdc > positionQTYs.usdc || contractQTYs.stAtom > positionQTYs.stAtom || contractQTYs.stOsmo > positionQTYs.stOsmo || contractQTYs.tia > positionQTYs.tia || contractQTYs.usdt > positionQTYs.usdt || contractQTYs.atomosmo_pool > positionQTYs.atomosmo_pool || contractQTYs.osmousdc_pool > positionQTYs.osmousdc_pool){
+            return true
+        }
+        //Deposits
+        if (contractQTYs.osmo < positionQTYs.osmo || contractQTYs.atom < positionQTYs.atom || contractQTYs.axlusdc < positionQTYs.axlusdc || contractQTYs.usdc < positionQTYs.usdc || contractQTYs.stAtom < positionQTYs.stAtom || contractQTYs.stOsmo < positionQTYs.stOsmo || contractQTYs.tia < positionQTYs.tia || contractQTYs.usdt < positionQTYs.usdt || contractQTYs.atomosmo_pool < positionQTYs.atomosmo_pool || contractQTYs.osmousdc_pool < positionQTYs.osmousdc_pool){
+            return false
+        }
+        return undefined
+   }
 
-   function getTVL() {
+   function getTVL(QTYs: DefinedCollateralAssets) {
     return(
-        (positionQTYs.osmo * +prices.osmo) + (positionQTYs.atom * +prices.atom) + (positionQTYs.axlusdc * +prices.axlUSDC) + (positionQTYs.usdc * +prices.usdc)
-        + getLPValue(positionQTYs.atomosmo_pool, prices.atomosmo_pool) + getLPValue(positionQTYs.osmousdc_pool, prices.osmousdc_pool) + (positionQTYs.stAtom * +prices.stAtom) + (positionQTYs.stOsmo * +prices.stOsmo)
-        + (positionQTYs.tia * +prices.tia) + (positionQTYs.usdt * +prices.usdt)
+        (QTYs.osmo * +prices.osmo) + (QTYs.atom * +prices.atom) + (QTYs.axlusdc * +prices.axlUSDC) + (QTYs.usdc * +prices.usdc)
+        + getLPValue(QTYs.atomosmo_pool, prices.atomosmo_pool) + getLPValue(QTYs.osmousdc_pool, prices.osmousdc_pool) + (QTYs.stAtom * +prices.stAtom) + (QTYs.stOsmo * +prices.stOsmo)
+        + (QTYs.tia * +prices.tia) + (QTYs.usdt * +prices.usdt)
     )
    }
    ///Get pro-rata cost
-    function getRataCost() {
-        var ratios = getassetRatios(getTVL(), positionQTYs, prices);
+    function getRataCost(QTYs: DefinedCollateralAssets) {
+        var ratios = getassetRatios(getTVL(QTYs), QTYs, prices);
         var cost = 0;
 
-        if (positionQTYs.osmo > 0){
+        if (QTYs.osmo > 0){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1367,7 +1158,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.osmo).toFixed(4));
             }
         }
-        if (positionQTYs.atom > 0){
+        if (QTYs.atom > 0){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1383,7 +1174,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.atom).toFixed(4));
             }
         }
-        if (positionQTYs.axlusdc > 0){
+        if (QTYs.axlusdc > 0){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1399,7 +1190,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.axlusdc).toFixed(4));
             }
         }
-        if (positionQTYs.usdc > 0){
+        if (QTYs.usdc > 0){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1415,7 +1206,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.usdc).toFixed(4));
             }
         }
-        if (positionQTYs.stAtom > 0){
+        if (QTYs.stAtom > 0){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1431,7 +1222,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.stAtom).toFixed(4));
             }
         }
-        if (positionQTYs.stOsmo > 0){
+        if (QTYs.stOsmo > 0){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1447,7 +1238,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.stOsmo).toFixed(4));
             }
         }
-        if (positionQTYs.tia > 0){
+        if (QTYs.tia > 0){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1462,7 +1253,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.tia).toFixed(4));
             }
         }
-        if (positionQTYs.usdt > 0){
+        if (QTYs.usdt > 0){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1477,7 +1268,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.usdt).toFixed(4));
             }
         }
-        if (positionQTYs.atomosmo_pool !== "0"){
+        if (QTYs.atomosmo_pool !== "0"){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1493,7 +1284,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat((parseFloat(asset_rate) * ratios.atomosmo_pool).toFixed(4));
             }
         }
-        if (positionQTYs.osmousdc_pool !== "0"){
+        if (QTYs.osmousdc_pool !== "0"){
             //find the asset's index in the basket                
             var rate_index = basketRes?.collateral_types.findIndex((info) => {
                 // @ts-ignore
@@ -1519,7 +1310,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 cost += parseFloat(creditRateRes.credit_interest);
             }   
         }
-
+        console.log(cost, QTYs)
         return(cost)
     }
     function getRates() {
@@ -1793,7 +1584,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             }
         }
     }
-    function handlesetDepositInput(asset: string, event: any){
+    function handlesetDepositInput(asset: string, deposit: boolean, event: any){
         event.preventDefault();
         var deposit_amount = event.target.value;
         switch (asset){
@@ -1804,6 +1595,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         osmo: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            osmo: +deposit_amount + +contractQTYs.osmo,
+                        }
+                    })
+                } else {
+                    var new_amount = +contractQTYs.osmo - +deposit_amount;
+                    if(new_amount < 0){
+                        new_amount = 0;
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            osmo: new_amount,
+                        }
+                    })
+                }
                 break;
             }
             case "atom": {
@@ -1813,6 +1624,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         atom: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            atom: +deposit_amount + +contractQTYs.atom,
+                        }
+                    })
+                } else {
+                    var new_amount = +contractQTYs.atom - +deposit_amount;
+                    if(new_amount < 0){
+                        new_amount = 0;
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            atom: new_amount,
+                        }
+                    })
+                }
                 break;
             }
             case "axlusdc": {
@@ -1822,6 +1653,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         axlusdc: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            axlusdc: +deposit_amount + +contractQTYs.axlusdc,
+                        }
+                    })
+                } else {
+                    var new_amount = +contractQTYs.axlusdc - +deposit_amount;
+                    if(new_amount < 0){
+                        new_amount = 0;
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            axlusdc: new_amount,
+                        }
+                    })
+                }
                 break;
             }
             case "usdc": {
@@ -1831,6 +1682,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         usdc: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            usdc: +deposit_amount + +contractQTYs.usdc,
+                        }
+                    })
+                } else {
+                    var new_amount = +contractQTYs.usdc - +deposit_amount;
+                    if(new_amount < 0){
+                        new_amount = 0;
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            usdc: new_amount,
+                        }
+                    })
+                }
                 break;
             }
             case "stAtom": {
@@ -1840,6 +1711,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         stAtom: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            stAtom: +deposit_amount + +contractQTYs.stAtom,
+                        }
+                    })
+                } else {
+                    var new_amount = +contractQTYs.stAtom - +deposit_amount;
+                    if(new_amount < 0){
+                        new_amount = 0;
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            stAtom: new_amount,
+                        }
+                    })
+                }
                 break;
             }
             case "stOsmo": {
@@ -1849,6 +1740,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         stOsmo: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            stOsmo: +deposit_amount + +contractQTYs.stOsmo,
+                        }
+                    })
+                } else {
+                    var new_amount = +contractQTYs.stOsmo - +deposit_amount;
+                    if(new_amount < 0){
+                        new_amount = 0;
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            stOsmo: new_amount,
+                        }
+                    })
+                }
                 break;
             }
             case "tia": {
@@ -1858,6 +1769,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         tia: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            tia: +deposit_amount + +contractQTYs.tia,
+                        }
+                    })
+                } else {
+                    var new_amount = +contractQTYs.tia - +deposit_amount;
+                    if(new_amount < 0){
+                        new_amount = 0;
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            tia: new_amount,
+                        }
+                    })
+                }
                 break;
             }
             case "usdt": {
@@ -1867,6 +1798,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         usdt: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            usdt: +deposit_amount + +contractQTYs.usdt,
+                        }
+                    })
+                } else {
+                    var new_amount = +contractQTYs.usdt - +deposit_amount;
+                    if(new_amount < 0){
+                        new_amount = 0;
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            usdt: new_amount,
+                        }
+                    })
+                }
                 break;
             }
             case "atomosmo_pool": {
@@ -1876,6 +1827,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         atomosmo_pool: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            atomosmo_pool: BigNumber(deposit_amount).plus(BigNumber(contractQTYs.atomosmo_pool)).toString(),
+                        }
+                    })
+                } else {
+                    var new_lp_amount = BigNumber(contractQTYs.atomosmo_pool).minus(BigNumber(deposit_amount));
+                    if(new_lp_amount < BigNumber(0)){
+                        new_lp_amount = BigNumber(0);
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            atomosmo_pool: new_lp_amount.toString(),
+                        }
+                    })
+                }
                 break;
             }
             case "osmoaxlusdc_pool": {
@@ -1885,6 +1856,26 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         osmousdc_pool: deposit_amount,
                     }
                 })
+                //Set positionQTYs
+                if (deposit) {
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            osmousdc_pool: BigNumber(deposit_amount).plus(BigNumber(contractQTYs.osmousdc_pool)).toString(),
+                        }
+                    })
+                } else {
+                    var new_lp_amount = BigNumber(contractQTYs.osmousdc_pool).minus(BigNumber(deposit_amount));
+                    if(new_lp_amount < BigNumber(0)){
+                        new_lp_amount = BigNumber(0);
+                    }
+                    setpositionQTYs(prevState => {
+                        return { 
+                            ...prevState,
+                            osmousdc_pool: new_lp_amount.toString(),
+                        }
+                    })
+                }
                 break;
             }
         }
@@ -1912,9 +1903,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmo", walletQTYs.osmo.toString())}>max: {walletQTYs.osmo.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("osmo", walletQTYs.osmo.toString()); setpositionQTYs(prevState => { return {...prevState, osmo: walletQTYs.osmo + contractQTYs.osmo}});}}>max: {walletQTYs.osmo.toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", true, event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.atom > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -1923,9 +1914,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atom", walletQTYs.atom.toString())}>max: {walletQTYs.atom.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("atom", walletQTYs.atom.toString()); setpositionQTYs(prevState => { return {...prevState, atom: walletQTYs.atom + contractQTYs.atom}});}}>max: {walletQTYs.atom.toFixed(3)}</div>
                         <label className="deposit-amount-label">ATOM amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atom", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atom", true, event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.usdc > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -1934,9 +1925,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("usdc", walletQTYs.usdc.toString())}>max: {walletQTYs.usdc.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("usdc", walletQTYs.usdc.toString()); setpositionQTYs(prevState => { return {...prevState, usdc: walletQTYs.usdc + contractQTYs.usdc}});}}>max: {walletQTYs.usdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">USDC amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdc", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdc", true, event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.axlusdc > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -1945,9 +1936,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("axlusdc", walletQTYs.axlusdc.toString())}>max: {walletQTYs.axlusdc.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("axlusdc", walletQTYs.axlusdc.toString()); setpositionQTYs(prevState => { return {...prevState, axlusdc: walletQTYs.axlusdc + contractQTYs.axlusdc}});}}>max: {walletQTYs.axlusdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">axlUSDC amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", true, event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.stAtom > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -1956,9 +1947,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/statom.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("stAtom", walletQTYs.stAtom.toString())}>max: {walletQTYs.stAtom.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("stAtom", walletQTYs.stAtom.toString()); setpositionQTYs(prevState => { return {...prevState, stAtom: walletQTYs.stAtom + contractQTYs.stAtom}});}}>max: {walletQTYs.stAtom.toFixed(3)}</div>
                         <label className="deposit-amount-label">stATOM amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stAtom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stAtom", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stAtom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stAtom", true, event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.stOsmo > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -1967,9 +1958,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/stosmo.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("stOsmo", walletQTYs.stOsmo.toString())}>max: {walletQTYs.stOsmo.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("stOsmo", walletQTYs.stOsmo.toString()); setpositionQTYs(prevState => { return {...prevState, stOsmo: walletQTYs.stOsmo + contractQTYs.stOsmo}});}}>max: {walletQTYs.stOsmo.toFixed(3)}</div>
                         <label className="deposit-amount-label">stOSMO amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stOsmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stOsmo", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stOsmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stOsmo", true, event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.tia > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -1978,9 +1969,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/tia.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("tia", walletQTYs.tia.toString())}>max: {walletQTYs.tia.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("tia", walletQTYs.tia.toString()); setpositionQTYs(prevState => { return {...prevState, tia: walletQTYs.tia + contractQTYs.tia}});}}>max: {walletQTYs.tia.toFixed(3)}</div>
                         <label className="deposit-amount-label">TIA amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.tia ?? ''} type="number" onChange={(event)=>handlesetDepositInput("tia", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.tia ?? ''} type="number" onChange={(event)=>handlesetDepositInput("tia", true, event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.usdt > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -1989,9 +1980,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdt.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("usdt", walletQTYs.usdt.toString())}>max: {walletQTYs.usdt.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("usdt", walletQTYs.usdt.toString()); setpositionQTYs(prevState => { return {...prevState, usdt: walletQTYs.usdt + contractQTYs.usdt}});}}>max: {walletQTYs.usdt.toFixed(3)}</div>
                         <label className="deposit-amount-label">USDT amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdt ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdt", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdt ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdt", true, event)}/>
                     </form>
                 </div>: null}
                 {/* {walletQTYs.atomosmo_pool > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -2001,9 +1992,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/osmo.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atomosmo_pool", walletQTYs.atomosmo_pool.toString())}>max: {walletQTYs.atomosmo_pool.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("atomosmo_pool", walletQTYs.atomosmo_pool.toString()); setpositionQTYs(prevState => { return {...prevState, atomosmo_pool: walletQTYs.atomosmo_pool + contractQTYs.atomosmo_pool}});}}>max: {walletQTYs.atomosmo_pool.toFixed(3)}</div>
                         <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", true, event)}/>
                     </form>
                 </div>: null}
                 {walletQTYs.osmousdc_pool > 0 || assetcardTitle === "Show Relevant Assets" ?
@@ -2013,9 +2004,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmoaxlusdc_pool", walletQTYs.osmousdc_pool.toString())}>max: {walletQTYs.osmousdc_pool.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("osmoaxlusdc_pool", walletQTYs.osmousdc_pool.toString()); setpositionQTYs(prevState => { return {...prevState, osmousdc_pool: walletQTYs.osmousdc_pool + contractQTYs.osmousdc_pool}});}}>max: {walletQTYs.osmousdc_pool.toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", true, event)}/>
                     </form>
                 </div>: null} */}
                 </> : //Withdraw elements
@@ -2026,9 +2017,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/osmo.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmo", contractQTYs.osmo.toString())}>max: {contractQTYs.osmo.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("osmo", contractQTYs.osmo.toString()); setpositionQTYs(prevState => { return {...prevState, osmo: 0}});}}>max: {contractQTYs.osmo.toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmo", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.atom > 0 ?        
@@ -2037,9 +2028,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/atom.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atom", contractQTYs.atom.toString())}>max: {contractQTYs.atom.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("atom", contractQTYs.atom.toString()); setpositionQTYs(prevState => { return {...prevState, atom: 0}});}}>max: {contractQTYs.atom.toFixed(3)}</div>
                         <label className="deposit-amount-label">ATOM amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atom", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atom", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.usdc > 0 ?        
@@ -2048,9 +2039,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("usdc", contractQTYs.usdc.toString())}>max: {contractQTYs.usdc.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("usdc", contractQTYs.usdc.toString()); setpositionQTYs(prevState => { return {...prevState, usdc: 0}});}}>max: {contractQTYs.usdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">USDC amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdc", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdc", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.axlusdc > 0 ?        
@@ -2059,9 +2050,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("axlusdc", contractQTYs.axlusdc.toString())}>max: {contractQTYs.axlusdc.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("axlusdc", contractQTYs.axlusdc.toString()); setpositionQTYs(prevState => { return {...prevState, axlusdc: 0}});}}>max: {contractQTYs.axlusdc.toFixed(3)}</div>
                         <label className="deposit-amount-label">axlUSDC amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.axlusdc ?? ''} type="number" onChange={(event)=>handlesetDepositInput("axlusdc", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.stAtom > 0 ?        
@@ -2070,9 +2061,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/statom.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("stAtom", contractQTYs.stAtom.toString())}>max: {contractQTYs.stAtom.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("stAtom", contractQTYs.stAtom.toString()); setpositionQTYs(prevState => { return {...prevState, stAtom: 0}});}}>max: {contractQTYs.stAtom.toFixed(3)}</div>
                         <label className="deposit-amount-label">stATOM amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stAtom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stAtom", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stAtom ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stAtom", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.stOsmo > 0 ?        
@@ -2081,9 +2072,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/stosmo.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("stOsmo", contractQTYs.stOsmo.toString())}>max: {contractQTYs.stOsmo.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("stOsmo", contractQTYs.stOsmo.toString()); setpositionQTYs(prevState => { return {...prevState, stOsmo: 0}});}}>max: {contractQTYs.stOsmo.toFixed(3)}</div>
                         <label className="deposit-amount-label">stOSMO amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stOsmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stOsmo", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.stOsmo ?? ''} type="number" onChange={(event)=>handlesetDepositInput("stOsmo", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.tia > 0 ?
@@ -2092,9 +2083,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/tia.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("tia", contractQTYs.tia.toString())}>max: {contractQTYs.tia.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("tia", contractQTYs.tia.toString()); setpositionQTYs(prevState => { return {...prevState, tia: 0}});}}>max: {contractQTYs.tia.toFixed(3)}</div>
                         <label className="deposit-amount-label">TIA amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.tia ?? ''} type="number" onChange={(event)=>handlesetDepositInput("tia", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.tia ?? ''} type="number" onChange={(event)=>handlesetDepositInput("tia", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.usdt > 0 ?
@@ -2103,9 +2094,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <Image className="deposit-icon" width={45} height={45} alt="" src="images/usdt.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("usdt", contractQTYs.usdt.toString())}>max: {contractQTYs.usdt.toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("usdt", contractQTYs.usdt.toString()); setpositionQTYs(prevState => { return {...prevState, usdt: 0}});}}>max: {contractQTYs.usdt.toFixed(3)}</div>
                         <label className="deposit-amount-label">USDT amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdt ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdt", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.usdt ?? ''} type="number" onChange={(event)=>handlesetDepositInput("usdt", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.atomosmo_pool !== "0" ?        
@@ -2115,9 +2106,8 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/osmo.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("atomosmo_pool", contractQTYs.atomosmo_pool.toString())}>max: {parseInt(contractQTYs.atomosmo_pool).toFixed(3)}</div>
-                        <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", event)}/>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("atomosmo_pool", contractQTYs.atomosmo_pool.toString()); setpositionQTYs(prevState => { return {...prevState, atomosmo_pool: "0"}});}}>max: {parseInt(contractQTYs.atomosmo_pool).toFixed(3)}</div>                        <label className="deposit-amount-label">ATOM/OSMO LP amount:</label>     
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.atomosmo_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("atomosmo_pool", false, event)}/>
                     </form>
                 </div>: null}
                 {contractQTYs.osmousdc_pool !== "0" ?        
@@ -2127,9 +2117,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         <Image className="deposit-icon-lp-right" width={45} height={45} alt="" src="images/usdc.axl.svg" />
                     </div>
                     <form className="deposit-form">
-                        <div className="deposit-max-amount-label" onClick={()=>handlesetDepositAmount("osmoaxlusdc_pool", contractQTYs.osmousdc_pool.toString())}>max: {parseInt(contractQTYs.osmousdc_pool).toFixed(3)}</div>
+                        <div className="deposit-max-amount-label" onClick={()=>{handlesetDepositAmount("osmoaxlusdc_pool", contractQTYs.osmousdc_pool.toString()); setpositionQTYs(prevState => { return {...prevState, osmousdc_pool: "0"}});}}>max: {parseInt(contractQTYs.osmousdc_pool).toFixed(3)}</div>
                         <label className="deposit-amount-label">OSMO/axlUSDC LP amount:</label>     
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", event)}/>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} name="amount" value={depositAmounts.osmousdc_pool ?? ''} type="number" onChange={(event)=>handlesetDepositInput("osmoaxlusdc_pool", false, event)}/>
                     </form>
                 </div> : null}
                 </>
@@ -2198,7 +2188,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             {forVaults ? //Buttons
             <div className="deposit-withdraw-card-btns">
                 <a className="btn buttons" style={{borderRadius: "1rem", color: "white", marginTop: "0%"}} onClick={()=>{if (currentfunctionLabel === "withdraw" || currentfunctionLabel === "deposit"){handleExecution()}}}>
-                    {currentfunctionLabel === "deposit" ? "Deposit" : currentfunctionLabel === "withdraw" ? "Withdraw" : "---->"}
+                    {currentfunctionLabel === "deposit" ? "Deposit" : "Withdraw"}
                 </a>         
                 <div className={"user-redemption-button"} onClick={handlefunctionLabel}>
                     <div className="spacing-btm">{currentfunctionLabel === "deposit" ? "Switch to withdraw" : currentfunctionLabel === "withdraw" ? "Switch to deposit" : "Switch to withdraw" }</div>
@@ -2208,6 +2198,21 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         </>);
     }
     const handlefunctionLabel = () => {
+        //resetPositionQTYs
+        resetPositionQTYs();
+        //resetdepositAmounts
+        setdepositAmounts({
+            osmo: undefined,
+            atom: undefined,
+            axlusdc: undefined,
+            usdc: undefined,
+            stAtom: undefined,
+            stOsmo: undefined,
+            tia: undefined,
+            usdt: undefined,
+            atomosmo_pool: undefined,
+            osmousdc_pool: undefined,
+        });
         if (currentfunctionLabel === "deposit"){
             setcurrentfunctionLabel("withdraw")
         } else if (currentfunctionLabel === "withdraw"){
@@ -2394,9 +2399,9 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 Bridge to Osmosis
             </div>
             :
-            <div className="vaults-title-div" style={{left: "3%"}}>
+            <div className="vaults-title-div" style={{position: "relative", left: "3%"}}>
                 <div className="onboarding-deposit-title">
-                    Fund Position
+                    Open Vault
                     <div><Image className="pie-chart-icon1" width={48} height={48} alt="" src="images/pie_chart.svg" /></div>
                 </div>
                 {assetcardTitle === "Show All Assets" ? <a className="asset-card-title" style={{textDecoration: "underline"}} onClick={handleshowAll}>{assetcardTitle}</a> : <a className="asset-card-title" style={{textDecoration: "underline"}} onClick={handleshowRelevant}>{assetcardTitle}</a>}
@@ -2458,15 +2463,15 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             <div className="mint-card-body mint-card-design shadow" style={{paddingRight: ".75rem", paddingLeft: ".75rem", paddingTop: "1rem", paddingBottom: ".75rem"}}>                
                 <div className="mint-stats-grid">
                     <div className="value-div">
-                        <div className="mint-card-stats">Debt: {(debtAmount/1_000000).toFixed(0)} CDT</div>
-                        <div className="mint-card-stats">Cost: {getRataCost().toFixed(4)}%</div>
-                        <div className="mint-card-stats">Liq. Value: ${((((debtAmount/1_000000)* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(0)}</div>
-                        <div className="mint-card-stats">TVL: ${(getTVL() ?? 0).toFixed(0)}</div>
+                        <div className="mint-card-stats">Debt: <a style={(mintAmount??0) > 0 ? {color: "#FF6961"} : (repayAmount??0) > 0 ? {color: "#77DD77"} : {}}>{((debtAmount/1_000000)+ (mintAmount??0) - (repayAmount??0)).toFixed(0)} CDT</a></div>
+                        <div className="mint-card-stats">Cost: <a style={(getRataCost(positionQTYs) < getRataCost(contractQTYs)) ? {color: "#77DD77"} : (getRataCost(positionQTYs) > getRataCost(contractQTYs)) ? {color: "#FF6961"} : {}}>{getRataCost(positionQTYs).toFixed(4)}%</a></div>
+                        <div className="mint-card-stats">Liq. Value: <a style={(mintAmount??0) > 0 ? {color: "#FF6961"} : (repayAmount??0) > 0 ? {color: "#77DD77"} : {}}>${(((((debtAmount/1_000000)+ (mintAmount??0) - (repayAmount??0))* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(0)}</a></div>
+                        <div className="mint-card-stats">TVL: <a style={istheUserWithdrawing() && istheUserWithdrawing() !== undefined ? {color: "#FF6961"} : !istheUserWithdrawing() && istheUserWithdrawing() !== undefined ? {color: "#77DD77"} : {}}>${(getTVL(positionQTYs) ?? 0).toFixed(0)}</a></div>
                     </div>
                     <div className="ltv-div">
-                        <div className="mint-card-stats">LTV: {((((debtAmount/1_000000)* creditPrice)/(getTVL()+1)) * 100).toFixed(1)}%</div>                        
-                        <div className="mint-card-stats">Borrowable LTV: {(brwLTV ?? 0).toFixed(0)}%</div>
-                        <div className="mint-card-stats">Liquidation LTV: {(maxLTV ?? 0).toFixed(0)}%</div>
+                        <div className="mint-card-stats">LTV: <a style={(mintAmount??0) > 0 || (istheUserWithdrawing() && istheUserWithdrawing() !== undefined) ? {color: "#FF6961"} : (repayAmount??0) > 0 || (!istheUserWithdrawing() && istheUserWithdrawing() !== undefined) ? {color: "#77DD77"} : {}}>{(((((debtAmount/1_000000)+ (mintAmount??0) - (repayAmount??0))* creditPrice)/(getTVL(positionQTYs)+1)) * 100).toFixed(1)}%</a></div>                        
+                        <div className="mint-card-stats">Borrowable LTV: <a style={getRataLTV(getTVL(positionQTYs), positionQTYs, prices, basketRes)[0] > getRataLTV(getTVL(contractQTYs), contractQTYs, prices, basketRes)[0] ? {color: "#77DD77"} : getRataLTV(getTVL(positionQTYs), positionQTYs, prices, basketRes)[0] < getRataLTV(getTVL(contractQTYs), contractQTYs, prices, basketRes)[0] ? {color: "#FF6961"} : {}}>{(getRataLTV(getTVL(positionQTYs), positionQTYs, prices, basketRes)[0]).toFixed(0)}%</a></div>
+                        <div className="mint-card-stats">Liquidation LTV: <a style={getRataLTV(getTVL(positionQTYs), positionQTYs, prices, basketRes)[1] > getRataLTV(getTVL(contractQTYs), contractQTYs, prices, basketRes)[1] ? {color: "#77DD77"} : getRataLTV(getTVL(positionQTYs), positionQTYs, prices, basketRes)[1] < getRataLTV(getTVL(contractQTYs), contractQTYs, prices, basketRes)[1] ? {color: "#FF6961"} : {}}>{(getRataLTV(getTVL(positionQTYs), positionQTYs, prices, basketRes)[1]).toFixed(0)}%</a></div>
                     </div>
                 </div>
                 {/*Mint/Repay card with position stats*/}
@@ -2475,8 +2480,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         Mint
                     </a> 
                     <form className="deposit-form" style={{top: "-19%"}}>
-                        <div className="mint-max-amount-label" onClick={()=>setmintAmount(parseFloat(((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1) - debtAmount/1_000000).toFixed(1)))}>max: {((getTVL()*(brwLTV/100))/Math.max(creditPrice, 1) - debtAmount/1_000000).toFixed(1)}</div>
-                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} value={mintAmount} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("mint")} onChange={(event)=>{event.preventDefault(); setmintAmount(parseFloat(event.target.value))}}/>
+                        <div className="mint-max-amount-label" onClick={()=>{setmintAmount(parseFloat(((getTVL(positionQTYs)*(brwLTV/100))/Math.max(creditPrice, 1) - (debtAmount/1_000000)).toFixed(1))); setcurrentfunctionLabel("mint"); setrepayAmount(0);}}>max: {((getTVL(positionQTYs)*(brwLTV/100))/Math.max(creditPrice, 1) - (debtAmount/1_000000)).toFixed(1)}</div>
+                        <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} defaultValue={mintAmount} value={mintAmount} name="amount" type="number" onClick={()=>{setcurrentfunctionLabel("mint"); setrepayAmount(0);}} onChange={(event)=>{event.preventDefault();
+                        if (event.target.value !== "") {
+                            setmintAmount(parseFloat(event.target.value))
+                        } else {
+                            setmintAmount(0)
+                        }}}/>
                     </form>
                     <div className="mint-element-icon" style={{top: "-19%"}}>
                         <Image className="deposit-icon" width={45} height={45} alt="" src="images/CDT.svg" />
@@ -2489,8 +2499,13 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                             Repay
                         </a>
                         <form className="deposit-form" style={{top: "-19%"}}>
-                            <div className="mint-max-amount-label" onClick={()=>setrepayAmount(debtAmount/1_000000)}>max: {(debtAmount/1_000000).toFixed(1)}</div>
-                            <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} value={repayAmount} name="amount" type="number" onClick={()=>setcurrentfunctionLabel("repay")} onChange={(event)=>{event.preventDefault(); setrepayAmount(parseFloat(event.target.value))}}/>
+                            <div className="mint-max-amount-label" onClick={()=>{setrepayAmount(debtAmount/1_000000); setcurrentfunctionLabel("repay"); setmintAmount(0);}}>max: {(debtAmount/1_000000).toFixed(1)}</div>
+                            <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} defaultValue={repayAmount} value={repayAmount} name="amount" type="number" onClick={()=>{setcurrentfunctionLabel("repay"); setmintAmount(0);}} onChange={(event)=>{event.preventDefault(); 
+                            if (event.target.value !== "") {
+                                setrepayAmount(parseFloat(event.target.value))
+                            } else {
+                                setrepayAmount(0)
+                            }}}/>
                         </form>
                         <div className="mint-element-icon" style={{top: "-19%"}}>
                             <Image className="deposit-icon" width={45} height={45} alt="" src="images/CDT.svg" />
