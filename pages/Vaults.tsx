@@ -858,10 +858,62 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         ////Error message
                         const e = error as { message: string }
                         console.log(e.message)
-                        ///Format Pop up
-                        setPopupTrigger(true);
-                        setPopupMsg(<div>{e.message}</div>);
-                        setPopupStatus("Accrue Error");
+                        
+                        //This is a success msg but a cosmjs error
+                        if (e.message === "Invalid string. Length must be a multiple of 4"){
+                            //Query position
+                            //getPosition
+                            await queryClient?.getBasketPositions(
+                                {
+                                    user: address as string,
+                                }
+                            ).then(async (res) => {
+                                //Set amount to new debt amount
+                                var repay_amount = parseInt(res[0].positions[0].credit_amount);
+                                //Execute the Repay
+                                try {
+                                    ///Execute the Repay
+                                    await cdp_client?.repay({
+                                        positionId: positionID,
+                                    }, "auto", undefined, coins(repay_amount, denoms.cdt)).then((res) => {           
+                                        console.log(res?.events.toString())
+                                        //Update mint amount
+                                        setdebtAmount(+debtAmount - +(repay_amount* 1_000_000));
+                                        setsliderValue((+debtAmount - +(repay_amount* 1_000_000))/1000000);
+                                        //format pop up
+                                        setPopupTrigger(true);
+                                        setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
+                                        setPopupStatus("Success");
+                                    })
+                                    
+                                } catch (error){
+                                    ////Error message
+                                    const e = error as { message: string }
+                                    console.log(e.message)
+                                    //This is a success msg but a cosmjs error
+                                    if (e.message === "Invalid string. Length must be a multiple of 4"){
+                                        //Update mint amount
+                                        setdebtAmount(+debtAmount - +(repay_amount* 1_000_000));
+                                        setsliderValue((+debtAmount - +(repay_amount* 1_000_000))/1000000);
+                                        //format pop up
+                                        setPopupTrigger(true);
+                                        setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
+                                        setPopupStatus("Success");
+                                        } else {
+                                        
+                                        ///Format Pop up
+                                        setPopupTrigger(true);
+                                        setPopupMsg(<div>{e.message}</div>);
+                                        setPopupStatus("Repay Error");
+                                    }
+                                }
+                            })
+                        } else {
+                            ///Format Pop up
+                            setPopupTrigger(true);
+                            setPopupMsg(<div>{e.message}</div>);
+                            setPopupStatus("Accrue Error");
+                        }
                     }
                 } else {
                     try {
