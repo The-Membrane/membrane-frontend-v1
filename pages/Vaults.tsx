@@ -796,7 +796,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             case "repay": {
                 let repay_amount = ((repayAmount ?? 0)* 1_000_000);
                 if (((repayAmount ?? 0)* 1_000_000) >= debtAmount) { 
-                    repay_amount = (debtAmount+1_000_000);
+                    repay_amount = (walletCDT* 1_000_000);
                 }
                     try {
                         ///Execute the Repay
@@ -826,8 +826,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                             setPopupTrigger(true);
                             setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
                             setPopupStatus("Success");
-                            } else {
-                            
+                        } else {                            
                             ///Format Pop up
                             setPopupTrigger(true);
                             setPopupMsg(<div>{e.message}</div>);
