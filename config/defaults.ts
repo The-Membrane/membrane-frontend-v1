@@ -79,7 +79,7 @@ export const skipProposals = ["10", "16", "17"];
 export const delegateList = [
     {
         name: "Frontend Host",
-        address: "osmo1d9ryqp7yfmr92vkk2yal96824pewf2g5wx0h2r0",
+        address: "osmo1d9ryqp7yfmr92vkk2yal96824pewf2g5wx0h2r",
         socials: ["@Cyph3rpunk1", "cyph3rpunk"]
     },
     {

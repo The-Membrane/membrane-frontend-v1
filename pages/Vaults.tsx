@@ -798,41 +798,41 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 if (((repayAmount ?? 0)* 1_000_000) >= debtAmount) { 
                     repay_amount = (walletCDT* 1_000_000);
                 }
-                    try {
-                        ///Execute the Repay
-                        await cdp_client?.repay({
-                            positionId: positionID,
-                        }, "auto", undefined, coins(repay_amount, denoms.cdt)).then((res) => {           
-                            console.log(res?.events.toString())
-                            //Update mint amount
-                            setdebtAmount(+debtAmount - +(repay_amount* 1_000_000));
-                            setsliderValue((+debtAmount - +(repay_amount* 1_000_000))/1000000);
-                            //format pop up
-                            setPopupTrigger(true);
-                            setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
-                            setPopupStatus("Success");
-                        })
-                        
-                    } catch (error){
-                        ////Error message
-                        const e = error as { message: string }
-                        console.log(e.message)
-                        //This is a success msg but a cosmjs error
-                        if (e.message === "Invalid string. Length must be a multiple of 4"){
-                            //Update mint amount
-                            setdebtAmount(+debtAmount - +(repay_amount* 1_000_000));
-                            setsliderValue((+debtAmount - +(repay_amount* 1_000_000))/1000000);
-                            //format pop up
-                            setPopupTrigger(true);
-                            setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
-                            setPopupStatus("Success");
-                        } else {                            
-                            ///Format Pop up
-                            setPopupTrigger(true);
-                            setPopupMsg(<div>{e.message}</div>);
-                            setPopupStatus("Repay Error");
-                        }
+                try {
+                    ///Execute the Repay
+                    await cdp_client?.repay({
+                        positionId: positionID,
+                    }, "auto", undefined, coins(repay_amount, denoms.cdt)).then((res) => {           
+                        console.log(res?.events.toString())
+                        //Update mint amount
+                        setdebtAmount(+debtAmount - +(repay_amount* 1_000_000));
+                        setsliderValue((+debtAmount - +(repay_amount* 1_000_000))/1000000);
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
+                        setPopupStatus("Success");
+                    })
+                    
+                } catch (error){
+                    ////Error message
+                    const e = error as { message: string }
+                    console.log(e.message)
+                    //This is a success msg but a cosmjs error
+                    if (e.message === "Invalid string. Length must be a multiple of 4"){
+                        //Update mint amount
+                        setdebtAmount(+debtAmount - +(repay_amount* 1_000_000));
+                        setsliderValue((+debtAmount - +(repay_amount* 1_000_000))/1000000);
+                        //format pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>Repayment of {repay_amount} CDT successful</div>);
+                        setPopupStatus("Success");
+                    } else {                            
+                        ///Format Pop up
+                        setPopupTrigger(true);
+                        setPopupMsg(<div>{e.message}</div>);
+                        setPopupStatus("Repay Error");
                     }
+                }
                 break;                
             }
             case "redemptions": {
