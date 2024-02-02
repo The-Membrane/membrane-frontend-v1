@@ -99,10 +99,11 @@ interface PIProps {
   result?: string;
   quorum?: number;
   proposalColor: string;
+  quorumThreshold: number;
 }
 
 const ProposalItem: React.FC<PIProps> = (props: PIProps) => {
-  const { onClick, title, days, result, quorum, proposalColor } = props;
+  const { onClick, title, days, result, quorum, proposalColor, quorumThreshold } = props;
   return (
     <div>
       <div className="proposal-item" onClick={onClick}>
@@ -113,7 +114,7 @@ const ProposalItem: React.FC<PIProps> = (props: PIProps) => {
         <div className="proposal-title">{title ?? ""}</div>
         <div
           className={`proposal-result ${
-            result && days && days < quorum! ? "low-quorum" : ""
+            quorumThreshold > quorum! ? "low-opacity" : ""
           }`}
         >
           {result ?? ""}
@@ -129,6 +130,7 @@ interface ProposalRowsProps {
   proposalType: string;
   proposalColor: string;
   onRowClick: (proposal: ProposalResponse, quorum: number) => void;
+  quorumThreshold: number;
 }
 
 const ProposalRows: React.FC<ProposalRowsProps> = (
@@ -145,6 +147,7 @@ const ProposalRows: React.FC<ProposalRowsProps> = (
           result={proposal[2]}
           quorum={proposal[3]!}
           proposalColor={props.proposalColor}
+          quorumThreshold={props.quorumThreshold}
         />
       )
     )}
@@ -159,6 +162,7 @@ interface PropPaneProps {
   govQueryClient: any;
   address: string | undefined;
   userVP: UserVP;
+  quorumThreshold: number;
 }
 
 export const ProposalPane: React.FC<PropPaneProps> = (props: PropPaneProps) => {
@@ -226,6 +230,7 @@ export const ProposalPane: React.FC<PropPaneProps> = (props: PropPaneProps) => {
           proposalType={proposalType}
           proposalColor={proposalColor}
           onRowClick={handleRowClick}
+          quorumThreshold={props.quorumThreshold}
         />
         <Popup
           trigger={isProposalDetailsVisible}

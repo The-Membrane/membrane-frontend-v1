@@ -436,6 +436,7 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         govQueryClient={govQueryClient}
         address={address}
         userVP={userVP}
+        quorumThreshold={quorum}
       />
       <DelegatePane 
       delegations={delegations} 
