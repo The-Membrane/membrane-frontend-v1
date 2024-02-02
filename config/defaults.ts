@@ -74,7 +74,7 @@ export interface Delegate {
     socials: [string, string]; // [twitter, discord]
 };
 /// List of proposals to skip
-export const skipProposals = ["10", "16", "17"];
+export const skipProposals = ["10", "16", "17", "22"];
 /// Delegates List (non-exhaustive but makes it better UX for stakers to choose from a list)
 export const delegateList = [
     {
