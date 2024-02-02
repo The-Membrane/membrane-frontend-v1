@@ -961,6 +961,7 @@ export default function Home() {
   //This won't work with muliple proposals of separate types since it sets based on the length of the array
   //We'd need to sort the proposal list by status beforehand
   const getProposals = async () => {
+    let skipped = 0;
     try {
       //Query Gov config
       await governancequeryClient?.config().then(async (config_res) => {
@@ -971,9 +972,6 @@ export default function Home() {
           var active_proposals = res.proposal_list.filter(proposal => proposal.status === "active");
           var completed_proposals = res.proposal_list.filter(proposal => proposal.status === "passed" || proposal.status === "rejected" || proposal.status === "amendment_desired" || proposal.status === "expired");
           var executed_proposals = res.proposal_list.filter(proposal => proposal.status === "executed");
-          // var active_proposals = [res];
-          // var completed_proposals = [] as ProposalResponse[];
-          // var executed_proposals = [] as ProposalResponse[];
 
           console.log(active_proposals)
           console.log(completed_proposals)
@@ -982,7 +980,7 @@ export default function Home() {
           for (let i = 0; i < active_proposals.length; i++) {
             let proposal = active_proposals[i];
             if (skipProposals.includes(proposal.proposal_id)) {
-              console.log("skipped:", proposal.proposal_id)
+              skipped += 1;
               continue
             }
               if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
@@ -1010,7 +1008,7 @@ export default function Home() {
                   //Get current result
                   let current_result = getProposalResult(parseInt(proposal.for_power), parseInt(proposal.amendment_power), parseInt(proposal.removal_power), parseInt(proposal.against_power), config_res, (proposal.messages !== undefined))
                   //Update active
-                  proposals.active[i] = [proposal, 0, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];                })
+                  proposals.active[i-skipped] = [proposal, 0, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];                })
               }                
             } 
             
