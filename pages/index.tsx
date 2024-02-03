@@ -983,7 +983,7 @@ export default function Home() {
               skipped += 1;
               continue
             }
-              if (proposals.active[7][0] === undefined && proposals.active[i][0] === undefined){
+              if (proposals.active[7][0] === undefined){
                               
                 //Query total voting power
                 await governancequeryClient?.totalVotingPower({
@@ -1009,8 +1009,15 @@ export default function Home() {
                   let current_result = getProposalResult(parseInt(proposal.for_power), parseInt(proposal.amendment_power), parseInt(proposal.removal_power), parseInt(proposal.against_power), config_res, (proposal.messages !== undefined))
                   //Update active
                   proposals.active[i-skipped] = [proposal, 0, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];                })
-              }                
-            } 
+              }               
+            }            
+            //Set Active proposals
+            setProposals(prevState => {
+              return {
+                ...prevState,
+                active: proposals.active,
+              }
+            })  
             
             //Executed
             for (let i = 0; i < executed_proposals.length; i++) {
@@ -1020,7 +1027,15 @@ export default function Home() {
                 //Update executed
                 proposals.executed[i] = [proposal, 0, "Executed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
               }
-            } 
+            }
+
+            //Set Executed proposals
+            setProposals(prevState => {
+              return {
+                ...prevState,
+                executed: proposals.executed,
+              }
+            })   
             
             //Completed
             for (let i = 0; i < completed_proposals.length; i++) {
@@ -1030,7 +1045,14 @@ export default function Home() {
                 //Update completed
                 proposals.completed[i] = [proposal, 0, "Completed", 100] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];
               }
-            }
+            }                         
+            //Set Completed proposals
+            setProposals(prevState => {
+              return {
+                ...prevState,
+                completed: proposals.completed,
+              }
+            })   
           
         })
       })
@@ -1048,12 +1070,17 @@ export default function Home() {
             proposals.pending = ([[proposal, 1, "Pending", 0]] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined][]).concat(proposals.pending)
             //pop end
             proposals.pending.pop()
+          }
         }
-        }
+        //Set Pending proposals
+        setProposals(prevState => {
+          return {
+            ...prevState,
+            pending: proposals.pending,
+          }
+        })   
       })
 
-      //Set proposals
-      setProposals(proposals)
     } catch (error) {
       console.log(error)
     }
