@@ -849,6 +849,12 @@ export default function Home() {
   
   //Get user staked & unstaking MBRN
   const getUserStake = async () => {
+    // await stakingqueryClient?.staked({
+    //   limit: 1024,
+    //   unstaking: false,
+    // }).then((res) => {
+    //   console.log(res.stakers.length)
+    // })
     try {
       await stakingqueryClient?.userStake({
         staker: address as string ?? "",
@@ -961,30 +967,30 @@ export default function Home() {
   //This won't work with muliple proposals of separate types since it sets based on the length of the array
   //We'd need to sort the proposal list by status beforehand
   const getProposals = async () => {
-    let skipped = 0;
     try {
       //Query Gov config
-      await governancequeryClient?.config().then(async (config_res) => {
+      await governancequeryClient?.config().then(async (config_res) => {        
+        //Set quorum from config
+        setQuorum(parseFloat(config_res.proposal_required_quorum))
         //Get active
-        await governancequeryClient?.activeProposals({ start: 19 })
+        await governancequeryClient?.activeProposals({ start: 19, limit: 32 })
         .then(async (res) => {
           //Sort then Set active, completed & executed
-          var active_proposals = res.proposal_list.filter(proposal => proposal.status === "active");
+          var active_proposals = res.proposal_list.filter(proposal => proposal.status === "active" && !skipProposals.includes(proposal.proposal_id));
           var completed_proposals = res.proposal_list.filter(proposal => proposal.status === "passed" || proposal.status === "rejected" || proposal.status === "amendment_desired" || proposal.status === "expired");
           var executed_proposals = res.proposal_list.filter(proposal => proposal.status === "executed");
 
           console.log(active_proposals)
-          console.log(completed_proposals)
-          console.log(executed_proposals)
+          // console.log(completed_proposals)
+          // console.log(executed_proposals)
           //Active
           for (let i = 0; i < active_proposals.length; i++) {
             let proposal = active_proposals[i];
-            if (skipProposals.includes(proposal.proposal_id)) {
-              skipped += 1;
-              continue
-            }
-              if (proposals.active[7][0] === undefined){
-                              
+            // if (skipProposals.includes(proposal.proposal_id)) {
+            //   skipped += 1;
+            //   continue
+            // }
+              if (proposals.active[7][0] === undefined){                              
                 //Query total voting power
                 await governancequeryClient?.totalVotingPower({
                   proposalId: parseInt(proposal.proposal_id)
@@ -1002,15 +1008,13 @@ export default function Home() {
                   }
                   //Calc quorum
                   var quorum = (parseInt(proposal.against_power) + parseInt(proposal.for_power) + aligned_power + parseInt(proposal.amendment_power) + parseInt(proposal.removal_power)) / totalVotingPower;
-                  //Query config
-                  //Set quorum from config
-                  setQuorum(parseFloat(config_res.proposal_required_quorum))
                   //Get current result
                   let current_result = getProposalResult(parseInt(proposal.for_power), parseInt(proposal.amendment_power), parseInt(proposal.removal_power), parseInt(proposal.against_power), config_res, (proposal.messages !== undefined))
                   //Update active
-                  proposals.active[i-skipped] = [proposal, 0, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];                })
+                  proposals.active[i] = [proposal, 0, current_result, quorum] as [ProposalResponse | undefined, number | undefined, string | undefined, number | undefined];                })
               }               
-            }            
+            }
+            console.log(proposals.active)
             //Set Active proposals
             setProposals(prevState => {
               return {
