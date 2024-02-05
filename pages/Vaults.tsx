@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import { useChain } from '@cosmos-kit/react';
-import { chainName } from '../config';
+import { chainName, testnetAddrs } from '../config';
 
 import { Coin, coin, coins } from "@cosmjs/amino";
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
+import { PositionsMsgComposer } from "../codegen/positions/Positions.message-composer";
 import { Asset, Basket, CollateralInterestResponse, InterestResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { Prices } from ".";
 import { denoms } from "../config";
@@ -15,6 +16,7 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { onStableswapTextClick } from "./Dashboard";
 import { formatNumber } from "./Liquidations";
 import BigNumber from "bignumber.js";
+
 
 declare module 'react' {
     export interface InputHTMLAttributes<T> {
@@ -592,13 +594,21 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
     //     }
     // }
     const handleExecution = async (fn?: string) => {
+        //Test double msg signs
+        if (false){
+            const cdp_composer = new PositionsMsgComposer(user_address, testnetAddrs.positions);
+            let accrue_msg = cdp_composer.accrue({positionIds: [positionID]});
+            await cdp_client?.client.signAndBroadcast(user_address, [accrue_msg], "auto",).then((res) => {console.log(res)});
+        }
+
         //Set function label if passed
         var currentfunction_label = fn ?? currentfunctionLabel;
         //Check if wallet is connected & connect if not
         if (address === undefined) {
             connect();
             return;
-        }///Set asset intents
+        }
+        ///Set asset intents
         var asset_intent: [string, number | string][] = [];
         if (depositAmounts.osmo != undefined && depositAmounts.osmo > 0){
             asset_intent.push(["OSMO", depositAmounts.osmo])
@@ -2432,7 +2442,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                             Repay
                         </a>
                         <form className="deposit-form" style={{top: "-19%"}}>
-                            <div className="mint-max-amount-label" onClick={()=>{setrepayAmount(debtAmount/1_000000); setcurrentfunctionLabel("repay"); setmintAmount(0);}}>max: {(debtAmount/1_000000).toFixed(1)}</div>
+                            <div className="mint-max-amount-label" onClick={()=>{setrepayAmount(debtAmount/1_000000); setcurrentfunctionLabel("repay"); setmintAmount(0);}}>max: {(walletCDT).toFixed(1)}</div>
                             <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} defaultValue={repayAmount} value={repayAmount} name="amount" type="number" onClick={()=>{setcurrentfunctionLabel("repay"); setmintAmount(0);}} onChange={(event)=>{event.preventDefault(); 
                             if (event.target.value !== "") {
                                 setrepayAmount(parseFloat(event.target.value))

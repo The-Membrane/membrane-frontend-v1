@@ -1,6 +1,12 @@
 import React from "react";
 import { useRouter } from 'next/router';
 
+import { Coin, coin, coins } from "@cosmjs/amino";
+import { getRoutesForTrade, calcAmountWithSlippage } from "@osmonauts/math";
+import { osmosis } from 'osmojs';
+import { AddLiquidity, Modal, Button } from '@interchain-ui/react';
+
+
 import Dashboard from './Dashboard';
 import { useEffect, useRef, useState } from 'react';
 import NavBar from '../components/NavBar';
@@ -23,6 +29,17 @@ import { delegateList, denoms, quadraticVoting, skipProposals } from "../config"
 export const SECONDS_PER_DAY = 86400;
 export const BLOCK_TIME_IN_SECONDS = 6;
 export const unstakingPeriod = 4; //days
+
+const {
+  joinPool,
+  exitPool,
+  exitSwapExternAmountOut,
+  exitSwapShareAmountIn,
+  joinSwapExternAmountIn,
+  joinSwapShareAmountOut,
+  swapExactAmountIn,
+  swapExactAmountOut
+} = osmosis.gamm.v1beta1.MessageComposer.withTypeUrl;
 
 export interface Prices {
   osmo: number,
@@ -1228,9 +1245,77 @@ export default function Home() {
       })
     } catch (error) {
       console.log(error)
-    }
+    }  
+  }
+
+//Quick Action functions
+
+
+// const handleCDTswaps = async (asset: string, amount: number) => {
+//     const msg = joinSwapExternAmountIn({
+//       sender: address as string,
+//       poolId: 1,
+//       tokenIn:,
+//       shareOutMinAmount: 0,
+//     });
+
+//   // const routes = getRoutesForTrade({
+//   //   trade: {
+//   //     sell: {
+//   //       denom: tokenIn.denom,
+//   //       amount: tokenInAmount,
+//   //     },
+//   //     buy: {
+//   //       denom: tokenOut.denom,
+//   //       amount: tokenOutAmount,
+//   //     },
+//   //   },
+//   //   pairs,
+//   // });
+
+//   // const msg = swapExactAmountIn( {
+//   //   sender: address! as string,
+//   //   routes,
+//   //   tokenIn: coin(amount, denoms.cdt),
+//   //   tokenOutMinAmount
+//   // });    
   
- }
+//   // const tokenOutMinAmount = calcAmountWithSlippage(tokenOutAmount, slippage);
+// };
+
+function Demo() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Modal
+      trigger={
+        <Button onClick={() => setIsOpen(true)}>
+          Add Liquidity
+        </Button>
+      }
+      isOpen={isOpen}
+      header={<div>Add Liquidity</div>}
+      onClose={() => setIsOpen(false)}
+    >
+      <AddLiquidity
+          token1={
+           { denom: 'Cosmos Hub',
+            imgSrc: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png',
+            symbol: 'ATOM',
+            available: 15.868}
+          }
+          token2={
+            {available: 57.61,
+            symbol: 'OSMO',
+            denom: 'Osmosis',
+            imgSrc:
+              'https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png',}
+          }
+      />
+    </Modal>
+  );
+}
+
   useEffect(() => {    
     Hotjar.init(siteId, hotjarVersion);
   }, []);
@@ -1397,6 +1482,8 @@ export default function Home() {
   }, [oraclequeryClient, cdpqueryClient, prices, address, activeComponent, walletChecked])
 
   const renderComponent = () => {
+    
+    return Demo()
     ///If the dashboard is only going to show the vault page then load the vault page only
     if (onlyVaultPage() && activeComponent === 'dashboard'){
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}

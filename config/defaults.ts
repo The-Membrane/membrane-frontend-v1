@@ -13,6 +13,7 @@ import {
     osmosisAminoConverters,
     osmosisProtoRegistry
 } from 'osmojs';
+import { PrettyPair } from "@osmonauts/math/dist/types";
 
 export const chainName = 'osmosis';
 // export const chainName = 'osmosistestnet';
@@ -67,6 +68,22 @@ export const denoms = {
   //USDT
   usdt: "ibc/4ABBEF4C8926DDDB320AE5188CFD63267ABBCEFC0583E4AE05D6E5AA2401DDAB",
 };
+//all CDT pairs
+// export const cdtRoutes = {
+//     "uosmo": [
+//         {
+//             pool_id: '1226',
+//             poolAddress: 'gamm/pool/1226',
+//             images: [Object],
+//             ratio: '0.5',
+//             amount: '0.5',
+//             symbol: 'OSMO',
+//             denom: 'uosmo',
+//             info: [Object]        
+//         } as PrettyPair,
+//     ]
+// };
+
 export const quadraticVoting = true;
 export interface Delegate {
     name: string;

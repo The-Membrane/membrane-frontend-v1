@@ -6,8 +6,10 @@
 
 import * as _0 from "./Positions.types";
 import * as _1 from "./Positions.client";
+import * as _2 from "./Positions.message-composer";
 export namespace contracts {
   export const Positions = { ..._0,
-    ..._1
+    ..._1,
+    ..._2
   };
 }
