@@ -14,9 +14,9 @@ import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stabil
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { VestingClient } from '../codegen/vesting/Vesting.client';
-import { AminoTypes, GasPrice } from '@cosmjs/stargate';
+import { AminoTypes, GasPrice, Registry } from '@cosmjs/stargate';
 import { osmosisAminoConverters, osmosisProtoRegistry } from 'osmojs';
-import { Registry } from "@cosmjs/proto-signing";
+// import { Registry } from "@cosmjs/proto-signing";
 
 export function useClients(): {
   cdp_client: PositionsClient | null;
@@ -29,7 +29,7 @@ export function useClients(): {
   base_client: SigningCosmWasmClient | null;
   address: String | undefined;
 } {
-  const { getSigningCosmWasmClient, getSigningStargateClient, address, status, getOfflineSigner } = useChain(chainName);
+  const { getSigningCosmWasmClient, address, status, getOfflineSigner } = useChain(chainName);
   
   const [launchClient, setlaunchClient] = useState<LaunchClient | null>(  null  );
   const [cdpClient, setcdpClient] = useState<PositionsClient | null>(  null  );
