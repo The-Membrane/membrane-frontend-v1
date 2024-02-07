@@ -62,7 +62,7 @@ import {
       : "";
     const daysPast = Date.now() / 1000 - proposal.start_time;
     const daysLeft = Math.max(
-      (proposal.end_block - proposal.start_block === 43200
+      (proposal.end_block - proposal.start_time === 259200
         ? EXPEDITED_VOTING_PERIOD_IN_SECONDS - daysPast
         : VOTING_PERIOD_IN_SECONDS - daysPast) / SECONDS_PER_DAY,
       0
