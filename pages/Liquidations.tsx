@@ -87,6 +87,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
     usdt: 0,
     atomosmo_pool: 0,
     osmousdc_pool: 0,
+    cdt: 0,
   });
   //At risk positions  
   const [riskyPositions, setriskyPositions] = useState<[string, number, PositionResponse][]>([]);

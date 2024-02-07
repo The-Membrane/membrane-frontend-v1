@@ -10,7 +10,6 @@ import { aminoTypes, registry } from '../config/defaults';
 import { assets, chains } from 'chain-registry';
 import { GasPrice } from '@cosmjs/stargate';
 import { SignerOptions } from '@cosmos-kit/core';
-import '@interchain-ui/react/styles';
 import { defaultTheme } from '../config';
 import React from 'react';
 
@@ -23,7 +22,7 @@ function CreateCosmosApp({ Component, pageProps }: AppProps) {
       };
     },
     signingCosmwasm: (chain) => {
-      switch (chain.chain_name) {
+      switch (chain as string) {
         case 'osmosis':
         case 'osmosistestnet':
           return {

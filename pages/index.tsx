@@ -2,9 +2,8 @@ import React from "react";
 import { useRouter } from 'next/router';
 
 import { Coin, coin, coins } from "@cosmjs/amino";
-import { getRoutesForTrade, calcAmountWithSlippage } from "@osmonauts/math";
+import { calcAmountWithSlippage } from "@osmonauts/math";
 import { osmosis } from 'osmojs';
-import { AddLiquidity, Modal, Button } from '@interchain-ui/react';
 
 
 import Dashboard from './Dashboard';
