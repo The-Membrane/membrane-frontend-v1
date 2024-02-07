@@ -8,7 +8,7 @@ import { Coin } from "@cosmjs/amino";
 import { MsgExecuteContractEncodeObject } from "@cosmjs/cosmwasm-stargate";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
 import { toUtf8 } from "@cosmjs/encoding";
-import { Decimal, Uint128, AssetInfo, Addr, BasketPositionsResponse, PositionResponse, CAsset, Asset, PoolInfo, LPAssetInfo, Basket, SupplyCap, PriceResponse, PriceInfo, Rate, MultiAssetSupplyCap, CollateralInterestResponse, Config, DebtCap, ExecuteMsg, PoolType, CallbackMsg, UpdateConfig, EditBasket, TWAPPoolInfo, InstantiateMsg, CreateBasket, InterestResponse, QueryMsg, UserInfo, RedeemabilityResponse, PremiumInfo, RedemptionInfo, PositionRedemption } from "./Positions.types";
+import { Decimal, Uint128, NativeToken, Addr, BasketPositionsResponse, PositionResponse, CAsset, Asset, PoolInfo, Basket, SupplyCap, PriceResponse, PriceInfo, Rate, MultiAssetSupplyCap, CollateralInterestResponse, Config, DebtCap, ExecuteMsg, PoolType, CallbackMsg, UpdateConfig, EditBasket, TWAPPoolInfo, InstantiateMsg, CreateBasket, InterestResponse, QueryMsg, UserInfo, RedeemabilityResponse, PremiumInfo, RedemptionInfo, PositionRedemption } from "./Positions.types";
 export interface PositionsMsg {
   contractAddress: string;
   sender: string;
@@ -132,7 +132,7 @@ export interface PositionsMsg {
     revToStakers,
     takeRevenue
   }: {
-    addedCAsset?: cAsset;
+    addedCAsset?: CAsset;
     baseInterestRate?: Decimal;
     collateralSupplyCaps?: SupplyCap[];
     cpcMarginOfError?: Decimal;
@@ -150,7 +150,7 @@ export interface PositionsMsg {
     maxLTV,
     maxBorrowLTV
   }: {
-    asset: AssetInfo;
+    asset: NativeToken;
     maxLTV?: Decimal;
     maxBorrowLTV?: Decimal;
   }, _funds?: Coin[]) => MsgExecuteContractEncodeObject;
@@ -466,7 +466,7 @@ export class PositionsMsgComposer implements PositionsMsg {
     revToStakers,
     takeRevenue
   }: {
-    addedCAsset?: cAsset;
+    addedCAsset?: CAsset;
     baseInterestRate?: Decimal;
     collateralSupplyCaps?: SupplyCap[];
     cpcMarginOfError?: Decimal;
@@ -509,7 +509,7 @@ export class PositionsMsgComposer implements PositionsMsg {
     maxLTV,
     maxBorrowLTV
   }: {
-    asset: AssetInfo;
+    asset: NativeToken;
     maxLTV?: Decimal;
     maxBorrowLTV?: Decimal;
   }, _funds?: Coin[]): MsgExecuteContractEncodeObject => {
