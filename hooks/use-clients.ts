@@ -14,9 +14,9 @@ import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stabil
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { VestingClient } from '../codegen/vesting/Vesting.client';
-import { AminoTypes, GasPrice, Registry } from '@cosmjs/stargate';
+import { AminoTypes, GasPrice } from '@cosmjs/stargate';
 import { osmosisAminoConverters, osmosisProtoRegistry } from 'osmojs';
-// import { Registry } from "@cosmjs/proto-signing";
+import { Registry } from "@cosmjs/stargate/node_modules/@cosmjs/proto-signing";
 
 export function useClients(): {
   cdp_client: PositionsClient | null;

@@ -1299,7 +1299,7 @@ const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) 
       tokenOutMinAmount
     });
     
-    // await stargate_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
+    await base_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
   }
 };
 
