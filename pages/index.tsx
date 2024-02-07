@@ -82,7 +82,7 @@ export default function Home() {
   const [popupStatus, setPopupStatus] = useState("User Agreement");
   
   //Get Clients
-  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, vesting_client, base_client, address, stargate_client } = useClients();
+  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, vesting_client, base_client, address } = useClients();
   const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, governancequeryClient, stakingqueryClient, oraclequeryClient } = useQueryClients();
   
   //Set Prices
@@ -1299,7 +1299,7 @@ const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) 
       tokenOutMinAmount
     });
     
-    await stargate_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
+    // await stargate_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
   }
 };
 

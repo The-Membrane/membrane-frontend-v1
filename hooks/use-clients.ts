@@ -14,7 +14,7 @@ import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stabil
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { VestingClient } from '../codegen/vesting/Vesting.client';
-import { AminoTypes, GasPrice, SigningStargateClient } from '@cosmjs/stargate';
+import { AminoTypes, GasPrice } from '@cosmjs/stargate';
 import { osmosisAminoConverters, osmosisProtoRegistry } from 'osmojs';
 import { Registry } from "@cosmjs/proto-signing";
 
@@ -28,7 +28,6 @@ export function useClients(): {
   vesting_client: VestingClient | null;
   base_client: SigningCosmWasmClient | null;
   address: String | undefined;
-  stargate_client: SigningStargateClient | null;
 } {
   const { getSigningCosmWasmClient, getSigningStargateClient, address, status, getOfflineSigner } = useChain(chainName);
   
@@ -40,7 +39,6 @@ export function useClients(): {
   const [stakingClient, setstakingClient] = useState<StakingClient | null>(  null  );
   const [vestingClient, setvestingClient] = useState<VestingClient | null>(  null  );
   const [cosmwasmClient, setCosmwasmClient] = useState<SigningCosmWasmClient | null>(  null  );
-  const [stargateClient, setStargateClient] = useState<SigningStargateClient | null>(  null  );
 
   var signed_errored = false;
 
@@ -60,31 +58,17 @@ export function useClients(): {
       var client = SigningCosmWasmClient.connectWithSigner(
         'https://osmosis-rpc.polkachu.com/', 
         signer,
-        { gasPrice: GasPrice.fromString('0.025uosmo')  }
+        {
+          registry: new Registry([...osmosisProtoRegistry]),
+          aminoTypes: new AminoTypes({...osmosisAminoConverters}),
+          gasPrice: GasPrice.fromString('0.025uosmo')
+        }
       ).catch((e) => {
         console.log(e);
         signed_errored = true;
       });
       if (signed_errored) {
         client = getSigningCosmWasmClient();
-      }
-
-      //Stargate client
-      var stargate_signed_errored = false;   
-      var stargate_client = SigningStargateClient.connectWithSigner(
-        "https://osmosis-rpc.polkachu.com/",
-        signer,
-        {
-        registry: new Registry([...osmosisProtoRegistry]),
-        aminoTypes: new AminoTypes({...osmosisAminoConverters}),
-        gasPrice: GasPrice.fromString('0.025uosmo')
-        }
-      ).catch((e) => {
-        console.log(e);
-        stargate_signed_errored = true;
-      });
-      if (stargate_signed_errored) {
-        stargate_client = getSigningStargateClient();
       }
 
       client.then((cosmwasmClient) => {
@@ -109,15 +93,6 @@ export function useClients(): {
         console.log(e);
       });
 
-      stargate_client.then((stargateClient) => {
-        if (!stargateClient || !address) {
-          console.error('stargateClient undefined or address undefined.');
-          return;
-        }
-        setStargateClient(stargateClient);
-      }).catch((e) => {
-        console.log(e);
-      });
     }
   }, [address, status, testnetAddrs]);
 
@@ -131,7 +106,6 @@ export function useClients(): {
     vesting_client: vestingClient ?? null,
     base_client: cosmwasmClient ?? null,
     address: address, 
-    stargate_client: stargateClient ?? null,
     // connect: connect,
   };
 }
