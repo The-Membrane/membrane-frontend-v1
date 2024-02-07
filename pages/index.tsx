@@ -23,12 +23,15 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
-import { delegateList, denoms, quadraticVoting, skipProposals } from "../config";
+import { cdtRoutes, delegateList, denoms, quadraticVoting, skipProposals } from "../config";
+import { SwapAmountInRoute } from "osmojs/dist/codegen/osmosis/poolmanager/v1beta1/swap_route";
+import { SigningStargateClient } from "@cosmjs/stargate";
 
 
 export const SECONDS_PER_DAY = 86400;
 export const BLOCK_TIME_IN_SECONDS = 6;
 export const unstakingPeriod = 4; //days
+const SWAP_SLIPPAGE = 0.5; //0.5% slippage
 
 const {
   joinPool,
@@ -52,6 +55,18 @@ export interface Prices {
   stOsmo: number,
   tia: number,
   usdt: number,
+  cdt: number,
+}
+
+export interface swapRoutes {
+  osmo: SwapAmountInRoute[],
+  atom: SwapAmountInRoute[],
+  axlUSDC: SwapAmountInRoute[],
+  usdc: SwapAmountInRoute[],
+  stAtom: SwapAmountInRoute[],
+  stOsmo: SwapAmountInRoute[],
+  tia: SwapAmountInRoute[],
+  usdt: SwapAmountInRoute[],
 }
 
 export default function Home() {
@@ -67,7 +82,7 @@ export default function Home() {
   const [popupStatus, setPopupStatus] = useState("User Agreement");
   
   //Get Clients
-  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, vesting_client, base_client, address } = useClients();
+  const { cdp_client, launch_client, liq_queue_client, stability_pool_client, governance_client, staking_client, vesting_client, base_client, address, stargate_client } = useClients();
   const { cdpqueryClient, launchqueryClient, liqqueuequeryClient, stabilitypoolqueryClient, governancequeryClient, stakingqueryClient, oraclequeryClient } = useQueryClients();
   
   //Set Prices
@@ -82,6 +97,7 @@ export default function Home() {
     stOsmo: 0,
     tia: 0,
     usdt: 0,
+    cdt: 0,
   });
   const [rateRes, setrateRes] = useState<CollateralInterestResponse>();
   const [creditRateRes, setcreditRateRes] = useState<InterestResponse>();
@@ -203,6 +219,11 @@ export default function Home() {
                         denom: denoms.usdt
                     }
                 },
+                {
+                    native_token: {
+                        denom: denoms.cdt
+                    }
+                }
 
             ],
             oracleTimeLimit: 10,
@@ -219,6 +240,7 @@ export default function Home() {
                 stOsmo: parseFloat(res[7].price),
                 tia: parseFloat(res[8].price),
                 usdt: parseFloat(res[9].price),
+                cdt: parseFloat(res[10].price),
             })
         })
     } catch (error) {
@@ -1248,79 +1270,47 @@ export default function Home() {
     }  
   }
 
-//Quick Action functions
+//////Quick Action functions
 
 
-// const handleCDTswaps = async (asset: string, amount: number) => {
-//     const msg = joinSwapExternAmountIn({
-//       sender: address as string,
-//       poolId: 1,
-//       tokenIn:,
-//       shareOutMinAmount: 0,
-//     });
+//This is for CDT using the oracle's prices
+const gettokenOutAmount = (tokenInAmount: number, tokenIn: keyof Prices ) => {
+  let basePrice = prices[tokenIn]
+  let tokenOut = prices.cdt
 
-//   // const routes = getRoutesForTrade({
-//   //   trade: {
-//   //     sell: {
-//   //       denom: tokenIn.denom,
-//   //       amount: tokenInAmount,
-//   //     },
-//   //     buy: {
-//   //       denom: tokenOut.denom,
-//   //       amount: tokenOutAmount,
-//   //     },
-//   //   },
-//   //   pairs,
-//   // });
+  return tokenInAmount * (basePrice / tokenOut)
 
-//   // const msg = swapExactAmountIn( {
-//   //   sender: address! as string,
-//   //   routes,
-//   //   tokenIn: coin(amount, denoms.cdt),
-//   //   tokenOutMinAmount
-//   // });    
-  
-//   // const tokenOutMinAmount = calcAmountWithSlippage(tokenOutAmount, slippage);
-// };
-
-function Demo() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <Modal
-      trigger={
-        <Button onClick={() => setIsOpen(true)}>
-          Add Liquidity
-        </Button>
-      }
-      isOpen={isOpen}
-      header={<div>Add Liquidity</div>}
-      onClose={() => setIsOpen(false)}
-    >
-      <AddLiquidity
-          token1={
-           { denom: 'Cosmos Hub',
-            imgSrc: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png',
-            symbol: 'ATOM',
-            available: 15.868}
-          }
-          token2={
-            {available: 57.61,
-            symbol: 'OSMO',
-            denom: 'Osmosis',
-            imgSrc:
-              'https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png',}
-          }
-      />
-    </Modal>
-  );
 }
+
+const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) => {
+  console.log("swap_attempt")
+  if (prices.osmo !== 0) {
+    //Get tokenOutAmount
+    const tokenOutAmount = gettokenOutAmount(tokenInAmount, tokenIn);
+    //Swap routes
+    const routes: SwapAmountInRoute[] = cdtRoutes[tokenIn];
+    
+    const tokenOutMinAmount = parseInt(calcAmountWithSlippage(tokenOutAmount.toString(), SWAP_SLIPPAGE)).toString();
+
+    const msg = swapExactAmountIn( {
+      sender: address! as string,
+      routes,
+      tokenIn: coin(tokenInAmount, denoms.cdt),
+      tokenOutMinAmount
+    });
+    
+    await stargate_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
+  }
+};
 
   useEffect(() => {    
     Hotjar.init(siteId, hotjarVersion);
   }, []);
 
+  
   useEffect(() => {
+
+    handleCDTswaps("osmo", 1000000)
     if (prices.osmo === 0) {
       //Get prices
       queryPrices()
@@ -1482,8 +1472,6 @@ function Demo() {
   }, [oraclequeryClient, cdpqueryClient, prices, address, activeComponent, walletChecked])
 
   const renderComponent = () => {
-    
-    return Demo()
     ///If the dashboard is only going to show the vault page then load the vault page only
     if (onlyVaultPage() && activeComponent === 'dashboard'){
       return <Positions cdp_client={cdp_client} queryClient={cdpqueryClient} address={address as string | undefined} pricez={prices} walletCDT={walletCDT??0}

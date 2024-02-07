@@ -229,6 +229,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         usdt: 0,
         atomosmo_pool: 0,
         osmousdc_pool: 0,
+        cdt: 0,
     });
     //Debt Caps
     const [debtCaps, setdebtCaps] = useState<Prices>({
@@ -242,6 +243,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
         usdt: 0,
         atomosmo_pool: 0,
         osmousdc_pool: 0,
+        cdt: 0,
     });
     //This is used to keep track of what asses the user has in the contract
     //bc the input/output asset quantities are updated in responsive to the user's actions    
@@ -332,6 +334,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
       usdt: 0,
       atomosmo_pool: 0,
       osmousdc_pool: 0,
+      cdt: 0,
     });
 
     const handleOpen = () => {
@@ -1268,6 +1271,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
             stOsmo: 0,
             atomosmo_pool: 0,
             osmousdc_pool: 0,
+            cdt: 0,
         };
         //find OSMO's index in the basket                
         var rate_index = basketRes?.collateral_types.findIndex((info) => {
@@ -1379,6 +1383,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                 usdt: 0,
                 atomosmo_pool: 0,
                 osmousdc_pool: 0,
+                cdt: 0,
             };
             await queryClient?.getBasketDebtCaps().then((res) => {
                 ///Find the debt cap util for each collateral denom
@@ -2408,7 +2413,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                     <div className="value-div">
                         <div className="mint-card-stats">Debt: <a style={(mintAmount??0) > 0 ? {color: "#FF6961"} : (repayAmount??0) > 0 ? {color: "#77DD77"} : {}}>{((debtAmount/1_000000)+ (mintAmount??0) - (repayAmount??0)).toFixed(0)} CDT</a></div>
                         <div className="mint-card-stats">Cost: <a style={(getRataCost(positionQTYs) < getRataCost(contractQTYs)) ? {color: "#77DD77"} : (getRataCost(positionQTYs) > getRataCost(contractQTYs)) ? {color: "#FF6961"} : {}}>{getRataCost(positionQTYs).toFixed(4)}%</a></div>
-                        <div className="mint-card-stats">Liq. Value: <a style={(mintAmount??0) > 0 ? {color: "#FF6961"} : (repayAmount??0) > 0 ? {color: "#77DD77"} : {}}>${(((((debtAmount/1_000000)+ (mintAmount??0) - (repayAmount??0))* creditPrice) / (maxLTV / 100)) ?? 0).toFixed(0)}</a></div>
+                        <div className="mint-card-stats">Liq. Value: <a style={(mintAmount??0) > 0 ? {color: "#FF6961"} : (repayAmount??0) > 0 ? {color: "#77DD77"} : {}}>${(((((debtAmount/1_000000)+ (mintAmount??0) - (repayAmount??0))* creditPrice) / (getRataLTV(getTVL(positionQTYs), positionQTYs, prices, basketRes)[1] / 100)) ?? 0).toFixed(0)}</a></div>
                         <div className="mint-card-stats">TVL: <a style={istheUserWithdrawing() && istheUserWithdrawing() !== undefined ? {color: "#FF6961"} : !istheUserWithdrawing() && istheUserWithdrawing() !== undefined ? {color: "#77DD77"} : {}}>${(getTVL(positionQTYs) ?? 0).toFixed(0)}</a></div>
                     </div>
                     <div className="ltv-div">
