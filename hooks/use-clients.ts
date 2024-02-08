@@ -6,7 +6,7 @@ import { LaunchClient, LaunchQueryClient } from '../codegen/launch/Launch.client
 import { chainName, testnetAddrs } from '../config';
 
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate/build/cosmwasmclient';
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OracleClient, OracleQueryClient } from '../codegen/oracle/Oracle.client';
 import { PositionsClient, PositionsQueryClient } from '../codegen/positions/Positions.client';
 import { LiquidationQueueClient, LiquidationQueueQueryClient } from '../codegen/liquidation_queue/LiquidationQueue.client';
@@ -14,9 +14,8 @@ import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stabil
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { VestingClient } from '../codegen/vesting/Vesting.client';
-import { AminoTypes, GasPrice } from '@cosmjs/stargate';
-import { osmosisAminoConverters, osmosisProtoRegistry } from 'osmojs';
-import { Registry } from "@cosmjs/proto-signing";
+import { GasPrice } from '@cosmjs/stargate';
+import { aminoTypes, registry } from '../config/defaults';
 
 export function useClients(): {
   cdp_client: PositionsClient | null;
@@ -59,8 +58,8 @@ export function useClients(): {
         'https://osmosis-rpc.polkachu.com/', 
         signer,
         {
-          // registry: new Registry([...osmosisProtoRegistry]),
-          // aminoTypes: new AminoTypes({...osmosisAminoConverters}),
+          registry,
+          aminoTypes,
           gasPrice: GasPrice.fromString('0.025uosmo')
         }
       ).catch((e) => {

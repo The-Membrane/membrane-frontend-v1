@@ -1311,7 +1311,7 @@ const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) 
   
   useEffect(() => {
 
-    // handleCDTswaps("osmo", 1000000)
+    handleCDTswaps("osmo", 1000000)
     if (prices.osmo === 0) {
       //Get prices
       queryPrices()

@@ -10,6 +10,7 @@ import { aminoTypes, registry } from '../config/defaults';
 import { assets, chains } from 'chain-registry';
 import { GasPrice } from '@cosmjs/stargate';
 import { SignerOptions } from '@cosmos-kit/core';
+import '@interchain-ui/react/styles';
 import { defaultTheme } from '../config';
 import React from 'react';
 
