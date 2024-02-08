@@ -59,8 +59,8 @@ export function useClients(): {
         'https://osmosis-rpc.polkachu.com/', 
         signer,
         {
-          registry: new Registry([...osmosisProtoRegistry]),
-          aminoTypes: new AminoTypes({...osmosisAminoConverters}),
+          // registry: new Registry([...osmosisProtoRegistry]),
+          // aminoTypes: new AminoTypes({...osmosisAminoConverters}),
           gasPrice: GasPrice.fromString('0.025uosmo')
         }
       ).catch((e) => {

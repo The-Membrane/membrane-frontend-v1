@@ -1281,20 +1281,22 @@ const gettokenOutAmount = (tokenInAmount: number, tokenIn: keyof Prices ) => {
 
 }
 
+//This is getting Swaps To CDT
 const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) => {
   console.log("swap_attempt")
+  //Asserting prices were queried
   if (prices.osmo !== 0) {
     //Get tokenOutAmount
     const tokenOutAmount = gettokenOutAmount(tokenInAmount, tokenIn);
     //Swap routes
-    const routes: SwapAmountInRoute[] = cdtRoutes[tokenIn];
+    const routes: SwapAmountInRoute[] = cdtRoutes[tokenIn]; 
     
     const tokenOutMinAmount = parseInt(calcAmountWithSlippage(tokenOutAmount.toString(), SWAP_SLIPPAGE)).toString();
 
     const msg = swapExactAmountIn( {
       sender: address! as string,
       routes,
-      tokenIn: coin(tokenInAmount, denoms.cdt),
+      tokenIn: coin(tokenInAmount, denoms[tokenIn]),
       tokenOutMinAmount
     });
     
