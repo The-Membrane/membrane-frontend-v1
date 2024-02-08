@@ -2428,7 +2428,7 @@ const Positions = ({cdp_client, queryClient, address, walletCDT, pricez,
                         Mint
                     </a> 
                     <form className="deposit-form" style={{top: "-19%"}}>
-                        <div className="mint-max-amount-label" onClick={()=>{setmintAmount(parseFloat(((getTVL(positionQTYs)*(brwLTV/100))/Math.max(creditPrice, 1) - (debtAmount/1_000000)).toFixed(1))); setcurrentfunctionLabel("mint"); setrepayAmount(0);}}>max: {((getTVL(positionQTYs)*(brwLTV/100))/Math.max(creditPrice, 1) - (debtAmount/1_000000)).toFixed(1)}</div>
+                        <div className="mint-max-amount-label" onClick={()=>{setmintAmount(parseFloat(((getTVL(positionQTYs)*(brwLTV/100))/Math.max(creditPrice, 1) - (debtAmount/1_000000)).toFixed(1))); setcurrentfunctionLabel("mint"); setrepayAmount(0);}}>max: {((getTVL(positionQTYs)*(getRataLTV(getTVL(positionQTYs), positionQTYs, prices, basketRes)[0]/100))/Math.max(creditPrice, 1) - (debtAmount/1_000000)).toFixed(1)}</div>
                         <input className="card-deposit-amount" style={{backgroundColor:"#454444"}} defaultValue={mintAmount} value={mintAmount} name="amount" type="number" onClick={()=>{setcurrentfunctionLabel("mint"); setrepayAmount(0);}} onChange={(event)=>{event.preventDefault();
                         if (event.target.value !== "") {
                             setmintAmount(parseFloat(event.target.value))
