@@ -1803,11 +1803,11 @@ const handleCollateralswaps = (tokenOut: keyof swapRoutes, CDTInAmount: number) 
     Hotjar.init(siteId, hotjarVersion);
   }, []);
   
-  // useEffect(() => {
-  //   if (osmosisQueryClient !== null && positionID !== "0" && prices.osmo !== 0) {
-  //     // handleCollateralswaps("atom", 1000000)
-  //     // unloopPosition(positionID, 1)
-  //   } else { console.log("osmosisQueryClient not set")}
+  useEffect(() => {
+    // if (osmosisQueryClient !== null && positionID !== "0" && prices.osmo !== 0) {
+      // handleCollateralswaps("atom", 1000000)
+      // unloopPosition(positionID, 1)
+    // } else { console.log("osmosisQueryClient not set")}
     if (prices.osmo === 0) {
       //Get prices
       queryPrices()
