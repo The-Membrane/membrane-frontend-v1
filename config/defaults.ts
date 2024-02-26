@@ -47,43 +47,78 @@ export const testnetAddrs = {
 };
 
 export const denoms = {
-  mbrn: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn",
-  cdt: "factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/ucdt",
-  osmo: "uosmo",
+  mbrn: ["factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/umbrn", 6],
+  cdt: ["factory/osmo1s794h9rxggytja3a4pmwul53u98k06zy2qtrdvjnfuxruh7s8yjs6cyxgd/ucdt", 6],
+  osmo: ["uosmo", 6],
   //mainnet atom ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
-  atom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
+  atom: ["ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2", 6],
   //mainnet axlUSDC ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858
-  axlUSDC: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+  axlUSDC: ["ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858", 6],
   //mainnet "gamm/pool/1"
-  atomosmo_pool: "gamm/pool/1",
+  atomosmo_pool: ["gamm/pool/1", 18],
   //mainnet "gamm/pool/678"
-  osmousdc_pool: "gamm/pool/678",
+  osmousdc_pool: ["gamm/pool/678", 18],
   //Noble USDC
-  usdc: "ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4",
+  usdc: ["ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4", 6],
   //Stride Atom
-  stAtom: "ibc/C140AFD542AE77BD7DCC83F13FDD8C5E5BB8C4929785E6EC2F4C636F98F17901",
+  stAtom: ["ibc/C140AFD542AE77BD7DCC83F13FDD8C5E5BB8C4929785E6EC2F4C636F98F17901", 6],
   //Stride Osmo
-  stOsmo: "ibc/D176154B0C63D1F9C6DCFB4F70349EBF2E2B5A87A05902F57A6AE92B863E9AEC",
+  stOsmo: ["ibc/D176154B0C63D1F9C6DCFB4F70349EBF2E2B5A87A05902F57A6AE92B863E9AEC", 6],
   //TIA
-  tia: "ibc/D79E7D83AB399BFFF93433E54FAA480C191248FC556924A2A8351AE2638B3877",
+  tia: ["ibc/D79E7D83AB399BFFF93433E54FAA480C191248FC556924A2A8351AE2638B3877", 6],
   //USDT
-  usdt: "ibc/4ABBEF4C8926DDDB320AE5188CFD63267ABBCEFC0583E4AE05D6E5AA2401DDAB",
+  usdt: ["ibc/4ABBEF4C8926DDDB320AE5188CFD63267ABBCEFC0583E4AE05D6E5AA2401DDAB", 6],
 };
 //all CDT pairs
 export const cdtRoutes = {
     "osmo": [
         {
             poolId: BigInt(1226),
-            tokenOutDenom: denoms.cdt,
-        } as SwapAmountInRoute,
+            tokenOutDenom: denoms.cdt[0],
+        },
     ],
-    "atom": [],
-    "usdc": [],
-    "usdt": [],
-    "tia": [],
-    "stAtom": [],
-    "stOsmo": [],
-    "axlUSDC": [],
+    "atom": [
+        {
+            poolId: BigInt(1),
+            tokenOutDenom: denoms.osmo[0],
+        },
+    ],
+    "usdc": [
+        {
+            poolId: BigInt(1268),
+            tokenOutDenom: denoms.cdt[0],
+        },
+    ],
+    "usdt": [
+        {
+            poolId: BigInt(1220),
+            tokenOutDenom: denoms.usdc[0],
+        } 
+    ],
+    "tia": [
+        {
+            poolId: BigInt(1247),
+            tokenOutDenom: denoms.usdc[0],
+        }
+    ],
+    "stAtom": [
+        {
+            poolId: BigInt(1283), //1136
+            tokenOutDenom: denoms.atom[0],
+        }
+    ],
+    "stOsmo": [
+        {
+            poolId: BigInt(833),
+            tokenOutDenom: denoms.osmo[0],
+        }
+    ],
+    "axlUSDC": [
+        {//This is the transmuter pool
+            poolId: BigInt(1212), //1223
+            tokenOutDenom: denoms.usdc[0],
+        }
+    ],
 } as swapRoutes;
 
 export const quadraticVoting = true;

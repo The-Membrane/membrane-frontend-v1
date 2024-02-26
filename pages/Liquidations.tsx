@@ -114,43 +114,43 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
  const assets: Assets = {
   "OSMO": {
     price: prices.osmo,
-    denom: denoms.osmo,
+    denom: denoms.osmo[0] as string,
   },
   "ATOM": {
     price: prices.atom,
-    denom: denoms.atom,
+    denom: denoms.atom[0] as string,
   },
   "axlUSDC": {
     price: prices.axlUSDC,
-    denom: denoms.axlUSDC,
+    denom: denoms.axlUSDC[0] as string,
   },
   "USDC": {
     price: prices.usdc,
-    denom: denoms.usdc,
+    denom: denoms.usdc[0] as string,
   },
   "stATOM": {
     price: prices.stAtom,
-    denom: denoms.stAtom,
+    denom: denoms.stAtom[0] as string,
   },
   "stOSMO": {
     price: prices.stOsmo,
-    denom: denoms.stOsmo,
+    denom: denoms.stOsmo[0] as string,
   },
   "TIA": {
     price: prices.tia,
-    denom: denoms.tia,
+    denom: denoms.tia[0] as string,
   },
   "USDT": {
     price: prices.usdt,
-    denom: denoms.usdt,
+    denom: denoms.usdt[0] as string,
   },
   "ATOM-OSMO": {
     price: prices.atomosmo_pool,
-    denom: denoms.atomosmo_pool,
+    denom: denoms.atomosmo_pool[0] as string,
   },
   "OSMO-axlUSDC": {
     price: prices.osmousdc_pool,
-    denom: denoms.osmousdc_pool,
+    denom: denoms.osmousdc_pool[0] as string,
   },
 }
 
@@ -267,8 +267,8 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         for (let i = 0; i < res.collateral_types.length; i++) {
           //@ts-ignore
           if (res.collateral_types[i].asset.info.native_token.denom === asset) {
-            if (asset === denoms.atomosmo_pool || asset === denoms.osmousdc_pool) {
-              setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount)/1000_000_000_000_000_000_000) * price).toFixed(2)));
+            if (asset === denoms.atomosmo_pool[0] as string || asset === denoms.osmousdc_pool[0] as string) {
+              setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount)/1000_000_000_000_000_000_000) * price).toFixed(2))); //TVL in K
               break;
             } else {
               setcollateralTVL(parseFloat(((parseInt(res.collateral_types[i].asset.amount) / 1000_000_000) * price).toFixed(2)));

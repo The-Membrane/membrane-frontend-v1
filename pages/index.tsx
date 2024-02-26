@@ -2,8 +2,11 @@ import React from "react";
 import { useRouter } from 'next/router';
 
 import { Coin, coin, coins } from "@cosmjs/amino";
-import { calcAmountWithSlippage } from "@osmonauts/math";
+import { calcAmountWithSlippage, calcShareOutAmount, convertGeckoPricesToDenomPriceHash, LiquidityPoolCalculator } from "@osmonauts/math";
 import { osmosis } from 'osmojs';
+import { asset_list, assets } from '@chain-registry/osmosis';
+import { CoinDenom, convertBaseUnitsToDollarValue, getChainDenomBySymbol, getSymbolByChainDenom } from '@chain-registry/utils';
+import priceResponse from "../__fixtures__/coingecko/api/v3/simple/price/data.json";
 
 
 import Dashboard from './Dashboard';
@@ -13,24 +16,30 @@ import LiquidationPools from './Liquidations';
 import Lockdrop from './Lockdrop';
 import Governance, { Delegation, Delegator, EmissionsSchedule, UserClaims, UserStake } from './Governance';
 import { ProposalList } from "../components/governance/ProposalPane";
-import Positions, { CollateralAssets, ContractInfo, DefinedCollateralAssets, getRataLTV } from './Vaults';
+import Positions, { CollateralAssets, ContractInfo, DefinedCollateralAssets, getRataLTV, getassetRatios } from './Vaults';
 import { useClients, useQueryClients } from '../hooks/use-clients';
 import { PositionsClient, PositionsQueryClient } from "../codegen/positions/Positions.client";
+import { PositionsMsgComposer } from "../codegen/positions/Positions.message-composer";
 import Popup from "../components/Popup";
 import Hotjar from '@hotjar/browser';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { Basket, CollateralInterestResponse, InterestResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
+import { Asset, Basket, CollateralInterestResponse, InterestResponse, NativeToken, PositionResponse, RedeemabilityResponse } from "../codegen/positions/Positions.types";
 import { ClaimsResponse } from "../codegen/liquidation_queue/LiquidationQueue.types";
 import { Config, ProposalResponse } from "../codegen/governance/Governance.types";
-import { cdtRoutes, delegateList, denoms, quadraticVoting, skipProposals } from "../config";
+import { cdtRoutes, chainName, delegateList, denoms, quadraticVoting, skipProposals, testnetAddrs } from "../config";
 import { SwapAmountInRoute } from "osmojs/dist/codegen/osmosis/poolmanager/v1beta1/swap_route";
-import { SigningStargateClient } from "@cosmjs/stargate";
+import { CoinSymbol } from "@osmonauts/math/dist/types";
+import BigNumber from "bignumber.js";
+import { position } from "@chakra-ui/react";
+import { EncodeObject } from "@cosmjs/proto-signing";
+import { MsgSwapExactAmountIn } from "osmojs/dist/codegen/osmosis/gamm/v1beta1/tx";
+import { MsgExecuteContractEncodeObject } from "@cosmjs/cosmwasm-stargate";
 
 
 export const SECONDS_PER_DAY = 86400;
 export const BLOCK_TIME_IN_SECONDS = 6;
 export const unstakingPeriod = 4; //days
-const SWAP_SLIPPAGE = 0.5; //0.5% slippage
+const SWAP_SLIPPAGE = 1.5; //1.5% slippage
 
 const {
   joinPool,
@@ -112,7 +121,7 @@ export default function Home() {
   const [contractQTYs, setcontractQTYs] = useState<ContractInfo>({
     osmo: 0,
     atom: 0,
-    axlusdc: 0,
+    axlUSDC: 0,
     usdc: 0,
     stAtom: 0,
     stOsmo: 0,
@@ -128,7 +137,7 @@ export default function Home() {
   const [walletQTYs, setwalletQTYs] = useState<CollateralAssets>({
     osmo: undefined,
     atom: undefined,
-    axlusdc: undefined,
+    axlUSDC: undefined,
     usdc: undefined,
     stAtom: undefined,
     stOsmo: undefined,
@@ -144,7 +153,7 @@ export default function Home() {
   const [positionQTYs, setpositionQTYs] = useState<DefinedCollateralAssets>({
     osmo: 0,
     atom: 0,
-    axlusdc: 0,
+    axlUSDC: 0,
     usdc: 0,
     stAtom: 0,
     stOsmo: 0,
@@ -170,57 +179,57 @@ export default function Home() {
             assetInfos: [
                 {
                     native_token: {
-                        denom: denoms.osmo
+                        denom: denoms.osmo[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.atom
+                        denom: denoms.atom[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.axlUSDC
+                        denom: denoms.axlUSDC[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.atomosmo_pool
+                        denom: denoms.atomosmo_pool[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.osmousdc_pool
+                        denom: denoms.osmousdc_pool[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.usdc
+                        denom: denoms.usdc[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.stAtom
+                        denom: denoms.stAtom[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.stOsmo
+                        denom: denoms.stOsmo[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.tia
+                        denom: denoms.tia[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.usdt
+                        denom: denoms.usdt[0] as string
                     }
                 },
                 {
                     native_token: {
-                        denom: denoms.cdt
+                        denom: denoms.cdt[0] as string
                     }
                 }
 
@@ -252,7 +261,7 @@ export default function Home() {
     var contract_info: ContractInfo = {
       osmo: 0,
       atom: 0,
-      axlusdc: 0,
+      axlUSDC: 0,
       atomosmo_pool: "0",
       osmousdc_pool: "0",
       usdc: 0,
@@ -306,7 +315,7 @@ export default function Home() {
             var position_qtys: DefinedCollateralAssets = {
                 osmo: 0,
                 atom: 0,
-                axlusdc: 0,
+                axlUSDC: 0,
                 usdc: 0,
                 stAtom: 0,
                 stOsmo: 0,
@@ -315,43 +324,45 @@ export default function Home() {
                 atomosmo_pool: "0",
                 osmousdc_pool: "0",
             };
+            console.log(userRes)
             //@ts-ignore
             userRes[0].positions[0].collateral_assets.forEach(asset => {
                 // @ts-ignore
                 var actual_asset = asset.asset.info.native_token.denom;
 
-                if (actual_asset === denoms.osmo) {
+                if (actual_asset === denoms.osmo[0]) {
                   position_qtys.osmo = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.osmo = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.atom) {
+                } else if (actual_asset === denoms.atom[0]) {
                   position_qtys.atom = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.atom = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.axlUSDC) {
-                  position_qtys.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
-                  contract_info.axlusdc = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.atomosmo_pool) {
+                } else if (actual_asset === denoms.axlUSDC[0]) {
+                  position_qtys.axlUSDC = parseInt(asset.asset.amount) / 1_000_000;
+                  contract_info.axlUSDC = parseInt(asset.asset.amount) / 1_000_000;
+                } else if (actual_asset === denoms.atomosmo_pool[0]) {
                   position_qtys.atomosmo_pool = (BigInt(asset.asset.amount)/1_000_000_000_000_000_000n).toString();
                   contract_info.atomosmo_pool = (BigInt(asset.asset.amount)/1_000_000_000_000_000_000n).toString();
-                } else if (actual_asset === denoms.osmousdc_pool) {
+                } else if (actual_asset === denoms.osmousdc_pool[0]) {
                   position_qtys.osmousdc_pool = (BigInt(asset.asset.amount)/1_000_000_000_000_000_000n).toString();
                   contract_info.osmousdc_pool = (BigInt(asset.asset.amount)/1_000_000_000_000_000_000n).toString();
-                } else if (actual_asset === denoms.usdc) {
+                } else if (actual_asset === denoms.usdc[0]) {
                   position_qtys.usdc = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.usdc = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.stAtom) {
+                } else if (actual_asset === denoms.stAtom[0]) {
                   position_qtys.stAtom = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.stAtom = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.stOsmo) {
+                } else if (actual_asset === denoms.stOsmo[0]) {
                   position_qtys.stOsmo = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.stOsmo = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.tia) {
+                } else if (actual_asset === denoms.tia[0]) {
                   position_qtys.tia = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.tia = parseInt(asset.asset.amount) / 1_000_000;
-                } else if (actual_asset === denoms.usdt) {
+                } else if (actual_asset === denoms.usdt[0]) {
                   position_qtys.usdt = parseInt(asset.asset.amount) / 1_000_000;
                   contract_info.usdt = parseInt(asset.asset.amount) / 1_000_000;
                 }
             })
+            console.log(position_qtys)
             setpositionQTYs(position_qtys);
 
             if (basketRes != undefined){
@@ -360,7 +371,10 @@ export default function Home() {
               //@ts-ignore
               setcreditPrice(parseFloat(basketRes.credit_price.price))
             }
+        } else {
+          console.log(userRes)
         }
+        console.log(contract_info)
         setcontractQTYs(contract_info);
     } catch (error) {
         const e = error as { message: string }
@@ -403,43 +417,43 @@ export default function Home() {
           if (asset_claims > 0) {           
             //Add asset to display
             switch (resp[i].bid_for) {
-              case denoms.osmo: {     
+              case denoms.osmo[0] as string: {     
                 new_display += asset_claims + " OSMO, ";
                 break;
               }
-              case denoms.atom: {
+              case denoms.atom[0] as string: {
                 new_display += asset_claims + " ATOM, ";
                 break;
               }
-              case denoms.axlUSDC: {
+              case denoms.axlUSDC[0] as string: {
                 new_display += asset_claims + " axlUSDC, ";
                 break;
               }
-              case denoms.usdc: {
+              case denoms.usdc[0] as string: {
                 new_display += asset_claims + " USDC, ";
                 break;
               }
-              case denoms.stAtom: {
+              case denoms.stAtom[0] as string: {
                 new_display += asset_claims + " stATOM, ";
                 break;
               }
-              case denoms.stOsmo: {
+              case denoms.stOsmo[0] as string: {
                 new_display += asset_claims + " stOSMO, ";
                 break;
               }
-              case denoms.tia: {
+              case denoms.tia[0] as string: {
                 new_display += asset_claims + " TIA, ";
                 break;
               }
-              case denoms.usdt: {
+              case denoms.usdt[0] as string: {
                 new_display += asset_claims + " USDT, ";
                 break;
               }
-              case denoms.atomosmo_pool: {
+              case denoms.atomosmo_pool[0] as string: {
                 new_display += (asset_claims/1_000000_000000) + " ATOM-OSMO LP, ";
                 break;
               }
-              case denoms.osmousdc_pool: {
+              case denoms.osmousdc_pool[0] as string: {
                 new_display += (asset_claims/1_000000_000000) + " OSMO-axlUSDC LP, ";
                 break;
               }
@@ -483,43 +497,43 @@ export default function Home() {
         for (let i = 0; i < res.claims.length; i++) {
           console.log(res.claims)
           switch (res.claims[i].denom) {
-            case denoms.osmo: {
+            case denoms.osmo[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " OSMO, "
               break;
             }
-            case denoms.atom: {
+            case denoms.atom[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " ATOM, "
               break;
             }
-            case denoms.axlUSDC: {
+            case denoms.axlUSDC[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " axlUSDC, "
               break;
             }
-            case denoms.usdc: {
+            case denoms.usdc[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " USDC, "
               break;
             }
-            case denoms.stAtom: {
+            case denoms.stAtom[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " stATOM, "
               break;
             }
-            case denoms.stOsmo: {
+            case denoms.stOsmo[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " stOSMO, "
               break;
             }
-            case denoms.tia: {
+            case denoms.tia[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " TIA, "
               break;
             }
-            case denoms.usdt: {
+            case denoms.usdt[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000 + " USDT, "
               break;
             }
-            case denoms.atomosmo_pool: {
+            case denoms.atomosmo_pool[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000_000_000_000_000 + " ATOM-OSMO LP, "
               break;
             }
-            case denoms.osmousdc_pool: {
+            case denoms.osmousdc_pool[0] as string: {
               claims += parseInt(res.claims[i].amount)/1_000_000_000_000_000_000 + " OSMO-axlUSDC LP, "
               break;
             }
@@ -862,7 +876,7 @@ export default function Home() {
         //Set user claims
         for (let i = 0; i < res.claimables.length; i++) {
           if("denom" in res.claimables[i].info) {
-            if ((res.claimables[i].info as unknown as NativeToken).denom === denoms.cdt) {
+            if ((res.claimables[i].info as unknown as NativeToken).denom === denoms.cdt[0]) {
               setuserClaims(prevState => {
                 return {
                   ...prevState,
@@ -1019,7 +1033,7 @@ export default function Home() {
           var executed_proposals = res.proposal_list.filter(proposal => proposal.status === "executed");
 
           console.log(active_proposals)
-          // console.log(completed_proposals)
+          console.log(completed_proposals)
           // console.log(executed_proposals)
           //Active
           for (let i = 0; i < active_proposals.length; i++) {
@@ -1158,25 +1172,25 @@ export default function Home() {
     //Calc position value
     if (position.collateral_assets.length > 0) {
       position.collateral_assets.forEach((collateral) => {//@ts-ignore   
-        if (collateral.asset.info.native_token.denom === denoms.osmo) {
+        if (collateral.asset.info.native_token.denom === denoms.osmo[0]) {
           position_value += prices.osmo * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.atom) {
+        } else if (collateral.asset.info.native_token.denom === denoms.atom[0]) {
           position_value += prices.atom * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC) {
+        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC[0]) {
           position_value += prices.axlUSDC * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.usdc) {
+        } else if (collateral.asset.info.native_token.denom === denoms.usdc[0]) {
           position_value += prices.usdc * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.stAtom) {
+        } else if (collateral.asset.info.native_token.denom === denoms.stAtom[0]) {
           position_value += prices.stAtom * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.stOsmo) {
+        } else if (collateral.asset.info.native_token.denom === denoms.stOsmo[0]) {
           position_value += prices.stOsmo * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore  
-        } else if (collateral.asset.info.native_token.denom === denoms.tia) {
+        } else if (collateral.asset.info.native_token.denom === denoms.tia[0]) {
           position_value += prices.tia * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore  
-        } else if (collateral.asset.info.native_token.denom === denoms.usdt) {
+        } else if (collateral.asset.info.native_token.denom === denoms.usdt[0]) {
           position_value += prices.usdt * parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore 
-        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool) {
+        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool[0]) {
           position_value += prices.atomosmo_pool * parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool) {
+        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool[0]) {
           position_value += prices.osmousdc_pool * parseInt(collateral.asset.amount) / 1_000_000_000_000_000_000;//@ts-ignore   
         }
       })
@@ -1194,7 +1208,7 @@ export default function Home() {
     var position_collateral_qtys: DefinedCollateralAssets = {
       osmo: 0,
       atom: 0,
-      axlusdc: 0,
+      axlUSDC: 0,
       usdc: 0,
       stAtom: 0,
       stOsmo: 0,
@@ -1206,25 +1220,25 @@ export default function Home() {
     //Set position collateral QTYs
     if (position.collateral_assets.length > 0) {
       position.collateral_assets.forEach((collateral) => {//@ts-ignore   
-        if (collateral.asset.info.native_token.denom === denoms.osmo) {
+        if (collateral.asset.info.native_token.denom === denoms.osmo[0]) {
           position_collateral_qtys.osmo = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.atom) {
+        } else if (collateral.asset.info.native_token.denom === denoms.atom[0]) {
           position_collateral_qtys.atom = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC) {
-          position_collateral_qtys.axlusdc = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.usdc) {
+        } else if (collateral.asset.info.native_token.denom === denoms.axlUSDC[0]) {
+          position_collateral_qtys.axlUSDC = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
+        } else if (collateral.asset.info.native_token.denom === denoms.usdc[0]) {
           position_collateral_qtys.usdc = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.stAtom) {
+        } else if (collateral.asset.info.native_token.denom === denoms.stAtom[0]) {
           position_collateral_qtys.stAtom = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.stOsmo) {
+        } else if (collateral.asset.info.native_token.denom === denoms.stOsmo[0]) {
           position_collateral_qtys.stOsmo = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.tia) {
+        } else if (collateral.asset.info.native_token.denom === denoms.tia[0]) {
           position_collateral_qtys.tia = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.usdt) {
+        } else if (collateral.asset.info.native_token.denom === denoms.usdt[0]) {
           position_collateral_qtys.usdt = parseInt(collateral.asset.amount) / 1_000_000;//@ts-ignore
-        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool) {
+        } else if (collateral.asset.info.native_token.denom === denoms.atomosmo_pool[0]) {
           position_collateral_qtys.atomosmo_pool = (BigInt(collateral.asset.amount)/1_000_000_000_000_000_000n).toString();//@ts-ignore   
-        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool) {
+        } else if (collateral.asset.info.native_token.denom === denoms.osmousdc_pool[0]) {
           position_collateral_qtys.osmousdc_pool = (BigInt(collateral.asset.amount)/1_000_000_000_000_000_000n).toString();//@ts-ignore   
         }
       })
@@ -1270,48 +1284,530 @@ export default function Home() {
   }
 
 //////Quick Action functions
+//Initialize osmosis client
+const [osmosisQueryClient, setosmosisQueryClient] = useState<any | null>( null );
+//Get Osmosis Client
+useEffect(() => {
+  if (osmosisQueryClient === null || osmosisQueryClient === undefined) {
+    const { createRPCQueryClient } = osmosis.ClientFactory;
+    const osmosisClient = createRPCQueryClient({ rpcEndpoint: "https://osmosis-rpc.polkachu.com/" }).then((osmosisClient) => {
+      if (!osmosisClient) {
+        console.error('osmosisClient undefined.');
+        return;
+      }
 
+      //Set client
+      setosmosisQueryClient(osmosisClient);
+    });
+  }
+}, []); //We'll add dependencies for Quick Actions clicks so that this requeries if the user is about to need it & its undefined
+//Initialize osmosis variables
+//@ts-ignore
+let cg_prices;
+const osmosisAssets = [
+  ...assets.assets,
+  ...asset_list.assets,
+].filter(({ type_asset }) => type_asset !== 'ics20').filter((asset) => asset !== undefined);
+//@ts-ignore
+cg_prices = convertGeckoPricesToDenomPriceHash(osmosisAssets, priceResponse);
+//@ts-ignore
+let calculator = new LiquidityPoolCalculator({ assets: osmosisAssets});
+
+/////functions/////
+const unloopPosition = async ( positionId: string, loops: number ) => {
+  //Create CDP Message Composer
+  const cdp_composer = new PositionsMsgComposer(user_address, testnetAddrs.positions);
+  //getPosition
+  const userRes = await cdpqueryClient?.getBasketPositions(
+    {
+        user: address as string,
+    }
+  );
+
+  //Set Position value
+  var positionValue = getPositionValue(userRes![0].positions[0]);
+  //Set credit amount
+  var creditAmount = parseInt(userRes![0].positions[0].credit_amount);
+  //Get borrowable LTV
+  let rataLTVs = getRataLTV(getPositionValue(userRes![0].positions[0]), getPositionQTYs(userRes![0].positions[0]), prices, basketRes);
+  let borrowLTV = rataLTVs[0]/100;
+  
+  //Get Position's LTV
+  var currentLTV = getPositionLTV(positionValue, creditAmount);
+  //If current LTV is over the borrowable LTV, we can't withdraw anything
+  if (currentLTV > borrowLTV) {
+    console.log("Current LTV is over the Position's borrowable LTV, we can't withdraw collateral")
+    return;
+  }
+  //Get position cAsset ratios 
+  //Ratios won't change in btwn loops so we can set them outside the loop
+  let cAsset_ratios = getassetRatios(positionValue, getPositionQTYs(userRes![0].positions[0]), prices);
+
+  //Repeat until no more CDT or Loops are done
+  var iter = 0;
+  var all_msgs: EncodeObject[] = [];
+  while ((creditAmount > 0 || iter == 0) && iter < loops){
+    //Set LTV range
+    //We can withdraw value up to the borrowable LTV
+    //Or the current LTV, whichever is lower
+    let LTV_range = Math.min(borrowLTV - currentLTV, currentLTV);
+    //Set value to withdraw
+    var withdrawValue = positionValue * LTV_range;
+    console.log(withdrawValue, positionValue, LTV_range, borrowLTV, currentLTV)
+
+    //.Divvy withdraw value to the cAssets based on ratio
+    //Transform the value to the cAsset's amount using its price & decimals
+    let cAsset_amounts = Object.keys(cAsset_ratios).map((key) => {
+      return [key, parseInt(((cAsset_ratios[key as keyof DefinedCollateralAssets] * withdrawValue) / prices[key as keyof DefinedCollateralAssets] * Math.pow(10, denoms[key as keyof DefinedCollateralAssets][1] as number)).toFixed(0))];
+    });
+    //Save amounts as assets for withdraw msg
+    var assets: Asset[] = [];
+    cAsset_amounts.forEach((amount) => {
+      if (amount[1] as number != 0) {
+        assets.push(
+          {
+            amount: amount[1].toString(), 
+            //@ts-ignore
+            info: {native_token: {
+              denom: denoms[amount[0] as keyof DefinedCollateralAssets][0] as string
+            }}
+          });
+      }
+    });
+
+    
+    //Create withdraw msg for assets
+    var withdraw_msg: MsgExecuteContractEncodeObject = cdp_composer.withdraw({
+      positionId: positionId,
+      assets, 
+    });
+    
+    //Create Swap msgs to CDT for each cAsset & save tokenOutMinAmount
+    var swap_msgs: EncodeObject[] = [];
+    var tokenOutMin = 0;
+    cAsset_amounts.forEach((amount) => {
+      if (amount[1] as number != 0) {
+        let swap_output = handleCDTswaps(amount[0] as keyof swapRoutes, parseInt(amount[1].toString()) as number)!;
+        swap_msgs.push(swap_output);         
+        tokenOutMin += parseInt((swap_output.value as MsgSwapExactAmountIn).tokenOutMinAmount);
+      }
+    });
+
+    //Create repay msg with newly swapped CDT
+    var repay_msg: EncodeObject = cdp_composer.repay({
+      positionId: positionId,
+    });    
+    repay_msg.value.funds = [coin(tokenOutMin.toString(), denoms.cdt[0] as string)];
+    
+    console.log(repay_msg.value.funds)
+
+    
+    //Subtract slippage to mint value
+    withdrawValue = parseFloat(calcAmountWithSlippage(withdrawValue.toString(), SWAP_SLIPPAGE));
+    //Calc new TVL (w/ slippage calculated into the mintValue)
+    positionValue = positionValue - withdrawValue;
+    
+    
+    //Repayments under 100 CDT will fail unless fully repaid
+    //NOTE: This will leave the user with leftover CDT in their wallet, maximum 50 CDT
+    if ((creditAmount - repay_msg.value.funds[0].amount) < 100_000_000 && (creditAmount - repay_msg.value.funds[0].amount) > 0){
+      //Set repay amount so that credit amount is 100
+      repay_msg.value.funds = [coin((creditAmount - 100_000_000).toString(), denoms.cdt[0] as string)];
+      //break loop
+      iter = loops;
+    } 
+
+    //Attempted full repay
+    if (LTV_range === currentLTV) {      
+      //Set credit amount to 0
+      creditAmount = 0;
+      //Add any walletCDT to the repay amount to account for interest & slippage
+      repay_msg.value.funds = [coin((creditAmount +  ((walletCDT??0) * 1_000_000)).toString(), denoms.cdt[0] as string)];
+    } else {      
+      //Set credit amount including slippage
+      creditAmount -= repay_msg.value.funds[0].amount;
+    }
+
+    //Calc new LTV
+    currentLTV = getPositionLTV(positionValue, creditAmount);
+
+    //Add msgs to all_msgs
+    all_msgs = all_msgs.concat([withdraw_msg]).concat(swap_msgs).concat([repay_msg]);
+
+    //Increment iter
+    iter += 1;
+  }
+
+  console.log(all_msgs, iter)
+
+  await base_client?.signAndBroadcast(user_address, all_msgs, "auto",).then((res) => {console.log(res)});
+
+}
+//Ledger has a msg max of 3 msgs per tx (untested), so users can only loop with a max of 1 collateral
+//LTV as a decimal
+const loopPosition = async ( LTV: number, positionId: string, loops: number ) => {
+  //Create CDP Message Composer
+  const cdp_composer = new PositionsMsgComposer(user_address, testnetAddrs.positions);
+  //getPosition
+  const userRes = await cdpqueryClient?.getBasketPositions(
+    {
+        user: address as string,
+    }
+  );
+
+  //Set Position value
+  var positionValue = getPositionValue(userRes![0].positions[0]);
+  //Set credit amount
+  var creditAmount = parseInt(userRes![0].positions[0].credit_amount);
+  //Confirm desired LTV isn't over the borrowable LTV
+  let rataLTVs = getRataLTV(getPositionValue(userRes![0].positions[0]), getPositionQTYs(userRes![0].positions[0]), prices, basketRes);
+  let borrowLTV = rataLTVs[0]/100;
+  
+  if (LTV >= borrowLTV) {
+    console.log("Desired LTV is over the Position's borrowable LTV")
+    return;
+  }
+  //Get position cAsset ratios 
+  //Ratios won't change in btwn loops so we can set them outside the loop
+  let cAsset_ratios = getassetRatios(positionValue, getPositionQTYs(userRes![0].positions[0]), prices);
+  //Get Position's LTV
+  var currentLTV = getPositionLTV(positionValue, creditAmount);
+  if (LTV < currentLTV) {
+    console.log("Desired LTV is under the Position's current LTV")
+    return;
+  }
+
+  //Repeat until CDT to mint is under 1 or Loops are done
+  var mintAmount = 0;
+  var iter = 0;
+  var all_msgs: EncodeObject[] = [];
+  while ((mintAmount > 1_000_000 || iter == 0) && iter < loops){
+    //Set LTV range
+    let LTV_range = LTV - currentLTV;
+    //Set value to mint
+    var mintValue = positionValue * LTV_range;
+    //Set amount to mint
+    mintAmount = parseInt(((mintValue / parseFloat(basketRes!.credit_price.price)) * 1_000_000).toFixed(0));
+    
+    //Create mint msg
+    let mint_msg: EncodeObject = cdp_composer.increaseDebt({
+      positionId: positionId,
+      amount: mintAmount.toString(),
+    });  
+    //Divvy mint amount to the cAssets based on ratio
+    let cAsset_amounts = Object.keys(cAsset_ratios).map((key) => {
+      return [key, (cAsset_ratios[key as keyof DefinedCollateralAssets] * mintAmount)];
+    });
+    
+    //Create Swap msgs from CDT for each cAsset & save tokenOutMinAmount
+    var swap_msgs: EncodeObject[] = [];
+    var tokenOutMins: Coin[] = [];
+    cAsset_amounts.forEach((amount) => {
+      if (amount[1] as number > 0) {
+        let swap_output = handleCollateralswaps(amount[0] as keyof swapRoutes, parseInt(amount[1].toString()) as number)!;
+        swap_msgs.push(swap_output);         
+        tokenOutMins.push(coin((swap_output.value as MsgSwapExactAmountIn).tokenOutMinAmount, denoms[amount[0] as keyof DefinedCollateralAssets][0] as string));
+      }
+    });
+    //Create deposit msgs for newly swapped assets
+    var deposit_msg: MsgExecuteContractEncodeObject = cdp_composer.deposit({
+      positionId: positionId,
+    });
+    //Sort tokenOutMins alphabetically
+    tokenOutMins.sort((a, b) => (a.denom > b.denom) ? 1 : -1);
+    deposit_msg.value.funds = tokenOutMins;
+    //////////////////////////
+
+    //Subtract slippage to mint value
+    mintValue = parseFloat(calcAmountWithSlippage(mintValue.toString(), SWAP_SLIPPAGE));
+    //Calc new TVL (w/ slippage calculated into the mintValue)
+    positionValue = positionValue + mintValue;
+    
+    //Set credit amount
+    creditAmount += mintAmount;
+    //Calc new LTV
+    currentLTV = getPositionLTV(positionValue, creditAmount);
+
+    //Add msgs to all_msgs
+    all_msgs = all_msgs.concat([mint_msg]).concat(swap_msgs).concat([deposit_msg]);
+
+    //Increment iter
+    iter += 1;
+  }
+
+  console.log(all_msgs, iter)
+
+  await base_client?.signAndBroadcast(user_address, all_msgs, "auto",).then((res) => {console.log(res)});
+}
+const exitCLPools = async (poolId: number) => {
+  console.log("exit_cl_attempt")
+  
+  //Query CL pool
+  const userPoolResponse = await osmosisQueryClient!.osmosis.concentratedliquidity.v1beta1.userPositions({
+    address: address! as string,
+    poolId,
+  });
+  console.log(userPoolResponse)
+  //Convert user positions to a list of position IDs
+  //@ts-ignore
+  let positionIds = userPoolResponse.positions.map((position) => {
+    return position.position.positionId;
+  });
+
+  let collect_msg = osmosis.concentratedliquidity.v1beta1.MessageComposer.withTypeUrl.collectSpreadRewards({
+    positionIds,
+    sender: address! as string,
+  });
+  let collect_msg_2 = osmosis.concentratedliquidity.v1beta1.MessageComposer.withTypeUrl.collectIncentives({
+    positionIds,
+    sender: address! as string,
+  });
+  let withdraw_msg = osmosis.concentratedliquidity.v1beta1.MessageComposer.withTypeUrl.withdrawPosition({
+    positionId: userPoolResponse.positions[0].position.positionId,
+    sender: address! as string,
+    liquidityAmount: userPoolResponse.positions[0].position.liquidity,
+  });
+  await base_client?.signAndBroadcast(user_address, [collect_msg, collect_msg_2, withdraw_msg], "auto",).then((res) => {console.log(res)});
+}
+const exitGAMMPools = async (poolId: number, shareInAmount: string) => {
+  console.log("exit_pool_attempt")
+
+  //Query pool
+  const poolResponse = await osmosisQueryClient!.osmosis.gamm.v1beta1.pool({
+    poolId
+  });
+  let pool = poolResponse.pool;
+  let poolAssets = pool.poolAssets;
+  let totalShares = pool.totalShares;
+  //Calc user's share of pool
+  let shareAmount = new BigNumber(shareInAmount);
+  let totalShareAmount = new BigNumber(totalShares.amount);
+  let userShare =  shareAmount.div(totalShareAmount);
+  console.log(userShare)
+  //Calc user's share of poolAssets
+  //@ts-ignore
+  let tokenOutMins = poolAssets.map((asset) => {
+    if (asset.token.amount !== undefined) {
+      return coin(
+        parseInt(calcAmountWithSlippage((parseInt(asset.token.amount) * parseFloat(userShare.valueOf())).toFixed(0), SWAP_SLIPPAGE)), 
+        asset.token.denom);
+    }
+  });
+  console.log(tokenOutMins)
+
+  //Exit pool
+  const msg = exitPool({
+    poolId: BigInt(poolId),
+    sender: address! as string,
+    shareInAmount,
+    tokenOutMins,
+  });
+  await base_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
+
+}
+//////joinPools
+//The input tokens must be in the order of the pool's assets
+//pool 1268 is CDT/USDC
+const joinCLPools = async (tokenIn1: Coin, poolId: number, tokenIn2: Coin) => {
+  console.log("join_CL_pool_attempt")
+  let joinCoins = [tokenIn1, tokenIn2];
+  
+  let msg = osmosis.concentratedliquidity.v1beta1.MessageComposer.withTypeUrl.createPosition({
+    poolId: BigInt(poolId),
+    sender: address! as string,
+    //This range is .98 to 1.02
+    // lowerTick: BigInt("-200000"),
+    // upperTick: BigInt(20000),
+    //This is range .99 to 1.01
+    lowerTick: BigInt("-100000"),
+    upperTick: BigInt(10000),
+    /**
+     * tokens_provided is the amount of tokens provided for the position.
+     * It must at a minimum be of length 1 (for a single sided position)
+     * and at a maximum be of length 2 (for a position that straddles the current
+     * tick).
+     */
+    tokensProvided: joinCoins,
+    //Do we care about input minimums since we are depositing both?
+    tokenMinAmount0: "0",
+    tokenMinAmount1: "0",
+  });
+
+  await base_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
+}
+//This is used primarily to loop GAMM shares used as collateral
+const joinGAMMPools = async (tokenIn1: Coin, poolId: number, tokenIn2?: Coin) => {
+    //@ts-ignore
+    if (osmosisQueryClient !== null && cg_prices !== null && osmosisAssets !== undefined) {
+      console.log("join_pool_attempt")
+      //Query pool
+      const poolResponse = await osmosisQueryClient!.osmosis.gamm.v1beta1.pool({
+        poolId
+      });
+      let pool = poolResponse.pool;
+      //JoinPool no Swap
+      if (tokenIn2 !== undefined) {
+        let joinCoins = [tokenIn1, tokenIn2];
+        const shareOutAmount = calcShareOutAmount(pool, joinCoins);
+        const tokenInMaxs = joinCoins.map((c: Coin) => {
+          return coin(c.amount, c.denom);
+        });
+
+        const msg = joinPool( {
+          poolId: BigInt(poolId),
+          sender: address! as string,
+          tokenInMaxs: tokenInMaxs,
+          shareOutAmount: parseInt(calcAmountWithSlippage(shareOutAmount, SWAP_SLIPPAGE)).toString(),
+        });
+        
+        await base_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});    
+      } else {
+        //Join with Swap        
+        //@ts-ignore
+        let tokenPrice = cg_prices[tokenIn1.denom as CoinDenom];
+        
+        //Find the key for the denom
+        let tokenKey = Object.keys(denoms).find(key => denoms[key as keyof swapRoutes][0] === tokenIn1.denom);
+        let tokenInValue = (parseFloat(tokenPrice)* parseFloat(tokenIn1.amount) / Math.pow(10, denoms[tokenKey as keyof swapRoutes][1] as number));
+        // console.log(tokenInValue)
+        //@ts-ignore
+        const coinsNeeded = calculator.convertDollarValueToCoins(tokenInValue, pool, cg_prices);
+        // console.log(coinsNeeded)
+        const shareOutAmount = calcShareOutAmount(pool, coinsNeeded);
+        // console.log(shareOutAmount)
+
+        const msg = joinSwapExternAmountIn({
+          poolId: BigInt(poolId),
+          sender: address! as string,
+          tokenIn: tokenIn1,
+          shareOutMinAmount: parseInt(calcAmountWithSlippage(shareOutAmount, SWAP_SLIPPAGE)).toString(),
+        })
+        
+        await base_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});    
+      }  
+  }
+}
+///Exit Pools
 
 //This is for CDT using the oracle's prices
-const gettokenOutAmount = (tokenInAmount: number, tokenIn: keyof Prices ) => {
+const getCDTtokenOutAmount = (tokenInAmount: number, tokenIn: keyof Prices ) => {
   let basePrice = prices[tokenIn]
   let tokenOut = prices.cdt
 
   return tokenInAmount * (basePrice / tokenOut)
-
 }
+//Parse through saved Routes until we reach CDT
+const getCDTRoute = (tokenIn: keyof swapRoutes) => {
+  var route = cdtRoutes[tokenIn];
+  //to protect against infinite loops
+  var iterations = 0;
+  
+  while (route != undefined && route[route.length-1].tokenOutDenom as string !== denoms.cdt[0] && iterations < 5){
+    //Find the key from this denom
+    let routeDenom = route[route.length-1].tokenOutDenom as string;
+    //Set the next node in the route path
+    let routeKey = Object.keys(denoms).find(key => denoms[key as keyof swapRoutes][0] === routeDenom);
+    //Add the next node to the route
+    route = route.concat(cdtRoutes[routeKey as keyof swapRoutes]);
+    
+    //output to test
+    console.log(route)
+    iterations += 1;
+  }
 
+  return route;
+}
 //This is getting Swaps To CDT
-const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) => {
+const handleCDTswaps = (tokenIn: keyof swapRoutes, tokenInAmount: number) => {
   console.log("swap_attempt")
   //Asserting prices were queried
   if (prices.osmo !== 0) {
     //Get tokenOutAmount
-    const tokenOutAmount = gettokenOutAmount(tokenInAmount, tokenIn);
+    const tokenOutAmount = getCDTtokenOutAmount(tokenInAmount, tokenIn);
     //Swap routes
-    const routes: SwapAmountInRoute[] = cdtRoutes[tokenIn]; 
+    const routes: SwapAmountInRoute[] = getCDTRoute(tokenIn); 
     
     const tokenOutMinAmount = parseInt(calcAmountWithSlippage(tokenOutAmount.toString(), SWAP_SLIPPAGE)).toString();
 
     const msg = swapExactAmountIn( {
       sender: address! as string,
       routes,
-      tokenIn: coin(tokenInAmount, denoms[tokenIn]),
+      tokenIn: coin(tokenInAmount, denoms[tokenIn][0] as string),
       tokenOutMinAmount
     });
     
-    await base_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
+    return msg;
+    // await base_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
+    // handleCDTswaps("atom", 1000000)
   }
 };
 
+//Parse through saved Routes until we reach CDT
+const getCollateralRoute = (tokenOut: keyof swapRoutes) => {//Swap routes
+  const temp_routes: SwapAmountInRoute[] = getCDTRoute(tokenOut);
+
+  //Reverse the route
+  var routes = temp_routes.reverse();
+  //Swap tokenOutdenom of the route to the key of the route
+  routes = routes.map((route) => {
+    let routeDenom = route.tokenOutDenom as string;
+    let routeKey = Object.keys(cdtRoutes).find(key => cdtRoutes[key as keyof swapRoutes][0].tokenOutDenom === routeDenom && route.poolId === cdtRoutes[key as keyof swapRoutes][0].poolId);
+    
+    let keyDenom = denoms[routeKey as keyof swapRoutes][0] as string;
+    return {
+      poolId: route.poolId,
+      tokenOutDenom: keyDenom,
+    }
+  });
+
+  if (tokenOut === "usdc") {
+    console.log(temp_routes, routes)
+  }
+
+  return routes;
+}
+//This is for Collateral using the oracle's prices
+const getCollateraltokenOutAmount = (CDTInAmount: number, tokenOut: keyof Prices ) => {
+  let basePrice = prices.cdt;
+  let tokenOutPrice = prices[tokenOut];
+
+  return CDTInAmount * (basePrice / tokenOutPrice)
+}
+//Swapping CDT to collateral
+const handleCollateralswaps = (tokenOut: keyof swapRoutes, CDTInAmount: number) => {
+  console.log("collateral_swap_attempt")
+  //Asserting prices were queried
+  if (prices.osmo !== 0) {
+    //Get tokenOutAmount
+    const tokenOutAmount = getCollateraltokenOutAmount(CDTInAmount, tokenOut);
+    //Swap routes
+    const routes: SwapAmountInRoute[] = getCollateralRoute(tokenOut);
+    
+    const tokenOutMinAmount = parseInt(calcAmountWithSlippage(tokenOutAmount.toString(), SWAP_SLIPPAGE)).toString();
+
+    const msg = swapExactAmountIn( {
+      sender: address! as string,
+      routes,
+      tokenIn: coin(CDTInAmount.toString(), denoms.cdt[0] as string),
+      tokenOutMinAmount
+    });
+    
+    // await base_client?.signAndBroadcast(user_address, [msg], "auto",).then((res) => {console.log(res)});
+    return msg;
+  }
+};
+
+  
+  //Hotjar browser mouse tracking
   useEffect(() => {    
     Hotjar.init(siteId, hotjarVersion);
   }, []);
-
   
-  useEffect(() => {
-
-    // handleCDTswaps("osmo", 1000000)
+  // useEffect(() => {
+  //   if (osmosisQueryClient !== null && positionID !== "0" && prices.osmo !== 0) {
+  //     // handleCollateralswaps("atom", 1000000)
+  //     // unloopPosition(positionID, 1)
+  //   } else { console.log("osmosisQueryClient not set")}
     if (prices.osmo === 0) {
       //Get prices
       queryPrices()
@@ -1323,13 +1819,13 @@ const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) 
 
       //Get account's balance of CDT
       if (walletCDT === undefined){
-        oraclequeryClient?.client.getBalance(address as string, denoms.cdt).then((res) => {
+        oraclequeryClient?.client.getBalance(address as string, denoms.cdt[0] as string).then((res) => {
           setwalletCDT(parseInt(res.amount) / 1_000_000);
         })
       }
       if (walletMBRN === undefined){
         //Get account's balance of MBRN
-        oraclequeryClient?.client.getBalance(address as string, denoms.mbrn).then((res) => {
+        oraclequeryClient?.client.getBalance(address as string, denoms.mbrn[0] as string).then((res) => {
           setwalletMBRN(parseInt(res.amount) / 1_000_000);
         })
       }
@@ -1340,11 +1836,11 @@ const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) 
         })
       }
       ///Get wallet's available collateral balances
-      if (walletQTYs.osmo === undefined || walletQTYs.atom === undefined || walletQTYs.axlusdc === undefined || walletQTYs.usdc === undefined || walletQTYs.atomosmo_pool === undefined || walletQTYs.osmousdc_pool === undefined || walletQTYs.stAtom === undefined || walletQTYs.stOsmo === undefined || walletQTYs.tia === undefined || walletQTYs.usdt === undefined){
+      if (walletQTYs.osmo === undefined || walletQTYs.atom === undefined || walletQTYs.axlUSDC === undefined || walletQTYs.usdc === undefined || walletQTYs.atomosmo_pool === undefined || walletQTYs.osmousdc_pool === undefined || walletQTYs.stAtom === undefined || walletQTYs.stOsmo === undefined || walletQTYs.tia === undefined || walletQTYs.usdt === undefined){
         var wallet_qtys: CollateralAssets = {
           osmo: walletQTYs.osmo,
           atom: walletQTYs.atom,
-          axlusdc: walletQTYs.axlusdc,
+          axlUSDC: walletQTYs.axlUSDC,
           usdc: walletQTYs.usdc,
           stAtom: walletQTYs.stAtom,
           stOsmo: walletQTYs.stOsmo,
@@ -1355,43 +1851,43 @@ const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) 
         };
         try {
           //Get account's balance of OSMO
-          oraclequeryClient?.client.getBalance(address as string, denoms.osmo).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.osmo[0] as string).then((res) => {
             wallet_qtys.osmo = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of ATOM
-          oraclequeryClient?.client.getBalance(address as string, denoms.atom).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.atom[0] as string).then((res) => {
             wallet_qtys.atom = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of axlUSDC
-          oraclequeryClient?.client.getBalance(address as string, denoms.axlUSDC).then((res) => {
-            wallet_qtys.axlusdc = (parseInt(res.amount) / 1_000_000)
+          oraclequeryClient?.client.getBalance(address as string, denoms.axlUSDC[0] as string).then((res) => {
+            wallet_qtys.axlUSDC = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of USDC
-          oraclequeryClient?.client.getBalance(address as string, denoms.usdc).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.usdc[0] as string).then((res) => {
             wallet_qtys.usdc = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of stATOM
-          oraclequeryClient?.client.getBalance(address as string, denoms.stAtom).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.stAtom[0] as string).then((res) => {
             wallet_qtys.stAtom = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of stOSMO
-          oraclequeryClient?.client.getBalance(address as string, denoms.stOsmo).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.stOsmo[0] as string).then((res) => {
             wallet_qtys.stOsmo = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of TIA
-          oraclequeryClient?.client.getBalance(address as string, denoms.tia).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.tia[0] as string).then((res) => {
             wallet_qtys.tia = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of USDT
-          oraclequeryClient?.client.getBalance(address as string, denoms.usdt).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.usdt[0] as string).then((res) => {
             wallet_qtys.usdt = (parseInt(res.amount) / 1_000_000)
           })
           //Get account's balance of ATOM - OSMO LP
-          oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.atomosmo_pool[0] as string).then((res) => {
             wallet_qtys.atomosmo_pool = (BigInt(res.amount) / 1_000_000_000_000_000_000n).toString()
           })
           //Get account's balance of OSMO - USDC LP
-          oraclequeryClient?.client.getBalance(address as string, denoms.osmousdc_pool).then((res) => {
+          oraclequeryClient?.client.getBalance(address as string, denoms.osmousdc_pool[0] as string).then((res) => {
             wallet_qtys.osmousdc_pool = (BigInt(res.amount) / 1_000_000_000_000_000_000n).toString()
           })
           //Set walletChecked
@@ -1415,12 +1911,12 @@ const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) 
       })
     }
     //////Positions Page Queries
-    if (activeComponent === "vault"){
+    // if (activeComponent === "vault"){
       if (positionID === "0"){
         //fetch & Update position data
         fetch_update_positionData()
       }
-    }
+    // }
 
     /////Liquidation Page Queries    
     if (activeComponent === "liquidation"){

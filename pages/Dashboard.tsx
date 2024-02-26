@@ -2,8 +2,6 @@ import React, { use, useEffect } from "react";
 import { WalletSection } from "../components";
 import Image from "next/image";
 import { Basket } from "../codegen/positions/Positions.types";
-import { Prices } from ".";
-import { denoms } from "../config";
 
 type DashboardProps = {
     setActiveComponent: (component: string) => void;

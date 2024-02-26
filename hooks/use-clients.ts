@@ -14,8 +14,10 @@ import { StabilityPoolClient, StabilityPoolQueryClient } from '../codegen/stabil
 import { GovernanceClient, GovernanceQueryClient } from '../codegen/governance/Governance.client';
 import { StakingClient, StakingQueryClient } from '../codegen/staking/Staking.client';
 import { VestingClient } from '../codegen/vesting/Vesting.client';
-import { GasPrice } from '@cosmjs/stargate';
+import { GasPrice, QueryClient } from '@cosmjs/stargate';
 import { aminoTypes, registry } from '../config/defaults';
+
+import { osmosis } from 'osmojs';
 
 export function useClients(): {
   cdp_client: PositionsClient | null;
@@ -27,7 +29,7 @@ export function useClients(): {
   vesting_client: VestingClient | null;
   base_client: SigningCosmWasmClient | null;
   address: String | undefined;
-} {
+} {  
   const { getSigningCosmWasmClient, address, status, getOfflineSigner } = useChain(chainName);
   
   const [launchClient, setlaunchClient] = useState<LaunchClient | null>(  null  );
@@ -118,7 +120,7 @@ export function useQueryClients(): {
   governancequeryClient: GovernanceQueryClient | null;
   stakingqueryClient: StakingQueryClient | null;
 } {
-
+    //GetCosmwasmClient
     var query_errored = true;
     const { getCosmWasmClient } = useChain(chainName);
     ///I can change the RPC node here
@@ -175,7 +177,7 @@ export function useQueryClients(): {
       liqqueuequeryClient: liqqueueQueryClient ?? null,
       stabilitypoolqueryClient: stabilitypoolqueryClient ?? null,
       governancequeryClient: governancequeryClient ?? null,
-      stakingqueryClient: stakingqueryClient ?? null
+      stakingqueryClient: stakingqueryClient ?? null,
     };
   }
 
