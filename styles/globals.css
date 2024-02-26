@@ -187,7 +187,6 @@ input {
 .fullHeight{
   min-height: 100vh;
   max-width: 100vw;
-  background-color: #212121;
   font-family: 'Abel', sans-serif;
   display: flex;
   position: relative;
@@ -288,18 +287,7 @@ p{
   padding-top: 3vh;
   padding-left: 0.5vw;
 }
-.walletsection {  
-  position: fixed;
-  right: 1vw;
-  min-width: 120px;
-  top: 2vh;
-  z-index: 2;
-}
-.nav-walletsection { 
-  width: 5vw;
-  margin-top: 5vh;
-  margin-left: 0.3vw;
-}
+
 .cards {
   position: absolute;
   width: 89vw;
@@ -1949,13 +1937,10 @@ span[data-descr]:hover::after {
   position: relative;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
-.vote-buttons {
-  background-color: gray;
-  border-radius: 0.2rem;
-  width: 82px;
-  height: 22px;
-}
+
 .vote-total {
   position: relative;
   margin-top: 2%;
@@ -3361,9 +3346,7 @@ span[data-descr]:hover::after {
   object-fit: cover;
   z-index: 1;
 }
-.vault-page {
-  background-color: #212121;
-}
+
 .pie-chart-icon1 {
   position: relative;
 }
@@ -3666,7 +3649,6 @@ input[type=range][orient=vertical] {
   width: 100vw;
   font-size: x-large;
   color: white;
-  background-color: #212121;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -3799,7 +3781,7 @@ input[type=range][orient=vertical] {
   padding-bottom: 16px;
   padding-right: 32px;
   padding-left: 32px;
-  height: 200px;
+  height: 220px;
   width: 100%;
   max-width: 600px;
   background-color: #383838;

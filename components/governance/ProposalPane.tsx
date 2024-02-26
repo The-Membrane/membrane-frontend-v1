@@ -9,6 +9,17 @@ import { usePopup } from "./HelperFunctions";
 import { UserVP } from "../../pages/Governance";
 import ProposalDetails from "./ProposalPopup";
 import Popup from "../Popup";
+import {
+  Box,
+  Button,
+  Collapse,
+  Flex,
+  HStack,
+  Text,
+  VStack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 //Interfaces and Global Variables
 
@@ -103,7 +114,15 @@ interface PIProps {
 }
 
 const ProposalItem: React.FC<PIProps> = (props: PIProps) => {
-  const { onClick, title, days, result, quorum, proposalColor, quorumThreshold } = props;
+  const {
+    onClick,
+    title,
+    days,
+    result,
+    quorum,
+    proposalColor,
+    quorumThreshold,
+  } = props;
   return (
     <div>
       <div className="proposal-item" onClick={onClick}>
@@ -154,6 +173,90 @@ const ProposalRows: React.FC<ProposalRowsProps> = (
   </div>
 );
 
+type ProposalProps = {
+  id?: string;
+  data: {
+    status: string;
+    title: string;
+    description?: string;
+    links?: string[];
+    messages?: string[];
+  };
+  popup: () => void;
+};
+
+const Proposal: React.FC<ProposalProps> = ({ data, popup }: ProposalProps) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  // Function to determine the color of the status circle based on the proposal status
+  const getStatusColor = () => {
+    switch (data.status) {
+      case "active":
+        return "rgba(46, 204, 113, 0.3)";
+      case "pending":
+        return "rgba(241, 196, 15, 0.3)";
+      case "completed":
+        return "rgba(52, 152, 219, 0.3)";
+      case "executed":
+        return "rgba(231, 76, 60, 0.3)";
+      default:
+        return "rgba(149, 165, 166, 0.3)";
+    }
+  };
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
+  const openPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setPopupOpen(false);
+  };
+
+  return (
+    <Box
+      bg="gray.700"
+      borderRadius="xl"
+      py={4}
+      px={6}
+      color="white"
+      boxShadow="xl"
+      width="100vw"
+      maxWidth="5xl"
+    >
+      <HStack spacing={4} align="center">
+        <Button
+          size="sm"
+          fontSize="xs"
+          fontWeight="normal"
+          colorScheme="teal"
+          borderRadius="full"
+          bg={getStatusColor()}
+          px={3}
+        >
+          {data.status
+            ? data.status.charAt(0).toUpperCase() + data.status.slice(1)
+            : ""}
+        </Button>
+
+        <Text flex="1" fontWeight="medium" my={0} noOfLines={2} isTruncated>
+          {data.title}
+        </Text>
+
+        <Button
+          size="sm"
+          fontSize="sm"
+          fontWeight="normal"
+          colorScheme="teal"
+          onClick={() => popup()}
+        >
+          {isMobile ? "View" : "View Proposal"}
+        </Button>
+      </HStack>
+    </Box>
+  );
+};
+
 interface PropPaneProps {
   proposals: ProposalList;
   handleSubmitProposalForm: () => void;
@@ -168,7 +271,10 @@ interface PropPaneProps {
 export const ProposalPane: React.FC<PropPaneProps> = (props: PropPaneProps) => {
   const [proposalType, setProposalType] = useState("Active");
   const [proposalColor, setProposalColor] = useState("#567c39");
-  const [proposalDetails, setProposalDetails] = useState<{ proposal: ProposalResponse | undefined, quorum: number }>({ proposal: undefined, quorum: 0 });
+  const [proposalDetails, setProposalDetails] = useState<{
+    proposal: ProposalResponse | undefined;
+    quorum: number;
+  }>({ proposal: undefined, quorum: 0 });
   const [isProposalDetailsVisible, setProposalDetailsVisible] = useState(false);
   const [popupStatus, setPopupStatus] = useState("Success");
   const { trigger, setTrigger, msg, status, showPopup } = usePopup();
@@ -213,53 +319,115 @@ export const ProposalPane: React.FC<PropPaneProps> = (props: PropPaneProps) => {
   };
 
   const handleRowClick = (proposal: ProposalResponse, quorum: number) => {
-    setProposalDetails({ proposal, quorum });
-    setProposalDetailsVisible(true);
+    const popup = () => {
+      setProposalDetails({ proposal, quorum });
+      setProposalDetailsVisible(true);
+    };
+
+    return popup;
   };
 
+  //Converts ProposalResponse to ProposalProps for display
+  const convertPropData = (proposal: ProposalResponse): ProposalProps => {
+    return {
+      id: proposal?.proposal_id,
+      data: {
+        status: proposal?.status,
+        title: proposal?.title,
+        description: proposal?.description,
+        links: proposal?.link ? [proposal.link] : undefined,
+        messages:
+          proposal?.messages?.map((message) => message.msg.toString()) ??
+          undefined,
+      },
+      popup: handleRowClick(proposal, props.quorumThreshold),
+    };
+  };
+
+  //Combines proposals from all categories into one list
+  const convertPropList = (proposalList: ProposalList): ProposalProps[] => {
+    const allConvertedProposals: ProposalProps[] = [];
+
+    for (const category in proposalList) {
+      if (proposalList.hasOwnProperty(category)) {
+        const proposalsInCategory = proposalList[category];
+
+        const convertedCategoryProposals = proposalsInCategory
+          .filter((proposalData) => proposalData[0] !== undefined)
+          .map((proposalData) => convertPropData(proposalData![0]!));
+
+        allConvertedProposals.push(...convertedCategoryProposals);
+      }
+    }
+
+    return allConvertedProposals;
+  };
+
+  const propList = convertPropList(props.proposals);
+
+
+  //Show more/less button
+  const [showAll, setShowAll] = React.useState(false);
+  const initialLength = 5;
+  const displayedProposals = showAll ? propList : propList.slice(0, initialLength);
+
   return (
-    <div className="proposal-pane">
-      <div className="proposal-top">
-        <Dropdown handleItemClick={handleTypeChange} />
-        <div className="proposal-axis-labels">Current Result</div>
-      </div>
-      <div className="proposals-frame">
-        <div style={{ marginBottom: "15px" }} />
-        <ProposalRows
-          proposals={props.proposals}
-          proposalType={proposalType}
-          proposalColor={proposalColor}
-          onRowClick={handleRowClick}
-          quorumThreshold={props.quorumThreshold}
-        />
-        <Popup
-          trigger={isProposalDetailsVisible}
-          setTrigger={setProposalDetailsVisible}
-          msgStatus={popupStatus}
-          errorMsg={
-            <ProposalDetails
-              proposal={proposalDetails.proposal!}
-              quorum={proposalDetails.quorum}
-              govQueryClient={props.govQueryClient}
-              address={props.address}
-              userVP={props.userVP}
-              handleVote={handleVote}
-            />
-          }
-        />
-        <div
-          className="submit-proposal-button"
-          onClick={props.handleSubmitProposalForm}
+    <VStack spacing={4} align="stretch" mb={16}>
+      {propList.length === 0 ? (
+        <Box>No proposals available</Box>
+      ) : (
+        displayedProposals.map((proposal) => (
+          <Proposal
+            key={proposal?.id}
+            data={proposal?.data}
+            popup={proposal.popup}
+          />
+        ))
+      )}
+
+      {propList.length > initialLength && (
+        <Flex
+          justify="center"
+          fontWeight="bold"
+          cursor="pointer"
         >
-          <div
-            className="submit-proposal"
-            onClick={props.handleSubmitProposalForm}
-          >
-            Submit Proposal
-          </div>
-        </div>
-      </div>
-      <Popup trigger={trigger} setTrigger={setTrigger} msgStatus={status} errorMsg={msg} />
-    </div>
+          <Text display="flex" gap={4} alignItems="center" onClick={() => setShowAll(!showAll)}>
+            {showAll ? "Show Less " : "Show More "}
+            {showAll ? <FaChevronUp /> : <FaChevronDown />}
+          </Text>
+        </Flex>
+      )}
+      <Popup
+        trigger={isProposalDetailsVisible}
+        setTrigger={setProposalDetailsVisible}
+        msgStatus={popupStatus}
+        errorMsg={
+          <ProposalDetails
+            proposal={proposalDetails.proposal!}
+            quorum={proposalDetails.quorum}
+            govQueryClient={props.govQueryClient}
+            address={props.address}
+            userVP={props.userVP}
+            handleVote={handleVote}
+          />
+        }
+      />
+      <Button
+        onClick={props.handleSubmitProposalForm}
+        size="lg"
+        maxW="md"
+        bgColor="#745EFF"
+        alignSelf="center"
+        color={"white"}
+      >
+        Submit Proposal
+        <Popup
+          trigger={trigger}
+          setTrigger={setTrigger}
+          msgStatus={status}
+          errorMsg={msg}
+        />
+      </Button>
+    </VStack>
   );
 };
