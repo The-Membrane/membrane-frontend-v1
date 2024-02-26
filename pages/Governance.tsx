@@ -5,15 +5,13 @@ import { ProposalResponse, ProposalMessage, VoteOption, ProposalVoteOption } fro
 import Popup from "../components/Popup";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import React from "react";
-import Image from "next/image";
 import { useChain } from "@cosmos-kit/react";
 import { chainName, Delegate, delegateList, quadraticVoting } from "../config";
 import { VestingClient } from "../codegen/vesting/Vesting.client";
 import { ProposalPane, ProposalList } from "../components/governance/ProposalPane";
-import StakeButton from "../components/governance/StakeButton";
-import UnstakeButton from "../components/governance/UnstakeButton";
-import ClaimButton from "../components/governance/ClaimButton";
-import DelegatePane from "../components/governance/DelegatePane";
+import { Box, Flex, Heading, VStack, useBreakpointValue } from "@chakra-ui/react";
+import StakePane from "../components/governance/StakePane";
+import { DelegatePane } from "../components/governance/DelegatePane";
 
 export interface Delegation {
   delegator: string;
@@ -394,68 +392,96 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
     setwalletMBRN(WalletMBRN)
     setuserVP(UserVP)
   }, [Proposals, EmissionsSchedule, UserStake, UserClaims, Delegations, Delegators, WalletMBRN, UserVP]);
-      
-  return (
-    <div className="page-frame governance">
-      <div className="pagetitle-gov">
-        Governance
-        <Image className="gov-icon" width={43} height={48} alt="" src="/images/staking.svg" />  
-        {/* <div className="total-vp-frame">
-          <div className="total-vp-label">Total VP: </div>
-          <div className="total-vp-amount">{quadraticVoting === true ? Math.sqrt(userVP.userStake) + userVP.userDelegations : userVP.userDelegations + userVP.userStake}</div>
-        </div> */}
-      </div>  
-      <div className="button-frames">
-        <StakeButton 
-        userStake={userStake}
-        emissionsSchedule={emissionsSchedule} 
-        walletMBRN={walletMBRN} 
-        address={address} 
-        connect={connect} 
-        stakingClient={stakingClient} 
-        /> 
-        <UnstakeButton 
-        userStake={userStake} 
-        setUserStake={setUserStake} 
-        address={address} 
-        connect={connect} 
-        stakingClient={stakingClient} 
-        />
-        <ClaimButton 
-        userClaims={userClaims} 
-        address={address} 
-        connect={connect} 
-        stakingClient={stakingClient} />
-      </div>
-      <div className="proposals-delegations">
-        <ProposalPane
-        proposals={proposals}
-        handleSubmitProposalForm={handlesubmitproposalForm}
-        connect={connect}
-        govClient={govClient}
-        govQueryClient={govQueryClient}
-        address={address}
-        userVP={userVP}
-        quorumThreshold={quorum}
-      />
-      <DelegatePane 
-      delegations={delegations} 
-      stakingQueryClient={stakingQueryClient} 
-      stakingClient={stakingClient} 
-      maxCommission={maxCommission} 
-      userStake={userStake} 
-      userVP={userVP} 
-      getDelegations={getDelegations}
-      handledelegateSubmission={handledelegateSubmission} 
-      />
+     
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
-        {/* <div className="mbrn-stake-logo">
-          <Image className="logo-icon1  logo-shiftDown" width={43} height={48} alt="" src="/images/Logo.svg" />
-        </div> */}
-        {/* <Image className="cdt-logo-icon" width={45} height={45} alt="" src="/images/CDT.svg" />       */}
-      </div>
+  return (
+    <Box bg="gray.900" color="white" minH="full">
+      <Flex
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        mx={2}
+      >
+      {/* Governance Header */}
+      <Flex
+        w="full"
+        maxW="8xl"
+        justifyContent="space-between"
+        alignItems="center"
+        pt={isMobile ?"4" : "8"}
+      >
+        <Heading size={isMobile ? "2xl" : "lg"} ml={isMobile ? 0 : 8} mt={4} pb="2">
+          Governance
+        </Heading>
+      </Flex>
+      {/* Main Content */}
+      <VStack
+        spacing={5}
+        w="full"
+        maxW="7xl"
+        direction={{ base: "column", lg: "row" }}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Flex
+          w="full"
+          gap={10}
+          direction={{ base: "column", lg: "row" }}
+          alignItems="center"
+          justifyContent="center"
+        >
+        <StakePane 
+          userStake={userStake}
+          setUserStake={setUserStake}
+          emissionsSchedule={emissionsSchedule}
+          userClaims={userClaims}
+          walletMBRN={walletMBRN}
+          address={address}
+          connect={connect}
+          stakingClient={stakingClient}
+        />
+        <DelegatePane
+        delegations={delegations}
+        stakingQueryClient={stakingQueryClient}
+        stakingClient={stakingClient}
+        maxCommission={maxCommission}
+        userStake={userStake}
+        userVP={userVP}
+        getDelegations={getDelegations}
+        handledelegateSubmission={handledelegateSubmission}
+        />
+        </Flex>
+      </VStack>
+      {/* Proposals Header */}
+      <Flex
+          w="full"
+          maxW="8xl"
+          justifyContent="flex-start"
+          alignItems="center"
+          py="8"
+        >
+        <Heading size={isMobile ? "2xl" : "lg"} ml={isMobile ? 0 : 8} mt={4} pb="2">
+            Proposals
+          </Heading>
+        </Flex>
+
+        {/* Proposals Pane */}
+        <Flex w="full" maxW="7xl" justifyContent="center">
+          <ProposalPane
+            proposals={proposals}
+            handleSubmitProposalForm={handlesubmitproposalForm}
+            connect={connect}
+            govClient={govClient}
+            govQueryClient={govQueryClient}
+            address={address}
+            userVP={userVP}
+            quorumThreshold={quorum}
+            />        
+        </Flex>
+      </Flex>
       <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
-    </div>    
+    </Box>    
   );
 };
 

@@ -25,6 +25,7 @@ import { Config, ProposalResponse } from "../codegen/governance/Governance.types
 import { cdtRoutes, delegateList, denoms, quadraticVoting, skipProposals } from "../config";
 import { SwapAmountInRoute } from "osmojs/dist/codegen/osmosis/poolmanager/v1beta1/swap_route";
 import { SigningStargateClient } from "@cosmjs/stargate";
+import { Box } from "@chakra-ui/react";
 
 
 export const SECONDS_PER_DAY = 86400;
@@ -73,11 +74,11 @@ export default function Home() {
   const siteId = 3709543;
   const hotjarVersion = 6;
 
-  const [activeComponent, setActiveComponent] = useState('dashboard');
+  const [activeComponent, setActiveComponent] = useState('vault');
   
   //Popup
   const [popupTrigger, setPopupTrigger] = useState(true);
-  const [popupMsg, setPopupMsg] = useState<ReactJSXElement>(<div>EXITING THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.</div>);
+  const [popupMsg, setPopupMsg] = useState<ReactJSXElement>(<Box mt={5}>EXITING THIS POP-UP IS ACKNOWLEDGEMENT OF & AGREEMENT TO THE FOLLOWING: This is experimental technology which may or may not be allowed in certain jurisdictions in the past/present/future, and it’s up to you to determine & accept all liability of use. This interface is for an externally deployed codebase that you are expected to do independent research for, for any additional understanding.</Box>);
   const [popupStatus, setPopupStatus] = useState("User Agreement");
   
   //Get Clients
@@ -1149,7 +1150,7 @@ export default function Home() {
   }
 
   function onlyVaultPage(){
-    return !((walletCDT != undefined && walletCDT > 0) || (walletMBRN != undefined && walletMBRN > 0) || (inLaunch != undefined && inLaunch === true))
+    return true;
   }
   
   //Calculate the position value using prices and collateral quantities
@@ -1529,11 +1530,11 @@ const handleCDTswaps = async (tokenIn: keyof swapRoutes, tokenInAmount: number) 
       href="https://fonts.googleapis.com/css2?family=Abel&display=swap"
       rel="stylesheet"
     />
-    <div className="fullHeight">
-        <NavBar setActiveComponent={setActiveComponent}/> 
+    <Box bg="gray.900" className="page-frame">
+        <NavBar setPage={setActiveComponent}/> 
         {renderComponent()}        
         <Popup trigger={popupTrigger} setTrigger={setPopupTrigger} msgStatus={popupStatus} errorMsg={popupMsg}/>
-    </div>
+    </Box>
     
   </>
   );
