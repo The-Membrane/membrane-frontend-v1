@@ -556,7 +556,7 @@ export const DelegatePane: React.FC<DelegatePaneProps> = (
         </Text>
       </HStack>
       <Divider mb={2} />
-      <VStack spacing="4" maxH="250px" overflowY="auto">
+      <VStack spacing="4" maxH="200px" overflowY="auto">
         {delegations
           .filter((delegate) => delegate.delegator)
           .map((delegate, index) => (

@@ -1,14 +1,29 @@
+import {
+  VStack,
+  Text,
+  Divider,
+  Box,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+
+
 interface QueueStatsItemProps {
-    metric: number | string;
-    label: string;
-    color?: string;
-  }
-  
-  export function QueueStatsItem({ metric, label, color }: QueueStatsItemProps) {
-    return (
-      <div className="queue-stats-item">
-        <div style={{textAlign: "center", borderBottom: `2px solid ${color}`, fontSize: "large"}}>{metric}</div>
-        <div className="collateral-tvl-label">{label}</div>
-      </div>
-    );
-  }
+  upperText: string;
+  lowerText: string;
+  color?: string;
+}
+
+const QueueStatsItem = ({ upperText, lowerText, color = "cyan.500" }: QueueStatsItemProps) => {
+  const fontSize = useBreakpointValue({ base: "sm", md: "md", lg: "lg" });
+  return (
+    <VStack spacing={1} align="center">
+      <Text fontSize={fontSize} fontWeight="bold">
+        {upperText}
+      </Text>
+      <Divider borderColor={color} m={1} />
+      <Text fontSize={fontSize} textAlign="center">{lowerText}</Text>
+    </VStack>
+  );
+};
+
+export default QueueStatsItem;

@@ -409,9 +409,10 @@ const Governance = ({govClient, govQueryClient, stakingClient, stakingQueryClien
         maxW="8xl"
         justifyContent="space-between"
         alignItems="center"
-        pt={isMobile ?"4" : "8"}
+        pt={isMobile ?"2" : "4"}
+        pb={2}
       >
-        <Heading size={isMobile ? "2xl" : "lg"} ml={isMobile ? 0 : 8} mt={4} pb="2">
+        <Heading size={isMobile ? "2xl" : "lg"} ml={isMobile ? 0 : 8} mt={isMobile? 4 : 2} pb="2">
           Governance
         </Heading>
       </Flex>

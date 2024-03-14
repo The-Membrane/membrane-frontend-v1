@@ -1,36 +1,104 @@
-type ChartProps = {
-    barGraph: any; // replace with the actual type of bar
-    barIndex: number;
-    setPremium: (value: number) => void;
-    premium: number | undefined;
-  };
-  
+import React from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
-  const Chart: React.FC<ChartProps> = ({ barGraph, barIndex, setPremium, premium }) => {
+interface ChartProps {
+  dataset?: number[];
+  barSize?: number;
+  borderRadius?: number;
+}
+
+const ChartComponent: React.FC<ChartProps> = ({
+  dataset,
+  barSize = 20,
+  borderRadius = 90,
+}) => {
+  // Use provided dataset or default to dummy data
+  const dataValues =
+    dataset ||
+    Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
+
+  // Find the maximum value in the dataset for Y-axis scaling
+  const maxValue = Math.max(...dataValues);
+
+  // Map data for the bars
+  const data = dataValues.map((value, index) => ({
+    name: `${index}%`,
+    value,
+    maxValue,
+  }));
+
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart barGap={-barSize} data={data}>
+        <defs>
+          <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="rgba(121, 142, 255, 1)" />
+            <stop offset="95%" stopColor="rgba(79, 202, 187, 1)" />
+          </linearGradient>
+        </defs>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="name" axisLine={false} tick={{ fill: "#FFFFFF" }} />
+        <YAxis
+          axisLine={false}
+          domain={[0, maxValue]}
+          tick={{ fill: "#FFFFFF" }}
+        />
+        <Tooltip
+            content={<CustomTooltip active={true} payload={[]} label="Example Label" />}
+            cursor={{ fill: "rgba(0, 0, 0, 0.2)" }}
+        />
+        {/* Background Bars */}
+        <Bar
+          dataKey="maxValue"
+          barSize={barSize}
+          fill="rgba(0, 0, 0, 0.2)"
+          radius={borderRadius}
+        />
+        {/* Gradient Bars */}
+        <Bar
+          dataKey="value"
+          barSize={barSize}
+          fill="url(#barGradient)"
+          radius={borderRadius}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
+
+interface CTProps {
+  active: boolean;
+  payload: any[];
+  label: string;
+}
+
+const CustomTooltip: React.FC<CTProps> = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    const gradientBarPayload = payload.find((p) => p.dataKey === "value");
     return (
-      <>
-          <div className="bar-icon" data-descr={barGraph[barIndex][0].tvl} style={{height: barGraph[barIndex][0].height, backgroundColor: barGraph[barIndex][0].color,}}/>
-          <div className="bar-icon1" data-descr={barGraph[barIndex][1].tvl} style={{height: barGraph[barIndex][1].height, backgroundColor: barGraph[barIndex][1].color,}}/>
-          <div className="bar-icon2" data-descr={barGraph[barIndex][2].tvl} style={{height: barGraph[barIndex][2].height, backgroundColor: barGraph[barIndex][2].color,}}/>
-          <div className="bar-icon3" data-descr={barGraph[barIndex][3].tvl} style={{height: barGraph[barIndex][3].height, backgroundColor: barGraph[barIndex][3].color,}}/>
-          <div className="bar-icon4" data-descr={barGraph[barIndex][4].tvl} style={{height: barGraph[barIndex][4].height, backgroundColor: barGraph[barIndex][4].color,}}/>
-          <div className="bar-icon5" data-descr={barGraph[barIndex][5].tvl} style={{height: barGraph[barIndex][5].height, backgroundColor: barGraph[barIndex][5].color,}}/>
-          <div className="bar-icon6" data-descr={barGraph[barIndex][6].tvl} style={{height: barGraph[barIndex][6].height, backgroundColor: barGraph[barIndex][6].color,}}/>
-          <div className="bar-icon7" data-descr={barGraph[barIndex][7].tvl} style={{height: barGraph[barIndex][7].height, backgroundColor: barGraph[barIndex][7].color,}}/>
-          <div className="bar-icon8" data-descr={barGraph[barIndex][8].tvl} style={{height: barGraph[barIndex][8].height, backgroundColor: barGraph[barIndex][8].color,}}/>
-          <div className="bar-icon9" data-descr={barGraph[barIndex][9].tvl} style={{height: barGraph[barIndex][9].height, backgroundColor: barGraph[barIndex][9].color,}}/>
-          <div className="label4" data-tvl={barGraph[barIndex][0].tvl} style={(premium === 0) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(0)}}>0%</div>
-          <div className="label5" data-tvl={barGraph[barIndex][1].tvl} style={(premium === 1) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(1)}}>1%</div>
-          <div className="label6" data-tvl={barGraph[barIndex][2].tvl} style={(premium === 2) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(2)}}>2%</div>
-          <div className="label7" data-tvl={barGraph[barIndex][3].tvl} style={(premium === 3) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(3)}}>3%</div>
-          <div className="label8" data-tvl={barGraph[barIndex][4].tvl} style={(premium === 4) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(4)}}>4%</div>
-          <div className="label9" data-tvl={barGraph[barIndex][5].tvl} style={(premium === 5) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(5)}}>5%</div>
-          <div className="label10" data-tvl={barGraph[barIndex][6].tvl} style={(premium === 6) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(6)}}>6%</div>
-          <div className="label11" data-tvl={barGraph[barIndex][7].tvl} style={(premium === 7) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(7)}}>7%</div>
-          <div className="label12" data-tvl={barGraph[barIndex][8].tvl} style={(premium === 8) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(8)}}>8%</div>
-          <div className="label13" data-tvl={barGraph[barIndex][9].tvl} style={(premium === 9) ? {color:"rgba(79, 202, 187, 0.8)"} : undefined} onClick={()=>{setPremium(9)}}>9%</div>         
-      </>
+      <div
+        style={{
+          backgroundColor: "#4A5568", // This is Chakra's gray.700
+          padding: "16px",
+          borderRadius: "10px",
+          color: "white",
+        }}
+      >
+        <p>{`${label} Discount`}</p>
+        <p>{`${gradientBarPayload.value} CDT`}</p>
+      </div>
     );
-  };
-  
-  export default Chart;
+  }
+
+  return null;
+};
+
+export default ChartComponent;
