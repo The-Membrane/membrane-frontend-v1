@@ -40,7 +40,7 @@ export const OmniAssetBid: React.FC<OmniAssetBidProps> = ({address, connect, sp_
 
         try {
             await sp_client?.deposit({}
-            , "auto", undefined, coins(((omniAmount ?? 0) * 1_000_000), denoms.cdt)
+            , "auto", undefined, coins(((omniAmount ?? 0) * 1_000_000), denoms.cdt[0] as string)
             ).then(async (res) => {
                 console.log(res)
                 showPopup("Success", `Deposited ${omniAmount} CDT`);
