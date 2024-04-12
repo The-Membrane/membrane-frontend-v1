@@ -43,7 +43,7 @@ const StakeButton: React.FC<StakeButtonProps> = ({
           {},
           "auto",
           undefined,
-          coins((stakeAmount ?? 0) * 1_000_000, denoms.mbrn[0])
+          coins((stakeAmount ?? 0) * 1_000_000, denoms.mbrn[0] as string)
         )
         .then((res) => {
           console.log(res);
