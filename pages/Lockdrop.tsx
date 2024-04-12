@@ -245,7 +245,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
 
   const set_totalOSMO = async () => {
     try {
-      await queryClient?.client.getBalance((testnetAddrs.launch) as string, denoms.osmo).then((res) => {
+      await queryClient?.client.getBalance((testnetAddrs.launch) as string, denoms.osmo[0] as string).then((res) => {
         settotalOSMO(parseFloat((parseInt(res.amount) / 1_000_000).toFixed(2)));
       });
     } catch (error) {
@@ -253,7 +253,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
     }
 
     try {
-      await queryClient?.client.getBalance((address) as string, denoms.osmo).then((res) => {
+      await queryClient?.client.getBalance((address) as string, denoms.osmo[0] as string).then((res) => {
         setwalletosmoAmount(parseFloat((parseInt(res.amount) / 1_000_000).toFixed(2)));
       });
     } catch (error) {
@@ -284,7 +284,7 @@ const Lockdrop = ({launch_client, queryClient, baseClient, address, prices}: Pro
       try {
         await launch_client?.lock({
           lockUpDuration: deposit.new_lock_up_duration * 1,
-        }, "auto", undefined, [coin((deposit.deposit ?? 0) * 1_000_000, denoms.osmo)])
+        }, "auto", undefined, [coin((deposit.deposit ?? 0) * 1_000_000, denoms.osmo[0] as string)])
         .then((res) => {
           get_updateddepositList();
           // Update lock amount
