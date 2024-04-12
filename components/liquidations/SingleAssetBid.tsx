@@ -67,7 +67,7 @@ interface SingleAssetBidProps {
             },          
             liq_premium: premium ?? 0,
           }
-        }, "auto", undefined, coins(((depositAmount ?? 0) * 1_000_000), denoms.cdt)).then((res: any) => {
+        }, "auto", undefined, coins(((depositAmount ?? 0) * 1_000_000), denoms.cdt[0] as string)).then((res: any) => {
           console.log(res)
 
           showPopup("Success", `Bid of ${depositAmount} CDT at a ${premium}% premium successful`);
