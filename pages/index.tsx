@@ -1276,6 +1276,7 @@ export default function Home() {
             }
           })
         })   
+        console.log(riskyPositions)
         setriskyPositions(riskyPositions);
       })
     } catch (error) {
