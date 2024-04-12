@@ -352,7 +352,7 @@ const LiquidationPools = ({queryClient, liq_queueClient, sp_queryClient, sp_clie
         liquidatiblePositions.push([position[0], position[2].position_id]);
       }
     })
-
+    console.log(liquidatiblePositions)
     return liquidatiblePositions;
   }
   const handleLiquidation = async () => {
